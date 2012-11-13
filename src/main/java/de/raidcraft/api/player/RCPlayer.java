@@ -13,6 +13,8 @@ public interface RCPlayer {
 
 	public String getDisplayName();
 
+    public boolean isOp();
+
 	public boolean hasPermission(String permission);
 
 	public String getWorld();

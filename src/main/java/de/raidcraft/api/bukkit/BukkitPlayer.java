@@ -7,7 +7,6 @@ import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -50,8 +49,15 @@ public class BukkitPlayer extends AbstractPlayer {
 		}
 	}
 
-	@Override
+    @Override
+    public boolean isOp() {
+
+        return player.isOnline() && player.isOp();
+    }
+
+    @Override
 	public boolean hasPermission(String permission) {
+
 		return player.hasPermission(permission);
 	}
 
