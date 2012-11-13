@@ -16,6 +16,10 @@ import java.util.*;
  */
 public final class LocationUtil {
 
+    private LocationUtil() {
+
+    }
+
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
 
         if (l1.getWorld() != null && l2.getWorld() != null) {

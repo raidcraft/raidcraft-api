@@ -13,6 +13,10 @@ import java.util.Date;
  */
 public final class DateUtil {
 
+    private DateUtil() {
+
+    }
+
     public static final SimpleDateFormat DATE = new SimpleDateFormat("dd-MM-yyy HH:mm:ss");
 
     public static String getCurrentDateString() {

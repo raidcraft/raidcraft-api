@@ -15,6 +15,10 @@ import java.util.regex.Pattern;
  */
 public final class SignUtil {
 
+    private SignUtil() {
+
+    }
+
     /**
      * Checks if the given line on the sign is equals to
      * the given text colored in the given color.

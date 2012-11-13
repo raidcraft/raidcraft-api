@@ -5,7 +5,6 @@ import com.sk89q.worldedit.bukkit.BukkitWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -15,6 +14,10 @@ import org.bukkit.util.Vector;
  * @author Silthus
  */
 public final class BukkitUtil {
+
+    private BukkitUtil() {
+
+    }
 
     public static final WorldVector SPAWN = getWorldVector(Bukkit.getWorld("world").getSpawnLocation());
 
