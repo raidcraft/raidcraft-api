@@ -77,6 +77,10 @@ public final class BukkitUtil {
                 }
             }
         }
-        return target;
+        if (entity.hasLineOfSight(target)) {
+            return target;
+        } else {
+            return null;
+        }
     }
 }
