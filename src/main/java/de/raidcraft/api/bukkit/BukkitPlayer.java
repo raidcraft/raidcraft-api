@@ -2,9 +2,11 @@ package de.raidcraft.api.bukkit;
 
 import com.sk89q.worldedit.WorldVector;
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.player.AbstractPlayer;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.util.BukkitUtil;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
@@ -61,7 +63,7 @@ public class BukkitPlayer extends AbstractPlayer {
 		return player.hasPermission(permission);
 	}
 
-	@Override
+    @Override
 	public boolean isOnline() {
 
 		return player != null && player.isOnline();

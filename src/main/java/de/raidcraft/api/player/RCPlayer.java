@@ -17,6 +17,12 @@ public interface RCPlayer {
 
 	public boolean hasPermission(String permission);
 
+    public void addMoney(double amount);
+
+    public void removeMoney(double amount);
+
+    public boolean hasEnoughMoney(double cost);
+
 	public String getWorld();
 
 	public boolean isInWorld(String world);
