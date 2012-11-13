@@ -1,0 +1,6 @@
+name: RaidCraft-API
+main: com.silthus.raidcraft.bukkit.CorePlugin
+version: 1.0
+author: Silthus
+website: www.raid-craft.de
+depend: [WorldEdit, WorldGuard]
