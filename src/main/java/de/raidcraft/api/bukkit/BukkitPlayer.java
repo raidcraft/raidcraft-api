@@ -95,6 +95,7 @@ public class BukkitPlayer extends AbstractPlayer {
         return BukkitUtil.toBlockWorldVector(player.getTargetBlock(null, 100));
     }
 
+    @Override
     public LivingEntity getTarget() {
 
         return BukkitUtil.getTargetEntity(player, LivingEntity.class);

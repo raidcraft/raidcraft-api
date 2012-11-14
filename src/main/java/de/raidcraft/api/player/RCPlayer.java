@@ -2,6 +2,7 @@ package de.raidcraft.api.player;
 
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.WorldVector;
+import org.bukkit.entity.LivingEntity;
 
 /**
  * @author Silthus
@@ -37,6 +38,8 @@ public interface RCPlayer {
 	public void teleport(WorldVector vector);
 
     public RCPlayer getTargetPlayer();
+
+    public LivingEntity getTarget();
 
     public BlockWorldVector getTargetBlock();
 }
