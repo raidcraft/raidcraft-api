@@ -100,4 +100,10 @@ public class BukkitPlayer extends AbstractPlayer {
 
         return BukkitUtil.getTargetEntity(player, LivingEntity.class);
     }
+
+    @Override
+    public int getItemInHand() {
+
+        return player.getItemInHand().getTypeId();
+    }
 }

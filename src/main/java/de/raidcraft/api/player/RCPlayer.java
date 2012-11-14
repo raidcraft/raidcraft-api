@@ -42,4 +42,6 @@ public interface RCPlayer {
     public LivingEntity getTarget();
 
     public BlockWorldVector getTargetBlock();
+
+    public int getItemInHand();
 }
