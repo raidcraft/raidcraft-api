@@ -3,6 +3,7 @@ package de.raidcraft.api.player;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.WorldVector;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 /**
  * @author Silthus
@@ -14,6 +15,8 @@ public interface RCPlayer {
 	public String getUserName();
 
 	public String getDisplayName();
+
+    public Player getBukkitPlayer();
 
     public boolean isOp();
 
