@@ -31,6 +31,11 @@ public class BukkitPlayer extends AbstractPlayer {
 		this.player = Bukkit.getPlayer(getUserName());
 	}
 
+    public Player getBukkitPlayer() {
+
+        return player;
+    }
+
 	@Override
 	public String getWorld() {
 
