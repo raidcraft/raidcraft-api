@@ -1,5 +1,6 @@
 package de.raidcraft.api.player;
 
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.WorldVector;
 
 /**
@@ -36,4 +37,6 @@ public interface RCPlayer {
 	public void teleport(WorldVector vector);
 
     public RCPlayer getTargetPlayer();
+
+    public BlockWorldVector getTargetBlock();
 }

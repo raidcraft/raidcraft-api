@@ -1,12 +1,11 @@
 package de.raidcraft.api.bukkit;
 
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.WorldVector;
 import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.player.AbstractPlayer;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.util.BukkitUtil;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
@@ -73,7 +72,7 @@ public class BukkitPlayer extends AbstractPlayer {
 	public WorldVector getLocation() {
 
 		if (isOnline()) {
-			return BukkitUtil.getWorldVector(player.getLocation());
+			return BukkitUtil.toWorldVector(player.getLocation());
 		}
 		return null;
 	}
@@ -88,6 +87,12 @@ public class BukkitPlayer extends AbstractPlayer {
     public RCPlayer getTargetPlayer() {
 
         return RaidCraft.getPlayer(BukkitUtil.getTarget(player, player.getWorld().getPlayers()));
+    }
+
+    @Override
+    public BlockWorldVector getTargetBlock() {
+
+        return BukkitUtil.toBlockWorldVector(player.getTargetBlock(null, 100));
     }
 
     public LivingEntity getTarget() {

@@ -1,9 +1,11 @@
 package de.raidcraft.util;
 
+import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.WorldVector;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,7 +21,7 @@ public final class BukkitUtil {
 
     }
 
-    public static final WorldVector SPAWN = getWorldVector(Bukkit.getWorld("world").getSpawnLocation());
+    public static final WorldVector SPAWN = toWorldVector(Bukkit.getWorld("world").getSpawnLocation());
 
     /**
      * Gets the WorldEdit {@link com.sk89q.worldedit.WorldVector} from the Bukkit {@link org.bukkit.Location}
@@ -27,7 +29,7 @@ public final class BukkitUtil {
      * @param location of the vector
      * @return {@link com.sk89q.worldedit.WorldVector}
      */
-    public static WorldVector getWorldVector(Location location) {
+    public static WorldVector toWorldVector(Location location) {
         return new WorldVector(new BukkitWorld(location.getWorld()), location.getX(), location.getY(), location.getZ());
     }
 
@@ -85,5 +87,10 @@ public final class BukkitUtil {
         } else {
             return null;
         }
+    }
+
+    public static BlockWorldVector toBlockWorldVector(Block block) {
+
+        return new BlockWorldVector(new BukkitWorld(block.getWorld()), toWorldVector(block.getLocation()));
     }
 }
