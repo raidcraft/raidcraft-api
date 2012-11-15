@@ -1,12 +1,10 @@
 package de.raidcraft.api.database;
 
 import com.sk89q.commandbook.CommandBook;
-import com.sk89q.rebar.config.YamlConfigurationFile;
 import com.sk89q.rebar.config.annotations.Setting;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -23,6 +21,11 @@ import java.util.Set;
 public class Database {
 
     private static Database instance;
+
+    public static Database getInstance() {
+
+        return instance;
+    }
 
     private LocalConfiguration config;
     private static Connection connection;
