@@ -19,6 +19,7 @@ public class ConfigurationBase extends YamlConfigurationFile {
 
         super(new File(plugin.getDataFolder(), name),
                 new YamlStyle(DumperOptions.FlowStyle.AUTO, 4));
+        File file = new File((plugin.getDataFolder()), name);
         // load the config
         setHeader("###########################################################",
                   "#    Raid-Craft Configuration File: " + name,
@@ -29,7 +30,9 @@ public class ConfigurationBase extends YamlConfigurationFile {
             Configurator configurator = new Configurator();
             configurator.registerInstance(this);
             configurator.load(this, this);
-            configurator.save(this, this);
+            if (!file.exists()) {
+                configurator.save(this, this);
+            }
             load();
         } catch (IOException e) {
             plugin.getLogger().warning(e.getMessage());

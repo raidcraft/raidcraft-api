@@ -1,8 +1,5 @@
 package de.raidcraft;
 
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.zachsthings.libcomponents.ComponentInformation;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.database.Database;
@@ -10,9 +7,7 @@ import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -30,10 +25,6 @@ import java.util.logging.Logger;
  *
  * @author Silthus
  */
-@ComponentInformation(
-		friendlyName = "RaidCraft RCRPG Utility Class",
-		desc = "RaidCraft RCRPG Utility Class"
-)
 public class RaidCraft implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -67,7 +58,7 @@ public class RaidCraft implements Listener {
                 // player is not online so we need to check our database
                 // if no match is found it will throw an exception
                 ResultSet resultSet = Database.getConnection().prepareStatement(
-                        "SELECT count(*) as count, player FROM `rcs_player` WHERE player IS LIKE '%" + name + "%'").executeQuery();
+                        "SELECT count(*) as count, player FROM `raidcraft_guests` WHERE player IS LIKE '%" + name + "%'").executeQuery();
                 if (resultSet.next()) {
                     if (resultSet.getInt("count") == 1) {
                         name = resultSet.getString("player");
