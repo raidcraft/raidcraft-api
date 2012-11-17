@@ -38,9 +38,9 @@ public class Database {
 
         try {
             connect();
-            plugin.getLogger().info("[RaidCraft-API] MySQL-Status: Database connection successful established!");
+            plugin.getLogger().info("[Database] MySQL-Status: Database connection successful established!");
         } catch (SQLException ex) {
-            plugin.getLogger().warning("[RaidCraft-API] MySQL-Error: " + ex.getMessage());
+            plugin.getLogger().warning("[Database] MySQL-Error: " + ex.getMessage());
         }
     }
 
