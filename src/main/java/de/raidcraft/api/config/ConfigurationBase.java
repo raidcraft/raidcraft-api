@@ -31,17 +31,22 @@ public class ConfigurationBase extends YamlConfigurationFile {
                 "#    Raid-Craft Configuration File: " + name,
                 "#    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion(),
                 "###########################################################");
+
         try {
             // lets create some defaults if the file does not exist
             Configurator configurator = new SimpleConfigurator();
             configurator.registerInstance(this);
-            configurator.load(this, this);
+            // create the normal defaults file if it does not exist
             if (!file.exists()) {
                 DefaultsUtils.createDefaultConfiguration(this.getClass(), file, "defaults/" + name);
-                configurator.save(this, this);
+                load();
+                configurator.load(this, this);
                 save();
+            } else {
+                // it is important to load the config first or else it wont use the @Setting annotations
+                load();
+                configurator.load(this, this);
             }
-            load();
         } catch (IOException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
