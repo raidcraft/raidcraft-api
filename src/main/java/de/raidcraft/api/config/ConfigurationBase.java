@@ -40,6 +40,7 @@ public class ConfigurationBase extends YamlConfigurationFile {
             // it is important to load the config first or else it wont use the @Setting annotations
             load();
             configurator.load(this, this);
+            configurator.save(this, this);
             save();
         } catch (IOException e) {
             plugin.getLogger().warning(e.getMessage());
