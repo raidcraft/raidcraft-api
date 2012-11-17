@@ -4,6 +4,7 @@ import com.sk89q.rebar.config.ConfigurationException;
 import com.sk89q.rebar.config.YamlConfigurationFile;
 import com.sk89q.rebar.config.YamlStyle;
 import com.sk89q.rebar.config.annotations.Configurator;
+import com.sk89q.rebar.util.DefaultsUtils;
 import de.raidcraft.api.BasePlugin;
 import org.yaml.snakeyaml.DumperOptions;
 
@@ -35,6 +36,7 @@ public class ConfigurationBase extends YamlConfigurationFile {
             configurator.registerInstance(this);
             configurator.load(this, this);
             if (!file.exists()) {
+                DefaultsUtils.createDefaultConfiguration(this.getClass(), file, "defaults/" + name);
                 configurator.save(this, this);
             }
             load();
