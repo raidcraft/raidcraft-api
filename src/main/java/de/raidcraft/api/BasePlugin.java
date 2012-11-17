@@ -17,6 +17,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,9 +45,18 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
 
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
         if (plugin != null) {
-            if (economy == null) setupEconomy();
-            if (chat == null) setupChat();
-            if (permission == null) setupPermissions();
+            if (economy == null) {
+                if (setupEconomy()) getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Economy API.");
+                else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Economy API.");
+            }
+            if (chat == null) {
+                if (setupChat()) getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Chat API.");
+                else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Chat API.");
+            }
+            if (permission == null) {
+                if (setupPermissions()) getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Permissions API.");
+                else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Permissions API.");
+            }
         }
 
         this.commands = new CommandsManager<CommandSender>() {
@@ -60,6 +70,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
         commandRegistration = new CommandsManagerRegistration(this, this, commands);
         // call the sub plugins to enable
         enable();
+        PluginDescriptionFile description = getDescription();
+        getLogger().info(description.getName() + "-v" + description.getVersion() + " enabled.");
     }
 
     public final void onDisable() {
@@ -67,6 +79,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
         this.commandRegistration.unregisterCommands();
         // call the sub plugin to disable
         disable();
+        PluginDescriptionFile description = getDescription();
+        getLogger().info(description.getName() + "-v" + description.getVersion() + " disabled.");
     }
 
     public abstract void enable();
