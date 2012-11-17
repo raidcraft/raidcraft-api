@@ -34,7 +34,7 @@ public class ConfigurationBase extends YamlConfigurationFile {
             configurator.load(this, this);
             if (!file.exists()) {
                 DefaultsUtils.createDefaultConfiguration(this.getClass(), file, "defaults/" + name);
-                configurator.save(this, this);
+                save();
             }
             load();
         } catch (IOException e) {
