@@ -1,6 +1,6 @@
 package de.raidcraft.util;
 
-import com.sk89q.commandbook.CommandBook;
+import de.raidcraft.RaidCraft;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,7 +49,7 @@ public final class DateUtil {
         try {
             return DATE.parse(date).getTime();
         } catch (ParseException e) {
-            CommandBook.logger().warning(e.getMessage());
+            RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
         }
         return 0;

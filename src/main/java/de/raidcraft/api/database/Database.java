@@ -1,6 +1,5 @@
 package de.raidcraft.api.database;
 
-import com.sk89q.commandbook.CommandBook;
 import com.sk89q.rebar.config.annotations.Setting;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
@@ -33,14 +32,15 @@ public class Database {
 
     public Database(BasePlugin plugin) {
 
+        if (instance != null) return;
         instance = this;
         this.config = new LocalConfiguration(plugin, "database.yml");
 
         try {
             connect();
-            CommandBook.logger().info("[RCDatabase] MySQL-Status: Database connection successful established!");
+            plugin.getLogger().info("[RCDatabase] MySQL-Status: Database connection successful established!");
         } catch (SQLException ex) {
-            CommandBook.logger().warning("[RCDatabase] MySQL-Error: " + ex.getMessage());
+            plugin.getLogger().warning("[RCDatabase] MySQL-Error: " + ex.getMessage());
         }
     }
 

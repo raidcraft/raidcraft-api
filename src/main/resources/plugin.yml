@@ -3,4 +3,4 @@ main: de.raidcraft.RaidCraftPlugin
 version: 1.0
 author: Silthus
 website: www.raid-craft.de
-depend: [WorldEdit, WorldGuard]
+depend: [WorldEdit, WorldGuard, Rebar]

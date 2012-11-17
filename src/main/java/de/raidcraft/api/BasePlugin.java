@@ -6,7 +6,9 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.api.player.RCPlayer;
-import de.raidcraft.api.player.UnknownPlayerException;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,21 +16,38 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 /**
  * @author Silthus
  */
 public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
 
-    private Database database;
+    private static Database database;
     private CommandsManager<CommandSender> commands;
     private CommandsManagerRegistration commandRegistration;
+    // vault variables
+    private static Economy economy;
+    private static Chat chat;
+    private static Permission permission;
+
+    public BasePlugin() {
+
+        if (database == null) {
+            database = new Database(this);
+        }
+    }
 
     public final void onEnable() {
 
-        this.database = new Database(this);
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
+        if (plugin != null) {
+            if (economy == null) setupEconomy();
+            if (chat == null) setupChat();
+            if (permission == null) setupPermissions();
+        }
 
         this.commands = new CommandsManager<CommandSender>() {
 
@@ -39,16 +58,26 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
             }
         };
         commandRegistration = new CommandsManagerRegistration(this, this, commands);
+        // call the sub plugins to enable
+        enable();
     }
 
     public final void onDisable() {
 
-
+        this.commandRegistration.unregisterCommands();
+        // call the sub plugin to disable
+        disable();
     }
 
     public abstract void enable();
 
     public abstract void disable();
+
+    public void reload() {
+
+        disable();
+        enable();
+    }
 
     @Override
     public final boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -98,5 +127,49 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
     public final RCPlayer getPlayer(String player) {
 
         return RaidCraft.getPlayer(player);
+    }
+
+    public final Economy getEconomy() {
+
+        return economy;
+    }
+
+    public final Chat getChat() {
+
+        return chat;
+    }
+
+    public final Permission getPermissions() {
+
+        return permission;
+    }
+
+    private boolean setupPermissions() {
+
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
+    }
+
+    private boolean setupChat() {
+
+        RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
+        if (chatProvider != null) {
+            chat = chatProvider.getProvider();
+        }
+
+        return (chat != null);
+    }
+
+    private boolean setupEconomy() {
+
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            economy = economyProvider.getProvider();
+        }
+
+        return (economy != null);
     }
 }
