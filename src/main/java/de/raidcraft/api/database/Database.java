@@ -1,5 +1,6 @@
 package de.raidcraft.api.database;
 
+import com.sk89q.rebar.config.annotations.Setting;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 
@@ -45,10 +46,14 @@ public class Database {
 
     private static class LocalConfiguration extends ConfigurationBase {
 
-        public final String hostname = getString("database.hostname", "localhost:3306");
-        public final String database = getString("database.database", "minecraft");
-        public final String username = getString("database.username", "minecraft");
-        public final String password = getString("database.password", "password");
+        @Setting("database.hostname")
+        public String hostname = "localhost:3306";
+        @Setting("database.database")
+        public String database = "minecraft";
+        @Setting("database.username")
+        public String username = "minecraft";
+        @Setting("database.password")
+        public String password = "password";
 
         public LocalConfiguration(BasePlugin plugin, String name) {
 
