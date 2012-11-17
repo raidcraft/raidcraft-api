@@ -20,9 +20,8 @@ public class ConfigurationBase extends YamlConfigurationFile {
 
         super(new File(plugin.getDataFolder(), name),
                 new YamlStyle(DumperOptions.FlowStyle.BLOCK, 4));
-        // create the dirs
-        plugin.getDataFolder().mkdirs();
-        File file = new File((plugin.getDataFolder()), name);
+        // create our own file reference
+        File file = new File(plugin.getDataFolder(), name);
         // load the config
         setHeader("###########################################################",
                 "#    Raid-Craft Configuration File: " + name,

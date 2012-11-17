@@ -34,19 +34,21 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
     private static Chat chat;
     private static Permission permission;
 
-    public BasePlugin() {
 
+    public final void onEnable() {
+
+        // create default folders
+        getDataFolder().mkdirs();
+        // enable the database first
         if (database == null) {
             database = new Database(this);
         }
-    }
-
-    public final void onEnable() {
 
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
         if (plugin != null) {
             if (economy == null) {
-                if (setupEconomy()) getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Economy API.");
+                if (setupEconomy())
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Economy API.");
                 else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Economy API.");
             }
             if (chat == null) {
@@ -54,7 +56,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
                 else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Chat API.");
             }
             if (permission == null) {
-                if (setupPermissions()) getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Permissions API.");
+                if (setupPermissions())
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Permissions API.");
                 else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Permissions API.");
             }
         }
