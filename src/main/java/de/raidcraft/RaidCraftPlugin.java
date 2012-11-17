@@ -1,12 +1,11 @@
 package de.raidcraft;
 
 import de.raidcraft.api.BasePlugin;
-import de.raidcraft.api.Component;
 
 /**
  * @author Silthus
  */
-public class RaidCraftPlugin extends BasePlugin implements Component {
+public class RaidCraftPlugin extends BasePlugin {
 
     @Override
     public void enable() {

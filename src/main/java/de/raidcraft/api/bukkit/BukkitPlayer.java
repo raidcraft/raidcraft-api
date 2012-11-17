@@ -17,19 +17,19 @@ import org.bukkit.event.player.PlayerTeleportEvent;
  */
 public class BukkitPlayer extends AbstractPlayer {
 
-	private final Player player;
+    private final Player player;
 
-	public BukkitPlayer(Player player) {
+    public BukkitPlayer(Player player) {
 
-		super(player.getName());
-		this.player = player;
-	}
+        super(player.getName());
+        this.player = player;
+    }
 
-	public BukkitPlayer(String username) {
+    public BukkitPlayer(String username) {
 
-		super(username);
-		this.player = Bukkit.getPlayer(getUserName());
-	}
+        super(username);
+        this.player = Bukkit.getPlayer(getUserName());
+    }
 
     @Override
     public Player getBukkitPlayer() {
@@ -37,24 +37,24 @@ public class BukkitPlayer extends AbstractPlayer {
         return player;
     }
 
-	@Override
-	public String getWorld() {
+    @Override
+    public String getWorld() {
 
-		if (isOnline()) {
-			return player.getWorld().getName();
-		}
-		return "";
-	}
+        if (isOnline()) {
+            return player.getWorld().getName();
+        }
+        return "";
+    }
 
-	@Override
-	public void sendMessage(String... messages) {
+    @Override
+    public void sendMessage(String... messages) {
 
-		if (isOnline()) {
-			for (String message : messages) {
-				player.sendMessage(ChatColor.YELLOW + message);
-			}
-		}
-	}
+        if (isOnline()) {
+            for (String message : messages) {
+                player.sendMessage(ChatColor.YELLOW + message);
+            }
+        }
+    }
 
     @Override
     public boolean isOp() {
@@ -63,31 +63,31 @@ public class BukkitPlayer extends AbstractPlayer {
     }
 
     @Override
-	public boolean hasPermission(String permission) {
+    public boolean hasPermission(String permission) {
 
-		return player.hasPermission(permission);
-	}
+        return player.hasPermission(permission);
+    }
 
     @Override
-	public boolean isOnline() {
+    public boolean isOnline() {
 
-		return player != null && player.isOnline();
-	}
+        return player != null && player.isOnline();
+    }
 
-	@Override
-	public WorldVector getLocation() {
+    @Override
+    public WorldVector getLocation() {
 
-		if (isOnline()) {
-			return BukkitUtil.toWorldVector(player.getLocation());
-		}
-		return null;
-	}
+        if (isOnline()) {
+            return BukkitUtil.toWorldVector(player.getLocation());
+        }
+        return null;
+    }
 
-	@Override
-	public void teleport(WorldVector vector) {
+    @Override
+    public void teleport(WorldVector vector) {
 
-		player.teleport(BukkitUtil.getLocation(vector), PlayerTeleportEvent.TeleportCause.PLUGIN);
-	}
+        player.teleport(BukkitUtil.getLocation(vector), PlayerTeleportEvent.TeleportCause.PLUGIN);
+    }
 
     @Override
     public RCPlayer getTargetPlayer() {

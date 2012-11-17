@@ -7,7 +7,8 @@ import de.raidcraft.api.RaidCraftException;
  */
 public class UnknownPlayerException extends RaidCraftException {
 
-	public UnknownPlayerException(String message) {
-		super(message);
-	}
+    public UnknownPlayerException(String message) {
+
+        super(message);
+    }
 }

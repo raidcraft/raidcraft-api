@@ -26,9 +26,9 @@ public class ConfigurationBase extends YamlConfigurationFile {
         }
         // load the config
         setHeader("###########################################################",
-                  "#    Raid-Craft Configuration File: " + name,
-                  "#    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion(),
-                  "###########################################################");
+                "#    Raid-Craft Configuration File: " + name,
+                "#    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion(),
+                "###########################################################");
         try {
             // lets create some defaults if the file does not exist
             Configurator configurator = new Configurator();

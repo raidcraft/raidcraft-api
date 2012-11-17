@@ -27,33 +27,34 @@ import java.util.logging.Logger;
  */
 public class RaidCraft implements Listener {
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onPlayerQuit(PlayerQuitEvent event) {
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerQuit(PlayerQuitEvent event) {
 
-		players.remove(event.getPlayer().getName());
-	}
+        players.remove(event.getPlayer().getName());
+    }
 
-	/*///////////////////////////////////////////////////////////////////////////
-	//                      RaidCraft RCRPG Utility Class
-	///////////////////////////////////////////////////////////////////////////*/
+    /*///////////////////////////////////////////////////////////////////////////
+     //                      RaidCraft RCRPG Utility Class
+     ///////////////////////////////////////////////////////////////////////////*/
 
     public static final Logger LOGGER = Logger.getLogger("Minecraft.RaidCraft");
 
-	private static final Map<String, RCPlayer> players = new HashMap<>();
-	private static final Map<Class<? extends Component>, Component> components = new HashMap<>();
+    private static final Map<String, RCPlayer> players = new HashMap<>();
+    private static final Map<Class<? extends Component>, Component> components = new HashMap<>();
 
-	/**
-	 * Gets the wrapped Player for interaction with the player and his surroundings.
-	 *
-	 * @param name of the player
-	 * @return RCPlayer
-	 */
-	public static RCPlayer safeGetPlayer(String name) throws UnknownPlayerException {
+    /**
+     * Gets the wrapped Player for interaction with the player and his surroundings.
+     *
+     * @param name of the player
+     *
+     * @return RCPlayer
+     */
+    public static RCPlayer safeGetPlayer(String name) throws UnknownPlayerException {
 
-		Player player = Bukkit.getPlayer(name);
-		RCPlayer rcPlayer = null;
+        Player player = Bukkit.getPlayer(name);
+        RCPlayer rcPlayer = null;
 
-		if (player == null) {
+        if (player == null) {
             try {
                 // player is not online so we need to check our database
                 // if no match is found it will throw an exception
@@ -76,86 +77,100 @@ public class RaidCraft implements Listener {
                 e.printStackTrace();
             }
         } else {
-			rcPlayer = getPlayer(player);
-		}
+            rcPlayer = getPlayer(player);
+        }
         if (rcPlayer == null) throw new UnknownPlayerException("Es gibt keinen Spieler mit dem Namen: " + name);
-		return rcPlayer;
-	}
+        return rcPlayer;
+    }
 
-	/**
-	 * Gets the player but will ignore the exception thrown.
-	 * This can be used when you know that the player name is correct.
-	 *
-	 * @param name of the player
-	 * @return wrapped RCPlayer object
-	 */
-	public static RCPlayer getPlayer(String name) {
-		try {
-			return safeGetPlayer(name);
-		} catch (UnknownPlayerException e) {
-			LOGGER.severe(e.getMessage());
-			e.printStackTrace();
-		}
-		return null;
-	}
+    /**
+     * Gets the player but will ignore the exception thrown.
+     * This can be used when you know that the player name is correct.
+     *
+     * @param name of the player
+     *
+     * @return wrapped RCPlayer object
+     */
+    public static RCPlayer getPlayer(String name) {
 
-	/**
-	 * Gets the player from the Bukkit Player object.
-	 *
-	 * @param player object from bukkit
-	 * @return RCPlayer
-	 */
-	public static RCPlayer getPlayer(Player player) {
+        try {
+            return safeGetPlayer(name);
+        } catch (UnknownPlayerException e) {
+            LOGGER.severe(e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-		RCPlayer rcPlayer;
-		if (players.containsKey(player.getName())) {
-			rcPlayer = players.get(player.getName());
-		} else {
-			rcPlayer = new BukkitPlayer(player);
-			players.put(player.getName(), rcPlayer);
-		}
-		return rcPlayer;
-	}
+    /**
+     * Gets the player from the Bukkit Player object.
+     *
+     * @param player object from bukkit
+     *
+     * @return RCPlayer
+     */
+    public static RCPlayer getPlayer(Player player) {
 
-	/**
-	 * Gets the given PlayerComponent for the given Player object.
-	 *
-	 * @param player to get component for
-	 * @param clazz of the component
-	 * @param <T> component type
-	 * @return PlayerComponent
-	 */
-	public static <T extends PlayerComponent> T getPlayerComponent(RCPlayer player, Class<T> clazz) {
-		return player.getComponent(clazz);
-	}
+        RCPlayer rcPlayer;
+        if (players.containsKey(player.getName())) {
+            rcPlayer = players.get(player.getName());
+        } else {
+            rcPlayer = new BukkitPlayer(player);
+            players.put(player.getName(), rcPlayer);
+        }
+        return rcPlayer;
+    }
 
-	/**
-	 * Registers the given component with the RaidCraft API making it usable.
-	 *
-	 * @param clazz to register
-	 * @param component instance
-	 */
-	public static void registerComponent(Class<? extends Component> clazz, Component component) {
-		components.put(clazz, component);
-	}
+    /**
+     * Gets the given PlayerComponent for the given Player object.
+     *
+     * @param player to get component for
+     * @param clazz  of the component
+     * @param <T>    component type
+     *
+     * @return PlayerComponent
+     */
+    public static <T extends PlayerComponent> T getPlayerComponent(RCPlayer player, Class<T> clazz) {
 
-	/**
-	 * Unregisters the given component class.
-	 *
-	 * @param clazz to unregister
-	 */
-	public static void unregisterComponent(Class<? extends Component> clazz) {
-		components.remove(clazz);
-	}
+        return player.getComponent(clazz);
+    }
 
-	/**
-	 * Gets the given component instance.
-	 *
-	 * @param clazz of the component
-	 * @param <T> type
-	 * @return casted component instance
-	 */
-	public static <T extends Component> T getComponent(Class<T> clazz) {
-		return clazz.cast(components.get(clazz));
-	}
+    /**
+     * Registers the given component with the RaidCraft API making it usable.
+     *
+     * @param clazz     to register
+     * @param component instance
+     */
+    public static void registerComponent(Class<? extends Component> clazz, Component component) {
+
+        components.put(clazz, component);
+    }
+
+    /**
+     * Unregisters the given component class.
+     *
+     * @param clazz to unregister
+     */
+    public static void unregisterComponent(Class<? extends Component> clazz) {
+
+        components.remove(clazz);
+    }
+
+    /**
+     * Gets the given component instance.
+     *
+     * @param clazz of the component
+     * @param <T>   type
+     *
+     * @return casted component instance
+     */
+    public static <T extends Component> T getComponent(Class<T> clazz) {
+
+        return clazz.cast(components.get(clazz));
+    }
+
+    public static Database getDatabase() {
+
+        return Database.getInstance();
+    }
 }

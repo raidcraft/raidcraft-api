@@ -10,17 +10,17 @@ import org.bukkit.entity.Player;
  */
 public interface RCPlayer {
 
-	public <T extends PlayerComponent> T getComponent(Class<T> clazz);
+    public <T extends PlayerComponent> T getComponent(Class<T> clazz);
 
-	public String getUserName();
+    public String getUserName();
 
-	public String getDisplayName();
+    public String getDisplayName();
 
     public Player getBukkitPlayer();
 
     public boolean isOp();
 
-	public boolean hasPermission(String permission);
+    public boolean hasPermission(String permission);
 
     public void addMoney(double amount);
 
@@ -28,17 +28,17 @@ public interface RCPlayer {
 
     public boolean hasEnoughMoney(double cost);
 
-	public String getWorld();
+    public String getWorld();
 
-	public boolean isInWorld(String world);
+    public boolean isInWorld(String world);
 
-	public void sendMessage(String... messages);
+    public void sendMessage(String... messages);
 
-	public boolean isOnline();
+    public boolean isOnline();
 
-	public WorldVector getLocation();
+    public WorldVector getLocation();
 
-	public void teleport(WorldVector vector);
+    public void teleport(WorldVector vector);
 
     public RCPlayer getTargetPlayer();
 

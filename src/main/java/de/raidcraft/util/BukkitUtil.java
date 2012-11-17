@@ -27,13 +27,16 @@ public final class BukkitUtil {
      * Gets the WorldEdit {@link com.sk89q.worldedit.WorldVector} from the Bukkit {@link org.bukkit.Location}
      *
      * @param location of the vector
+     *
      * @return {@link com.sk89q.worldedit.WorldVector}
      */
     public static WorldVector toWorldVector(Location location) {
+
         return new WorldVector(new BukkitWorld(location.getWorld()), location.getX(), location.getY(), location.getZ());
     }
 
     public static WorldVector getWorldVector(String world, int x, int y, int z) {
+
         return new WorldVector(new BukkitWorld(Bukkit.getWorld(world)), x, y, z);
     }
 
@@ -41,9 +44,11 @@ public final class BukkitUtil {
      * Gets the bukkit {@link org.bukkit.Location} from the WorldEdit {@link com.sk89q.worldedit.WorldVector}.
      *
      * @param vector location
+     *
      * @return {@link org.bukkit.Location}
      */
     public static Location getLocation(WorldVector vector) {
+
         return new Location(Bukkit.getWorld(vector.getWorld().getName()), vector.getX(), vector.getY(), vector.getZ());
     }
 
@@ -53,16 +58,19 @@ public final class BukkitUtil {
     }
 
     public static Player getTargetPlayer(final Player player) {
+
         return getTarget(player, player.getWorld().getPlayers());
     }
 
     public static LivingEntity getTargetEntity(final LivingEntity entity, final Class<? extends LivingEntity> type) {
+
         if (entity instanceof Creature)
             return ((Creature) entity).getTarget();
         return getTarget(entity, entity.getWorld().getEntitiesByClass(type));
     }
 
     public static <T extends LivingEntity> T getTarget(final LivingEntity entity, final Iterable<T> entities) {
+
         if (entity == null)
             return null;
         T target = null;

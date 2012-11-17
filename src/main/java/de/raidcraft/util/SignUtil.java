@@ -22,35 +22,41 @@ public final class SignUtil {
     /**
      * Checks if the given line on the sign is equals to
      * the given text colored in the given color.
+     *
      * @param strSign colored sign text
      * @param strText text to compare
+     *
      * @return true if text is equal
      */
     public static boolean isLineEqual(String strSign, String strText) {
-	    strSign = strip(strSign);
-	    strText = strip(strText);
-	    return strText.equalsIgnoreCase(strSign);
+
+        strSign = strip(strSign);
+        strText = strip(strText);
+        return strText.equalsIgnoreCase(strSign);
     }
 
-	public static String strip(String strText) {
-		strText = ChatColor.stripColor(strText).trim();
-		Pattern pattern = Pattern.compile("\\[(.*?)\\]");
-		Matcher matcher = pattern.matcher(strText);
-		if (matcher.matches()) {
-			strText = matcher.group(1);
-		}
-		return strText;
-	}
+    public static String strip(String strText) {
 
-	public static boolean isSign(Block block) {
-		Material type = block.getType();
-		return type == Material.SIGN || type == Material.WALL_SIGN;
-	}
+        strText = ChatColor.stripColor(strText).trim();
+        Pattern pattern = Pattern.compile("\\[(.*?)\\]");
+        Matcher matcher = pattern.matcher(strText);
+        if (matcher.matches()) {
+            strText = matcher.group(1);
+        }
+        return strText;
+    }
+
+    public static boolean isSign(Block block) {
+
+        Material type = block.getType();
+        return type == Material.SIGN || type == Material.WALL_SIGN;
+    }
 
     public static String parseColor(String line) {
+
         String regex = "&(?<!&&)(?=%c)";
         Formatter fmt;
-        for(ChatColor clr : ChatColor.values()) {
+        for (ChatColor clr : ChatColor.values()) {
             char code = clr.getChar();
             fmt = new Formatter();
             line = line.replaceAll(fmt.format(regex, code).toString(), "\u00A7");

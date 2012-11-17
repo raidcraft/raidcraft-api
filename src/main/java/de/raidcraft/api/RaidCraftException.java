@@ -5,7 +5,8 @@ package de.raidcraft.api;
  */
 public class RaidCraftException extends Throwable {
 
-	public RaidCraftException(String message) {
-		super(message);
-	}
+    public RaidCraftException(String message) {
+
+        super(message);
+    }
 }
