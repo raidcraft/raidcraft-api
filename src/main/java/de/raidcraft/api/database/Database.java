@@ -1,6 +1,5 @@
 package de.raidcraft.api.database;
 
-import com.sk89q.rebar.config.annotations.Setting;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 
@@ -46,14 +45,10 @@ public class Database {
 
     private static class LocalConfiguration extends ConfigurationBase {
 
-        @Setting("database.host")
-        public String host = "localhost:3306";
-        @Setting("database.database")
-        public String database = "minecraft";
-        @Setting("database.username")
-        public String sqlUsername = "minecraft";
-        @Setting("database.password")
-        public String sqlPassword = "password";
+        public final String hostname = getString("database.hostname", "localhost:3306");
+        public final String database = getString("database.database", "minecraft");
+        public final String username = getString("database.username", "minecraft");
+        public final String password = getString("database.password", "password");
 
         public LocalConfiguration(BasePlugin plugin, String name) {
 
@@ -74,7 +69,7 @@ public class Database {
             }
         }
         if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection("jdbc:mysql://" + config.host + "/" + config.database, config.sqlUsername, config.sqlPassword);
+            connection = DriverManager.getConnection("jdbc:mysql://" + config.hostname + "/" + config.database, config.username, config.password);
             createTables();
         }
     }
