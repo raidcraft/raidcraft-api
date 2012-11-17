@@ -6,6 +6,9 @@ import de.raidcraft.api.database.Database;
 import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -172,5 +175,20 @@ public class RaidCraft implements Listener {
     public static Database getDatabase() {
 
         return Database.getInstance();
+    }
+
+    public static Economy getEconomy() {
+
+        return RaidCraftPlugin.getInstance().getEconomy();
+    }
+
+    public static Permission getPermissions() {
+
+        return RaidCraftPlugin.getInstance().getPermissions();
+    }
+
+    public static Chat getChat() {
+
+        return RaidCraftPlugin.getInstance().getChat();
     }
 }

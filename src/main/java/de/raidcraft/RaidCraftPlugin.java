@@ -7,6 +7,18 @@ import de.raidcraft.api.BasePlugin;
  */
 public class RaidCraftPlugin extends BasePlugin {
 
+    private static RaidCraftPlugin instance;
+
+    public static RaidCraftPlugin getInstance() {
+
+        return instance;
+    }
+
+    public RaidCraftPlugin() {
+
+        instance = this;
+    }
+
     @Override
     public void enable() {
 

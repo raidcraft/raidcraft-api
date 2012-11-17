@@ -1,7 +1,6 @@
 package de.raidcraft.api.player;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
 import net.milkbowl.vault.economy.Economy;
 
 import java.lang.reflect.Constructor;
@@ -69,7 +68,7 @@ public abstract class AbstractPlayer implements RCPlayer {
     @Override
     public boolean hasEnoughMoney(double cost) {
 
-        Economy economy = RaidCraft.getComponent(RaidCraftPlugin.class).getEconomy();
+        Economy economy = RaidCraft.getEconomy();
         if (economy == null) return false;
         return economy.has(getUserName(), cost);
     }
@@ -77,7 +76,7 @@ public abstract class AbstractPlayer implements RCPlayer {
     @Override
     public void addMoney(double amount) {
 
-        Economy economy = RaidCraft.getComponent(RaidCraftPlugin.class).getEconomy();
+        Economy economy = RaidCraft.getEconomy();
         if (economy == null) return;
         economy.depositPlayer(getUserName(), amount);
     }
@@ -85,7 +84,7 @@ public abstract class AbstractPlayer implements RCPlayer {
     @Override
     public void removeMoney(double amount) {
 
-        Economy economy = RaidCraft.getComponent(RaidCraftPlugin.class).getEconomy();
+        Economy economy = RaidCraft.getEconomy();
         if (economy == null) return;
         economy.withdrawPlayer(getUserName(), amount);
     }
