@@ -34,7 +34,7 @@
         <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>rebar</artifactId>
-            <version>4.1.0-SNAPSHOT</version>
+            <version>4.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
