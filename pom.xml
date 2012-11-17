@@ -21,7 +21,7 @@
     <groupId>de.raidcraft</groupId>
     <artifactId>raidcraft-api</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>RaidCraft-API</name>
 
     <parent>
@@ -34,7 +34,8 @@
         <connection>scm:git:ssh://git@srvdev2.raid-craft.de:22109/${project.artifactId}.git</connection>
         <developerConnection>scm:git:ssh://git@srvdev2.raid-craft.de:22109/${project.artifactId}.git</developerConnection>
         <url>http://git.raid-craft.de/${project.artifactId}</url>
-    </scm>
+      <tag>raidcraft-api-1.0</tag>
+  </scm>
 
     <dependencies>
         <dependency>
