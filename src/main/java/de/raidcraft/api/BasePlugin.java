@@ -26,13 +26,15 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
 
+    // only make one connection to the db for all plugins
     private static Database database;
-    private CommandsManager<CommandSender> commands;
-    private CommandsManagerRegistration commandRegistration;
     // vault variables
     private static Economy economy;
     private static Chat chat;
     private static Permission permission;
+    // member variables
+    private CommandsManager<CommandSender> commands;
+    private CommandsManagerRegistration commandRegistration;
 
 
     public final void onEnable() {
