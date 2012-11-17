@@ -31,7 +31,9 @@
     </parent>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@srvdev2.raid-craft.de:22109/${artifactId}.git</developerConnection>
+        <connection>scm:git:ssh://git@srvdev2.raid-craft.de:22109/${project.artifactId}.git</connection>
+        <developerConnection>scm:git:ssh://git@srvdev2.raid-craft.de:22109/${project.artifactId}.git</developerConnection>
+        <url>http://git.raid-craft.de/${project.artifactId}</url>
     </scm>
 
     <dependencies>
