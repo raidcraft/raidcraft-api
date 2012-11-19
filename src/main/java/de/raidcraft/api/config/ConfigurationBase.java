@@ -29,19 +29,16 @@ public class ConfigurationBase extends YamlConfigurationFile {
                 "###########################################################");
 
         try {
-            // lets create some defaults if the file does not exist
-            Configurator configurator = new Configurator();
-            configurator.registerInstance(this);
             // create the normal defaults file if it does not exist
             if (!file.exists()) {
                 DefaultsUtils.createDefaultConfiguration(this.getClass(), file, "defaults/" + name);
                 save();
             }
-            // it is important to load the config first or else it wont use the @Setting annotations
+            // load the config file
             load();
+            Configurator configurator = new Configurator();
+            configurator.registerInstance(this);
             configurator.load(this, this);
-            configurator.save(this, this);
-            save();
         } catch (IOException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
