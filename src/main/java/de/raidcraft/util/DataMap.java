@@ -19,8 +19,9 @@ public class DataMap implements Map<String, Object> {
     @SuppressWarnings("unchecked")
     protected DataMap(ResultSet resultSet, String columnKey, String columnValue) throws SQLException {
 
+        if (!resultSet.first()) return;
         // go thru all the given keys
-        while (resultSet.next()) {
+        do {
             String key = resultSet.getString(columnKey);
             String value = resultSet.getString(columnValue);
             // if the key contains a dot we need to create a map for it
@@ -43,7 +44,7 @@ public class DataMap implements Map<String, Object> {
                 // add a normal key:value reference
                 data.put(key, value);
             }
-        }
+        } while (resultSet.next());
     }
 
     protected DataMap(ConfigurationSection config, String... exclude) {
