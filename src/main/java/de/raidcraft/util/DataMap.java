@@ -20,6 +20,7 @@ public class DataMap implements Map<String, Object> {
     protected DataMap(ResultSet resultSet, String columnKey, String columnValue) throws SQLException {
 
         if (!resultSet.first()) return;
+        if (columnKey == null || columnValue == null) return;
         // go thru all the given keys
         do {
             String key = resultSet.getString(columnKey);
