@@ -11,11 +11,65 @@ import java.util.*;
  */
 public class DataMap implements Map<String, Object> {
 
-    protected Map<String, Object> data;
+    protected Map<String, Object> data = new LinkedHashMap<>();
 
-    public DataMap() {
+    protected DataMap() {
+    }
 
-        this.data = new LinkedHashMap<>();
+    @SuppressWarnings("unchecked")
+    protected DataMap(ResultSet resultSet, String columnKey, String columnValue) throws SQLException {
+
+        // go thru all the given keys
+        while (resultSet.next()) {
+            String key = resultSet.getString(columnKey);
+            String value = resultSet.getString(columnValue);
+            // if the key contains a dot we need to create a map for it
+            if (key.contains("\\.")) {
+                String[] split = key.split("\\.");
+                if (!data.containsKey(split[0])) {
+                    data.put(split[0], new DataMap());
+                }
+                DataMap map = (DataMap) data.get(split[0]);
+                map.put(split[1], value);
+            } else if (data.containsKey(key)) {
+                // if the key exists twice or more we need to make a list for it
+                if (!(data.get(key) instanceof List)) {
+                    String tmpVal = (String) data.get(key);
+                    data.put(key, new ArrayList<String>());
+                    ((List<String>) data.get(key)).add(tmpVal);
+                }
+                ((List<String>) data.get(key)).add(value);
+            } else {
+                // add a normal key:value reference
+                data.put(key, value);
+            }
+        }
+    }
+
+    protected DataMap(ConfigurationSection config, String... exclude) {
+
+        Set<String> excludedKeys = new HashSet<>(Arrays.asList(exclude));
+        // go tru all keys in the given config section
+        for (String key : config.getKeys(false)) {
+            if (!excludedKeys.contains(key)) {
+                // get the keys and desolve them
+                if (config.isList(key)) {
+                    // this will add the list to the map
+                    data.put(key, config.getStringList(key));
+                } else if (config.isConfigurationSection(key)) {
+                    // if the subpart is a config section it has sub keys
+                    data.put(key, new DataMap());
+                    // in our case that means a map because we only go one down
+                    DataMap map = (DataMap) data.get(key);
+                    // go thru all keys of the sub section and add their respective values
+                    for (String child : config.getConfigurationSection(key).getKeys(false)) {
+                        map.put(child, config.getConfigurationSection(key).get(child));
+                    }
+                } else {
+                    data.put(key, config.get(key));
+                }
+            }
+        }
     }
 
     public DataMap getDataMap(String key) {
@@ -188,72 +242,5 @@ public class DataMap implements Map<String, Object> {
     public Set<Entry<String, Object>> entrySet() {
 
         return data.entrySet();
-    }
-
-    /*/////////////////////////////////////////////////////////////
-     // Some static util methods that help building the data map
-     /////////////////////////////////////////////////////////////*/
-
-    @SuppressWarnings("unchecked")
-    public static DataMap build(ResultSet resultSet, String columnKey, String columnValue) {
-
-        DataMap data = new DataMap();
-        try {
-            // go thru all requirement keys
-            while (resultSet.next()) {
-                String key = resultSet.getString(columnKey);
-                String value = resultSet.getString(columnValue);
-                // if the key contains a dot we need to create a map for it
-                if (key.contains("\\.")) {
-                    String[] split = key.split("\\.");
-                    if (!data.containsKey(split[0])) {
-                        data.put(split[0], new DataMap());
-                    }
-                    DataMap map = (DataMap) data.get(split[0]);
-                    map.put(split[1], value);
-                } else if (data.containsKey(key)) {
-                    // if the key exists twice or more we need to make a list for it
-                    if (!(data.get(key) instanceof List)) {
-                        String tmpVal = (String) data.get(key);
-                        data.put(key, new ArrayList<String>());
-                        ((List<String>) data.get(key)).add(tmpVal);
-                    }
-                    ((List<String>) data.get(key)).add(value);
-                } else {
-                    // add a normal key:value reference
-                    data.put(key, value);
-                }
-            }
-        } catch (SQLException e) {
-            // should never occur
-        }
-        return data;
-    }
-
-    public static DataMap build(ConfigurationSection config, String... exclude) {
-
-        Set<String> excludedKeys = new HashSet<>(Arrays.asList(exclude));
-        DataMap data = new DataMap();
-        for (String key : config.getKeys(false)) {
-            if (!excludedKeys.contains(key)) {
-                // get the keys and desolve them
-                if (config.isList(key)) {
-                    // this will add the list to the map
-                    data.put(key, config.getStringList(key));
-                } else if (config.isConfigurationSection(key)) {
-                    // if the subpart is a config section it has sub keys
-                    data.put(key, new DataMap());
-                    // in our case that means a map because we only go one down
-                    DataMap map = (DataMap) data.get(key);
-                    // go thru all keys of the sub section and add their respective values
-                    for (String child : config.getConfigurationSection(key).getKeys(false)) {
-                        map.put(child, config.getConfigurationSection(key).get(child));
-                    }
-                } else {
-                    data.put(key, config.get(key));
-                }
-            }
-        }
-        return data;
     }
 }
