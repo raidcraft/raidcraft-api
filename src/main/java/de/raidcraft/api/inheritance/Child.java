@@ -18,8 +18,4 @@ public interface Child<T extends Parent> {
     public void removeStrongParent(T parent);
 
     public void removeWeakParent(T parent);
-
-    public void setStrongParents(Collection<T> parents);
-
-    public void setWeakParents(Collection<T> parents);
 }
