@@ -92,6 +92,7 @@ public abstract class ConfigurationBase extends YamlConfiguration {
                 e.printStackTrace();
             }
         }
+        save(file);
     }
 
     @Override
