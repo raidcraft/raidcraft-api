@@ -3,6 +3,7 @@ package de.raidcraft.api;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.config.Config;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.api.player.RCPlayer;
@@ -96,6 +97,12 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
 
         disable();
         enable();
+    }
+
+    public final <T extends Config> T configure(T config) {
+
+        config.load();
+        return config;
     }
 
     @Override

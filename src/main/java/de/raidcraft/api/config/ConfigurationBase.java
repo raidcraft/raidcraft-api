@@ -43,7 +43,6 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
                 "    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion() + "\n" +
                 "##########################################################");
         options().copyHeader(true);
-        load(file);
     }
 
     public BasePlugin getPlugin() {
