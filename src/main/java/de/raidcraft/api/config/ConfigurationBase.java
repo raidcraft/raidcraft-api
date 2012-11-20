@@ -17,7 +17,7 @@ import static de.raidcraft.api.config.ConfigUtil.smartCast;
 /**
  * @author Silthus
  */
-public abstract class ConfigurationBase extends YamlConfiguration {
+public abstract class ConfigurationBase extends YamlConfiguration implements Config {
 
     /**
      * Refrence to the plugin instance.
@@ -52,6 +52,16 @@ public abstract class ConfigurationBase extends YamlConfiguration {
     }
 
     public void reload() {
+
+        load();
+    }
+
+    public final void save() {
+
+        save(file);
+    }
+
+    public final void load() {
 
         load(file);
     }
