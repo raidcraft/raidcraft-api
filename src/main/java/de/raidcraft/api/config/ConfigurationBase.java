@@ -46,6 +46,11 @@ public abstract class ConfigurationBase extends YamlConfiguration {
         load(file);
     }
 
+    public BasePlugin getPlugin() {
+
+        return plugin;
+    }
+
     public void reload() {
 
         load(file);
