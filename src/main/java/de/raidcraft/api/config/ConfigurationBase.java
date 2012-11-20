@@ -143,7 +143,8 @@ public abstract class ConfigurationBase extends YamlConfiguration {
             // read the template file from the resources folder
             InputStream stream = plugin.getResource("defaults/" + name);
             if (stream == null) {
-                plugin.getLogger().warning("There is not default config for " + name);
+                plugin.getLogger().warning("There is no default config for " + name);
+                file.createNewFile();
                 return;
             }
             OutputStream out = new FileOutputStream(file);
