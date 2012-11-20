@@ -34,9 +34,14 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
 
     public ConfigurationBase(BasePlugin plugin, String name) {
 
+        this(plugin, new File(plugin.getDataFolder(), name));
+    }
+
+    public ConfigurationBase(BasePlugin plugin, File file) {
+
         this.plugin = plugin;
-        this.name = name;
-        this.file = new File(plugin.getDataFolder(), name);
+        this.name = file.getName();
+        this.file = file;
         // set the header
         options().header("##########################################################\n" +
                 "    Raid-Craft Configuration File: " + name + "\n" +
