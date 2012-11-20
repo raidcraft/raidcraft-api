@@ -16,10 +16,15 @@ import java.io.IOException;
  */
 public class ConfigurationBase extends YamlConfigurationFile {
 
+    private final BasePlugin plugin;
+
     public ConfigurationBase(BasePlugin plugin, String name) {
 
         super(new File(plugin.getDataFolder(), name),
                 new YamlStyle(DumperOptions.FlowStyle.BLOCK, 4));
+
+        this.plugin = plugin;
+
         // create our own file reference
         File file = new File(plugin.getDataFolder(), name);
         // load the config
@@ -46,5 +51,10 @@ public class ConfigurationBase extends YamlConfigurationFile {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public BasePlugin getPlugin() {
+
+        return plugin;
     }
 }
