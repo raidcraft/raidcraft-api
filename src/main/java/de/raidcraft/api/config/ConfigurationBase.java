@@ -38,10 +38,10 @@ public abstract class ConfigurationBase extends YamlConfiguration {
         this.name = name;
         this.file = new File(plugin.getDataFolder(), name);
         // set the header
-        options().header("###########################################################\n" +
-                "#    Raid-Craft Configuration File: " + name + "\n" +
-                "#    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion() + "\n" +
-                "###########################################################");
+        options().header("##########################################################\n" +
+                "    Raid-Craft Configuration File: " + name + "\n" +
+                "    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion() + "\n" +
+                "##########################################################");
         options().copyHeader(true);
         load(file);
     }
@@ -54,16 +54,15 @@ public abstract class ConfigurationBase extends YamlConfiguration {
     @Override
     public final void load(File file) {
 
-        if (!file.exists()) {
-            copyFile();
-        }
         try {
+            if (!file.exists()) {
+                copyFile();
+            }
             // load the config by calling the bukkit super method
             super.load(file);
             // load the annoations
             loadAnnotations();
             plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + name + "\" successfully.");
-            return;
         } catch (IOException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
@@ -71,7 +70,6 @@ public abstract class ConfigurationBase extends YamlConfiguration {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
         }
-        plugin.getLogger().warning("[" + plugin.getName() + "] error when loading config file \"" + name + "\"");
     }
 
     private void loadAnnotations() {
