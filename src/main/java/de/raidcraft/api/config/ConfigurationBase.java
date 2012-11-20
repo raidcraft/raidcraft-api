@@ -1,60 +1,158 @@
 package de.raidcraft.api.config;
 
-import com.sk89q.rebar.config.ConfigurationException;
-import com.sk89q.rebar.config.YamlConfigurationFile;
-import com.sk89q.rebar.config.YamlStyle;
-import com.sk89q.rebar.config.annotations.Configurator;
-import com.sk89q.rebar.util.DefaultsUtils;
 import de.raidcraft.api.BasePlugin;
-import org.yaml.snakeyaml.DumperOptions;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+
+import static de.raidcraft.api.config.ConfigUtil.prepareSerialization;
+import static de.raidcraft.api.config.ConfigUtil.smartCast;
 
 /**
  * @author Silthus
  */
-public class ConfigurationBase extends YamlConfigurationFile {
+public abstract class ConfigurationBase extends YamlConfiguration {
 
+    /**
+     * Refrence to the plugin instance.
+     */
     private final BasePlugin plugin;
+    /**
+     * The Name of the config file
+     */
+    private final String name;
+    /**
+     * The actual physical file object.
+     */
+    private File file;
 
     public ConfigurationBase(BasePlugin plugin, String name) {
 
-        super(new File(plugin.getDataFolder(), name),
-                new YamlStyle(DumperOptions.FlowStyle.BLOCK, 4));
-
         this.plugin = plugin;
-
-        // create our own file reference
-        File file = new File(plugin.getDataFolder(), name);
-        // load the config
-        setHeader("###########################################################",
-                "#    Raid-Craft Configuration File: " + name,
-                "#    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion(),
+        this.name = name;
+        this.file = new File(plugin.getDataFolder(), name);
+        // set the header
+        options().header("###########################################################\n" +
+                "#    Raid-Craft Configuration File: " + name + "\n" +
+                "#    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion() + "\n" +
                 "###########################################################");
+        options().copyHeader(true);
+        load(file);
+    }
 
+    public void reload() {
+
+        load(file);
+    }
+
+    @Override
+    public final void load(File file) {
+
+        if (!file.exists()) {
+            copyFile();
+        }
         try {
-            // create the normal defaults file if it does not exist
-            if (!file.exists()) {
-                DefaultsUtils.createDefaultConfiguration(this.getClass(), file, "defaults/" + name);
-                save();
-            }
-            // load the config file
-            load();
-            Configurator configurator = new Configurator();
-            configurator.registerInstance(this);
-            configurator.load(this, this);
+            // load the config by calling the bukkit super method
+            super.load(file);
+            // load the annoations
+            loadAnnotations();
+            plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + name + "\" successfully.");
+            return;
         } catch (IOException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
-        } catch (ConfigurationException e) {
+        } catch (InvalidConfigurationException e) {
+            plugin.getLogger().warning(e.getMessage());
+            e.printStackTrace();
+        }
+        plugin.getLogger().warning("[" + plugin.getName() + "] error when loading config file \"" + name + "\"");
+    }
+
+    private void loadAnnotations() {
+
+        for (Field field : getFieldsRecur(getClass())) {
+            if (!field.isAnnotationPresent(Setting.class)) continue;
+            String key = field.getAnnotation(Setting.class).value();
+            final Object value = smartCast(field.getGenericType(), get(key));
+            try {
+                field.setAccessible(true);
+                if (value != null) {
+                    field.set(this, value);
+                } else {
+                    set(key, prepareSerialization(field.get(this)));
+                }
+            } catch (IllegalAccessException e) {
+                plugin.getLogger().log(Level.SEVERE, "Error setting configuration value of field: ", e);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public final void save(File file) {
+
+        try {
+            saveAnnotations();
+            super.save(file);
+        } catch (IOException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
         }
     }
 
-    public BasePlugin getPlugin() {
+    private void saveAnnotations() {
 
-        return plugin;
+        for (Field field : getFieldsRecur(getClass())) {
+            field.setAccessible(true);
+            if (!field.isAnnotationPresent(Setting.class)) continue;
+            String key = field.getAnnotation(Setting.class).value();
+            try {
+                set(key, prepareSerialization(field.get(this)));
+            } catch (IllegalAccessException e) {
+                plugin.getLogger().log(Level.SEVERE, "Error getting configuration value of field: ", e);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private List<Field> getFieldsRecur(Class<?> clazz) {
+
+        return getFieldsRecur(clazz, false);
+    }
+
+    private List<Field> getFieldsRecur(Class<?> clazz, boolean includeObject) {
+
+        List<Field> fields = new ArrayList<>();
+        while (clazz != null && (includeObject || !Object.class.equals(clazz))) {
+            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
+    }
+
+    private void copyFile() {
+
+        try {
+            // read the template file from the resources folder
+            InputStream stream = plugin.getResource("defaults/" + name);
+            OutputStream out = new FileOutputStream(file);
+            // buffer 1024 byte so we don't need to write/read too much
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = stream.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            // exit cleanly
+            stream.close();
+            out.close();
+        } catch (IOException iex) {
+            plugin.getLogger().log(Level.WARNING, "could not create default config: " + name, iex);
+        }
     }
 }

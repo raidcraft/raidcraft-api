@@ -34,7 +34,7 @@ public class Database {
 
         if (instance != null) return;
         instance = this;
-        this.config = new LocalConfiguration(plugin, "config.yml");
+        this.config = new LocalConfiguration(plugin);
 
         try {
             connect();
@@ -46,18 +46,20 @@ public class Database {
 
     private static class LocalConfiguration extends ConfigurationBase {
 
-        @Setting("database.hostname")
+        private static final String CONFIG_NAME = "database.yml";
+
+        @Setting("hostname")
         public String hostname = "localhost:3306";
-        @Setting("database.database")
+        @Setting("database")
         public String database = "minecraft";
-        @Setting("database.username")
+        @Setting("username")
         public String username = "minecraft";
-        @Setting("database.password")
+        @Setting("password")
         public String password = "password";
 
-        public LocalConfiguration(BasePlugin plugin, String name) {
+        public LocalConfiguration(BasePlugin plugin) {
 
-            super(plugin, name);
+            super(plugin, CONFIG_NAME);
         }
     }
 
