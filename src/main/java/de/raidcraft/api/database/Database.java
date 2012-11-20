@@ -34,7 +34,7 @@ public class Database {
 
         if (instance != null) return;
         instance = this;
-        this.config = new LocalConfiguration(plugin);
+        this.config = plugin.configure(new LocalConfiguration(plugin));
 
         try {
             connect();
