@@ -1,8 +1,8 @@
 package de.raidcraft.api.database;
 
-import com.sk89q.rebar.config.annotations.Setting;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
+import de.raidcraft.api.config.Setting;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
