@@ -26,7 +26,7 @@ public class Database {
         return instance;
     }
 
-    private LocalConfiguration config;
+    private DatabaseConfig config;
     private static Connection connection;
     private static Map<Class<?>, Table> tables = new HashMap<>();
 
@@ -34,7 +34,7 @@ public class Database {
 
         if (instance != null) return;
         instance = this;
-        this.config = plugin.configure(new LocalConfiguration(plugin));
+        this.config = plugin.configure(new DatabaseConfig(plugin));
 
         try {
             connect();
@@ -44,20 +44,38 @@ public class Database {
         }
     }
 
-    private static class LocalConfiguration extends ConfigurationBase {
+    public DatabaseConfig getConfig() {
+
+        return config;
+    }
+
+    public static class DatabaseConfig extends ConfigurationBase {
 
         private static final String CONFIG_NAME = "database.yml";
 
-        @Setting("hostname")
+        @Setting("database.hostname")
         public String hostname = "localhost:3306";
-        @Setting("database")
+        @Setting("database.database")
         public String database = "minecraft";
-        @Setting("username")
+        @Setting("database.username")
         public String username = "minecraft";
-        @Setting("password")
+        @Setting("database.password")
         public String password = "password";
 
-        public LocalConfiguration(BasePlugin plugin) {
+        @Setting("persistence.hostname")
+        public String persistence_hostname = "localhost:3306";
+        @Setting("persistence.database")
+        public String persistence_database = "minecraft";
+        @Setting("persistence.username")
+        public String persistence_username = "minecraft";
+        @Setting("persistence.password")
+        public String persistence_password = "password";
+        @Setting("persistence.type")
+        public PersistenceDatabase.Type peristence_type = PersistenceDatabase.Type.MYSQL;
+        @Setting("persistence.logging")
+        public boolean persistance_logging = false;
+
+        public DatabaseConfig(BasePlugin plugin) {
 
             super(plugin, CONFIG_NAME);
         }
