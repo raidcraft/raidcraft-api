@@ -73,8 +73,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
             }
         };
         commandRegistration = new CommandsManagerRegistration(this, this, commands);
-        // call the sub plugins to enable
-        enable();
         // load the persistance database if used
         if (getDatabaseClasses().size() > 0) {
             try {
@@ -84,6 +82,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
                 installDDL();
             }
         }
+        // call the sub plugins to enable
+        enable();
         PluginDescriptionFile description = getDescription();
         getLogger().info(description.getName() + "-v" + description.getVersion() + " enabled.");
     }
