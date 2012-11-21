@@ -1,12 +1,10 @@
 package de.raidcraft.api;
 
-import com.avaje.ebean.EbeanServer;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.config.Config;
 import de.raidcraft.api.database.Database;
-import de.raidcraft.api.database.PersistenceDatabase;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.api.player.RCPlayer;
 import net.milkbowl.vault.chat.Chat;
@@ -38,7 +36,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
     // member variables
     private CommandsManager<CommandSender> commands;
     private CommandsManagerRegistration commandRegistration;
-    private PersistenceDatabase persistenceDatabase;
 
     public final void onEnable() {
 
@@ -79,9 +76,13 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
         // call the sub plugins to enable
         enable();
         // load the persistance database if used
-        if (getDatabaseClasses().size() > 0 && persistenceDatabase == null) {
-            persistenceDatabase = new PersistenceDatabase(this);
-            persistenceDatabase.initializeDatabase();
+        if (getDatabaseClasses().size() > 0) {
+            try {
+                getDatabase().find(getDatabaseClasses().get(0)).findRowCount();
+            } catch (Exception e) {
+                // install the dll
+                installDDL();
+            }
         }
         PluginDescriptionFile description = getDescription();
         getLogger().info(description.getName() + "-v" + description.getVersion() + " enabled.");
@@ -204,12 +205,5 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
         }
 
         return (economy != null);
-    }
-
-    @Override
-    public EbeanServer getDatabase() {
-
-        if (persistenceDatabase != null) return persistenceDatabase.getDatabase();
-        return super.getDatabase();
     }
 }

@@ -62,19 +62,6 @@ public class Database {
         @Setting("database.password")
         public String password = "password";
 
-        @Setting("persistence.hostname")
-        public String persistence_hostname = "localhost:3306";
-        @Setting("persistence.database")
-        public String persistence_database = "minecraft";
-        @Setting("persistence.username")
-        public String persistence_username = "minecraft";
-        @Setting("persistence.password")
-        public String persistence_password = "password";
-        @Setting("persistence.type")
-        public PersistenceDatabase.Type peristence_type = PersistenceDatabase.Type.MYSQL;
-        @Setting("persistence.logging")
-        public boolean persistance_logging = false;
-
         public DatabaseConfig(BasePlugin plugin) {
 
             super(plugin, CONFIG_NAME);
