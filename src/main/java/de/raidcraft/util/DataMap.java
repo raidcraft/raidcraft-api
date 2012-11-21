@@ -13,16 +13,16 @@ public class DataMap implements Map<String, Object> {
 
     protected Map<String, Object> data = new LinkedHashMap<>();
 
-    protected DataMap() {
+    public DataMap() {
     }
 
-    protected DataMap(Map<String, Object> map) {
+    public DataMap(Map<String, Object> map) {
 
         this.data = map;
     }
 
     @SuppressWarnings("unchecked")
-    protected DataMap(ResultSet resultSet, String columnKey, String columnValue) throws SQLException {
+    public DataMap(ResultSet resultSet, String columnKey, String columnValue) throws SQLException {
 
         if (!resultSet.first()) return;
         if (columnKey == null || columnValue == null) return;
@@ -53,7 +53,7 @@ public class DataMap implements Map<String, Object> {
         } while (resultSet.next());
     }
 
-    protected DataMap(ConfigurationSection config, String... exclude) {
+    public DataMap(ConfigurationSection config, String... exclude) {
 
         Set<String> excludedKeys = new HashSet<>(Arrays.asList(exclude));
         // go tru all keys in the given config section
