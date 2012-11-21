@@ -16,6 +16,11 @@ public class DataMap implements Map<String, Object> {
     protected DataMap() {
     }
 
+    protected DataMap(Map<String, Object> map) {
+
+        this.data = map;
+    }
+
     @SuppressWarnings("unchecked")
     protected DataMap(ResultSet resultSet, String columnKey, String columnValue) throws SQLException {
 
