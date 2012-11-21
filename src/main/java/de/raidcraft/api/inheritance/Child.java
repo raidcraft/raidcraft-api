@@ -9,7 +9,7 @@ public interface Child<T extends Parent> {
 
     public Collection<T> getStrongParents();
 
-    public Collection<T> getWeaksParents();
+    public Collection<T> getWeakParents();
 
     public void addStrongParent(T parent);
 
