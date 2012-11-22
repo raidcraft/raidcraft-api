@@ -1,5 +1,9 @@
 package de.raidcraft.api;
 
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.EbeanServerFactory;
+import com.avaje.ebean.config.DataSourceConfig;
+import com.avaje.ebean.config.ServerConfig;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
@@ -36,6 +40,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
     // member variables
     private CommandsManager<CommandSender> commands;
     private CommandsManagerRegistration commandRegistration;
+    private EbeanServer ebean;
 
     public final void onEnable() {
 
@@ -72,15 +77,11 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
                 return sender.hasPermission(s);
             }
         };
-        commandRegistration = new CommandsManagerRegistration(this, this, commands);
-        // load the persistance database if used
+        this.commands.setInjector(new SimpleInjector(this));
+        this.commandRegistration = new CommandsManagerRegistration(this, this, this.commands);
+        // check if the database needs to be setup
         if (getDatabaseClasses().size() > 0) {
-            try {
-                getDatabase().find(getDatabaseClasses().get(0)).findRowCount();
-            } catch (Throwable e) {
-                // install the dll
-                installDDL();
-            }
+            setupDatabase();
         }
         // call the sub plugins to enable
         enable();
@@ -100,6 +101,50 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
     public abstract void enable();
 
     public abstract void disable();
+
+    private void setupDatabase() {
+
+        ServerConfig db = new ServerConfig();
+
+        db.setDefaultServer(true);
+        db.setRegister(true);
+        db.setClasses(getDatabaseClasses());
+        db.setName(getDescription().getName());
+        getServer().configureDbConfig(db);
+
+        DataSourceConfig ds = db.getDataSourceConfig();
+
+        ds.setUrl(replaceDatabaseString(ds.getUrl()));
+        getDataFolder().mkdirs();
+
+        ClassLoader previous = Thread.currentThread().getContextClassLoader();
+
+        Thread.currentThread().setContextClassLoader(getClassLoader());
+        ebean = EbeanServerFactory.create(db);
+        Thread.currentThread().setContextClassLoader(previous);
+
+        // load the database classes
+        loadDatabase();
+    }
+
+    private String replaceDatabaseString(String input) {
+        input = input.replaceAll("\\{DIR\\}", getDataFolder().getPath().replaceAll("\\\\", "/") + "/");
+        input = input.replaceAll("\\{NAME\\}", getDescription().getName().replaceAll("[^\\w_-]", ""));
+        return input;
+    }
+
+    private void loadDatabase() {
+
+        // load the persistance database if used
+        if (getDatabaseClasses().size() > 0) {
+            try {
+                getDatabase().find(getDatabaseClasses().get(0)).findRowCount();
+            } catch (Throwable e) {
+                // install the dll
+                installDDL();
+            }
+        }
+    }
 
     public void reload() {
 
