@@ -77,7 +77,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
         if (getDatabaseClasses().size() > 0) {
             try {
                 getDatabase().find(getDatabaseClasses().get(0)).findRowCount();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 // install the dll
                 installDDL();
             }
