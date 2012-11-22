@@ -153,12 +153,12 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
         Bukkit.getPluginManager().registerEvents(listener, this);
     }
 
-    public final RCPlayer getPlayer(Player player) {
+    public RCPlayer getPlayer(Player player) {
 
         return RaidCraft.getPlayer(player);
     }
 
-    public final RCPlayer getPlayer(String player) {
+    public RCPlayer getPlayer(String player) {
 
         return RaidCraft.getPlayer(player);
     }
