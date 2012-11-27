@@ -146,6 +146,12 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
         }
     }
 
+    @Override
+    public EbeanServer getDatabase() {
+
+        return ebean;
+    }
+
     public void reload() {
 
         disable();
