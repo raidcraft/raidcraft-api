@@ -2,6 +2,7 @@ package de.raidcraft.api.player;
 
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.WorldVector;
+import de.raidcraft.api.InvalidTargetException;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -40,9 +41,9 @@ public interface RCPlayer {
 
     public void teleport(WorldVector vector);
 
-    public RCPlayer getTargetPlayer();
+    public RCPlayer getTargetPlayer() throws InvalidTargetException;
 
-    public LivingEntity getTarget();
+    public LivingEntity getTarget() throws InvalidTargetException;
 
     public BlockWorldVector getTargetBlock();
 

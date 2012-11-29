@@ -3,6 +3,7 @@ package de.raidcraft.api.bukkit;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.WorldVector;
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.InvalidTargetException;
 import de.raidcraft.api.player.AbstractPlayer;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.util.BukkitUtil;
@@ -90,9 +91,13 @@ public class BukkitPlayer extends AbstractPlayer {
     }
 
     @Override
-    public RCPlayer getTargetPlayer() {
+    public RCPlayer getTargetPlayer() throws InvalidTargetException {
 
-        return RaidCraft.getPlayer(BukkitUtil.getTarget(player, player.getWorld().getPlayers()));
+        Player target = BukkitUtil.getTarget(player, player.getWorld().getPlayers());
+        if (target == null) {
+            throw new InvalidTargetException("Du hast kein Ziel im Sichtfeld!");
+        }
+        return RaidCraft.getPlayer(target);
     }
 
     @Override
@@ -102,9 +107,13 @@ public class BukkitPlayer extends AbstractPlayer {
     }
 
     @Override
-    public LivingEntity getTarget() {
+    public LivingEntity getTarget() throws InvalidTargetException {
 
-        return BukkitUtil.getTargetEntity(player, LivingEntity.class);
+        LivingEntity target = BukkitUtil.getTargetEntity(player, LivingEntity.class);
+        if (target == null) {
+            throw new InvalidTargetException("Du hast kein Ziel im Sichtfeld!");
+        }
+        return target;
     }
 
     @Override
