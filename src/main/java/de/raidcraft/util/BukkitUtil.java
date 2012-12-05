@@ -7,10 +7,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Silthus
@@ -95,6 +99,17 @@ public final class BukkitUtil {
         } else {
             return null;
         }
+    }
+
+    public static List<LivingEntity> getNearbyEntities(final LivingEntity source, int radius) {
+
+        List<LivingEntity> entities = new ArrayList<>();
+        for (Entity entity : LocationUtil.getNearbyEntities(source.getLocation(), radius)) {
+            if (entity instanceof LivingEntity) {
+                entities.add((LivingEntity) entity);
+            }
+        }
+        return entities;
     }
 
     public static BlockWorldVector toBlockWorldVector(Block block) {

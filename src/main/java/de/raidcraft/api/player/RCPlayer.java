@@ -6,6 +6,8 @@ import de.raidcraft.api.InvalidTargetException;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 /**
  * @author Silthus
  */
@@ -44,6 +46,8 @@ public interface RCPlayer {
     public RCPlayer getTargetPlayer() throws InvalidTargetException;
 
     public LivingEntity getTarget() throws InvalidTargetException;
+
+    public List<LivingEntity> getNearbyEntities(int radius);
 
     public BlockWorldVector getTargetBlock();
 

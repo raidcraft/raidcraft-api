@@ -13,6 +13,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.List;
+
 /**
  * @author Silthus
  */
@@ -114,6 +116,12 @@ public class BukkitPlayer extends AbstractPlayer {
             throw new InvalidTargetException("Du hast kein Ziel im Sichtfeld!");
         }
         return target;
+    }
+
+    @Override
+    public List<LivingEntity> getNearbyEntities(int radius) {
+
+        return BukkitUtil.getNearbyEntities(getBukkitPlayer(), radius);
     }
 
     @Override
