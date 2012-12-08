@@ -1,11 +1,13 @@
 package de.raidcraft;
 
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.Component;
+import de.raidcraft.api.commands.ConfirmCommand;
 
 /**
  * @author Silthus
  */
-public class RaidCraftPlugin extends BasePlugin {
+public class RaidCraftPlugin extends BasePlugin implements Component {
 
     private static RaidCraftPlugin instance;
 
@@ -17,6 +19,7 @@ public class RaidCraftPlugin extends BasePlugin {
     public RaidCraftPlugin() {
 
         instance = this;
+        registerCommands(ConfirmCommand.class);
     }
 
     @Override

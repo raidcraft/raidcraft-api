@@ -7,6 +7,7 @@ import com.avaje.ebean.config.ServerConfig;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
@@ -26,6 +27,9 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Silthus
  */
@@ -38,6 +42,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
     private static Chat chat;
     private static Permission permission;
     // member variables
+    private final Map<String, QueuedCommand> queuedCommands = new HashMap<>();
     private CommandsManager<CommandSender> commands;
     private CommandsManagerRegistration commandRegistration;
     private EbeanServer ebean;
@@ -162,6 +167,24 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
 
         config.load();
         return config;
+    }
+
+    public final void queueCommand(final QueuedCommand command) {
+
+        queuedCommands.put(command.getPlayer().getUserName(), command);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+
+                queuedCommands.remove(command.getPlayer().getUserName());
+            }
+        }, 200L);
+        // 5 second remove delay
+    }
+
+    public final Map<String, QueuedCommand> getQueuedCommands() {
+
+        return queuedCommands;
     }
 
     @Override
