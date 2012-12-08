@@ -19,13 +19,13 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     public RaidCraftPlugin() {
 
         instance = this;
-        registerCommands(ConfirmCommand.class);
     }
 
     @Override
     public void enable() {
 
-        // this is just used as a dummy plugin to setup the api in the BasePlugin class
+        registerCommands(ConfirmCommand.class);
+        RaidCraft.registerComponent(RaidCraftPlugin.class, this);
     }
 
     @Override

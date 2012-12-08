@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,13 +104,13 @@ public final class BukkitUtil {
     @SuppressWarnings("unchecked")
     public static List<LivingEntity> getNearbyEntities(final LivingEntity source, int radius) {
 
-        List<Entity> entities = source.getNearbyEntities(radius, radius, radius);
-        for (Entity entity : entities) {
-            if (!(entity instanceof LivingEntity)) {
-                entities.remove(entity);
+        List<LivingEntity> entities = new ArrayList<>();
+        for (Entity entity : source.getNearbyEntities(radius, radius, radius)) {
+            if (entity instanceof LivingEntity) {
+                entities.add((LivingEntity) entity);
             }
         }
-        return (List<LivingEntity>) entities;
+        return entities;
     }
 
     public static BlockWorldVector toBlockWorldVector(Block block) {
