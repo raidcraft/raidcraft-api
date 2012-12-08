@@ -1,7 +1,7 @@
 package de.raidcraft.api.commands;
 
-import de.raidcraft.api.player.RCPlayer;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Method;
 import java.util.Random;
@@ -14,11 +14,11 @@ public class QueuedCaptchaCommand extends QueuedCommand {
     private static final Random RANDOM = new Random();
     private final String captcha;
 
-    public QueuedCaptchaCommand(RCPlayer player, Object object, Method method, Object... args) {
+    public QueuedCaptchaCommand(CommandSender sender, Object object, Method method, Object... args) {
 
-        super(player, object, method, args);
+        super(sender, object, method, args);
         this.captcha = generateCaptchaString();
-        player.sendMessage(ChatColor.RED + "Bitte bestätige den Befehl mit: /rcconfirm " + captcha);
+        sender.sendMessage(ChatColor.RED + "Bitte bestätige den Befehl mit: /rcconfirm " + captcha);
     }
 
     public String getCaptcha() {

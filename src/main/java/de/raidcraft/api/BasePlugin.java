@@ -171,12 +171,12 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
 
     public final void queueCommand(final QueuedCommand command) {
 
-        queuedCommands.put(command.getPlayer().getUserName(), command);
+        queuedCommands.put(command.getSender().getName(), command);
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
             @Override
             public void run() {
 
-                queuedCommands.remove(command.getPlayer().getUserName());
+                queuedCommands.remove(command.getSender().getName());
             }
         }, 600L);
         // 30 second remove delay

@@ -2,8 +2,8 @@ package de.raidcraft.api.commands;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
-import de.raidcraft.api.player.RCPlayer;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,23 +13,23 @@ import java.lang.reflect.Method;
 */
 public class QueuedCommand {
 
-    private final RCPlayer player;
+    private final CommandSender sender;
     private final Object object;
     private final Method method;
     private final Object[] args;
 
-    public QueuedCommand(final RCPlayer player, Object object, Method method, Object... args) {
+    public QueuedCommand(final CommandSender sender, Object object, Method method, Object... args) {
 
-        this.player = player;
+        this.sender = sender;
         this.object = object;
         this.method = method;
         this.args = args;
         RaidCraft.getComponent(RaidCraftPlugin.class).queueCommand(this);
     }
 
-    public RCPlayer getPlayer() {
+    public CommandSender getSender() {
 
-        return player;
+        return sender;
     }
 
     public void run() {
@@ -38,7 +38,7 @@ public class QueuedCommand {
             method.setAccessible(true);
             method.invoke(object, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            player.sendMessage(ChatColor.RED + e.getMessage());
+            sender.sendMessage(ChatColor.RED + e.getMessage());
             e.printStackTrace();
         }
     }
