@@ -179,7 +179,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
                 queuedCommands.remove(command.getPlayer().getUserName());
             }
         }, 600L);
-        // 5 second remove delay
+        // 30 second remove delay
     }
 
     public final Map<String, QueuedCommand> getQueuedCommands() {
