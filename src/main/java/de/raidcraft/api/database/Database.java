@@ -1,5 +1,6 @@
 package de.raidcraft.api.database;
 
+import com.avaje.ebean.Ebean;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
@@ -132,5 +133,14 @@ public class Database {
     public static <T extends Table> T getTable(Class<T> cls) {
 
         return cls.cast(tables.get(cls));
+    }
+
+    public static void save(Bean bean) {
+
+        if (Ebean.find(bean.getClass(), bean.getId()) == null) {
+            Ebean.save(bean);
+        } else {
+            Ebean.update(bean);
+        }
     }
 }
