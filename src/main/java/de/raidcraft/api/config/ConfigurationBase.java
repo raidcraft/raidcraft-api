@@ -76,7 +76,7 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
     }
 
     @Override
-    public final void load(File file) {
+    public void load(File file) {
 
         try {
             if (!file.exists()) {
