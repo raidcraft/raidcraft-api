@@ -50,6 +50,11 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
         options().copyHeader(true);
     }
 
+    public File getFile() {
+
+        return file;
+    }
+
     public BasePlugin getPlugin() {
 
         return plugin;
@@ -82,10 +87,7 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
             // load the annoations
             loadAnnotations();
             plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + name + "\" successfully.");
-        } catch (IOException e) {
-            plugin.getLogger().warning(e.getMessage());
-            e.printStackTrace();
-        } catch (InvalidConfigurationException e) {
+        } catch (IOException | InvalidConfigurationException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
         }

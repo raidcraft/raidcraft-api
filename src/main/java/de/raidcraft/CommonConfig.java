@@ -1,6 +1,7 @@
-package de.raidcraft.api.config;
+package de.raidcraft;
 
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.config.ConfigurationBase;
 
 import java.io.File;
 
