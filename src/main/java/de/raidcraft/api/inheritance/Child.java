@@ -1,15 +1,15 @@
 package de.raidcraft.api.inheritance;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  * @author Silthus
  */
 public interface Child<T extends Parent> {
 
-    public Collection<T> getStrongParents();
+    public Set<T> getStrongParents();
 
-    public Collection<T> getWeakParents();
+    public Set<T> getWeakParents();
 
     public void addStrongParent(T parent);
 
