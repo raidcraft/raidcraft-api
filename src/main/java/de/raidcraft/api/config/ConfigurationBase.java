@@ -1,6 +1,7 @@
 package de.raidcraft.api.config;
 
 import de.raidcraft.api.BasePlugin;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -31,11 +32,7 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
      * The actual physical file object.
      */
     private File file;
-
-    public ConfigurationBase(BasePlugin plugin, String name) {
-
-        this(plugin, new File(plugin.getDataFolder(), name));
-    }
+    private ConfigurationSection overrideConfig = null;
 
     public ConfigurationBase(BasePlugin plugin, File file) {
 
@@ -48,6 +45,32 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
                 "    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion() + "\n" +
                 "##########################################################");
         options().copyHeader(true);
+    }
+
+    public ConfigurationBase(BasePlugin plugin, String name) {
+
+        this(plugin, new File(plugin.getDataFolder(), name));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <V> V getOverride(String key, V def) {
+
+        Class<V> vClass = (Class<V>) def.getClass();
+        if (overrideConfig != null) {
+            if (overrideConfig.isSet(key)) {
+                return vClass.cast(overrideConfig.get(key));
+            }
+        }
+        if (!isSet(key)) {
+            set(key, def);
+            save();
+        }
+        return vClass.cast(get(key, def));
+    }
+
+    protected void setOverrideConfig(ConfigurationSection config) {
+
+        this.overrideConfig = config;
     }
 
     public File getFile() {
