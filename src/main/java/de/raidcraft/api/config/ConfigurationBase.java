@@ -78,6 +78,22 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
         return this.overrideConfig;
     }
 
+    protected ConfigurationSection getOverrideSection(String path) {
+
+        ConfigurationSection section;
+        if (getOverrideConfig() != null) {
+            section = getOverrideConfig().getConfigurationSection(path);
+            if (section != null) {
+                return section;
+            }
+        }
+        section = getConfigurationSection(path);
+        if (section == null) {
+            section = createSection(path);
+        }
+        return section;
+    }
+
     public File getFile() {
 
         return file;
