@@ -94,7 +94,7 @@ public final class BukkitUtil {
                 }
             }
         }
-        if (target != null && entity.hasLineOfSight(target)) {
+        if (target != null && entity.getLineOfSight(null, 100).contains(target.getWorld().getBlockAt(target.getLocation()))) {
             return target;
         } else {
             return null;
