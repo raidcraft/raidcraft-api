@@ -8,7 +8,9 @@ import java.util.*;
 
 /**
  * @author Silthus
+ * @deprecated please use the {@link de.raidcraft.api.config.DataMap}
  */
+@Deprecated
 public class DataMap implements Map<String, Object> {
 
     protected Map<String, Object> data = new LinkedHashMap<>();

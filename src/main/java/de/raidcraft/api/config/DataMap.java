@@ -37,10 +37,15 @@ public abstract class DataMap extends MemorySection {
     }
 
     @Override
-    public void set(String path, Object value) {
+    public Object get(String path, Object def) {
 
-        super.set(path, value);
-        save();
+        if (!isSet(path)) {
+            set(path, def);
+            save();
+            return def;
+        } else {
+            return super.get(path, def);
+        }
     }
 
     public abstract void save();
