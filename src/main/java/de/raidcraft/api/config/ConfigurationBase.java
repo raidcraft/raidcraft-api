@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import static de.raidcraft.api.config.ConfigUtil.prepareSerialization;
@@ -93,6 +94,19 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
             section = createSection(path);
         }
         return section;
+    }
+
+    protected DataMap getOverrideDataMap(String path) {
+
+        ConfigurationSection section = getConfigurationSection(path);
+        if (section == null) {
+            section = createSection(path);
+        }
+        YamlDataMap dataMap = new YamlDataMap(section, this);
+        for (Map.Entry<String, Object> data : getOverrideSection(path).getValues(true).entrySet()) {
+            dataMap.set(data.getKey(), data.getValue());
+        }
+        return dataMap;
     }
 
     public File getFile() {
