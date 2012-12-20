@@ -55,15 +55,16 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
     @SuppressWarnings("unchecked")
     protected <V> V getOverride(String key, V def) {
 
+        if (!isSet(key)) {
+            set(key, def);
+            save();
+        }
+
         Class<V> vClass = (Class<V>) def.getClass();
         if (overrideConfig != null) {
             if (overrideConfig.isSet(key)) {
                 return vClass.cast(overrideConfig.get(key));
             }
-        }
-        if (!isSet(key)) {
-            set(key, def);
-            save();
         }
         return vClass.cast(get(key, def));
     }
