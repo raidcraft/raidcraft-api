@@ -54,7 +54,7 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
     }
 
     @SuppressWarnings("unchecked")
-    protected <V> V getOverride(String key, V def) {
+    public <V> V getOverride(String key, V def) {
 
         if (!isSet(key)) {
             set(key, def);
@@ -70,17 +70,17 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
         return vClass.cast(get(key, def));
     }
 
-    protected void setOverrideConfig(ConfigurationSection config) {
+    public void setOverrideConfig(ConfigurationSection config) {
 
         this.overrideConfig = config;
     }
 
-    protected ConfigurationSection getOverrideConfig() {
+    public ConfigurationSection getOverrideConfig() {
 
         return this.overrideConfig;
     }
 
-    protected ConfigurationSection getOverrideSection(String path) {
+    public ConfigurationSection getOverrideSection(String path) {
 
         ConfigurationSection section;
         if (getOverrideConfig() != null) {
@@ -96,7 +96,7 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
         return section;
     }
 
-    protected DataMap getOverrideDataMap(String path) {
+    public DataMap getOverrideDataMap(String path) {
 
         ConfigurationSection section = getConfigurationSection(path);
         if (section == null) {
