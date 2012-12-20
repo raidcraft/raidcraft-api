@@ -1,14 +1,13 @@
 package de.raidcraft.api.config;
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.*;
 
 import java.util.Map;
 
 /**
  * @author Silthus
  */
-public abstract class DataMap extends MemorySection {
+public abstract class DataMap extends MemoryConfiguration {
 
     public DataMap(Map<?, ?> data) {
 
@@ -46,6 +45,19 @@ public abstract class DataMap extends MemorySection {
         } else {
             return super.get(path, def);
         }
+    }
+
+    @Override
+    public boolean isSet(String path) {
+
+        Configuration root = getRoot();
+        if (root == null) {
+            return false;
+        }
+        if (root.options().copyDefaults()) {
+            return contains(path);
+        }
+        return super.get(path, null) != null;
     }
 
     public abstract void save();
