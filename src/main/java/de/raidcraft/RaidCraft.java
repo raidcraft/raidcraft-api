@@ -11,6 +11,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -170,6 +171,11 @@ public class RaidCraft implements Listener {
     public static <T extends Component> T getComponent(Class<T> clazz) {
 
         return clazz.cast(components.get(clazz));
+    }
+
+    public static <T extends Event> void callEvent(T event) {
+
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     public static Database getDatabase() {
