@@ -84,9 +84,8 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
 
         ConfigurationSection section;
         if (getOverrideConfig() != null) {
-            section = getOverrideConfig().getConfigurationSection(path);
-            if (section != null) {
-                return section;
+            if (getOverrideConfig().isConfigurationSection(path)) {
+                return getOverrideConfig().getConfigurationSection(path);
             }
         }
         section = getConfigurationSection(path);
@@ -98,12 +97,9 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
 
     public DataMap getOverrideDataMap(String path) {
 
-        ConfigurationSection section = getConfigurationSection(path);
-        if (section == null) {
-            section = createSection(path);
-        }
+        ConfigurationSection section = getOverrideSection(path);
         YamlDataMap dataMap = new YamlDataMap(section, this);
-        for (Map.Entry<String, Object> data : getOverrideSection(path).getValues(true).entrySet()) {
+        for (Map.Entry<String, Object> data : section.getValues(true).entrySet()) {
             dataMap.set(data.getKey(), data.getValue());
         }
         return dataMap;

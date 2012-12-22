@@ -20,7 +20,9 @@ public class YamlDataMap extends DataMap {
     @Override
     public void save() {
 
-        config.set(path, getValues(true));
-        config.save();
+        if (path != null && !path.equals("")) {
+            config.set(path, getValues(true));
+            config.save();
+        }
     }
 }
