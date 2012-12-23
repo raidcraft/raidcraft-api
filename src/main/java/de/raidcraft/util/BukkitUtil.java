@@ -73,32 +73,25 @@ public final class BukkitUtil {
         return getTarget(entity, entity.getWorld().getEntitiesByClass(type));
     }
 
-    public static <T extends LivingEntity> T getTarget(final LivingEntity entity, final Iterable<T> entities) {
+    public static <T extends LivingEntity> T getTarget(final LivingEntity source, final Iterable<T> entities) {
 
-        if (entity == null)
-            return null;
         T target = null;
-        double targetDistanceSquared = Double.MAX_VALUE;
+        double targetDistanceSquared = 0;
         final double radiusSquared = 1;
-        final Vector l = entity.getEyeLocation().toVector(),
-                n = entity.getLocation().getDirection().normalize();
-        final double cos = Math.cos(Math.PI / 4);
+        final Vector l = source.getEyeLocation().toVector(), n = source.getLocation().getDirection().normalize();
+        final double cos45 = Math.cos(Math.PI / 4);
         for (final T other : entities) {
-            if (other == entity)
+            if (other == source)
                 continue;
-            if (target == null || targetDistanceSquared > other.getLocation().distanceSquared(entity.getLocation())) {
-                final Vector t = other.getLocation().toVector().subtract(l);
-                if (n.clone().crossProduct(t).lengthSquared() < radiusSquared && t.normalize().dot(n) >= cos) {
+            if (target == null || targetDistanceSquared > other.getLocation().distanceSquared(source.getLocation())) {
+                final Vector t = other.getLocation().add(0, 1, 0).toVector().subtract(l);
+                if (n.clone().crossProduct(t).lengthSquared() < radiusSquared && t.normalize().dot(n) >= cos45) {
                     target = other;
-                    targetDistanceSquared = target.getLocation().distanceSquared(entity.getLocation());
+                    targetDistanceSquared = target.getLocation().distanceSquared(source.getLocation());
                 }
             }
         }
-        if (target != null && entity.getLineOfSight(null, 100).contains(target.getWorld().getBlockAt(target.getLocation()))) {
-            return target;
-        } else {
-            return null;
-        }
+        return target;
     }
 
     @SuppressWarnings("unchecked")
