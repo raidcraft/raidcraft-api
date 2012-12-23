@@ -30,6 +30,13 @@
         <version>2.2</version>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>raidcraft</id>
+            <url>http://nexus.raid-craft.de/content/groups/public/</url>
+        </repository>
+    </repositories>
+
     <scm>
         <connection>scm:git:ssh://git@srvdev2.raid-craft.de:22109/${project.artifactId}.git</connection>
         <developerConnection>scm:git:ssh://git@srvdev2.raid-craft.de:22109/${project.artifactId}.git</developerConnection>
