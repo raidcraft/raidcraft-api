@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 
 import static de.raidcraft.api.config.ConfigUtil.prepareSerialization;
@@ -33,8 +32,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
      * The actual physical file object.
      */
     private File file;
-    @Deprecated
-    private ConfigurationSection overrideConfig = null;
+    private DataMap override = null;
 
     public ConfigurationBase(T plugin, File file) {
 
@@ -54,61 +52,27 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         this(plugin, new File(plugin.getDataFolder(), name));
     }
 
-    @Deprecated
-    @SuppressWarnings("unchecked")
+    public void merge(ConfigurationBase config, String path) {
+
+        getOverrideConfig().merge(config.createDataMap(path));
+    }
+
+    public void merge(ConfigurationBase config) {
+
+        getOverrideConfig().merge(config.createDataMap());
+    }
+
     public <V> V getOverride(String key, V def) {
 
-        if (!isSet(key)) {
-            set(key, def);
-            save();
-        }
-
-        Class<V> vClass = (Class<V>) def.getClass();
-        if (overrideConfig != null) {
-            if (overrideConfig.isSet(key)) {
-                return vClass.cast(overrideConfig.get(key));
-            }
-        }
-        return vClass.cast(get(key, def));
+        return (V) getOverrideConfig().get(key, def);
     }
 
-    @Deprecated
-    public void setOverrideConfig(ConfigurationSection config) {
+    public DataMap getOverrideConfig() {
 
-        this.overrideConfig = config;
-    }
-
-    @Deprecated
-    public ConfigurationSection getOverrideConfig() {
-
-        return this.overrideConfig;
-    }
-
-    @Deprecated
-    public ConfigurationSection getOverrideSection(String path) {
-
-        ConfigurationSection section;
-        if (getOverrideConfig() != null) {
-            if (getOverrideConfig().isConfigurationSection(path)) {
-                return getOverrideConfig().getConfigurationSection(path);
-            }
+        if (override == null) {
+            override = createDataMap();
         }
-        section = getConfigurationSection(path);
-        if (section == null) {
-            section = createSection(path);
-        }
-        return section;
-    }
-
-    @Deprecated
-    public DataMap getOverrideDataMap(String path) {
-
-        ConfigurationSection section = getOverrideSection(path);
-        YamlDataMap dataMap = new YamlDataMap(section, this);
-        for (Map.Entry<String, Object> data : section.getValues(true).entrySet()) {
-            dataMap.set(data.getKey(), data.getValue());
-        }
-        return dataMap;
+        return this.override;
     }
 
     public ConfigurationSection getSafeConfigSection(String path) {
