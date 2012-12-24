@@ -19,12 +19,12 @@ import static de.raidcraft.api.config.ConfigUtil.smartCast;
 /**
  * @author Silthus
  */
-public abstract class ConfigurationBase extends YamlConfiguration implements Config {
+public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfiguration implements Config {
 
     /**
      * Refrence to the plugin instance.
      */
-    private final BasePlugin plugin;
+    private final T plugin;
     /**
      * The Name of the config file
      */
@@ -35,7 +35,7 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
     private File file;
     private ConfigurationSection overrideConfig = null;
 
-    public ConfigurationBase(BasePlugin plugin, File file) {
+    public ConfigurationBase(T plugin, File file) {
 
         this.plugin = plugin;
         this.name = file.getName();
@@ -48,7 +48,7 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
         options().copyHeader(true);
     }
 
-    public ConfigurationBase(BasePlugin plugin, String name) {
+    public ConfigurationBase(T plugin, String name) {
 
         this(plugin, new File(plugin.getDataFolder(), name));
     }
@@ -110,7 +110,7 @@ public abstract class ConfigurationBase extends YamlConfiguration implements Con
         return file;
     }
 
-    public BasePlugin getPlugin() {
+    public T getPlugin() {
 
         return plugin;
     }
