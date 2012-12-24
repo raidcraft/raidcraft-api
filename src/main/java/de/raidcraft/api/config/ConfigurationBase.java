@@ -33,6 +33,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
      * The actual physical file object.
      */
     private File file;
+    @Deprecated
     private ConfigurationSection overrideConfig = null;
 
     public ConfigurationBase(T plugin, File file) {
@@ -53,6 +54,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         this(plugin, new File(plugin.getDataFolder(), name));
     }
 
+    @Deprecated
     @SuppressWarnings("unchecked")
     public <V> V getOverride(String key, V def) {
 
@@ -70,16 +72,19 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         return vClass.cast(get(key, def));
     }
 
+    @Deprecated
     public void setOverrideConfig(ConfigurationSection config) {
 
         this.overrideConfig = config;
     }
 
+    @Deprecated
     public ConfigurationSection getOverrideConfig() {
 
         return this.overrideConfig;
     }
 
+    @Deprecated
     public ConfigurationSection getOverrideSection(String path) {
 
         ConfigurationSection section;
@@ -95,6 +100,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         return section;
     }
 
+    @Deprecated
     public DataMap getOverrideDataMap(String path) {
 
         ConfigurationSection section = getOverrideSection(path);
@@ -103,6 +109,25 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
             dataMap.set(data.getKey(), data.getValue());
         }
         return dataMap;
+    }
+
+    public ConfigurationSection getSafeConfigSection(String path) {
+
+        ConfigurationSection configurationSection = getConfigurationSection(path);
+        if (configurationSection == null) {
+            configurationSection = createSection(path);
+        }
+        return configurationSection;
+    }
+
+    public DataMap createDataMap() {
+
+        return new YamlDataMap(this, this);
+    }
+
+    public DataMap createDataMap(String path) {
+
+        return new YamlDataMap(getSafeConfigSection(path), this);
     }
 
     public File getFile() {

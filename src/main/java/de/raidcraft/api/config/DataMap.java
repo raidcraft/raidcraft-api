@@ -37,6 +37,21 @@ public abstract class DataMap extends MemoryConfiguration {
         }
     }
 
+    /**
+     * Will merge the given map with this map. The given map
+     * will override values if defined.
+     * You also need to make sure that the sections match up with the defined keys.
+     *
+     * @param map to merge
+     */
+    public void merge(DataMap map) {
+
+        // we want to merge so that this current map gets overriden
+        for (Map.Entry<String, Object> entry : map.getValues(true).entrySet()) {
+            set(entry.getKey(), entry.getValue());
+        }
+    }
+
     @Override
     public Object get(String path, Object def) {
 
