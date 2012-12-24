@@ -42,12 +42,12 @@ public abstract class DataMap extends MemoryConfiguration {
      * will override values if defined.
      * You also need to make sure that the sections match up with the defined keys.
      *
-     * @param map to merge
+     * @param section to merge
      */
-    public void merge(ConfigurationSection map) {
+    public void merge(ConfigurationSection section) {
 
         // we want to merge so that this current map gets overriden
-        for (Map.Entry<String, Object> entry : map.getValues(true).entrySet()) {
+        for (Map.Entry<String, Object> entry : section.getValues(true).entrySet()) {
             set(entry.getKey(), entry.getValue());
         }
     }
