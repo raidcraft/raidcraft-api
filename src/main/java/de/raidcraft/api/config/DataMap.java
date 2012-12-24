@@ -44,7 +44,7 @@ public abstract class DataMap extends MemoryConfiguration {
      *
      * @param map to merge
      */
-    public void merge(DataMap map) {
+    public void merge(ConfigurationSection map) {
 
         // we want to merge so that this current map gets overriden
         for (Map.Entry<String, Object> entry : map.getValues(true).entrySet()) {
