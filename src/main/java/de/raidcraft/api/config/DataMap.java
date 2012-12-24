@@ -52,6 +52,16 @@ public abstract class DataMap extends MemoryConfiguration {
         }
     }
 
+    public ConfigurationSection getSafeConfigSection(String path) {
+
+        ConfigurationSection configurationSection = getConfigurationSection(path);
+        if (configurationSection == null) {
+            configurationSection = createSection(path);
+            save();
+        }
+        return configurationSection;
+    }
+
     @Override
     public Object get(String path, Object def) {
 
