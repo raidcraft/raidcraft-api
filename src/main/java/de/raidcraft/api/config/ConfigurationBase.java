@@ -80,6 +80,11 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         return this.override;
     }
 
+    public void setOverrideConfig(DataMap override) {
+
+        this.override = override;
+    }
+
     public ConfigurationSection getSafeConfigSection(String path) {
 
         ConfigurationSection configurationSection = getConfigurationSection(path);
