@@ -20,21 +20,12 @@ import java.util.Set;
  */
 public class Database {
 
-    private static Database instance;
-
-    public static Database getInstance() {
-
-        return instance;
-    }
-
-    private DatabaseConfig config;
-    private static Connection connection;
     private static Map<Class<?>, Table> tables = new HashMap<>();
+    private DatabaseConfig config;
+    private Connection connection;
 
     public Database(BasePlugin plugin) {
 
-        if (instance != null) return;
-        instance = this;
         this.config = plugin.configure(new DatabaseConfig(plugin));
 
         try {
@@ -50,7 +41,7 @@ public class Database {
         return config;
     }
 
-    public static class DatabaseConfig extends ConfigurationBase {
+    public static class DatabaseConfig extends ConfigurationBase<BasePlugin> {
 
         private static final String CONFIG_NAME = "database.yml";
 
@@ -90,10 +81,11 @@ public class Database {
     public void registerTable(Class<? extends Table> clazz, Table table) {
 
         tables.put(clazz, table);
-        if (instance == null || connection == null) {
+        if (connection == null) {
             return;
         }
-        if (!(instance.getExistingTables(table.getTableName()).size() > 0)) {
+        table.setConnection(connection);
+        if (!(getExistingTables(table.getTableName()).size() > 0)) {
             table.createTable();
         }
     }
@@ -114,7 +106,7 @@ public class Database {
         Set<String> existingTables = new HashSet<>();
 
         try {
-            ResultSet resultSet = getConnection().getMetaData().getTables(null, null, search, null);
+            ResultSet resultSet = connection.getMetaData().getTables(null, null, search, null);
             while (resultSet.next()) {
                 String column = resultSet.getString(3);
                 existingTables.add(column);
@@ -123,11 +115,6 @@ public class Database {
         }
 
         return existingTables;
-    }
-
-    public static Connection getConnection() {
-
-        return connection;
     }
 
     public static <T extends Table> T getTable(Class<T> cls) {

@@ -35,14 +35,13 @@ import java.util.Map;
  */
 public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
 
-    // only make one connection to the db for all plugins
-    private static Database database;
     // vault variables
     private static Economy economy;
     private static Chat chat;
     private static Permission permission;
     // member variables
     private final Map<String, QueuedCommand> queuedCommands = new HashMap<>();
+    private Database database;
     private CommandsManager<CommandSender> commands;
     private CommandsManagerRegistration commandRegistration;
     private EbeanServer ebean;
@@ -51,10 +50,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
 
         // create default folders
         getDataFolder().mkdirs();
-        // enable the database first
-        if (database == null) {
-            database = new Database(this);
-        }
 
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
         if (plugin != null) {
@@ -214,6 +209,9 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
 
     public final void registerTable(Class<? extends Table> clazz, Table table) {
 
+        if (database == null) {
+            database = new Database(this);
+        }
         database.registerTable(clazz, table);
     }
 

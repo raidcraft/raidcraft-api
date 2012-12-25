@@ -9,6 +9,7 @@ import java.sql.Connection;
  */
 public abstract class Table {
 
+    private Connection connection;
     private String prefix = "modules_";
     private String tableName;
 
@@ -32,6 +33,11 @@ public abstract class Table {
 
     public final Connection getConnection() {
 
-        return Database.getConnection();
+        return connection;
+    }
+
+    public final void setConnection(Connection connection) {
+
+        this.connection = connection;
     }
 }
