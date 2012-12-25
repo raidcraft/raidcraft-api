@@ -51,5 +51,10 @@
             <version>1.2.20</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>de.raidcraft</groupId>
+            <artifactId>guestunlock</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

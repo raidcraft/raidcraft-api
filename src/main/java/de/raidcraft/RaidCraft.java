@@ -6,6 +6,7 @@ import de.raidcraft.api.database.Database;
 import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
+import de.raidcraft.guestunlock.GuestTable;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -62,8 +63,8 @@ public class RaidCraft implements Listener {
             try {
                 // player is not online so we need to check our database
                 // if no match is found it will throw an exception
-                ResultSet resultSet = Database.getConnection().prepareStatement(
-                        "SELECT count(*) as count, player FROM `raidcraft_guests` WHERE player IS LIKE '%" + name + "%'").executeQuery();
+                ResultSet resultSet = Database.getTable(GuestTable.class).getConnection().prepareStatement(
+                        "SELECT count(*) as count, player FROM `raidcraft_guests` WHERE player IS LIKE '" + name + "%'").executeQuery();
                 if (resultSet.next()) {
                     if (resultSet.getInt("count") == 1) {
                         name = resultSet.getString("player");
@@ -176,11 +177,6 @@ public class RaidCraft implements Listener {
     public static <T extends Event> void callEvent(T event) {
 
         Bukkit.getPluginManager().callEvent(event);
-    }
-
-    public static Database getDatabase() {
-
-        return Database.getInstance();
     }
 
     public static Economy getEconomy() {
