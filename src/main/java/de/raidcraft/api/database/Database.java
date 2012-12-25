@@ -112,6 +112,7 @@ public class Database {
                 existingTables.add(column);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return existingTables;
