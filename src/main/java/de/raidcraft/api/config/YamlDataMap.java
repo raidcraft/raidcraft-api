@@ -2,6 +2,8 @@ package de.raidcraft.api.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.Map;
+
 /**
  * @author Silthus
  */
@@ -17,12 +19,15 @@ public class YamlDataMap extends DataMap {
         this.path = data.getCurrentPath();
     }
 
-    @Override
     public void save() {
 
-        if (path != null && !path.equals("")) {
+        if (path == null || path.equals("")) {
+            for (Map.Entry<String, Object> entry : getValues(true).entrySet()) {
+                config.set(entry.getKey(), entry.getValue());
+            }
+        } else {
             config.set(path, getValues(true));
-            config.save();
         }
+        config.save();
     }
 }
