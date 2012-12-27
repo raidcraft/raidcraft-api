@@ -20,7 +20,8 @@ public class ConfirmCommand {
 
     @Command(
             aliases = {"rcconfirm", "confirm"},
-            desc = "Confirms the queued command."
+            desc = "Confirms the queued command.",
+            min = 1
     )
     public void confirm(CommandContext args, CommandSender sender) throws CommandException {
 
