@@ -79,7 +79,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
     public DataMap getOverrideConfig() {
 
         if (override == null) {
-            override = createDataMap();
+            setOverrideConfig(createDataMap());
         }
         return this.override;
     }
