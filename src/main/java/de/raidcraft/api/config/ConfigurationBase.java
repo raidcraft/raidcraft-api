@@ -144,7 +144,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
             super.load(file);
             // load the annoations
             loadAnnotations();
-            plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + name + "\" successfully.");
+            // plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + name + "\" successfully.");
         } catch (IOException | InvalidConfigurationException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
