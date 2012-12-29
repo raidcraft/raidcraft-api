@@ -17,10 +17,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.metadata.Metadatable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -192,5 +196,23 @@ public class RaidCraft implements Listener {
     public static Chat getChat() {
 
         return RaidCraftPlugin.getInstance().getChat();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <V> V getMetaData(Metadatable metadatable, String key, V def) {
+
+        List<MetadataValue> metadata = metadatable.getMetadata(key);
+        if (metadata == null || metadata.size() < 1) return def;
+        for (MetadataValue value : metadata) {
+            if (value.getOwningPlugin().equals(RaidCraft.getComponent(RaidCraftPlugin.class))) {
+                return (V) value.value();
+            }
+        }
+        return def;
+    }
+
+    public static <V> void setMetaData(Metadatable metadatable, String key, V value) {
+
+        metadatable.setMetadata(key, new FixedMetadataValue(RaidCraft.getComponent(RaidCraftPlugin.class), value));
     }
 }
