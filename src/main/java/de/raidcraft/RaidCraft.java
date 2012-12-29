@@ -7,6 +7,7 @@ import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.guestunlock.GuestTable;
+import de.raidcraft.util.MetaDataKey;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -199,20 +200,25 @@ public class RaidCraft implements Listener {
     }
 
     @SuppressWarnings("unchecked")
-    public static <V> V getMetaData(Metadatable metadatable, String key, V def) {
+    public static <V> V getMetaData(Metadatable metadatable, MetaDataKey key) {
 
-        List<MetadataValue> metadata = metadatable.getMetadata(key);
-        if (metadata == null || metadata.size() < 1) return def;
+        List<MetadataValue> metadata = metadatable.getMetadata(key.getKey());
+        if (metadata == null || metadata.size() < 1) return null;
         for (MetadataValue value : metadata) {
             if (value.getOwningPlugin().equals(RaidCraft.getComponent(RaidCraftPlugin.class))) {
                 return (V) value.value();
             }
         }
-        return def;
+        return null;
     }
 
-    public static <V> void setMetaData(Metadatable metadatable, String key, V value) {
+    public static <V> void setMetaData(Metadatable metadatable, MetaDataKey key, V value) {
 
-        metadatable.setMetadata(key, new FixedMetadataValue(RaidCraft.getComponent(RaidCraftPlugin.class), value));
+        metadatable.setMetadata(key.getKey(), new FixedMetadataValue(RaidCraft.getComponent(RaidCraftPlugin.class), value));
+    }
+
+    public static void removeMetaData(Metadatable metadatable, MetaDataKey key) {
+
+        metadatable.removeMetadata(key.getKey(), RaidCraft.getComponent(RaidCraftPlugin.class));
     }
 }
