@@ -200,16 +200,16 @@ public class RaidCraft implements Listener {
     }
 
     @SuppressWarnings("unchecked")
-    public static <V> V getMetaData(Metadatable metadatable, MetaDataKey key) {
+    public static <V> V getMetaData(Metadatable metadatable, MetaDataKey key, V def) {
 
         List<MetadataValue> metadata = metadatable.getMetadata(key.getKey());
-        if (metadata == null || metadata.size() < 1) return null;
+        if (metadata == null || metadata.size() < 1) return def;
         for (MetadataValue value : metadata) {
             if (value.getOwningPlugin().equals(RaidCraft.getComponent(RaidCraftPlugin.class))) {
                 return (V) value.value();
             }
         }
-        return null;
+        return def;
     }
 
     public static <V> void setMetaData(Metadatable metadatable, MetaDataKey key, V value) {
