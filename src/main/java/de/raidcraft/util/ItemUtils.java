@@ -1,6 +1,6 @@
 package de.raidcraft.util;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 
 /**
@@ -37,6 +37,6 @@ public final class ItemUtils {
     }
 
     public static String getFriendlyName(Material material) {
-        return StringUtils.capitalize(material.name().replace("_", " "));
+        return WordUtils.capitalize(material.name().replace("_", " ").toLowerCase());
     }
 }
