@@ -2,11 +2,9 @@ package de.raidcraft;
 
 import de.raidcraft.api.Component;
 import de.raidcraft.api.bukkit.BukkitPlayer;
-import de.raidcraft.api.database.Database;
 import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
-import de.raidcraft.guestunlock.GuestTable;
 import de.raidcraft.util.MetaDataKey;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -22,8 +20,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +61,8 @@ public class RaidCraft implements Listener {
         RCPlayer rcPlayer = null;
 
         if (player == null) {
+            // TODO: lookup from database
+            /*
             try {
                 // player is not online so we need to check our database
                 // if no match is found it will throw an exception
@@ -86,6 +84,7 @@ public class RaidCraft implements Listener {
                 LOGGER.warning(e.getMessage());
                 e.printStackTrace();
             }
+            */
         } else {
             rcPlayer = getPlayer(player);
         }
