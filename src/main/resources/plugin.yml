@@ -1,6 +1,6 @@
 name: RaidCraft-API
 main: de.raidcraft.RaidCraftPlugin
-version: {$project.version}#${build.number}
+version: ${project.version}#${build.number}
 author: Silthus
 website: www.raid-craft.de
 softdepend: [WorldGuard, WorldEdit]
