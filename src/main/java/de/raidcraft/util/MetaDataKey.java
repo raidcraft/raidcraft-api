@@ -5,7 +5,8 @@ package de.raidcraft.util;
  */
 public enum MetaDataKey {
 
-    PLAYER_PLACED_BLOCK("rc_player_placed_block", boolean.class);
+    PLAYER_PLACED_BLOCK("rc_player_placed_block", boolean.class),
+    LEVEL("rc_level", int.class);
 
     private final String key;
     private final Class<?> type;
