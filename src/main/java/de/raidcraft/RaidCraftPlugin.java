@@ -1,8 +1,12 @@
 package de.raidcraft;
 
+import com.avaje.ebean.Ebean;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.commands.ConfirmCommand;
+import org.bukkit.block.Block;
+
+import java.util.*;
 
 /**
  * @author Silthus
@@ -16,6 +20,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         return instance;
     }
 
+    private final Map<Block, Integer> playerPlacedBlocks = new HashMap<>();
+
     public RaidCraftPlugin() {
 
         instance = this;
@@ -26,11 +32,45 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
 
         registerCommands(ConfirmCommand.class);
         RaidCraft.registerComponent(RaidCraftPlugin.class, this);
+        // lets load all blocks that are player placed
+        for (PlayerPlacedBlock block : Ebean.find(PlayerPlacedBlock.class).findSet()) {
+            playerPlacedBlocks.put(block.getBlock(), block.getId());
+        }
+    }
+
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+
+        List<Class<?>> classes = new ArrayList<>();
+        classes.add(PlayerPlacedBlock.class);
+        return classes;
     }
 
     @Override
     public void disable() {
 
-        // this is just used as a dummy plugin to setup the api in the BasePlugin class
+        // lets save all player placed blocks that have an id if 0
+        for (Map.Entry<Block, Integer> entry : playerPlacedBlocks.entrySet()) {
+            if (entry.getValue() == 0) {
+                new PlayerPlacedBlock(entry.getKey());
+            }
+        }
+    }
+
+    public boolean isPlayerPlaced(Block block) {
+
+        return playerPlacedBlocks.containsKey(block);
+    }
+
+    public void setPlayerPlaced(Block block) {
+
+        playerPlacedBlocks.put(block, 0);
+    }
+
+    public void removePlayerPlaced(Block block) {
+
+        int id = playerPlacedBlocks.remove(block);
+        PlayerPlacedBlock placedBlock = Ebean.find(PlayerPlacedBlock.class, id);
+        if (placedBlock != null) placedBlock.remove();
     }
 }

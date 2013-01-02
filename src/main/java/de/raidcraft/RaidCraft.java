@@ -10,6 +10,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -219,5 +220,20 @@ public class RaidCraft implements Listener {
     public static void removeMetaData(Metadatable metadatable, MetaDataKey key) {
 
         metadatable.removeMetadata(key.getKey(), RaidCraft.getComponent(RaidCraftPlugin.class));
+    }
+
+    public static void setPlayerPlacedBlock(Block block) {
+
+        RaidCraft.getComponent(RaidCraftPlugin.class).setPlayerPlaced(block);
+    }
+
+    public static boolean isPlayerPlacedBlock(Block block) {
+
+        return RaidCraft.getComponent(RaidCraftPlugin.class).isPlayerPlaced(block);
+    }
+
+    public static void removePlayerPlacedBlock(Block block) {
+
+        RaidCraft.getComponent(RaidCraftPlugin.class).removePlayerPlaced(block);
     }
 }
