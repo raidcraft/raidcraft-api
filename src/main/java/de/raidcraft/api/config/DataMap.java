@@ -30,7 +30,11 @@ public abstract class DataMap extends MemoryConfiguration {
             Object value = entry.getValue();
 
             if (value instanceof Map) {
-                convertMapsToSections((Map<?, ?>) value, section.createSection(key));
+                ConfigurationSection subSection = section.getConfigurationSection(key);
+                if (subSection == null) subSection = section.createSection(key);
+                convertMapsToSections((Map<?, ?>) value, subSection);
+            } else if (value instanceof ConfigurationSection) {
+                convertMapsToSections(((ConfigurationSection) value).getValues(true), section);
             } else {
                 section.set(key, value);
             }

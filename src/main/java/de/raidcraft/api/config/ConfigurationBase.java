@@ -54,12 +54,12 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
     public void merge(ConfigurationBase config, String path) {
 
-        getOverrideConfig().merge(config.createDataMap(path));
+        getOverrideConfig().merge(config.getOverrideSection(path));
     }
 
     public void merge(ConfigurationBase config) {
 
-        getOverrideConfig().merge(config.createDataMap());
+        getOverrideConfig().merge(config);
     }
 
     public <V> V getOverride(String key, V def) {
