@@ -62,7 +62,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
 
     public void setPlayerPlaced(Block block) {
 
-        playerPlacedBlocks.put(block, new PlayerPlacedBlock(block));
+        playerPlacedBlocks.put(block, PlayerPlacedBlock.create(block));
     }
 
     public void removePlayerPlaced(Block block) {

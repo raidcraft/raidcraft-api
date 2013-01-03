@@ -16,15 +16,14 @@ import javax.persistence.Table;
 @Table(name = "rc_player_placed_blocks")
 public class PlayerPlacedBlock implements Bean {
 
-    public PlayerPlacedBlock() {
-    }
+    public static PlayerPlacedBlock create(Block block) {
 
-    public PlayerPlacedBlock(Block block) {
-
-        setX(block.getX());
-        setY(block.getY());
-        setZ(block.getZ());
-        setWorld(block.getWorld().getName());
+        PlayerPlacedBlock placedBlock = new PlayerPlacedBlock();
+        placedBlock.setX(block.getX());
+        placedBlock.setY(block.getY());
+        placedBlock.setZ(block.getZ());
+        placedBlock.setWorld(block.getWorld().getName());
+        return placedBlock;
     }
 
     @Id
