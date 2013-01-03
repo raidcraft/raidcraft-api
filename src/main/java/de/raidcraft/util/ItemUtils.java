@@ -36,9 +36,14 @@ public final class ItemUtils {
         }
     }
 
+    public static String getFriendlyName(String name) {
+
+        return WordUtils.capitalize(name.replace("_", " ").toLowerCase());
+    }
+
     public static String getFriendlyName(Material material) {
 
-        return WordUtils.capitalize(material.name().replace("_", " ").toLowerCase());
+        return getFriendlyName(material.name());
     }
 
     public static String getFriendlyName(Material material, Language language) {
