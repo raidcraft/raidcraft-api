@@ -23,7 +23,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         return instance;
     }
 
-    private final Map<Block, Integer> playerPlacedBlocks = new HashMap<>();
+    private final Map<Block, PlayerPlacedBlock> playerPlacedBlocks = new HashMap<>();
 
     public RaidCraftPlugin() {
 
@@ -37,7 +37,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         RaidCraft.registerComponent(RaidCraftPlugin.class, this);
         // lets load all blocks that are player placed
         for (PlayerPlacedBlock block : Ebean.find(PlayerPlacedBlock.class).findSet()) {
-            playerPlacedBlocks.put(block.getBlock(), block.getId());
+            playerPlacedBlocks.put(block.getBlock(), block);
         }
     }
 
@@ -52,14 +52,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     @Override
     public void disable() {
 
-        // lets save all player placed blocks that have an id if 0
-        List<PlayerPlacedBlock> toSave = new ArrayList<>();
-        for (Map.Entry<Block, Integer> entry : playerPlacedBlocks.entrySet()) {
-            if (entry.getValue() == 0) {
-                toSave.add(new PlayerPlacedBlock(entry.getKey()));
-            }
-        }
-        Ebean.save(toSave);
+        Ebean.save(playerPlacedBlocks.values());
     }
 
     public boolean isPlayerPlaced(Block block) {
@@ -69,13 +62,12 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
 
     public void setPlayerPlaced(Block block) {
 
-        playerPlacedBlocks.put(block, 0);
+        playerPlacedBlocks.put(block, new PlayerPlacedBlock(block));
     }
 
     public void removePlayerPlaced(Block block) {
 
-        int id = playerPlacedBlocks.remove(block);
-        PlayerPlacedBlock placedBlock = Ebean.find(PlayerPlacedBlock.class, id);
-        if (placedBlock != null) placedBlock.remove();
+        PlayerPlacedBlock remove = playerPlacedBlocks.remove(block);
+        Ebean.delete(remove);
     }
 }
