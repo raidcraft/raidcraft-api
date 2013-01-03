@@ -94,4 +94,22 @@ public abstract class AbstractPlayer implements RCPlayer {
 
         return username;
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AbstractPlayer that = (AbstractPlayer) o;
+
+        return username.equals(that.username);
+
+    }
+
+    @Override
+    public int hashCode() {
+
+        return username.hashCode();
+    }
 }
