@@ -17,6 +17,9 @@ import javax.persistence.Table;
 @Table(name = "rc_player_placed_blocks")
 public class PlayerPlacedBlock implements Bean {
 
+    public PlayerPlacedBlock() {
+    }
+
     public PlayerPlacedBlock(Block block) {
 
         setX(block.getX());
