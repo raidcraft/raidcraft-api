@@ -6,7 +6,10 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.commands.ConfirmCommand;
 import org.bukkit.block.Block;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Silthus
@@ -50,11 +53,13 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     public void disable() {
 
         // lets save all player placed blocks that have an id if 0
+        List<PlayerPlacedBlock> toSave = new ArrayList<>();
         for (Map.Entry<Block, Integer> entry : playerPlacedBlocks.entrySet()) {
             if (entry.getValue() == 0) {
-                new PlayerPlacedBlock(entry.getKey());
+                toSave.add(new PlayerPlacedBlock(entry.getKey()));
             }
         }
+        Ebean.save(toSave);
     }
 
     public boolean isPlayerPlaced(Block block) {
