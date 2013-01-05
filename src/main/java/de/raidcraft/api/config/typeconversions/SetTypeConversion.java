@@ -15,7 +15,7 @@ public class SetTypeConversion extends TypeConversion {
     @Override
     protected Object cast(Class<?> target, Type[] neededGenerics, Object value) {
 
-        Set<Object> values = new HashSet<Object>();
+        Set<Object> values = new HashSet<>();
         Collection raw = (Collection) value;
         for (Object obj : raw) {
             values.add(ConfigUtil.smartCast(neededGenerics[0], obj));

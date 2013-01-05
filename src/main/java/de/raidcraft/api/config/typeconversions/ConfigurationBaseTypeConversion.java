@@ -15,7 +15,7 @@ public class ConfigurationBaseTypeConversion extends TypeConversion {
 
     private static final Map<Class<? extends ConfigurationBase>,
             Constructor<? extends ConfigurationBase>> CACHED_CONSTRUCTORS =
-            new HashMap<Class<? extends ConfigurationBase>, Constructor<? extends ConfigurationBase>>();
+            new HashMap<>();
 
     @Override
     protected Object cast(Class<?> target, Type[] neededGenerics, Object value) {

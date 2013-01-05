@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class ConfigUtil {
 
-    private static final List<TypeConversion> typeConversions = new ArrayList<TypeConversion>(
+    private static final List<TypeConversion> typeConversions = new ArrayList<>(
             Arrays.asList(new SameTypeConversion(),
                     new StringTypeConversion(),
                     new BooleanTypeConversion(),

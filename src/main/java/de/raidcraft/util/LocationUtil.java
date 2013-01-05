@@ -245,7 +245,7 @@ public final class LocationUtil {
 
     public static List<Player> getNearbyPlayers(Block block, int radius) {
 
-        List<Player> players = new ArrayList<Player>();
+        List<Player> players = new ArrayList<>();
         for (Chunk chunk : getSurroundingChunks(block, radius)) {
             for (Entity e : chunk.getEntities())
                 if (e instanceof Player) {

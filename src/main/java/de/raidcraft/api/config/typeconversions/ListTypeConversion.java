@@ -15,7 +15,7 @@ public class ListTypeConversion extends TypeConversion {
     @Override
     protected Object cast(Class<?> target, Type[] neededGenerics, Object value) {
 
-        List<Object> values = new ArrayList<Object>();
+        List<Object> values = new ArrayList<>();
         Collection raw = (Collection) value;
         for (Object obj : raw) {
             values.add(ConfigUtil.smartCast(neededGenerics[0], obj));

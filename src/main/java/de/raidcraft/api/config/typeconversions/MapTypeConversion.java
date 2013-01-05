@@ -16,7 +16,7 @@ public class MapTypeConversion extends TypeConversion {
     protected Object cast(Class<?> target, Type[] neededGenerics, Object value) {
 
         Map<Object, Object> raw = (Map<Object, Object>) value;
-        Map<Object, Object> values = new HashMap<Object, Object>();
+        Map<Object, Object> values = new HashMap<>();
         for (Map.Entry<Object, Object> entry : raw.entrySet()) {
             values.put(ConfigUtil.smartCast(neededGenerics[0], entry.getKey()), ConfigUtil.smartCast(neededGenerics[1], entry.getValue()));
         }
