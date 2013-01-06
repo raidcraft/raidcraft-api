@@ -68,7 +68,29 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
             set(key, def);
             save();
         }
+        if (def instanceof Integer) return (V)(Integer)getOverrideInt(key, (Integer) def);
+        if (def instanceof Double) return (V) (Double) getOverrideDouble(key, (Double) def);
         return (V) getOverrideConfig().get(key, def);
+    }
+
+    public int getOverrideInt(String key, int def) {
+
+        return getOverrideConfig().getInt(key, def);
+    }
+
+    public double getOverrideDouble(String key, double def) {
+
+        return getOverrideConfig().getDouble(key, def);
+    }
+
+    public String getOverrideString(String key, String def) {
+
+        return getOverrideConfig().getString(key, def);
+    }
+
+    public boolean getOverrideBool(String key, boolean def) {
+
+        return getOverrideConfig().getBoolean(key, def);
     }
 
     public ConfigurationSection getOverrideSection(String path) {
