@@ -33,16 +33,13 @@ public abstract class DataMap extends MemoryConfiguration {
                 ConfigurationSection subSection = section.getConfigurationSection(key);
                 if (subSection == null) subSection = section.createSection(key);
                 convertMapsToSections((Map<?, ?>) value, subSection);
+            } else if (value instanceof ConfigurationSection) {
+                ConfigurationSection subSection = section.getConfigurationSection(key);
+                if (subSection == null) subSection = section.createSection(key);
+                convertMapsToSections(((ConfigurationSection) value).getValues(true), subSection);
             } else {
                 section.set(key, value);
             }
-        }
-    }
-
-    private void mergeConfig(ConfigurationSection config) {
-
-        for (String key : config.getKeys(true)) {
-            set(key, config.get(key));
         }
     }
 
@@ -56,7 +53,7 @@ public abstract class DataMap extends MemoryConfiguration {
     public void merge(ConfigurationSection section) {
 
         // we want to merge so that this current map gets overriden
-        mergeConfig(section);
+        convertMapsToSections(section.getValues(true), this);
     }
 
     public ConfigurationSection getSafeConfigSection(String path) {
