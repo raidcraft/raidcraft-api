@@ -17,7 +17,7 @@ public final class ItemUtils {
         try {
             return getItem(Integer.parseInt(name));
         } catch (NumberFormatException e) {
-            return Material.getMaterial(name);
+            return Material.getMaterial(name.toUpperCase());
         }
     }
 
