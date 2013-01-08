@@ -243,6 +243,45 @@ public final class LocationUtil {
         return location;
     }
 
+    public static BlockFace flipBlockFace(BlockFace face) {
+
+        switch (face) {
+
+            case DOWN:
+                return BlockFace.UP;
+            case UP:
+                return BlockFace.DOWN;
+            case NORTH:
+                return BlockFace.SOUTH;
+            case SOUTH:
+                return BlockFace.NORTH;
+            case WEST:
+                return BlockFace.EAST;
+            case EAST:
+                return BlockFace.WEST;
+            // TODO: add more face flipping
+            default:
+                return face;
+        }
+    }
+
+    public static BlockFace rotateBlockFace(BlockFace face) {
+
+        switch (face) {
+
+            case WEST:
+                return BlockFace.NORTH;
+            case NORTH:
+                return BlockFace.EAST;
+            case EAST:
+                return BlockFace.SOUTH;
+            case SOUTH:
+                return BlockFace.WEST;
+            default:
+                return face;
+        }
+    }
+
     public static List<Player> getNearbyPlayers(Block block, int radius) {
 
         List<Player> players = new ArrayList<>();
