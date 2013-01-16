@@ -3,6 +3,7 @@ package de.raidcraft.util;
 import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 /**
  * @author Silthus
@@ -20,9 +21,9 @@ public final class BlockUtil {
      */
     public static void replaceNonSolidSurfaceBlocks(Block source, Material material, int width, int length, int height) {
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                for (int z = 0; z < length; z++) {
+        for (int x = 0; x <= width; x++) {
+            for (int y = 0; y <= height; y++) {
+                for (int z = 0; z <= length; z++) {
                     replaceNonSolidSurfaceBlock(source.getRelative(x, y, z), material);
                     replaceNonSolidSurfaceBlock(source.getRelative(-x, -y, -z), material);
                 }
@@ -39,6 +40,24 @@ public final class BlockUtil {
             replaceNonSolidSurfaceBlock(block.getRelative(0, 1, 0), material);
         } else {
             block.setType(material);
+        }
+    }
+
+    public static void replaceNonSolidSurfaceBlocks(Block source, Material material, BlockFace direction, int radius) {
+
+        switch (direction) {
+
+            case WEST:
+            case EAST:
+                replaceNonSolidSurfaceBlocks(source, material, radius, 0, 0);
+                break;
+            case NORTH:
+            case SOUTH:
+                replaceNonSolidSurfaceBlocks(source, material, 0, radius, 0);
+                break;
+            default:
+                replaceNonSolidSurfaceBlocks(source, material, 0, 0, radius);
+                break;
         }
     }
 }
