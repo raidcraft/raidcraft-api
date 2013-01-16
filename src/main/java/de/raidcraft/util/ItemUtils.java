@@ -14,6 +14,9 @@ public final class ItemUtils {
 
     public static Material getItem(String name) {
 
+        if (name == null || name.equals("")) {
+            return null;
+        }
         try {
             return getItem(Integer.parseInt(name));
         } catch (NumberFormatException e) {
