@@ -49,7 +49,7 @@ public final class SignUtil {
     public static boolean isSign(Block block) {
 
         Material type = block.getType();
-        return type == Material.SIGN || type == Material.WALL_SIGN;
+        return type == Material.SIGN || type == Material.WALL_SIGN || type == Material.SIGN_POST;
     }
 
     public static String parseColor(String line) {
