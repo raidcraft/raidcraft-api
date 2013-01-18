@@ -1,8 +1,8 @@
 package de.raidcraft.util;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 
 import java.util.Formatter;
 import java.util.regex.Matcher;
@@ -48,8 +48,7 @@ public final class SignUtil {
 
     public static boolean isSign(Block block) {
 
-        Material type = block.getType();
-        return type == Material.SIGN || type == Material.WALL_SIGN || type == Material.SIGN_POST;
+        return block.getState() instanceof Sign;
     }
 
     public static String parseColor(String line) {
