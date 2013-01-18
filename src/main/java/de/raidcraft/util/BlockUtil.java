@@ -49,13 +49,15 @@ public final class BlockUtil {
     public static Set<Block> replaceNonSolidSurfaceBlock(Block block, Material material, boolean replaceAir) {
 
         Set<Block> changedBlocks = new HashSet<>();
+        if (replaceAir && block.getTypeId() == 0) {
+            block.setType(material);
+            changedBlocks.add(block);
+            return changedBlocks;
+        }
         if (block.getRelative(0, -1, 0).getTypeId() == 0 || block.getRelative(0, 1, 0).getTypeId() != 0) {
             return changedBlocks;
         }
-        if (replaceAir && block.getType() == Material.AIR) {
-            block.setType(material);
-            changedBlocks.add(block);
-        } else if (block.isLiquid() || !BlockType.canPassThrough(block.getTypeId())) {
+        if (block.isLiquid() || !BlockType.canPassThrough(block.getTypeId())) {
             changedBlocks.addAll(replaceNonSolidSurfaceBlock(block.getRelative(0, 1, 0), material, replaceAir));
         } else {
             block.setType(material);
