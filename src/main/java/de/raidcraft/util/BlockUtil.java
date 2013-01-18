@@ -5,6 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Silthus
  */
@@ -19,45 +22,52 @@ public final class BlockUtil {
      * @param length the z-axis radius
      * @param height the y-axis radius
      */
-    public static void replaceNonSolidSurfaceBlocks(Block source, Material material, int width, int length, int height) {
+    public static Set<Block> replaceNonSolidSurfaceBlocks(Block source, Material material, int width, int length, int height) {
 
+        Set<Block> changedBlocks = new HashSet<>();
         for (int x = 0; x <= width; x++) {
             for (int y = 0; y <= height; y++) {
                 for (int z = 0; z <= length; z++) {
-                    replaceNonSolidSurfaceBlock(source.getRelative(x, y, z), material);
-                    replaceNonSolidSurfaceBlock(source.getRelative(-x, -y, -z), material);
+                    changedBlocks.addAll(replaceNonSolidSurfaceBlock(source.getRelative(x, y, z), material));
+                    changedBlocks.addAll(replaceNonSolidSurfaceBlock(source.getRelative(-x, -y, -z), material));
                 }
             }
         }
+        return changedBlocks;
     }
 
-    public static void replaceNonSolidSurfaceBlock(Block block, Material material) {
+    public static Set<Block> replaceNonSolidSurfaceBlock(Block block, Material material) {
 
+        Set<Block> changedBlocks = new HashSet<>();
         if (block.getRelative(0, -1, 0).getTypeId() == 0 || block.getRelative(0, 1, 0).getTypeId() != 0) {
-            return;
+            return changedBlocks;
         }
         if (block.isLiquid() || !BlockType.canPassThrough(block.getTypeId())) {
-            replaceNonSolidSurfaceBlock(block.getRelative(0, 1, 0), material);
+            changedBlocks.addAll(replaceNonSolidSurfaceBlock(block.getRelative(0, 1, 0), material));
         } else {
             block.setType(material);
+            changedBlocks.add(block);
         }
+        return changedBlocks;
     }
 
-    public static void replaceNonSolidSurfaceBlocks(Block source, Material material, BlockFace direction, int radius) {
+    public static Set<Block> replaceNonSolidSurfaceBlocks(Block source, Material material, BlockFace direction, int radius) {
 
+        Set<Block> changedBlocks = new HashSet<>();
         switch (direction) {
 
             case WEST:
             case EAST:
-                replaceNonSolidSurfaceBlocks(source, material, radius, 0, 0);
+                changedBlocks.addAll(replaceNonSolidSurfaceBlocks(source, material, radius, 0, 0));
                 break;
             case NORTH:
             case SOUTH:
-                replaceNonSolidSurfaceBlocks(source, material, 0, radius, 0);
+                changedBlocks.addAll(replaceNonSolidSurfaceBlocks(source, material, 0, radius, 0));
                 break;
             default:
-                replaceNonSolidSurfaceBlocks(source, material, 0, 0, radius);
+                changedBlocks.addAll(replaceNonSolidSurfaceBlocks(source, material, 0, 0, radius));
                 break;
         }
+        return changedBlocks;
     }
 }
