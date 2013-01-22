@@ -1,7 +1,12 @@
-package de.raidcraft.util;
+package de.raidcraft.util.ItemUtils;
 
+import de.raidcraft.util.ItemUtils.serialazition.BookSerialization;
+import de.raidcraft.util.ItemUtils.serialazition.EnchantmentSerialization;
+import de.raidcraft.util.ItemUtils.serialazition.FireworkEffectSerialization;
+import de.raidcraft.util.ItemUtils.serialazition.Serializable;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Silthus
@@ -125,5 +130,35 @@ public final class ItemUtils {
     public enum Language {
         ENGLISH,
         GERMAN
+    }
+
+    public class Serialization {
+
+        private ItemStack item;
+        private Serializable serializable;
+
+        public Serialization(ItemStack item) {
+            this.item = item;
+
+            if(item.getType() == Material.FIREWORK) {
+                serializable = new FireworkEffectSerialization(item);
+            }
+            else if(item.getType() == Material.BOOK_AND_QUILL) {
+                serializable = new BookSerialization(item);
+            }
+            else {
+                serializable = new EnchantmentSerialization(item);
+            }
+        }
+
+        public String getSerializedItemData() {
+
+            return serializable.serialize();
+        }
+
+        public ItemStack getDeserializedItem(String serializedData) {
+
+            return serializable.deserialize(serializedData);
+        }
     }
 }
