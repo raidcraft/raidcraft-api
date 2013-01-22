@@ -132,7 +132,7 @@ public final class ItemUtils {
         GERMAN
     }
 
-    public class Serialization {
+    public static class Serialization {
 
         private ItemStack item;
         private Serializable serializable;
