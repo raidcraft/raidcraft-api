@@ -1,9 +1,9 @@
-package de.raidcraft.util.ItemUtils;
+package de.raidcraft.util.itemutils;
 
-import de.raidcraft.util.ItemUtils.serialazition.BookSerialization;
-import de.raidcraft.util.ItemUtils.serialazition.EnchantmentSerialization;
-import de.raidcraft.util.ItemUtils.serialazition.FireworkEffectSerialization;
-import de.raidcraft.util.ItemUtils.serialazition.Serializable;
+import de.raidcraft.util.itemutils.serialazition.BookSerialization;
+import de.raidcraft.util.itemutils.serialazition.EnchantmentSerialization;
+import de.raidcraft.util.itemutils.serialazition.FireworkEffectSerialization;
+import de.raidcraft.util.itemutils.serialazition.Serializable;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

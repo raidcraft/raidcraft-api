@@ -1,4 +1,4 @@
-package de.raidcraft.util.ItemUtils.serialazition;
+package de.raidcraft.util.itemutils.serialazition;
 
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
