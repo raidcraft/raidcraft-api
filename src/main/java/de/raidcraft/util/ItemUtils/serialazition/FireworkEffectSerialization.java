@@ -1,5 +1,6 @@
 package de.raidcraft.util.itemutils.serialazition;
 
+import de.raidcraft.RaidCraft;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +27,8 @@ public class FireworkEffectSerialization extends SimpleSerialization {
     @Override
     public String serialize() {
         FireworkMeta fireworkMeta = (FireworkMeta) getItem().getItemMeta();
+        if(fireworkMeta.getEffects().size() == 0) return "";
+        
         String fireworkEffects = fireworkMeta.getPower() + "=";
         for (FireworkEffect effect : fireworkMeta.getEffects()) {
             fireworkEffects += effect.getType().name() + ":";
@@ -89,6 +92,7 @@ public class FireworkEffectSerialization extends SimpleSerialization {
             getItem().setItemMeta(fireworkMeta);
         }
         catch(Exception e) {
+            RaidCraft.LOGGER.warning("Can't deserialize FireworkEffect ItemData");
             e.printStackTrace();
         }
 
