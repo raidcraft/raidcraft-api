@@ -26,7 +26,8 @@ public abstract class DataMap extends MemoryConfiguration {
     protected void convertMapsToSections(Map<?, ?> input, ConfigurationSection section) {
 
         for (Map.Entry<?, ?> entry : input.entrySet()) {
-            String key = entry.getKey().toString();
+            // always lower case the keys
+            String key = entry.getKey().toString().toLowerCase();
             Object value = entry.getValue();
 
             if (value instanceof Map) {
