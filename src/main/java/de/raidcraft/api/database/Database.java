@@ -85,7 +85,7 @@ public class Database {
             return;
         }
         table.setConnection(connection);
-        if (!(getExistingTables(table.getTableName()).size() > 0)) {
+        if (getExistingTables(table.getTableName()).size() <= 0) {
             table.createTable();
         }
     }
