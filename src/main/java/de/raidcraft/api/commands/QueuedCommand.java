@@ -18,11 +18,15 @@ public class QueuedCommand {
     private final Method method;
     private final Object[] args;
 
-    public QueuedCommand(final CommandSender sender, Object object, Method method, Object... args) {
+    public QueuedCommand(final CommandSender sender, Object object, String method, Object... args) throws NoSuchMethodException {
 
         this.sender = sender;
         this.object = object;
-        this.method = method;
+        Class[] argsClasses = new Class[args.length];
+        for (int i = 0; i < args.length; i++) {
+            argsClasses[i] = args[i].getClass();
+        }
+        this.method = object.getClass().getDeclaredMethod(method, argsClasses);
         this.args = args;
         RaidCraft.getComponent(RaidCraftPlugin.class).queueCommand(this);
     }

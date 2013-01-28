@@ -3,7 +3,6 @@ package de.raidcraft.api.commands;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.lang.reflect.Method;
 import java.util.Random;
 
 /**
@@ -14,7 +13,7 @@ public class QueuedCaptchaCommand extends QueuedCommand {
     private static final Random RANDOM = new Random();
     private final String captcha;
 
-    public QueuedCaptchaCommand(CommandSender sender, Object object, Method method, Object... args) {
+    public QueuedCaptchaCommand(CommandSender sender, Object object, String method, Object... args) throws NoSuchMethodException {
 
         super(sender, object, method, args);
         this.captcha = generateCaptchaString();
