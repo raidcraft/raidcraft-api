@@ -68,7 +68,12 @@ public class BukkitPlayer extends AbstractPlayer {
     @Override
     public boolean hasPermission(String permission) {
 
-        return player.hasPermission(permission);
+        if (isOnline()) {
+            return player.hasPermission(permission);
+        } else {
+            // TODO: maybe not hard code this
+            return RaidCraft.getPermissions().playerHas("world", getUserName(), permission);
+        }
     }
 
     @Override
