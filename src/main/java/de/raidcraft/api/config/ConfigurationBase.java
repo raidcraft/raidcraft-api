@@ -39,12 +39,6 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         this.plugin = plugin;
         this.name = file.getName();
         this.file = file;
-        // set the header
-        options().header("##########################################################\n" +
-                "    Raid-Craft Configuration File: " + name + "\n" +
-                "    Plugin: " + plugin.getName() + " - v" + plugin.getDescription().getVersion() + "\n" +
-                "##########################################################");
-        options().copyHeader(true);
     }
 
     public ConfigurationBase(T plugin, String name) {
