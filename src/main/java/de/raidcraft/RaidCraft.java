@@ -10,6 +10,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -63,29 +64,16 @@ public class RaidCraft implements Listener {
 
         if (player == null) {
             // TODO: lookup from database
-            /*
-            try {
-                // player is not online so we need to check our database
-                // if no match is found it will throw an exception
-                ResultSet resultSet = Database.getTable(GuestTable.class).getConnection().prepareStatement(
-                        "SELECT count(*) as count, player FROM `raidcraft_guests` WHERE player IS LIKE '" + name + "%'").executeQuery();
-                if (resultSet.next()) {
-                    if (resultSet.getInt("count") == 1) {
-                        name = resultSet.getString("player");
-                        // add the player to cache if he isnt added
-                        if (players.containsKey(name)) {
-                            rcPlayer = players.get(name);
-                        } else {
-                            rcPlayer = new BukkitPlayer(name);
-                            players.put(name, rcPlayer);
-                        }
-                    }
+            OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(name);
+            if (offlinePlayer != null) {
+                // add the player to cache if he isnt added
+                if (players.containsKey(name)) {
+                    rcPlayer = players.get(name);
+                } else {
+                    rcPlayer = new BukkitPlayer(name);
+                    players.put(name, rcPlayer);
                 }
-            } catch (SQLException e) {
-                LOGGER.warning(e.getMessage());
-                e.printStackTrace();
             }
-            */
         } else {
             rcPlayer = getPlayer(player);
         }
