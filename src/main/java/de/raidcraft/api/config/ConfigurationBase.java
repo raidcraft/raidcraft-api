@@ -177,23 +177,23 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         save(file);
     }
 
-    private void loadAnnotations(Object o) {
+    private void loadAnnotations(Object object) {
 
-        for (Field field : getFieldsRecur(o.getClass())) {
+        for (Field field : getFieldsRecur(object.getClass())) {
             field.setAccessible(true);
 
             try {
-                if (field.isAnnotationPresent(ConfigSubClass.class) && field.get(o) != null) {
-                    loadAnnotations(field.get(o));
+                if (field.isAnnotationPresent(ConfigSubClass.class) && field.get(object) != null) {
+                    loadAnnotations(field.get(object));
                 } else if (field.isAnnotationPresent(Setting.class)) {
 
                     String key = field.getAnnotation(Setting.class).value();
                     final Object value = smartCast(field.getGenericType(), get(key));
 
                     if (value != null) {
-                        field.set(this, value);
+                        field.set(object, value);
                     } else {
-                        set(key, prepareSerialization(field.get(this)));
+                        set(key, prepareSerialization(field.get(object)));
                     }
                 }
             } catch (IllegalAccessException e) {
@@ -220,16 +220,16 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         saveAnnotations(this);
     }
 
-    private void saveAnnotations(Object o) {
+    private void saveAnnotations(Object object) {
 
-        for (Field field : getFieldsRecur(o.getClass())) {
+        for (Field field : getFieldsRecur(object.getClass())) {
             field.setAccessible(true);
             try {
-                if (field.isAnnotationPresent(ConfigSubClass.class) && field.get(o) != null) {
-                    saveAnnotations(field.get(o));
+                if (field.isAnnotationPresent(ConfigSubClass.class) && field.get(object) != null) {
+                    saveAnnotations(field.get(object));
                 } else if (field.isAnnotationPresent(Setting.class)) {
                     String key = field.getAnnotation(Setting.class).value();
-                    set(key, prepareSerialization(field.get(this)));
+                    set(key, prepareSerialization(field.get(object)));
                 }
             } catch (IllegalAccessException e) {
                 plugin.getLogger().log(Level.SEVERE, "Error setting configuration value of field: ", e);
