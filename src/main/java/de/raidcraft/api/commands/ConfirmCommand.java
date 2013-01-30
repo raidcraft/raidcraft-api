@@ -26,7 +26,7 @@ public class ConfirmCommand {
     public void confirm(CommandContext args, CommandSender sender) throws CommandException {
 
         if (!plugin.getQueuedCommands().containsKey(sender.getName())) {
-            throw new CommandException("Es gibt nichts was du aktuell bestätigen kannst! (Zu lange gewartet?)");
+            throw new CommandException("Es gibt nichts was du aktuell bestätigen kannst!");
         }
         QueuedCommand command = plugin.getQueuedCommands().get(sender.getName());
         if (command instanceof QueuedCaptchaCommand) {
