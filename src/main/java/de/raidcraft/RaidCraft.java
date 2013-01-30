@@ -63,7 +63,6 @@ public class RaidCraft implements Listener {
         RCPlayer rcPlayer = null;
 
         if (player == null) {
-            // TODO: lookup from database
             OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(name);
             if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                 // add the player to cache if he isnt added
@@ -73,6 +72,10 @@ public class RaidCraft implements Listener {
                     rcPlayer = new BukkitPlayer(offlinePlayer.getName());
                     players.put(offlinePlayer.getName(), rcPlayer);
                 }
+            }
+            //TODO lookup from database because of auto completion
+            else {
+
             }
         } else {
             rcPlayer = getPlayer(player);
