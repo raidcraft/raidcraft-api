@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -172,23 +173,34 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
     private void loadAnnotations() {
 
-        for (Field field : getFieldsRecur(getClass())) {
-            if (!field.isAnnotationPresent(Setting.class)) continue;
-            String key = field.getAnnotation(Setting.class).value();
-            final Object value = smartCast(field.getGenericType(), get(key));
+        loadAnnotations(this);
+        save(file);
+    }
+
+    private void loadAnnotations(Object o) {
+
+        for (Field field : getFieldsRecur(o.getClass())) {
+            field.setAccessible(true);
+
             try {
-                field.setAccessible(true);
-                if (value != null) {
-                    field.set(this, value);
-                } else {
-                    set(key, prepareSerialization(field.get(this)));
+                if (field.isAnnotationPresent(ConfigSubClass.class) && field.get(o) != null) {
+                    loadAnnotations(field.get(o));
+                } else if (field.isAnnotationPresent(Setting.class)) {
+
+                    String key = field.getAnnotation(Setting.class).value();
+                    final Object value = smartCast(field.getGenericType(), get(key));
+
+                    if (value != null) {
+                        field.set(this, value);
+                    } else {
+                        set(key, prepareSerialization(field.get(this)));
+                    }
                 }
             } catch (IllegalAccessException e) {
                 plugin.getLogger().log(Level.SEVERE, "Error setting configuration value of field: ", e);
                 e.printStackTrace();
             }
         }
-        save(file);
     }
 
     @Override
@@ -205,14 +217,22 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
     private void saveAnnotations() {
 
-        for (Field field : getFieldsRecur(getClass())) {
+        saveAnnotations(this);
+    }
+
+    private void saveAnnotations(Object o) {
+
+        for (Field field : getFieldsRecur(o.getClass())) {
             field.setAccessible(true);
-            if (!field.isAnnotationPresent(Setting.class)) continue;
-            String key = field.getAnnotation(Setting.class).value();
             try {
-                set(key, prepareSerialization(field.get(this)));
+                if (field.isAnnotationPresent(ConfigSubClass.class) && field.get(o) != null) {
+                    saveAnnotations(field.get(o));
+                } else if (field.isAnnotationPresent(Setting.class)) {
+                    String key = field.getAnnotation(Setting.class).value();
+                    set(key, prepareSerialization(field.get(this)));
+                }
             } catch (IllegalAccessException e) {
-                plugin.getLogger().log(Level.SEVERE, "Error getting configuration value of field: ", e);
+                plugin.getLogger().log(Level.SEVERE, "Error setting configuration value of field: ", e);
                 e.printStackTrace();
             }
         }
@@ -227,13 +247,8 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         List<Field> fields = new ArrayList<>();
         while (clazz != null && (includeObject || !Object.class.equals(clazz))) {
-            for (Field field : clazz.getDeclaredFields()) {
-                if (field.isAnnotationPresent(ConfigSubClass.class)) {
-                    fields.addAll(getFieldsRecur(field.getType()));
-                } else {
-                    fields.add(field);
-                }
-            }
+
+            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
             clazz = clazz.getSuperclass();
         }
         return fields;
