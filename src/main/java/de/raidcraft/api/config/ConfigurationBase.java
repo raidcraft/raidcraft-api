@@ -5,10 +5,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -224,7 +227,13 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         List<Field> fields = new ArrayList<>();
         while (clazz != null && (includeObject || !Object.class.equals(clazz))) {
-            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.isAnnotationPresent(ConfigSubClass.class)) {
+                    fields.addAll(getFieldsRecur(field.getType()));
+                } else {
+                    fields.add(field);
+                }
+            }
             clazz = clazz.getSuperclass();
         }
         return fields;
