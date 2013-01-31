@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * @author Silthus
  */
-public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
+public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component {
 
     // vault variables
     private static Economy economy;
@@ -85,6 +85,9 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor {
         }
         // call the sub plugins to enable
         enable();
+        // lets register the plugin as component
+        RaidCraft.registerComponent(getClass(), this);
+
         PluginDescriptionFile description = getDescription();
         getLogger().info(description.getName() + "-v" + description.getVersion() + " enabled.");
     }
