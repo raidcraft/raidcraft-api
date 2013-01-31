@@ -2,6 +2,8 @@ package de.raidcraft;
 
 import de.raidcraft.api.Component;
 import de.raidcraft.api.bukkit.BukkitPlayer;
+import de.raidcraft.api.database.Database;
+import de.raidcraft.api.database.Table;
 import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
@@ -117,6 +119,18 @@ public class RaidCraft implements Listener {
             players.put(player.getName(), rcPlayer);
         }
         return rcPlayer;
+    }
+
+    /**
+     * Gets the registered table of the given table class.
+     *
+     * @param tClass of the table
+     * @param <T> table object
+     * @return table
+     */
+    public static <T extends Table> T getTable(Class<T> tClass) {
+
+        return Database.getTable(tClass);
     }
 
     /**
