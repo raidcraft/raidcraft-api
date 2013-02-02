@@ -1,6 +1,8 @@
 package de.raidcraft.api.database;
 
 import com.avaje.ebean.Ebean;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
@@ -24,8 +26,9 @@ public class Database {
     private DatabaseConfig config;
     private Connection connection;
 
-    public Database(BasePlugin plugin) {
+    public Database() {
 
+        BasePlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         this.config = plugin.configure(new DatabaseConfig(plugin));
 
         try {

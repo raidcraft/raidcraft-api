@@ -213,7 +213,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
     public final void registerTable(Class<? extends Table> clazz, Table table) {
 
         if (database == null) {
-            database = new Database(this);
+            database = new Database();
         }
         database.registerTable(clazz, table);
     }
