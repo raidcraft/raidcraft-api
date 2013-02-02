@@ -100,7 +100,7 @@ public class RaidCraft implements Listener {
             return safeGetPlayer(name);
         } catch (UnknownPlayerException e) {
             LOGGER.severe(e.getMessage());
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return null;
     }
