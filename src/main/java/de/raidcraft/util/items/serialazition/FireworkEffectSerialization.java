@@ -1,6 +1,7 @@
-package de.raidcraft.util.itemutils.serialazition;
+package de.raidcraft.util.items.serialazition;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.util.items.serialazition.SimpleSerialization;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.inventory.ItemStack;

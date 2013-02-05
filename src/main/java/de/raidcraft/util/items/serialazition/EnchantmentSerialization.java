@@ -1,5 +1,6 @@
-package de.raidcraft.util.itemutils.serialazition;
+package de.raidcraft.util.items.serialazition;
 
+import de.raidcraft.util.items.serialazition.SimpleSerialization;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 

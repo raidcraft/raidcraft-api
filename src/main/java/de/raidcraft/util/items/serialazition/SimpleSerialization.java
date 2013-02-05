@@ -1,4 +1,4 @@
-package de.raidcraft.util.itemutils.serialazition;
+package de.raidcraft.util.items.serialazition;
 
 import org.bukkit.inventory.ItemStack;
 
