@@ -52,4 +52,6 @@ public interface RCPlayer {
     public BlockWorldVector getTargetBlock();
 
     public int getItemInHand();
+
+    public void destroy();
 }

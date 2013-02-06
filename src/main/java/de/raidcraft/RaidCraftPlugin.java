@@ -33,6 +33,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     @Override
     public void enable() {
 
+        registerEvents(new RaidCraft());
         registerCommands(ConfirmCommand.class);
         RaidCraft.registerComponent(RaidCraftPlugin.class, this);
         // lets load all blocks that are player placed

@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class BukkitPlayer extends AbstractPlayer {
 
-    private final Player player;
+    private Player player;
 
     public BukkitPlayer(Player player) {
 
@@ -79,6 +79,9 @@ public class BukkitPlayer extends AbstractPlayer {
     @Override
     public boolean isOnline() {
 
+        if (player == null) {
+            player = Bukkit.getPlayer(getUserName());
+        }
         return player != null && player.isOnline();
     }
 
@@ -133,5 +136,11 @@ public class BukkitPlayer extends AbstractPlayer {
     public int getItemInHand() {
 
         return player.getItemInHand().getTypeId();
+    }
+
+    @Override
+    public void destroy() {
+
+        this.player = null;
     }
 }
