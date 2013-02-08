@@ -34,7 +34,7 @@ public abstract class PaginatedResult<T> {
 
     private final String header;
 
-    protected static final int PER_PAGE = 10;
+    protected static final int PER_PAGE = 7;
     protected int count = 1;
 
     public PaginatedResult(String header) {
