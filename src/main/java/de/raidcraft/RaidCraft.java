@@ -40,8 +40,10 @@ public class RaidCraft implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
 
-        players.get(event.getPlayer().getName()).destroy();
-        players.remove(event.getPlayer().getName());
+        if (players.containsKey(event.getPlayer().getName())) {
+            players.get(event.getPlayer().getName()).destroy();
+            players.remove(event.getPlayer().getName());
+        }
     }
 
     /*///////////////////////////////////////////////////////////////////////////
