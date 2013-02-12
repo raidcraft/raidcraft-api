@@ -9,6 +9,8 @@ public interface Config extends ConfigurationSection {
 
     public void reload();
 
+    public void load(boolean annotations);
+
     public void load();
 
     public void save();

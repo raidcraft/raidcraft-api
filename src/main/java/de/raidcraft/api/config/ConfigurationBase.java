@@ -148,9 +148,18 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         save(file);
     }
 
+    public void load(boolean annotations) {
+
+        load();
+        if (annotations) {
+            // load the annoations
+            loadAnnotations();
+        }
+    }
+
     public void load() {
 
-        load(file);
+        load(true);
     }
 
     @Override
@@ -162,8 +171,6 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
             }
             // load the config by calling the bukkit super method
             super.load(file);
-            // load the annoations
-            loadAnnotations();
             // plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + name + "\" successfully.");
         } catch (IOException | InvalidConfigurationException e) {
             plugin.getLogger().warning(e.getMessage());

@@ -161,10 +161,15 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         enable();
     }
 
+    public final <T extends Config> T configure(T config, boolean annotations) {
+
+        config.load(annotations);
+        return config;
+    }
+
     public final <T extends Config> T configure(T config) {
 
-        config.load();
-        return config;
+        return configure(config, true);
     }
 
     public final void queueCommand(final QueuedCommand command) {
