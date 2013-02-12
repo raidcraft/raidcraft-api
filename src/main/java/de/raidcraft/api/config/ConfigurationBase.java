@@ -150,7 +150,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
     public void load(boolean annotations) {
 
-        load();
+        load(file);
         if (annotations) {
             // load the annoations
             loadAnnotations();
