@@ -5,7 +5,13 @@ import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import com.sk89q.minecraft.util.commands.CommandUsageException;
+import com.sk89q.minecraft.util.commands.CommandsManager;
+import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
+import com.sk89q.minecraft.util.commands.SimpleInjector;
+import com.sk89q.minecraft.util.commands.WrappedCommandException;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
@@ -74,7 +80,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
             @Override
             public boolean hasPermission(CommandSender sender, String s) {
 
-                return sender.hasPermission(s);
+                return sender.isOp() || sender.hasPermission(s);
             }
         };
         this.commands.setInjector(new SimpleInjector(this));
