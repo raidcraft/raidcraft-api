@@ -28,7 +28,7 @@ public class QueuedCommand {
             argsClasses[i] = args[i].getClass();
         }
         for (Method method : object.getClass().getDeclaredMethods()) {
-            if (method.getParameterTypes().length == argsClasses.length) {
+            if(method.getName().equalsIgnoreCase(methodName)) {
                 boolean match = true;
                 for (int i = 0; i < argsClasses.length; i++) {
                     if (method.getParameterTypes()[i].isPrimitive()) {
