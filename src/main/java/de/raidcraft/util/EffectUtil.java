@@ -1,8 +1,10 @@
 package de.raidcraft.util;
 
 import de.raidcraft.RaidCraft;
+import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -17,6 +19,16 @@ import java.util.List;
 public class EffectUtil {
 
     private static final EffectUtil instance = new EffectUtil();
+
+    public static void playSound(Location location, Sound sound, float volume, float pitch) {
+
+        location.getWorld().playSound(location, sound, volume, pitch);
+    }
+
+    public static void playEffect(Location location, Effect effect, int data) {
+
+        location.getWorld().playEffect(location, effect, data);
+    }
 
     public static void playFirework(World world, Location location, FireworkEffect effect) {
 
