@@ -95,7 +95,7 @@ public final class BukkitUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<LivingEntity> getNearbyEntities(final LivingEntity source, int radius) {
+    public static List<LivingEntity> getNearbyEntities(final Entity source, int radius) {
 
         List<LivingEntity> entities = new ArrayList<>();
         for (Entity entity : source.getNearbyEntities(radius, radius, radius)) {
