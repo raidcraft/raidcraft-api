@@ -1,14 +1,24 @@
 package de.raidcraft.util;
 
+import com.comphenix.protocol.Packets;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
 import de.raidcraft.RaidCraft;
+import net.minecraft.server.v1_4_R1.EntityWolf;
 import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEntity;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.meta.FireworkMeta;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +28,7 @@ import java.util.List;
  */
 public class EffectUtil {
 
+    private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     private static final EffectUtil instance = new EffectUtil();
 
     public static void playSound(Location location, Sound sound, float volume, float pitch) {
@@ -28,6 +39,35 @@ public class EffectUtil {
     public static void playEffect(Location location, Effect effect, int data) {
 
         location.getWorld().playEffect(location, effect, data);
+    }
+
+    public static void fakeExplosion(Location location) {
+
+        PacketContainer fakeExplosion = protocolManager.createPacket(Packets.Server.EXPLOSION);
+        fakeExplosion.getDoubles().
+                write(0, location.getX()).
+                write(1, location.getY()).
+                write(2, location.getZ());
+        fakeExplosion.getFloat().
+                write(0, 3.0F);
+        for (Player player : location.getWorld().getPlayers()) {
+            try {
+                protocolManager.sendServerPacket(player, fakeExplosion);
+            } catch (InvocationTargetException e) {
+                RaidCraft.LOGGER.warning(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void playWolfHearts(Location loc) {
+
+        World world = loc.getWorld();
+        Wolf wo = world.spawn(loc, Wolf.class);
+        wo.remove();
+        net.minecraft.server.v1_4_R1.World nmsWorld = ((CraftWorld) world).getHandle();
+        net.minecraft.server.v1_4_R1.EntityWolf nmsWolf = (EntityWolf) ((CraftEntity) wo).getHandle();
+        nmsWorld.broadcastEntityEffect(nmsWolf, (byte) 7);
     }
 
     public static void playFirework(World world, Location location, FireworkEffect effect) {
