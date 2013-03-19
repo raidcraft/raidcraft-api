@@ -39,10 +39,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.milkbowl</groupId>
+            <groupId>net.milkbowl.vault</groupId>
             <artifactId>vault</artifactId>
-            <version>1.2.20</version>
-            <scope>compile</scope>
+            <version>1.2.24</version>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
