@@ -110,4 +110,89 @@ public final class BukkitUtil {
 
         return new BlockWorldVector(new BukkitWorld(block.getWorld()), toWorldVector(block.getLocation()));
     }
+
+    public static List<LivingEntity> getLivingEntitiesInCone(LivingEntity source, float radius) {
+
+        return getLivingEntitiesInCone(source, radius, 45.0F);
+    }
+
+    public static List<LivingEntity> getLivingEntitiesInCone(LivingEntity source, float radius, float degrees) {
+
+        return getEntitiesInCone(
+                getNearbyEntities(source, (int) radius),
+                source.getLocation().toVector(),
+                radius,
+                degrees,
+                source.getEyeLocation().toVector());
+    }
+
+
+    /** @param entities
+     *            List of nearby entities
+     * @param startPos
+     *            starting position
+     * @param radius
+     *            distance cone travels
+     * @param degrees
+     *            angle of cone
+     * @param direction
+     *            direction of the cone
+     * @return All entities inside the cone */
+    public static List<LivingEntity> getEntitiesInCone(List<LivingEntity> entities, Vector startPos, float radius, float degrees, Vector direction) {
+
+        // Returned list
+        List<LivingEntity> newEntities = new ArrayList<>();
+        // We don't want to use square root
+        float squaredRadius = radius * radius;
+
+        for (Entity entity : entities) {
+            Vector relativePosition = entity.getLocation().toVector();
+            // Position of the entity relative to the cone origin
+            relativePosition.subtract(startPos);
+            // First check : distance
+            if (relativePosition.lengthSquared() > squaredRadius) continue;
+            // Second check : angle
+            if (getAngleBetweenVectors(direction, relativePosition) > degrees) continue;
+            if (entity instanceof LivingEntity) {
+                newEntities.add((LivingEntity) entity);
+            }
+        }
+        return newEntities;
+    }
+
+    /** @param startPos
+     *            starting position
+     * @param radius
+     *            distance cone travels
+     * @param degrees
+     *            angle of cone
+     * @param direction
+     *            direction of the cone
+     * @return All block positions inside the cone */
+    public static List<Vector> getPositionsInCone(Vector startPos, float radius, float degrees, Vector direction) {
+
+        // Returned list
+        List<Vector> positions = new ArrayList<>();
+        // We don't want to use square root
+        float squaredRadius = radius * radius;
+
+        for (float x=startPos.getBlockX()-radius; x<startPos.getBlockX()+radius; x++)
+            for (float y=startPos.getBlockY()-radius; y<startPos.getBlockY()+radius; y++)
+                for (float z=startPos.getBlockZ()-radius; z<startPos.getBlockZ()+radius; z++) {
+                    Vector relative = new Vector(x,y,z);
+                    relative.subtract(startPos);
+                    // First check : distance
+                    if (relative.lengthSquared() > squaredRadius) continue;
+                    // Second check : angle
+                    if (getAngleBetweenVectors(direction, relative) > degrees) continue;
+                    // The position v is in the cone
+                    positions.add(new Vector(x,y,z));
+                }
+        return positions;
+    }
+
+
+    public static float getAngleBetweenVectors(Vector v1, Vector v2) {
+        return Math.abs((float)Math.toDegrees(v1.angle(v2)));
+    }
 }
