@@ -5,14 +5,14 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import de.raidcraft.RaidCraft;
-import net.minecraft.server.v1_4_R1.EntityWolf;
+import net.minecraft.server.v1_5_R1.EntityWolf;
 import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_5_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R1.entity.CraftEntity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -65,8 +65,8 @@ public class EffectUtil {
         World world = loc.getWorld();
         Wolf wo = world.spawn(loc, Wolf.class);
         wo.remove();
-        net.minecraft.server.v1_4_R1.World nmsWorld = ((CraftWorld) world).getHandle();
-        net.minecraft.server.v1_4_R1.EntityWolf nmsWolf = (EntityWolf) ((CraftEntity) wo).getHandle();
+        net.minecraft.server.v1_5_R1.World nmsWorld = ((CraftWorld) world).getHandle();
+        net.minecraft.server.v1_5_R1.EntityWolf nmsWolf = (EntityWolf) ((CraftEntity) wo).getHandle();
         nmsWorld.broadcastEntityEffect(nmsWolf, (byte) 7);
     }
 
