@@ -62,6 +62,16 @@ public final class ItemUtils {
         return getFriendlyName(material);
     }
 
+    public static String getFriendlyName(int id, Language language) {
+
+        return getFriendlyName(Material.getMaterial(id), language);
+    }
+
+    public static String getFriendlyName(int id) {
+
+        return getFriendlyName(Material.getMaterial(id));
+    }
+
     public enum Item {
 
         // tools
