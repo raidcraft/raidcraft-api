@@ -11,7 +11,7 @@ public abstract class AbstractRequirement<T> implements Requirement<T> {
     private final T resolver;
     private final String name;
 
-    protected AbstractRequirement(T resolver, ConfigurationSection config) {
+    public AbstractRequirement(T resolver, ConfigurationSection config) {
 
         this.resolver = resolver;
         this.name = StringUtils.formatName(config.getName());
