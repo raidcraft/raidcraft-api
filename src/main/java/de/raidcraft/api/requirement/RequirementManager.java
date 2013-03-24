@@ -37,7 +37,7 @@ public final class RequirementManager {
                     try {
                         ConfigurationSection section = config.getConfigurationSection(key + "." + reqName);
                         if (section == null) {
-                            RaidCraft.LOGGER.warning("Wrong requirement section defined for " + resolver);
+                            RaidCraft.LOGGER.warning("Wrong requirement section " + key + "." + reqName + " defined for " + resolver);
                             continue;
                         }
                         Requirement<T> requirement = (Requirement<T>) constructors.get(rClass).newInstance(

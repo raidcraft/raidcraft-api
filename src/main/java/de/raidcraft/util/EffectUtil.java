@@ -5,17 +5,13 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import de.raidcraft.RaidCraft;
-import net.minecraft.server.v1_5_R1.EntityWolf;
 import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_5_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_5_R1.entity.CraftEntity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.lang.reflect.InvocationTargetException;
@@ -60,6 +56,7 @@ public class EffectUtil {
         }
     }
 
+    /*
     public static void playWolfHearts(Location loc) {
 
         World world = loc.getWorld();
@@ -69,6 +66,7 @@ public class EffectUtil {
         net.minecraft.server.v1_5_R1.EntityWolf nmsWolf = (EntityWolf) ((CraftEntity) wo).getHandle();
         nmsWorld.broadcastEntityEffect(nmsWolf, (byte) 7);
     }
+    */
 
     public static void playFirework(World world, Location location, FireworkEffect effect) {
 
