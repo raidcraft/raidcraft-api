@@ -1,16 +1,14 @@
 package de.raidcraft.api.commands;
 
+import de.raidcraft.util.MathUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-
-import java.util.Random;
 
 /**
  * @author Silthus
  */
 public class QueuedCaptchaCommand extends QueuedCommand {
 
-    private static final Random RANDOM = new Random();
     private final String captcha;
 
     public QueuedCaptchaCommand(CommandSender sender, Object object, String method, Object... args) throws NoSuchMethodException {
@@ -29,11 +27,11 @@ public class QueuedCaptchaCommand extends QueuedCommand {
      *  Generate a CAPTCHA String consisting of random lowercase & uppercase letters, and numbers.
      */
     public String generateCaptchaString() {
-        int length = 5 + (Math.abs(RANDOM.nextInt()) % 3);
+        int length = 5 + (Math.abs(MathUtil.RANDOM.nextInt()) % 3);
 
         StringBuilder captchaStringBuffer = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            int baseCharNumber = Math.abs(RANDOM.nextInt()) % 62;
+            int baseCharNumber = Math.abs(MathUtil.RANDOM.nextInt()) % 62;
             int charNumber;
             if (baseCharNumber < 26) {
                 charNumber = 65 + baseCharNumber;
