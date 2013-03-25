@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Philip
  */
+@Deprecated
 public abstract class SimpleSerialization implements Serializable {
 
     private ItemStack item;

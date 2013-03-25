@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Philip
  */
+@Deprecated
 public interface Serializable {
 
     public String serialize();

@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Philip
  */
+@Deprecated
 public class BookSerialization extends SimpleSerialization {
 
     public BookSerialization(ItemStack item) {

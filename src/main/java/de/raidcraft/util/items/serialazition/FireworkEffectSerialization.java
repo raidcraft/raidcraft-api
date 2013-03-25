@@ -1,7 +1,6 @@
 package de.raidcraft.util.items.serialazition;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.util.items.serialazition.SimpleSerialization;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.inventory.ItemStack;
@@ -13,6 +12,7 @@ import java.util.List;
 /**
  * @author Philip
  */
+@Deprecated
 public class FireworkEffectSerialization extends SimpleSerialization {
 
     public FireworkEffectSerialization(ItemStack item) {

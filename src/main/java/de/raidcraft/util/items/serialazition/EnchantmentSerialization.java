@@ -1,6 +1,5 @@
 package de.raidcraft.util.items.serialazition;
 
-import de.raidcraft.util.items.serialazition.SimpleSerialization;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,6 +9,7 @@ import java.util.Map;
 /**
  * @author Philip
  */
+@Deprecated
 public class EnchantmentSerialization extends SimpleSerialization {
 
     public EnchantmentSerialization(ItemStack item) {

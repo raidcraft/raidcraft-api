@@ -6,7 +6,17 @@ import de.raidcraft.util.items.serialazition.FireworkEffectSerialization;
 import de.raidcraft.util.items.serialazition.Serializable;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Map;
 
 /**
  * @author Silthus
@@ -41,6 +51,48 @@ public final class ItemUtils {
             return Short.parseShort(split[1]);
         } catch (Exception e) {
             return -1;
+        }
+    }
+
+    /**
+     * Serializes the MetaData of an ItemStack
+     * and marshals it then in a String
+     * @param itemMeta The item to serialize
+     * @return The marshaled ItemStack as String
+     * @throws IOException On any internal Exception
+     */
+    public static String serializeItemMeta(ItemMeta itemMeta) throws IOException {
+
+        // create streams
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+        // write map
+        oos.writeObject(itemMeta.serialize());
+        oos.flush();
+
+        // toHexString
+        return new HexBinaryAdapter().marshal(baos.toByteArray());
+    }
+
+    /**
+     * Deserializes the ItemMeta of an ItemStack from a marshaled String
+     * @param hex ItemMeta marshaled in a String
+     * @return The deserialized ItemMeta
+     * @throws IOException On any internal exception
+     */
+    @SuppressWarnings("unchecked")
+    public static ItemMeta deserializeItemMeta(String hex) throws IOException {
+
+        // create streams
+        byte[] bytes = new HexBinaryAdapter().unmarshal(hex);
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        ObjectInputStream ois = new ObjectInputStream(bais);
+
+        try {
+            return (ItemMeta) ConfigurationSerialization.deserializeObject((Map<String, Object>) ois.readObject());
+        } catch (ClassNotFoundException cnfe) {
+            throw new IOException(cnfe);
         }
     }
 
@@ -142,6 +194,7 @@ public final class ItemUtils {
         GERMAN
     }
 
+    @Deprecated
     public static class Serialization {
 
         private ItemStack item;
