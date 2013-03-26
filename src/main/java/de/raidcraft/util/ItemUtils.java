@@ -59,6 +59,55 @@ public final class ItemUtils {
     /**
      * Serializes the MetaData of an ItemStack
      * and marshals it then in a String
+     * @param itemStack The item to serialize
+     * @return The marshaled ItemStack as String
+     * @throws IOException On any internal Exception
+     */
+    public static String serializeItemStack(ItemStack itemStack) throws IOException {
+
+        // create streams
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+        // write map
+        Map<String, Object> serialize = new HashMap<>(itemStack.serialize());
+        serialize.put("==", serialize.get("meta-type"));
+        oos.writeObject(serialize);
+        oos.flush();
+
+        // toHexString
+        return new HexBinaryAdapter().marshal(baos.toByteArray());
+    }
+
+    /**
+     * Deserializes the ItemMeta of an ItemStack from a marshaled String
+     * @param hex ItemMeta marshaled in a String
+     * @return The deserialized ItemMeta
+     * @throws IOException On any internal exception
+     */
+    @SuppressWarnings("unchecked")
+    public static ItemStack deserializeItemStack(String hex) throws IOException {
+
+        // create streams
+        byte[] bytes = new HexBinaryAdapter().unmarshal(hex);
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        ObjectInputStream ois = new ObjectInputStream(bais);
+
+        Map<String, Object> objectMap = new HashMap<>();
+        try {
+            objectMap = (Map<String, Object>) ois.readObject();
+        } catch (ClassNotFoundException cnfe) {
+            throw new IOException(cnfe);
+        } catch (EOFException ignored) {
+        }
+        return ItemStack.deserialize(objectMap);
+    }
+
+
+    /**
+     * Serializes the MetaData of an ItemStack
+     * and marshals it then in a String
      * @param itemMeta The item to serialize
      * @return The marshaled ItemStack as String
      * @throws IOException On any internal Exception
