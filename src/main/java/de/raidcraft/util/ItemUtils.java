@@ -72,7 +72,7 @@ public final class ItemUtils {
         // write map
 
         Map<String, Object> serialize = itemMeta.serialize();
-        serialize.put("class", itemMeta.getClass().getCanonicalName());
+        serialize.put("==", "itemmeta");
         oos.writeObject(serialize);
         oos.flush();
 
@@ -91,18 +91,20 @@ public final class ItemUtils {
 
         // create streams
         byte[] bytes = new HexBinaryAdapter().unmarshal(hex);
+
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         ObjectInputStream ois = new ObjectInputStream(bais);
+
         Map<String, Object> objectMap = new HashMap<>();
-        Class<? extends ItemMeta> aClass = null;
+
         try {
             objectMap = (Map<String, Object>) ois.readObject();
-            aClass = (Class<? extends ItemMeta>) Class.forName((String) objectMap.get("class"));
         } catch (ClassNotFoundException cnfe) {
             throw new IOException(cnfe);
         } catch (EOFException ignored) {
         }
-        return (ItemMeta) ConfigurationSerialization.deserializeObject(objectMap, aClass);
+
+        return (ItemMeta) ConfigurationSerialization.deserializeObject(objectMap);
     }
 
     public static String getFriendlyName(String name) {
