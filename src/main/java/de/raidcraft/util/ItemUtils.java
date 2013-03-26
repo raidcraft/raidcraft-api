@@ -56,45 +56,6 @@ public final class ItemUtils {
         }
     }
 
-    public static String serializeItemStack(ItemStack itemStack) throws IOException {
-
-        // create streams
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-
-        // write map
-        oos.writeObject(itemStack.serialize());
-        oos.flush();
-
-        // toHexString
-        return new HexBinaryAdapter().marshal(baos.toByteArray());
-    }
-
-    /**
-     * Deserializes the ItemMeta of an ItemStack from a marshaled String
-     * @param hex ItemMeta marshaled in a String
-     * @return The deserialized ItemMeta
-     * @throws IOException On any internal exception
-     */
-    @SuppressWarnings("unchecked")
-    public static ItemStack deserializeItemStack(String hex) throws IOException {
-
-        // create streams
-        byte[] bytes = new HexBinaryAdapter().unmarshal(hex);
-
-        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-        ObjectInputStream ois = new ObjectInputStream(bais);
-
-        Map<String, Object> objectMap = new HashMap<>();
-        try {
-            objectMap = (Map<String, Object>) ois.readObject();
-        } catch (ClassNotFoundException cnfe) {
-            throw new IOException(cnfe);
-        } catch (EOFException ignored) {
-        }
-        return (ItemStack) ConfigurationSerialization.deserializeObject(objectMap, ItemStack.class);
-    }
-
     /**
      * Serializes the MetaData of an ItemStack
      * and marshals it then in a String
@@ -109,7 +70,9 @@ public final class ItemUtils {
         ObjectOutputStream oos = new ObjectOutputStream(baos);
 
         // write map
-        oos.writeObject(itemMeta.serialize());
+        Map<String, Object> serialize = new HashMap<>(itemMeta.serialize());
+        serialize.put("==", serialize.get("meta-type"));
+        oos.writeObject(serialize);
         oos.flush();
 
         // toHexString
