@@ -70,7 +70,10 @@ public final class ItemUtils {
         ObjectOutputStream oos = new ObjectOutputStream(baos);
 
         // write map
-        oos.writeObject(itemMeta.serialize());
+
+        Map<String, Object> serialize = itemMeta.serialize();
+        serialize.put("class", itemMeta.getClass().getCanonicalName());
+        oos.writeObject(serialize);
         oos.flush();
 
         // toHexString
@@ -91,13 +94,15 @@ public final class ItemUtils {
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         ObjectInputStream ois = new ObjectInputStream(bais);
         Map<String, Object> objectMap = new HashMap<>();
+        Class<? extends ItemMeta> aClass = null;
         try {
             objectMap = (Map<String, Object>) ois.readObject();
+            aClass = (Class<? extends ItemMeta>) Class.forName((String) objectMap.get("class"));
         } catch (ClassNotFoundException cnfe) {
             throw new IOException(cnfe);
         } catch (EOFException ignored) {
         }
-        return (ItemMeta) ConfigurationSerialization.deserializeObject(objectMap);
+        return (ItemMeta) ConfigurationSerialization.deserializeObject(objectMap, aClass);
     }
 
     public static String getFriendlyName(String name) {
