@@ -13,9 +13,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -89,11 +91,15 @@ public final class ItemUtils {
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         ObjectInputStream ois = new ObjectInputStream(bais);
 
+        Map<String, Object> objectMap = new HashMap<>();
         try {
-            return (ItemMeta) ConfigurationSerialization.deserializeObject((Map<String, Object>) ois.readObject());
+            objectMap = (Map<String, Object>) ois.readObject();
         } catch (ClassNotFoundException cnfe) {
             throw new IOException(cnfe);
+        } catch (EOFException eof) {
+            return (ItemMeta) ConfigurationSerialization.deserializeObject(objectMap);
         }
+        throw new IOException("Error reading input stream!");
     }
 
     public static String getFriendlyName(String name) {
