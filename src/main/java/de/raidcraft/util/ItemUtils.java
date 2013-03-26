@@ -90,16 +90,14 @@ public final class ItemUtils {
         byte[] bytes = new HexBinaryAdapter().unmarshal(hex);
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         ObjectInputStream ois = new ObjectInputStream(bais);
-
         Map<String, Object> objectMap = new HashMap<>();
         try {
             objectMap = (Map<String, Object>) ois.readObject();
         } catch (ClassNotFoundException cnfe) {
             throw new IOException(cnfe);
-        } catch (EOFException eof) {
-            return (ItemMeta) ConfigurationSerialization.deserializeObject(objectMap);
+        } catch (EOFException ignored) {
         }
-        throw new IOException("Error reading input stream!");
+        return (ItemMeta) ConfigurationSerialization.deserializeObject(objectMap);
     }
 
     public static String getFriendlyName(String name) {
