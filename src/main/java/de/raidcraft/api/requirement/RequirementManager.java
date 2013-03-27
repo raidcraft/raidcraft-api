@@ -26,6 +26,10 @@ public final class RequirementManager {
     public static <T> List<Requirement<T>> createRequirements(T resolver, ConfigurationSection config) {
 
         List<Requirement<T>> requirements = new ArrayList<>();
+        if (config == null || config.getKeys(false) == null) {
+            return requirements;
+        }
+
         if (config.getKeys(false) == null) return requirements;
         for (String key : config.getKeys(false)) {
             key = StringUtils.formatName(key);
