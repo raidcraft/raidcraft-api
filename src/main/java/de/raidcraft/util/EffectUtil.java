@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import de.raidcraft.RaidCraft;
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -24,6 +25,7 @@ import java.util.List;
  */
 public class EffectUtil {
 
+    private static final int PARTICLE_PACKET = 63;
     private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     private static final EffectUtil instance = new EffectUtil();
 
@@ -54,6 +56,127 @@ public class EffectUtil {
                 e.printStackTrace();
             }
         }
+    }
+
+    public enum Particle {
+
+        HUGE_EXPLOSION("hugeexplosion"),
+        LARGE_EXPLOSION("largeexplode"),
+        FIREWORK_SPARK("fireworksSpark"),
+        BUBBLE("bubble"),
+        SUSPENDED("suspended"),
+        DEPTH_SUSPEND("depthsuspend"),
+        TOWN_AURA("townaura"),
+        CRIT("crit"),
+        MAGIC_CRIT("magicCrit"),
+        SMOKE("smoke"),
+        MOB_SPELL("mobSpell"),
+        MOB_SPELL_AMBIENT("mobSpellAmbient"),
+        SPELL("spell"),
+        INSTANT_SPELL("instantSpell"),
+        WITCH_MAGIC("witchMagic"),
+        NOTE("note"),
+        PORTAL("portal"),
+        ENCHANTMENT_TABLE("enchantmenttable"),
+        EXPLODE("explode"),
+        FLAME("flame"),
+        LAVA("lava"),
+        FOOT_STEP("footstep"),
+        SPLASH("splash"),
+        LARGE_SMOKE("largesmoke"),
+        CLOUD("cloud"),
+        RED_DUST("reddust"),
+        SNOWBALL_POOF("snowballpoof"),
+        DRIP_WATER("dripWater"),
+        DRIP_LAVA("dripLava"),
+        SNOW_SHOVEL("snowshovel"),
+        SLIME("slime"),
+        HEART("heart"),
+        ANGRY_VILLAGER("angryVillager"),
+        HAPPY_VILLAGER("happyVillager");
+
+        private final String packetName;
+
+        private Particle(String packetName) {
+
+            this.packetName = packetName;
+        }
+
+        public String getPacketName() {
+
+            return packetName;
+        }
+    }
+
+    /**
+     * Sends fake particles the the given clients.
+     *
+     * @param particle to send
+     * @param location to spawn the particle at
+     * @param speed to display the particles with
+     * @param amount of particles to create
+     * @param clients to display the particle for
+     */
+    public static void fakeParticles(Particle particle, Location location, float speed, int amount, Player... clients) {
+
+        PacketContainer packet = protocolManager.createPacket(PARTICLE_PACKET);
+        packet.getStrings().write(0, particle.getPacketName());
+        // lets write x, y, z coordinates
+        packet.getFloat().write(0, (float) location.getX());
+        packet.getFloat().write(1, (float) location.getY());
+        packet.getFloat().write(2, (float) location.getZ());
+        // need to multiply all positions with random.nextGaussian()
+        packet.getFloat().write(3, (float) (location.getX() * MathUtil.RANDOM.nextGaussian()));
+        packet.getFloat().write(4, (float) (location.getY() * MathUtil.RANDOM.nextGaussian()));
+        packet.getFloat().write(5, (float) (location.getZ() * MathUtil.RANDOM.nextGaussian()));
+        // also add the amount and speed of the particle
+        packet.getFloat().write(6, speed);
+        packet.getIntegers().write(0, amount);
+
+        for (Player player : clients) {
+            try {
+                protocolManager.sendServerPacket(player, packet);
+            } catch (InvocationTargetException e) {
+                RaidCraft.LOGGER.warning(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Sends fake particles the the given clients.
+     *
+     * @param particle to send
+     * @param location to spawn the particle at
+     * @param amount of particles to create
+     * @param clients to display the particle for
+     */
+    public static void fakeParticles(Particle particle, Location location, int amount, Player... clients) {
+
+        fakeParticles(particle, location, 1.0F, amount, clients);
+    }
+
+    /**
+     * Sends fake particles the the given clients.
+     *
+     * @param particle to send
+     * @param location to spawn the particle at
+     * @param amount of particles to create
+     */
+    public static void fakeParticles(Particle particle, Location location, int amount) {
+
+        fakeParticles(particle, location, amount, Bukkit.getServer().getOnlinePlayers());
+    }
+
+    /**
+     * Sends fake particles the the given clients.
+     *
+     * @param particle to send
+     * @param location to spawn the particle at
+     */
+    public static void fakeParticles(Particle particle, Location location) {
+
+        fakeParticles(particle, location, 1);
     }
 
     /*
@@ -111,10 +234,10 @@ public class EffectUtil {
 	 *
 	 * }
 	 */
-
     // internal references, performance improvements
     private Method world_getHandle = null;
     private Method nms_world_broadcastEntityEffect = null;
+
     private Method firework_getHandle = null;
 
     /**
