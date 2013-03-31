@@ -18,14 +18,14 @@ import java.util.Map;
 public final class RequirementManager {
 
     private static final Map<String, Class<? extends Requirement<?>>> requirementClasses = new HashMap<>();
-    private static final Map<Class<? extends Requirement<?>>, Constructor<? extends Requirement<?>>> constructors = new HashMap<>();
+    private static final Map<Class<? extends Requirement<? extends RequirementResolver>>, Constructor<? extends Requirement<? extends RequirementResolver>>> constructors = new HashMap<>();
 
     private RequirementManager() {}
 
     @SuppressWarnings("unchecked")
-    public static <T> List<Requirement<T>> createRequirements(T resolver, ConfigurationSection config) {
+    public static <T extends RequirementResolver> List<Requirement> createRequirements(T resolver, ConfigurationSection config) {
 
-        List<Requirement<T>> requirements = new ArrayList<>();
+        List<Requirement> requirements = new ArrayList<>();
         if (config == null || config.getKeys(false) == null) {
             return requirements;
         }
@@ -39,12 +39,12 @@ public final class RequirementManager {
                 Class<? extends Requirement<?>> rClass = requirementClasses.get(key);
                 for (String reqName : config.getConfigurationSection(key).getKeys(false)) {
                     try {
-                        ConfigurationSection section = config.getConfigurationSection(key + "." + reqName);
+                        final ConfigurationSection section = config.getConfigurationSection(key + "." + reqName);
                         if (section == null) {
                             RaidCraft.LOGGER.warning("Wrong requirement section " + key + "." + reqName + " defined for " + resolver);
                             continue;
                         }
-                        Requirement<T> requirement = (Requirement<T>) constructors.get(rClass).newInstance(
+                        final Requirement<T> requirement = (Requirement<T>) constructors.get(rClass).newInstance(
                                 resolver,
                                 section);
                         if (requirement instanceof AbstractRequirement) {
@@ -65,7 +65,7 @@ public final class RequirementManager {
     }
 
     @SuppressWarnings("unchecked")
-    public static void registerRequirementType(Class<? extends Requirement<?>> rClass) {
+    public static void registerRequirementType(Class<? extends Requirement<? extends RequirementResolver>> rClass) {
 
         if (!rClass.isAnnotationPresent(RequirementInformation.class)) {
             RaidCraft.LOGGER.warning("Cannot register " + rClass.getCanonicalName() + " as Requirement because it has no Information tag!");
@@ -74,7 +74,7 @@ public final class RequirementManager {
         for (Constructor<?> constructor : rClass.getDeclaredConstructors()) {
             if (constructor.getParameterTypes()[1].isAssignableFrom(ConfigurationSection.class)) {
                 constructor.setAccessible(true);
-                constructors.put(rClass, (Constructor<? extends Requirement<?>>) constructor);
+                constructors.put(rClass, (Constructor<? extends Requirement<? extends RequirementResolver>>) constructor);
                 // get the name for aliasing
                 String name = StringUtils.formatName(rClass.getAnnotation(RequirementInformation.class).value());
                 requirementClasses.put(name, rClass);

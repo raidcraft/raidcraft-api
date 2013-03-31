@@ -6,7 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * @author Silthus
  */
-public abstract class AbstractRequirement<T> implements Requirement<T> {
+public abstract class AbstractRequirement<T extends RequirementResolver> implements Requirement<T> {
 
     private final T resolver;
     private final String name;
