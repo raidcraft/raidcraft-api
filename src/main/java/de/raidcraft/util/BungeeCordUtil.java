@@ -4,9 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import org.bukkit.entity.Player;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author Philip
@@ -43,5 +41,27 @@ public class BungeeCordUtil {
             ex.printStackTrace();
             return;
         }
+    }
+
+    public static String decodeMessage(byte[] encoded, String channel) {
+
+        String isChannel;
+        byte[] data;
+        try {
+            DataInputStream in = new DataInputStream(new ByteArrayInputStream(encoded));
+            isChannel = in.readUTF();
+            short len = in.readShort();
+            data = new byte[len];
+            in.readFully(data);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        if(!isChannel.equalsIgnoreCase(channel)) {
+            return null;
+        }
+
+        return new String(data);
     }
 }
