@@ -25,8 +25,6 @@ public final class BukkitUtil {
 
     }
 
-    public static final WorldVector SPAWN = toWorldVector(Bukkit.getWorld("world").getSpawnLocation());
-
     /**
      * Gets the WorldEdit {@link com.sk89q.worldedit.WorldVector} from the Bukkit {@link org.bukkit.Location}
      *
