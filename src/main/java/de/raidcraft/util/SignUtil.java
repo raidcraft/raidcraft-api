@@ -62,4 +62,11 @@ public final class SignUtil {
         }
         return line.replace("&&", "&");
     }
+
+    public static String encodeColor(String coloredLine) {
+
+        String encoded = coloredLine.replace("&", "&&");
+        encoded = encoded.replace("\u00A7", "&");
+        return encoded;
+    }
 }
