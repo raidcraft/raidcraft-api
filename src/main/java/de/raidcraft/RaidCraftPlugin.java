@@ -4,6 +4,7 @@ import com.avaje.ebean.Ebean;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.commands.ConfirmCommand;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         for (PlayerPlacedBlock block : Ebean.find(PlayerPlacedBlock.class).findSet()) {
             playerPlacedBlocks.put(block.getBlock(), block);
         }
+
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     @Override
