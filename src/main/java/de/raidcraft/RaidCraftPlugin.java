@@ -4,7 +4,6 @@ import com.avaje.ebean.Ebean;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.commands.ConfirmCommand;
-import de.raidcraft.api.database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
@@ -57,9 +56,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     @Override
     public void disable() {
 
-        for (PlayerPlacedBlock block : playerPlacedBlocks.values()) {
-            Database.save(block);
-        }
     }
 
     public boolean isPlayerPlaced(Block block) {

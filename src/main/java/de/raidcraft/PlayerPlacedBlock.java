@@ -2,6 +2,7 @@ package de.raidcraft;
 
 import com.avaje.ebean.Ebean;
 import de.raidcraft.api.database.Bean;
+import de.raidcraft.api.database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 
@@ -23,6 +24,7 @@ public class PlayerPlacedBlock implements Bean {
         placedBlock.setY(block.getY());
         placedBlock.setZ(block.getZ());
         placedBlock.setWorld(block.getWorld().getName());
+        Database.save(placedBlock);
         return placedBlock;
     }
 
