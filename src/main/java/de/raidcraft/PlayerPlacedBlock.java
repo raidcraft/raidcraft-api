@@ -21,6 +21,10 @@ public class PlayerPlacedBlock implements Bean {
     private int y;
     private int z;
 
+    public PlayerPlacedBlock() {
+
+    }
+
     public PlayerPlacedBlock(Block block) {
 
         this(block.getWorld().getName(), block.getX(), block.getY(), block.getZ());
