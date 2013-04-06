@@ -39,6 +39,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         RaidCraft.registerComponent(RaidCraftPlugin.class, this);
         // lets load all blocks that are player placed
         for (PlayerPlacedBlock block : Ebean.find(PlayerPlacedBlock.class).findSet()) {
+            if (block == null) continue;
             playerPlacedBlocks.put(block.getBlock(), block);
         }
 
