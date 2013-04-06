@@ -228,17 +228,16 @@ public class RaidCraft implements Listener {
 
     public static void setPlayerPlacedBlock(Block block) {
 
-        // RaidCraft.getComponent(RaidCraftPlugin.class).setPlayerPlaced(block);
+        RaidCraft.getComponent(RaidCraftPlugin.class).setPlayerPlaced(block);
     }
 
     public static boolean isPlayerPlacedBlock(Block block) {
 
-        // return RaidCraft.getComponent(RaidCraftPlugin.class).isPlayerPlaced(block);
-        return false;
+        return RaidCraft.getComponent(RaidCraftPlugin.class).isPlayerPlaced(block);
     }
 
     public static void removePlayerPlacedBlock(Block block) {
 
-        // RaidCraft.getComponent(RaidCraftPlugin.class).removePlayerPlaced(block);
+        RaidCraft.getComponent(RaidCraftPlugin.class).removePlayerPlaced(block);
     }
 }
