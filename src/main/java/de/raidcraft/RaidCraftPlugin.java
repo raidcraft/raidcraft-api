@@ -1,16 +1,12 @@
 package de.raidcraft;
 
-import com.avaje.ebean.Ebean;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.commands.ConfirmCommand;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Silthus
@@ -24,8 +20,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         return instance;
     }
 
-    private final Map<Block, PlayerPlacedBlock> playerPlacedBlocks = new HashMap<>();
-
     public RaidCraftPlugin() {
 
         instance = this;
@@ -37,11 +31,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         registerEvents(new RaidCraft());
         registerCommands(ConfirmCommand.class);
         RaidCraft.registerComponent(RaidCraftPlugin.class, this);
-        // lets load all blocks that are player placed
-        for (PlayerPlacedBlock block : Ebean.find(PlayerPlacedBlock.class).findSet()) {
-            if (block == null) continue;
-            playerPlacedBlocks.put(block.getBlock(), block);
-        }
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
@@ -57,22 +46,5 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     @Override
     public void disable() {
 
-    }
-
-    public boolean isPlayerPlaced(Block block) {
-
-        return playerPlacedBlocks.containsKey(block);
-    }
-
-    public void setPlayerPlaced(Block block) {
-
-        playerPlacedBlocks.put(block, PlayerPlacedBlock.create(block));
-    }
-
-    public void removePlayerPlaced(Block block) {
-
-        PlayerPlacedBlock remove = playerPlacedBlocks.remove(block);
-        if (remove == null) return;
-        Ebean.delete(remove);
     }
 }
