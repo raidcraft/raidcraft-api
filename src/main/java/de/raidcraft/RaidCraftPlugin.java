@@ -138,6 +138,9 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     public void onChunkUnload(ChunkUnloadEvent event) {
 
         Set<PlayerPlacedBlock> remove = playerPlacedBlocks.remove(event.getChunk());
+        if (remove == null || remove.isEmpty()) {
+            return;
+        }
         getDatabase().save(remove);
     }
 }
