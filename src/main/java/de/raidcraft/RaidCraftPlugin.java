@@ -54,7 +54,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     @Override
     public void disable() {
 
-        getDatabase().save(playerPlacedBlocks);
+        getDatabase().save(playerPlacedBlocks.values());
     }
 
     public static class LocalConfiguration extends ConfigurationBase<RaidCraftPlugin> {
