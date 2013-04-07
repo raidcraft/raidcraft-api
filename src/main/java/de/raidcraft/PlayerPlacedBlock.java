@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 
 /**
 * @author Silthus
@@ -20,6 +21,7 @@ public class PlayerPlacedBlock implements Bean {
     private int x;
     private int y;
     private int z;
+    private Timestamp timestamp;
 
     public PlayerPlacedBlock() {
 
@@ -36,6 +38,7 @@ public class PlayerPlacedBlock implements Bean {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     public int getId() {
@@ -86,6 +89,16 @@ public class PlayerPlacedBlock implements Bean {
     public void setZ(int z) {
 
         this.z = z;
+    }
+
+    public Timestamp getTimestamp() {
+
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+
+        this.timestamp = timestamp;
     }
 
     @Override
