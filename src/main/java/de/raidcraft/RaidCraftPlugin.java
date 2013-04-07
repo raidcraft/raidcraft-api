@@ -127,7 +127,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         Chunk chunk = event.getChunk();
         playerPlacedBlocks.put(chunk, getDatabase().find(PlayerPlacedBlock.class).where()
                 .eq("chunk_x", chunk.getX())
-                .eq("chunk_y", chunk.getZ()).findSet());
+                .eq("chunk_z", chunk.getZ()).findSet());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
