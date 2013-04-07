@@ -103,7 +103,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         }
         PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
         PlayerPlacedBlock remove = playerPlacedBlocks.remove(playerPlacedBlock);
-        if (remove.getId() > 1) {
+        if (remove != null && remove.getId() > 1) {
             getDatabase().delete(remove);
         }
     }
