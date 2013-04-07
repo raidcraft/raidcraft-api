@@ -18,6 +18,8 @@ public class PlayerPlacedBlock implements Bean {
     @Id
     private int id;
     private String world;
+    private int chunkX;
+    private int chunkZ;
     private int x;
     private int y;
     private int z;
@@ -29,12 +31,14 @@ public class PlayerPlacedBlock implements Bean {
 
     public PlayerPlacedBlock(Block block) {
 
-        this(block.getWorld().getName(), block.getX(), block.getY(), block.getZ());
+        this(block.getWorld().getName(), block.getChunk().getX(), block.getChunk().getZ(), block.getX(), block.getY(), block.getZ());
     }
 
-    public PlayerPlacedBlock(String world, int x, int y, int z) {
+    public PlayerPlacedBlock(String world, int chunkX, int chunkZ, int x, int y, int z) {
 
         this.world = world;
+        this.chunkX = chunkX;
+        this.chunkZ = chunkZ;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -59,6 +63,26 @@ public class PlayerPlacedBlock implements Bean {
     public void setWorld(String world) {
 
         this.world = world;
+    }
+
+    public int getChunkX() {
+
+        return chunkX;
+    }
+
+    public void setChunkX(int chunkX) {
+
+        this.chunkX = chunkX;
+    }
+
+    public int getChunkZ() {
+
+        return chunkZ;
+    }
+
+    public void setChunkZ(int chunkZ) {
+
+        this.chunkZ = chunkZ;
     }
 
     public int getX() {

@@ -6,10 +6,17 @@ import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +24,7 @@ import java.util.Set;
 /**
  * @author Silthus
  */
-public class RaidCraftPlugin extends BasePlugin implements Component {
+public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
     private static RaidCraftPlugin instance;
     public static RaidCraftPlugin getInstance() {
@@ -26,7 +33,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     }
 
     private LocalConfiguration config;
-    private final Map<PlayerPlacedBlock, PlayerPlacedBlock> playerPlacedBlocks = new HashMap<>();
+    private final Map<Chunk, Set<PlayerPlacedBlock>> playerPlacedBlocks = new HashMap<>();
 
     public RaidCraftPlugin() {
 
@@ -37,24 +44,20 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     public void enable() {
 
         this.config = configure(new LocalConfiguration(this), true);
+        registerEvents(this);
         registerEvents(new RaidCraft());
         registerCommands(ConfirmCommand.class);
         RaidCraft.registerComponent(RaidCraftPlugin.class, this);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-
-        playerPlacedBlocks.clear();
-        // lets load all player placed blocks
-        Set<PlayerPlacedBlock> set = getDatabase().find(PlayerPlacedBlock.class).findSet();
-        for (PlayerPlacedBlock coordinate : set) {
-            playerPlacedBlocks.put(coordinate, coordinate);
-        }
     }
 
     @Override
     public void disable() {
 
-        getDatabase().save(playerPlacedBlocks.values());
+        for (Set<PlayerPlacedBlock> set : playerPlacedBlocks.values()) {
+            getDatabase().save(set);
+        }
     }
 
     public static class LocalConfiguration extends ConfigurationBase<RaidCraftPlugin> {
@@ -82,9 +85,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
             return;
         }
         PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
-        if (!playerPlacedBlocks.containsKey(playerPlacedBlock)) {
-            playerPlacedBlocks.put(playerPlacedBlock, playerPlacedBlock);
+        if (!playerPlacedBlocks.containsKey(block.getChunk())) {
+            playerPlacedBlocks.put(block.getChunk(), new HashSet<PlayerPlacedBlock>());
         }
+        playerPlacedBlocks.get(block.getChunk()).add(playerPlacedBlock);
     }
 
     public boolean isPlayerPlaced(Block block) {
@@ -93,7 +97,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
             return false;
         }
         PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
-        return playerPlacedBlocks.containsKey(playerPlacedBlock);
+        return playerPlacedBlocks.containsKey(block.getChunk()) && playerPlacedBlocks.get(block.getChunk()).contains(playerPlacedBlock);
     }
 
     public void removePlayerPlaced(Block block) {
@@ -101,11 +105,35 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         if (!config.player_placed_block_worlds.contains(block.getWorld().getName())) {
             return;
         }
+        if (!playerPlacedBlocks.containsKey(block.getChunk())) {
+            return;
+        }
         PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
-        PlayerPlacedBlock remove = playerPlacedBlocks.remove(playerPlacedBlock);
-        if (remove != null && remove.getId() > 1) {
-            getDatabase().delete(remove);
+        if (playerPlacedBlocks.get(block.getChunk()).remove(playerPlacedBlock)) {
+            PlayerPlacedBlock unique = getDatabase().find(PlayerPlacedBlock.class).where()
+                    .eq("x", playerPlacedBlock.getX())
+                    .eq("y", playerPlacedBlock.getY())
+                    .eq("z", playerPlacedBlock.getZ())
+                    .eq("world", playerPlacedBlock.getWorld()).findUnique();
+            if (unique != null) {
+                getDatabase().delete(unique);
+            }
         }
     }
 
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onChunkLoad(ChunkLoadEvent event) {
+
+        Chunk chunk = event.getChunk();
+        playerPlacedBlocks.put(chunk, getDatabase().find(PlayerPlacedBlock.class).where()
+                .eq("chunk_x", chunk.getX())
+                .eq("chunk_y", chunk.getZ()).findSet());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onChunkUnload(ChunkUnloadEvent event) {
+
+        Set<PlayerPlacedBlock> remove = playerPlacedBlocks.remove(event.getChunk());
+        getDatabase().save(remove);
+    }
 }
