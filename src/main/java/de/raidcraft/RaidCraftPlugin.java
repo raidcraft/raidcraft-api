@@ -1,6 +1,5 @@
 package de.raidcraft;
 
-import com.avaje.ebean.Ebean;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.commands.ConfirmCommand;
@@ -46,7 +45,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
 
         playerPlacedBlocks.clear();
         // lets load all player placed blocks
-        Set<PlayerPlacedBlock> set = Ebean.find(PlayerPlacedBlock.class).findSet();
+        Set<PlayerPlacedBlock> set = getDatabase().find(PlayerPlacedBlock.class).findSet();
         for (PlayerPlacedBlock coordinate : set) {
             playerPlacedBlocks.put(coordinate, coordinate);
         }
@@ -55,6 +54,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     @Override
     public void disable() {
 
+        getDatabase().save(playerPlacedBlocks);
     }
 
     public static class LocalConfiguration extends ConfigurationBase<RaidCraftPlugin> {
@@ -103,7 +103,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
         }
         PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
         PlayerPlacedBlock remove = playerPlacedBlocks.remove(playerPlacedBlock);
-        Ebean.delete(remove);
+        getDatabase().delete(remove);
     }
 
 }

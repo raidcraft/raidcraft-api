@@ -1,5 +1,7 @@
 package de.raidcraft;
 
+import com.avaje.ebean.EbeanServer;
+import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.database.Database;
@@ -239,5 +241,10 @@ public class RaidCraft implements Listener {
     public static void removePlayerPlacedBlock(Block block) {
 
         RaidCraft.getComponent(RaidCraftPlugin.class).removePlayerPlaced(block);
+    }
+
+    public static EbeanServer getDatabase(Class<? extends BasePlugin> clazz) {
+
+        return RaidCraft.getComponent(clazz).getDatabase();
     }
 }
