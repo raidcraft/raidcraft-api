@@ -130,7 +130,7 @@ public class SerializationUtil {
             return StaticFireworkEffectSerialization.serialize((FireworkMeta)meta);
         }
 
-        return toByteStream(meta);
+        return toByteStream((ConfigurationSerializable)meta);
     }
 
     /**
