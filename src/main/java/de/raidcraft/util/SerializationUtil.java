@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.*;
@@ -105,11 +106,6 @@ public class SerializationUtil {
      */
     public static String toByteStream(ConfigurationSerializable serializable) {
 
-        // workaround for not serializable meta
-        if(serializable instanceof FireworkMeta) {
-            return StaticFireworkEffectSerialization.serialize((FireworkMeta)serializable);
-        }
-
         // create streams
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             Map<String, Object> map = serialize(serializable);
@@ -125,6 +121,16 @@ public class SerializationUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String toByteStream(ItemMeta meta) {
+
+        // workaround for not serializable meta
+        if(meta instanceof FireworkMeta) {
+            return StaticFireworkEffectSerialization.serialize((FireworkMeta)meta);
+        }
+
+        return toByteStream(meta);
     }
 
     /**
