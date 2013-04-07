@@ -55,8 +55,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component {
     @Override
     public void disable() {
 
-        // lets save all player placed blocks
-        Ebean.save(playerPlacedBlocks.values());
     }
 
     public static class LocalConfiguration extends ConfigurationBase<RaidCraftPlugin> {

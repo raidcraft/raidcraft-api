@@ -1,6 +1,7 @@
 package de.raidcraft;
 
 import de.raidcraft.api.database.Bean;
+import de.raidcraft.api.database.Database;
 import org.bukkit.block.Block;
 
 import javax.persistence.Entity;
@@ -36,6 +37,7 @@ public class PlayerPlacedBlock implements Bean {
         this.x = x;
         this.y = y;
         this.z = z;
+        Database.save(this);
     }
 
     public int getId() {
