@@ -123,7 +123,7 @@ public class SerializationUtil {
         return null;
     }
 
-    public static String toByteStream_fixed(ItemMeta meta) {
+    public static String toByteStream(ItemMeta meta) {
 
         // workaround for not serializable meta
         if(meta instanceof FireworkMeta) {
