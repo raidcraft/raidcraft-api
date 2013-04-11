@@ -3,6 +3,7 @@ package de.raidcraft.api.database;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Author: Philip
@@ -45,11 +46,17 @@ public abstract class Table {
 
     public final ResultSet executeQuery(String sql) throws SQLException {
 
-        return getConnection().createStatement().executeQuery(sql);
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+        statement.close();
+        return resultSet;
     }
 
     public final int executeUpdate(String sql) throws SQLException {
 
-        return getConnection().createStatement().executeUpdate(sql);
+        Statement statement = getConnection().createStatement();
+        int result = statement.executeUpdate(sql);
+        statement.close();
+        return result;
     }
 }
