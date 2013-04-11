@@ -48,7 +48,7 @@ public class EffectUtil {
 
     public static void playEffect(Location location, Effect effect) {
 
-        location.getWorld().playEffect(location, effect, null);
+        playEffect(location, effect, 0);
     }
 
     public static void fakeExplosion(Location location) {
