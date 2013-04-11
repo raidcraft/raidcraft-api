@@ -48,7 +48,6 @@ public abstract class Table {
 
         Statement statement = getConnection().createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
-        statement.close();
         return resultSet;
     }
 
