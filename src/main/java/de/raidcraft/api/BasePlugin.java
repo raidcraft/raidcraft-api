@@ -49,6 +49,9 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     public final void onEnable() {
 
+        // lets register the plugin as component
+        RaidCraft.registerComponent(getClass(), this);
+
         // create default folders
         getDataFolder().mkdirs();
 
@@ -78,6 +81,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
                 return sender.isOp() || sender.hasPermission(s);
             }
         };
+
         this.commands.setInjector(new SimpleInjector(this));
         this.commandRegistration = new CommandsManagerRegistration(this, this, this.commands);
         // check if the database needs to be setup
@@ -86,8 +90,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         }
         // call the sub plugins to enable
         enable();
-        // lets register the plugin as component
-        RaidCraft.registerComponent(getClass(), this);
 
         PluginDescriptionFile description = getDescription();
         getLogger().info(description.getName() + "-v" + description.getVersion() + " enabled.");
