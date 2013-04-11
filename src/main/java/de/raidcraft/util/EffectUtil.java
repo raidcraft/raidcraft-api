@@ -34,9 +34,21 @@ public class EffectUtil {
         location.getWorld().playSound(location, sound, volume, pitch);
     }
 
+    public static void playEffect(Location location, Effect effect, int data, int amount) {
+
+        for (int i = 0; i < amount; i++) {
+            location.getWorld().playEffect(location, effect, data);
+        }
+    }
+
     public static void playEffect(Location location, Effect effect, int data) {
 
-        location.getWorld().playEffect(location, effect, data);
+        playEffect(location, effect, data, 1);
+    }
+
+    public static void playEffect(Location location, Effect effect) {
+
+        location.getWorld().playEffect(location, effect, null);
     }
 
     public static void fakeExplosion(Location location) {
