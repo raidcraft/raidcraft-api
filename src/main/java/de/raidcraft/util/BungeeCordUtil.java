@@ -13,7 +13,7 @@ public class BungeeCordUtil {
 
     public static void sendPluginMessage(Player player, String channel, String message) {
 
-        sendPluginMessage(player, channel, "ALL", message);
+        sendPluginMessage(player, "ALL", channel, message);
     }
 
     public static void sendPluginMessage(Player player, String targetServer, String channel, String message) {
