@@ -67,6 +67,7 @@ public class BungeeCordUtil {
             return null;
         }
 
-        return new String(data);
+        String message = new String(data);
+        return message;
     }
 }
