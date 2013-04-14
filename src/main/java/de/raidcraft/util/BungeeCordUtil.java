@@ -48,6 +48,21 @@ public class BungeeCordUtil {
         }
     }
 
+    public static void getPlayerList(Player player) {
+
+        try {
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            DataOutputStream msgData = new DataOutputStream(bao);
+            msgData.writeUTF("PlayerList");
+            msgData.writeUTF("ALL");
+            player.sendPluginMessage(RaidCraft.getComponent(RaidCraftPlugin.class), "BungeeCord", bao.toByteArray());
+            bao.reset();
+        } catch(IOException ex) {
+            ex.printStackTrace();
+            return;
+        }
+    }
+
     public static String decodeMessage(byte[] encoded, String channel) {
 
         String isChannel;
