@@ -63,6 +63,18 @@ public final class SignUtil {
         return line.replace("&&", "&");
     }
 
+    public static String destroyColor(String line) {
+
+        String regex = "&(?<!&&)(?=%c)";
+        Formatter fmt;
+        for (ChatColor clr : ChatColor.values()) {
+            char code = clr.getChar();
+            fmt = new Formatter();
+            line = line.replaceAll(fmt.format(regex, code).toString(), "#");
+        }
+        return line.replace("&&", "&");
+    }
+
     public static String encodeColor(String coloredLine) {
 
         String encoded = coloredLine.replace("&", "&&");
