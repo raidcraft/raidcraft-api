@@ -17,8 +17,6 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,7 +29,6 @@ import java.util.List;
 public class EffectUtil {
 
     private static final int PARTICLE_PACKET = 63;
-    private static final PotionEffect INVISIBILITY = new PotionEffect(PotionEffectType.INVISIBILITY, 20, 1, false);
     private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     private static final EffectUtil instance = new EffectUtil();
 
