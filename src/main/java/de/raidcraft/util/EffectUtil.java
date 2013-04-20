@@ -12,9 +12,9 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftBat;
-import org.bukkit.entity.Bat;
+import org.bukkit.craftbukkit.v1_5_R2.entity.CraftOcelot;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Ocelot;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
@@ -75,9 +75,8 @@ public class EffectUtil {
 
     public static void fakeWolfHearts(Location location) {
 
-        Bat ocelot = location.getWorld().spawn(location, Bat.class);
-        ((CraftBat) ocelot).getHandle().setInvisible(true);
-        ocelot.teleport(location.add(0, 1, 0));
+        Ocelot ocelot = location.getWorld().spawn(location, Ocelot.class);
+        ((CraftOcelot) ocelot).getHandle().setInvisible(true);
         ocelot.playEffect(EntityEffect.WOLF_HEARTS);
         ocelot.remove();
     }
@@ -202,18 +201,6 @@ public class EffectUtil {
 
         fakeParticles(particle, location, 1);
     }
-
-    /*
-    public static void playWolfHearts(Location loc) {
-
-        World world = loc.getWorld();
-        Wolf wo = world.spawn(loc, Wolf.class);
-        wo.remove();
-        net.minecraft.server.v1_5_R1.World nmsWorld = ((CraftWorld) world).getHandle();
-        net.minecraft.server.v1_5_R1.EntityWolf nmsWolf = (EntityWolf) ((CraftEntity) wo).getHandle();
-        nmsWorld.broadcastEntityEffect(nmsWolf, (byte) 7);
-    }
-    */
 
     public static void playFirework(World world, Location location, FireworkEffect effect) {
 
