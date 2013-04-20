@@ -75,9 +75,9 @@ public class EffectUtil {
 
     public static void fakeWolfHearts(Location location) {
 
-        location.add(0, 1, 0);
-        Ocelot ocelot = location.getWorld().spawn(location, Ocelot.class);
+        Ocelot ocelot = location.getWorld().spawn(new Location(location.getWorld(), 0, 256, 0), Ocelot.class);
         ((CraftOcelot) ocelot).getHandle().setInvisible(true);
+        ocelot.teleport(location.add(0, 1, 0));
         ocelot.playEffect(EntityEffect.WOLF_HEARTS);
         ocelot.remove();
     }
