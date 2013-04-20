@@ -7,13 +7,17 @@ import com.comphenix.protocol.events.PacketContainer;
 import de.raidcraft.RaidCraft;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
+import org.bukkit.EntityEffect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.entity.Bat;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +30,7 @@ import java.util.List;
 public class EffectUtil {
 
     private static final int PARTICLE_PACKET = 63;
+    private static final PotionEffect INVISIBILITY = new PotionEffect(PotionEffectType.INVISIBILITY, 20, 1, false);
     private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     private static final EffectUtil instance = new EffectUtil();
 
@@ -68,6 +73,14 @@ public class EffectUtil {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void fakeWolfHearts(Location location) {
+
+        Bat ocelot = location.getWorld().spawn(location, Bat.class);
+        ocelot.addPotionEffect(INVISIBILITY);
+        ocelot.playEffect(EntityEffect.WOLF_HEARTS);
+        ocelot.remove();
     }
 
     public enum Particle {
