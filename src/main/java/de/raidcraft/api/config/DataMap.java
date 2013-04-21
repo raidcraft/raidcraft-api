@@ -14,13 +14,17 @@ public abstract class DataMap extends MemoryConfiguration {
     public DataMap(Map<?, ?> data) {
 
         super();
-        convertMapsToSections(data, this);
+        if (data != null) {
+            convertMapsToSections(data, this);
+        }
     }
 
     public DataMap(ConfigurationSection data) {
 
         super();
-        convertMapsToSections(data.getValues(true), this);
+        if (data != null) {
+            convertMapsToSections(data.getValues(true), this);
+        }
     }
 
     protected void convertMapsToSections(Map<?, ?> input, ConfigurationSection section) {
