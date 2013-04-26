@@ -5,6 +5,7 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.api.items.CustomItemManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -47,7 +48,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerEvents(this);
         registerEvents(new RaidCraft());
         registerCommands(ConfirmCommand.class);
-        RaidCraft.registerComponent(RaidCraftPlugin.class, this);
+        RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
@@ -58,6 +59,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         for (Set<PlayerPlacedBlock> set : playerPlacedBlocks.values()) {
             getDatabase().save(set);
         }
+        RaidCraft.unregisterComponent(CustomItemManager.class);
     }
 
     public static class LocalConfiguration extends ConfigurationBase<RaidCraftPlugin> {

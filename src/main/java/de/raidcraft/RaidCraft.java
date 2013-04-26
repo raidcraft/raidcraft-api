@@ -6,6 +6,9 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
+import de.raidcraft.api.items.CustomItem;
+import de.raidcraft.api.items.CustomItemManager;
+import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
@@ -22,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
@@ -246,5 +250,20 @@ public class RaidCraft implements Listener {
     public static EbeanServer getDatabase(Class<? extends BasePlugin> clazz) {
 
         return RaidCraft.getComponent(clazz).getDatabase();
+    }
+
+    public CustomItemStack getCustomItem(ItemStack itemStack) {
+
+        return getComponent(CustomItemManager.class).getCustomItem(itemStack);
+    }
+
+    public CustomItem getCustomItem(int id) {
+
+        return getComponent(CustomItemManager.class).getCustomItem(id);
+    }
+
+    public CustomItemStack getCustomItemStack(int id) {
+
+        return getComponent(CustomItemManager.class).getCustomItemStack(id);
     }
 }

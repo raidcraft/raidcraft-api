@@ -97,6 +97,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     public final void onDisable() {
 
+        RaidCraft.unregisterComponent(getClass());
         this.commandRegistration.unregisterCommands();
         // call the sub plugin to disable
         disable();
