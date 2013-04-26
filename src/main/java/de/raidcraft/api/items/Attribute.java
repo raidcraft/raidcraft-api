@@ -3,9 +3,24 @@ package de.raidcraft.api.items;
 /**
  * @author Silthus
  */
-public interface Attribute {
+public class Attribute {
 
-    public String getName();
+    private final String name;
+    private final int value;
 
-    public int getValue();
+    public Attribute(String name, int value) {
+
+        this.name = name;
+        this.value = value;
+    }
+
+    public String getName() {
+
+        return name;
+    }
+
+    public int getValue() {
+
+        return value;
+    }
 }

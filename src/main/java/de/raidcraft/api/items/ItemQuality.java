@@ -1,29 +1,37 @@
 package de.raidcraft.api.items;
 
 import de.raidcraft.util.EnumUtils;
+import org.bukkit.ChatColor;
 
 /**
  * @author Silthus
  */
 public enum ItemQuality {
 
-    POOR("Schlecht"),
-    COMMON("Verbreitet"),
-    UNCOMMON("Selten"),
-    RARE("Rar"),
-    EPIC("Episch"),
-    LEGENDARY("Legendär");
+    POOR("Schlecht", ChatColor.GRAY),
+    COMMON("Verbreitet", ChatColor.WHITE),
+    UNCOMMON("Selten", ChatColor.GREEN),
+    RARE("Rar", ChatColor.BLUE),
+    EPIC("Episch", ChatColor.DARK_PURPLE),
+    LEGENDARY("Legendär", ChatColor.GOLD);
 
     private final String germanName;
+    private final ChatColor color;
 
-    private ItemQuality(String germanName) {
+    private ItemQuality(String germanName, ChatColor color) {
 
         this.germanName = germanName;
+        this.color = color;
     }
 
     public String getGermanName() {
 
         return germanName;
+    }
+
+    public ChatColor getColor() {
+
+        return color;
     }
 
     public static ItemQuality fromGermanName(String name) {

@@ -252,17 +252,17 @@ public class RaidCraft implements Listener {
         return RaidCraft.getComponent(clazz).getDatabase();
     }
 
-    public CustomItemStack getCustomItem(ItemStack itemStack) {
+    public static CustomItemStack getCustomItem(ItemStack itemStack) {
 
         return getComponent(CustomItemManager.class).getCustomItem(itemStack);
     }
 
-    public CustomItem getCustomItem(int id) {
+    public static CustomItem getCustomItem(int id) {
 
         return getComponent(CustomItemManager.class).getCustomItem(id);
     }
 
-    public CustomItemStack getCustomItemStack(int id) {
+    public static CustomItemStack getCustomItemStack(int id) {
 
         return getComponent(CustomItemManager.class).getCustomItemStack(id);
     }
