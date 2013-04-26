@@ -5,7 +5,9 @@ import java.util.List;
 /**
  * @author Silthus
  */
-public interface RequirementResolver {
+public interface RequirementResolver<T> {
+
+    public T getObject();
 
     /**
      * Gets a list of all attached requirements.
