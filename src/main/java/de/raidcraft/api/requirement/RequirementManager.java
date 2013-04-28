@@ -65,7 +65,7 @@ public final class RequirementManager {
     }
 
     @SuppressWarnings("unchecked")
-    public static void registerRequirementType(Class<? extends Requirement<? extends RequirementResolver>> rClass) {
+    public static <T extends Requirement<? extends RequirementResolver>> void registerRequirementType(Class<T> rClass) {
 
         if (!rClass.isAnnotationPresent(RequirementInformation.class)) {
             RaidCraft.LOGGER.warning("Cannot register " + rClass.getCanonicalName() + " as Requirement because it has no Information tag!");
@@ -74,7 +74,7 @@ public final class RequirementManager {
         for (Constructor<?> constructor : rClass.getDeclaredConstructors()) {
             if (constructor.getParameterTypes()[1].isAssignableFrom(ConfigurationSection.class)) {
                 constructor.setAccessible(true);
-                constructors.put(rClass, (Constructor<? extends Requirement<? extends RequirementResolver>>) constructor);
+                constructors.put(rClass, (Constructor<T>) constructor);
                 // get the name for aliasing
                 String name = StringUtils.formatName(rClass.getAnnotation(RequirementInformation.class).value());
                 requirementClasses.put(name, rClass);
