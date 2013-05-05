@@ -9,11 +9,15 @@ public interface CustomItem {
 
     public int getId();
 
+    public String getEncodedId();
+
     public int getMinecraftId();
 
     public short getMinecraftDataValue();
 
     public String getName();
+
+    public String getLore();
 
     public int getItemLevel();
 

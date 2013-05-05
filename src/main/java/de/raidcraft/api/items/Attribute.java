@@ -3,7 +3,7 @@ package de.raidcraft.api.items;
 /**
  * @author Silthus
  */
-public class Attribute {
+public class Attribute implements Comparable<Attribute> {
 
     private final String name;
     private final int value;
@@ -22,5 +22,11 @@ public class Attribute {
     public int getValue() {
 
         return value;
+    }
+
+    @Override
+    public int compareTo(Attribute o) {
+
+        return getName().compareTo(o.getName());
     }
 }
