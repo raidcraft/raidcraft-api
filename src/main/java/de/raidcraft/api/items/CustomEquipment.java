@@ -9,7 +9,7 @@ public interface CustomEquipment extends CustomItem {
 
     public EquipmentSlot getEquipmentSlot();
 
-    public Set<Attribute> getAttributes();
+    public Set<ItemAttribute> getAttributes();
 
     public int getDurability();
 }
