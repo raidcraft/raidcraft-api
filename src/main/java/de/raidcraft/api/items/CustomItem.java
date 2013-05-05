@@ -27,5 +27,7 @@ public interface CustomItem {
 
     public boolean matches(ItemStack itemStack);
 
+    public boolean rebuild(ItemStack itemStack);
+
     public CustomItemStack createNewItem();
 }
