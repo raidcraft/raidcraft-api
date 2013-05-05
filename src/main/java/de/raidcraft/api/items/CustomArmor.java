@@ -5,7 +5,7 @@ package de.raidcraft.api.items;
  */
 public interface CustomArmor extends CustomEquipment {
 
-    public ArmorType getType();
+    public ArmorType getArmorType();
 
     public int getArmorValue();
 }

@@ -1,5 +1,6 @@
 package de.raidcraft.api.items;
 
+import com.avaje.ebean.annotation.EnumValue;
 import de.raidcraft.util.EnumUtils;
 
 /**
@@ -7,9 +8,13 @@ import de.raidcraft.util.EnumUtils;
  */
 public enum ArmorType {
 
+    @EnumValue("CLOTH")
     CLOTH("Stoff"),
+    @EnumValue("LEATHER")
     LEATHER("Leder"),
+    @EnumValue("MAIL")
     MAIL("Kette"),
+    @EnumValue("PLATE")
     PLATE("Platte");
 
     private final String germanName;
@@ -22,6 +27,11 @@ public enum ArmorType {
     public String getGermanName() {
 
         return germanName;
+    }
+
+    public EquipmentSlot getEquipmentSlot(int itemId) {
+
+        return EquipmentSlot.fromItemId(itemId);
     }
 
     public static ArmorType fromGermanName(String name) {
