@@ -1,11 +1,12 @@
 package de.raidcraft.api.items;
 
+import de.raidcraft.api.requirement.RequirementResolver;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Silthus
  */
-public interface CustomItem {
+public interface CustomItem extends RequirementResolver {
 
     public int getId();
 

@@ -15,7 +15,9 @@ public enum ArmorType {
     @EnumValue("MAIL")
     MAIL("Kette"),
     @EnumValue("PLATE")
-    PLATE("Platte");
+    PLATE("Platte"),
+    @EnumValue("SHIELD")
+    SHIELD("Schild");
 
     private final String germanName;
 

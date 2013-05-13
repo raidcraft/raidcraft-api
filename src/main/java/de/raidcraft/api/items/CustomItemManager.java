@@ -20,6 +20,9 @@ public final class CustomItemManager implements Component {
 
     public CustomItemStack getCustomItem(ItemStack itemStack) {
 
+        if (itemStack == null || itemStack.getTypeId() == 0) {
+            return null;
+        }
         if (mappedMinecraftItems.containsKey(itemStack.getTypeId())) {
             for (CustomItem customItem : mappedMinecraftItems.get(itemStack.getTypeId())) {
                 if (customItem.matches(itemStack)) {
