@@ -18,14 +18,14 @@ import java.util.Map;
 public final class RequirementManager {
 
     private static final Map<String, Class<? extends Requirement<?>>> requirementClasses = new HashMap<>();
-    private static final Map<Class<? extends Requirement<? extends RequirementResolver>>, Constructor<? extends Requirement<? extends RequirementResolver>>> constructors = new HashMap<>();
+    private static final Map<Class<? extends Requirement<?>>, Constructor<? extends Requirement<?>>> constructors = new HashMap<>();
 
     private RequirementManager() {}
 
     @SuppressWarnings("unchecked")
-    public static <T extends RequirementResolver> List<Requirement> createRequirements(T resolver, ConfigurationSection config) {
+    public static <O, T extends RequirementResolver<O>> List<Requirement<O>> createRequirements(T resolver, ConfigurationSection config) {
 
-        List<Requirement> requirements = new ArrayList<>();
+        List<Requirement<O>> requirements = new ArrayList<>();
         if (config == null || config.getKeys(false) == null) {
             return requirements;
         }
@@ -44,7 +44,7 @@ public final class RequirementManager {
                             RaidCraft.LOGGER.warning("Wrong requirement section " + key + "." + reqName + " defined for " + resolver);
                             continue;
                         }
-                        final Requirement<T> requirement = (Requirement<T>) constructors.get(rClass).newInstance(
+                        final Requirement<O> requirement = (Requirement<O>) constructors.get(rClass).newInstance(
                                 resolver,
                                 section);
                         if (requirement instanceof AbstractRequirement) {
@@ -65,7 +65,7 @@ public final class RequirementManager {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Requirement<? extends RequirementResolver>> void registerRequirementType(Class<T> rClass) {
+    public static <T extends Requirement<?>> void registerRequirementType(Class<T> rClass) {
 
         if (!rClass.isAnnotationPresent(RequirementInformation.class)) {
             RaidCraft.LOGGER.warning("Cannot register " + rClass.getCanonicalName() + " as Requirement because it has no Information tag!");
