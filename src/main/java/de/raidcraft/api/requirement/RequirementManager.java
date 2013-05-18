@@ -23,7 +23,7 @@ public final class RequirementManager {
     private RequirementManager() {}
 
     @SuppressWarnings("unchecked")
-    public static <O, T extends RequirementResolver<O>> List<Requirement<O>> createRequirements(T resolver, ConfigurationSection config) {
+    public static <O> List<Requirement<O>> createRequirements(RequirementResolver<O> resolver, ConfigurationSection config) {
 
         List<Requirement<O>> requirements = new ArrayList<>();
         if (config == null || config.getKeys(false) == null) {
