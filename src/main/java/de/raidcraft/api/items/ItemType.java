@@ -1,5 +1,6 @@
 package de.raidcraft.api.items;
 
+import com.avaje.ebean.annotation.EnumValue;
 import de.raidcraft.util.EnumUtils;
 
 /**
@@ -7,7 +8,9 @@ import de.raidcraft.util.EnumUtils;
  */
 public enum ItemType {
 
+    @EnumValue("WEAPON")
     WEAPON("Waffe"),
+    @EnumValue("ARMOR")
     ARMOR("Rüstung");
 
     private final String germanName;
