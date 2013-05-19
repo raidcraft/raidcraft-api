@@ -1,5 +1,6 @@
 package de.raidcraft.api.items;
 
+import com.avaje.ebean.annotation.EnumValue;
 import de.raidcraft.util.EnumUtils;
 
 /**
@@ -7,12 +8,19 @@ import de.raidcraft.util.EnumUtils;
  */
 public enum WeaponType {
 
+    @EnumValue("SWORD")
     SWORD("Schwert", EquipmentSlot.ONE_HANDED),
+    @EnumValue("AXE")
     AXE("Axt", EquipmentSlot.ONE_HANDED),
+    @EnumValue("POLEARM")
     POLEARM("Stangenwaffe", EquipmentSlot.TWO_HANDED),
+    @EnumValue("MACE")
     MACE("Streitkolben", EquipmentSlot.TWO_HANDED),
+    @EnumValue("STAFF")
     STAFF("Stab", EquipmentSlot.TWO_HANDED),
+    @EnumValue("BOW")
     BOW("Bogen", EquipmentSlot.TWO_HANDED),
+    @EnumValue("MAGIC_WAND")
     MAGIC_WAND("Zauberstab", EquipmentSlot.ONE_HANDED);
 
     private final String germanName;

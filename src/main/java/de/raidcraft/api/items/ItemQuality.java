@@ -1,5 +1,6 @@
 package de.raidcraft.api.items;
 
+import com.avaje.ebean.annotation.EnumValue;
 import de.raidcraft.util.EnumUtils;
 import org.bukkit.ChatColor;
 
@@ -8,11 +9,17 @@ import org.bukkit.ChatColor;
  */
 public enum ItemQuality {
 
+    @EnumValue("POOR")
     POOR("Schlecht", ChatColor.GRAY),
+    @EnumValue("COMMON")
     COMMON("Verbreitet", ChatColor.WHITE),
+    @EnumValue("UNCOMMON")
     UNCOMMON("Selten", ChatColor.GREEN),
+    @EnumValue("RARE")
     RARE("Rar", ChatColor.BLUE),
+    @EnumValue("EPIC")
     EPIC("Episch", ChatColor.DARK_PURPLE),
+    @EnumValue("LEGENDARY")
     LEGENDARY("Legendär", ChatColor.GOLD);
 
     private final String germanName;

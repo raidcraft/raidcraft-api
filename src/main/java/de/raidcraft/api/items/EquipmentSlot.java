@@ -1,5 +1,6 @@
 package de.raidcraft.api.items;
 
+import com.avaje.ebean.annotation.EnumValue;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 import de.raidcraft.util.EnumUtils;
@@ -9,12 +10,19 @@ import de.raidcraft.util.EnumUtils;
  */
 public enum EquipmentSlot {
 
+    @EnumValue("ONE_HANDED")
     ONE_HANDED("Einhändig"),
+    @EnumValue("SHIELD_HAND")
     SHIELD_HAND("Schildhand"),
+    @EnumValue("TWO_HANDED")
     TWO_HANDED("Zweihändig"),
+    @EnumValue("HEAD")
     HEAD("Kopf"),
+    @EnumValue("CHEST")
     CHEST("Brust"),
+    @EnumValue("LEGS")
     LEGS("Beine"),
+    @EnumValue("FEET")
     FEET("Füße");
 
     private final String germanName;
