@@ -25,4 +25,9 @@ public class CustomItemStack {
 
         return itemStack;
     }
+
+    public void rebuild() {
+
+        getItem().rebuild(getHandle());
+    }
 }
