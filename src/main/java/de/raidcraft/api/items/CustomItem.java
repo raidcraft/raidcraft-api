@@ -29,7 +29,7 @@ public interface CustomItem extends RequirementResolver<Player> {
 
     public boolean matches(ItemStack itemStack);
 
-    public boolean rebuild(ItemStack itemStack);
+    public void rebuild(ItemStack itemStack);
 
     public CustomItemStack createNewItem();
 }
