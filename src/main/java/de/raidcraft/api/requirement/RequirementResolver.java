@@ -7,6 +7,8 @@ import java.util.List;
  */
 public interface RequirementResolver<T> {
 
+    public T getObject();
+
     /**
      * Gets a list of all attached requirements.
      *

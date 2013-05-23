@@ -1,31 +1,32 @@
 package de.raidcraft.api.items;
 
-import de.raidcraft.util.StringUtils;
-
 /**
  * @author Silthus
  */
 public class ItemAttribute implements Comparable<ItemAttribute> {
 
-    private final String name;
-    private final String displayName;
+    private final AttributeType type;
     private final int value;
 
-    public ItemAttribute(String name, String displayName, int value) {
+    public ItemAttribute(AttributeType type, int value) {
 
-        this.name = StringUtils.formatName(name);
-        this.displayName = displayName;
+        this.type = type;
         this.value = value;
+    }
+
+    public AttributeType getType() {
+
+        return type;
     }
 
     public String getName() {
 
-        return name;
+        return type.name();
     }
 
     public String getDisplayName() {
 
-        return displayName;
+        return type.getGermanName();
     }
 
     public int getValue() {

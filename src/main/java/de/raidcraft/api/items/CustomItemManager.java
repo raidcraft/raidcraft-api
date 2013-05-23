@@ -38,13 +38,13 @@ public final class CustomItemManager implements Component {
         return customItems.get(id);
     }
 
-    public CustomItemStack getCustomItemStack(int id) {
+    public CustomItemStack getCustomItemStack(int id) throws CustomItemException {
 
         CustomItem customItem = customItems.get(id);
         if (customItem != null) {
             return customItem.createNewItem();
         }
-        return null;
+        throw new CustomItemException("Unknown custom item with the id: " + id);
     }
 
     public void registerCustomItem(CustomItem item) throws DuplicateCustomItemException {

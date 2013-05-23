@@ -7,6 +7,7 @@ import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.api.items.CustomItem;
+import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.player.PlayerComponent;
@@ -262,7 +263,7 @@ public class RaidCraft implements Listener {
         return getComponent(CustomItemManager.class).getCustomItem(id);
     }
 
-    public static CustomItemStack getCustomItemStack(int id) {
+    public static CustomItemStack getCustomItemStack(int id) throws CustomItemException {
 
         return getComponent(CustomItemManager.class).getCustomItemStack(id);
     }
