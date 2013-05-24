@@ -24,7 +24,6 @@ import java.util.List;
  */
 public class EffectUtil {
 
-    private static final int PARTICLE_PACKET = 63;
     private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     private static final EffectUtil instance = new EffectUtil();
 
