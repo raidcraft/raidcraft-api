@@ -23,7 +23,8 @@ public enum EquipmentSlot {
     @EnumValue("LEGS")
     LEGS("Beine"),
     @EnumValue("FEET")
-    FEET("Füße");
+    FEET("Füße"),
+    HANDS("Hände");
 
     private final String germanName;
 
