@@ -1,6 +1,7 @@
-package de.raidcraft.util;
+package de.raidcraft.api.ambient;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.util.EnumUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -87,7 +88,7 @@ public enum ParticleEffect {
                 return e.getValue();
             }
         }
-        return null;
+        return EnumUtils.getEnumFromString(ParticleEffect.class, name);
     }
 
     public static ParticleEffect fromId(int id) {
