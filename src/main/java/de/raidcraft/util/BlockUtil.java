@@ -13,6 +13,37 @@ import java.util.Set;
  */
 public final class BlockUtil {
 
+    public static final HashSet<Byte> TRANSPARENT_BLOCKS = new HashSet<>();
+
+    static {
+
+        TRANSPARENT_BLOCKS.add((byte) 0);
+        TRANSPARENT_BLOCKS.add((byte) 8);
+        TRANSPARENT_BLOCKS.add((byte) 9);
+        TRANSPARENT_BLOCKS.add((byte) 10);
+        TRANSPARENT_BLOCKS.add((byte) 11);
+        TRANSPARENT_BLOCKS.add((byte) 30);
+        TRANSPARENT_BLOCKS.add((byte) 31);
+        TRANSPARENT_BLOCKS.add((byte) 32);
+        TRANSPARENT_BLOCKS.add((byte) 37);
+        TRANSPARENT_BLOCKS.add((byte) 38);
+        TRANSPARENT_BLOCKS.add((byte) 39);
+        TRANSPARENT_BLOCKS.add((byte) 40);
+        TRANSPARENT_BLOCKS.add((byte) 51);
+        TRANSPARENT_BLOCKS.add((byte) 55);
+        TRANSPARENT_BLOCKS.add((byte) 59);
+        TRANSPARENT_BLOCKS.add((byte) 70);
+        TRANSPARENT_BLOCKS.add((byte) 72);
+        TRANSPARENT_BLOCKS.add((byte) 75);
+        TRANSPARENT_BLOCKS.add((byte) 83);
+        TRANSPARENT_BLOCKS.add((byte) 90);
+        TRANSPARENT_BLOCKS.add((byte) 93);
+        TRANSPARENT_BLOCKS.add((byte) 94);
+        TRANSPARENT_BLOCKS.add((byte) 106);
+        TRANSPARENT_BLOCKS.add((byte) 147);
+        TRANSPARENT_BLOCKS.add((byte) 148);
+    }
+
     public static Set<Block> replaceNonSolidSurfaceBlocks(Block source, Material material, int width, int length, int height, boolean replaceAir) {
 
         Set<Block> changedBlocks = new HashSet<>();
