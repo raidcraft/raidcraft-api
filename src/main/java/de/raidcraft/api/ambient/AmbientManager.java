@@ -16,6 +16,10 @@ public final class AmbientManager {
                     return new AmbientParticleEffect(config);
                 case BUKKIT:
                     return new AmbientBukkitEffect(config);
+                case SOUND:
+                    return new AmbientSoundEffect(config);
+                case FIREWORK:
+                    return new AmbientFireworkEffect(config);
             }
         }
         throw new UnknownAmbientEffect("There is no ambient effect of the type " + config.getString("type"));

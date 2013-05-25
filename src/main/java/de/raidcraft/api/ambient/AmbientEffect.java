@@ -12,7 +12,8 @@ public interface AmbientEffect {
 
         PARTICLE,
         SOUND,
-        BUKKIT;
+        BUKKIT,
+        FIREWORK;
 
         public static Type fromString(String name) {
 
