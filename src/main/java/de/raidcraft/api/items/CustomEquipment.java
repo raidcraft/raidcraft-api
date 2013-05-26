@@ -11,5 +11,5 @@ public interface CustomEquipment extends CustomItem {
 
     public Set<ItemAttribute> getAttributes();
 
-    public int getDurability();
+    public int getMaxDurability();
 }
