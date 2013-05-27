@@ -97,14 +97,14 @@ public final class CustomItemUtil {
 
     public static String getSellPriceString(double price) {
 
-        if (price > 0.0) {
-            String[] split = Double.toString(price).split("\\.");
-            if (split.length < 2) {
-                return ChatColor.WHITE + split[0] + ChatColor.GOLD + "●";
-            }
-            return ChatColor.WHITE + split[0] + ChatColor.GOLD + "● " + ChatColor.WHITE + split[1] + ChatColor.GRAY + "●";
-        }
-        return null;
+        StringBuilder sb = new StringBuilder();
+        int gold = (int) price / 100;
+        sb.append(ChatColor.WHITE).append(gold).append(ChatColor.GOLD).append("●");
+        int silver = (int) price % 100;
+        sb.append(ChatColor.WHITE).append(silver).append(ChatColor.GRAY).append("●");
+        int copper = (int) (price * 100) % 100;
+        sb.append(ChatColor.WHITE).append(copper).append(ChatColor.RED).append("●");
+        return sb.toString();
     }
 
     public static String getSwingTimeString(double time) {
