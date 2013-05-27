@@ -1,7 +1,6 @@
 package de.raidcraft.api.player;
 
 import de.raidcraft.RaidCraft;
-import net.milkbowl.vault.economy.Economy;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -63,30 +62,6 @@ public abstract class AbstractPlayer implements RCPlayer {
     public boolean isInWorld(String world) {
 
         return world.equalsIgnoreCase(getWorld());
-    }
-
-    @Override
-    public boolean hasEnoughMoney(double cost) {
-
-        Economy economy = RaidCraft.getEconomy();
-        if (economy == null) return false;
-        return economy.has(getUserName(), cost);
-    }
-
-    @Override
-    public void addMoney(double amount) {
-
-        Economy economy = RaidCraft.getEconomy();
-        if (economy == null) return;
-        economy.depositPlayer(getUserName(), amount);
-    }
-
-    @Override
-    public void removeMoney(double amount) {
-
-        Economy economy = RaidCraft.getEconomy();
-        if (economy == null) return;
-        economy.withdrawPlayer(getUserName(), amount);
     }
 
     @Override
