@@ -5,11 +5,23 @@ package de.raidcraft.api.economy;
  */
 public enum BalanceSource {
 
-    SKILL,
-    DRAGON_TRAVEL,
-    PAY_COMMAND,
-    ADMIN_COMMAND,
-    LOOT_OBJECT,
-    SELL_ITEM,
-    PLUGIN
+    SKILL("Skillsystem"),
+    DRAGON_TRAVEL("Drachenreisen"),
+    PAY_COMMAND("Spielerüberweisung"),
+    ADMIN_COMMAND("Adminüberweisung"),
+    LOOT_OBJECT("Loot-Objekt"),
+    SELL_ITEM("Itemverkauf"),
+    PLUGIN("Plugin");
+
+    private String friendlyName;
+
+    private BalanceSource(String friendlyName) {
+
+        this.friendlyName = friendlyName;
+    }
+
+    public String getFriendlyName() {
+
+        return friendlyName;
+    }
 }
