@@ -10,5 +10,6 @@ public enum BalanceSource {
     PAY_COMMAND,
     ADMIN_COMMAND,
     LOOT_OBJECT,
-    SELL_ITEM
+    SELL_ITEM,
+    PLUGIN
 }

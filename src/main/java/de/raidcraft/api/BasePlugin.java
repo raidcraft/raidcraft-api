@@ -1,13 +1,7 @@
 package de.raidcraft.api;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import com.sk89q.minecraft.util.commands.CommandUsageException;
-import com.sk89q.minecraft.util.commands.CommandsManager;
-import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
-import com.sk89q.minecraft.util.commands.SimpleInjector;
-import com.sk89q.minecraft.util.commands.WrappedCommandException;
+import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
@@ -15,7 +9,6 @@ import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.api.player.RCPlayer;
 import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,7 +31,6 @@ import java.util.Map;
 public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component {
 
     // vault variables
-    private static Economy economy;
     private static Chat chat;
     private static Permission permission;
     // member variables
@@ -57,11 +49,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
         if (plugin != null) {
-            if (economy == null) {
-                if (setupEconomy())
-                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Economy API.");
-                else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Economy API.");
-            }
             if (chat == null) {
                 if (setupChat()) getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Chat API.");
                 else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Chat API.");
@@ -212,11 +199,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         return RaidCraft.getPlayer(player);
     }
 
-    public final Economy getEconomy() {
-
-        return economy;
-    }
-
     public final Chat getChat() {
 
         return chat;
@@ -244,15 +226,5 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         }
 
         return (chat != null);
-    }
-
-    private boolean setupEconomy() {
-
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-        }
-
-        return (economy != null);
     }
 }

@@ -6,6 +6,7 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
+import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItem;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemManager;
@@ -15,7 +16,6 @@ import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.util.MetaDataKey;
 import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -61,6 +61,7 @@ public class RaidCraft implements Listener {
 
     private static final Map<String, RCPlayer> players = new HashMap<>();
     private static final Map<Class<? extends Component>, Component> components = new HashMap<>();
+    private static Economy economy;
 
     /**
      * Gets the wrapped Player for interaction with the player and his surroundings.
@@ -195,9 +196,14 @@ public class RaidCraft implements Listener {
         Bukkit.getPluginManager().callEvent(event);
     }
 
+    public static void setupEconomy(Economy e) {
+
+        economy = e;
+    }
+
     public static Economy getEconomy() {
 
-        return RaidCraftPlugin.getInstance().getEconomy();
+        return economy;
     }
 
     public static Permission getPermissions() {
