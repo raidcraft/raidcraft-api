@@ -28,7 +28,7 @@ public class Database {
     public Database() {
 
         BasePlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-        this.config = plugin.configure(new DatabaseConfig(plugin));
+        this.config = plugin.configure(new DatabaseConfig(plugin), true);
 
         try {
             connect();
