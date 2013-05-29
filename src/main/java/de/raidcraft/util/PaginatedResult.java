@@ -52,11 +52,11 @@ public abstract class PaginatedResult<T> {
         if (results.size() == 0) throw new CommandException("No results match!");
         --page;
 
-        int maxPages = results.size() / PER_PAGE;
+        int maxPages = ((int)((results.size() / (double) PER_PAGE) * 100)) / 100;
         if (page < 0 || page > maxPages) throw new CommandException(
-                "Unknown page selected! " + (maxPages + 1) + " total pages.");
+                "Unknown page selected! " + (maxPages) + " total pages.");
 
-        sender.sendMessage(ChatColor.YELLOW + header + " (page " + (page + 1) + "/" + (maxPages + 1) + ")");
+        sender.sendMessage(ChatColor.YELLOW + header + " (page " + (page + 1) + "/" + (maxPages) + ")");
         for (int i = PER_PAGE * page; i < PER_PAGE * page + PER_PAGE && i < results.size(); i++) {
             sender.sendMessage(ChatColor.YELLOW.toString() + format(results.get(i)));
             count++;
