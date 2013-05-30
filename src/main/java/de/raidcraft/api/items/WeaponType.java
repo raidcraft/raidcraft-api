@@ -10,6 +10,8 @@ public enum WeaponType {
 
     @EnumValue("SWORD")
     SWORD("Schwert", EquipmentSlot.ONE_HANDED),
+    @EnumValue("DAGGER")
+    DAGGER("Dolch", EquipmentSlot.ONE_HANDED),
     @EnumValue("AXE")
     AXE("Axt", EquipmentSlot.ONE_HANDED),
     @EnumValue("POLEARM")
