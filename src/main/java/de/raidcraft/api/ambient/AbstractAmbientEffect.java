@@ -20,7 +20,7 @@ public abstract class AbstractAmbientEffect implements AmbientEffect {
     private final boolean sphere;
     private final double frequency;
 
-    private int executions = 0;
+    private double executions = 0;
 
     protected AbstractAmbientEffect(ConfigurationSection config) {
 
@@ -37,7 +37,9 @@ public abstract class AbstractAmbientEffect implements AmbientEffect {
     @Override
     public final void run(Location location) {
 
-        int execute = (int) (++executions * frequency);
+        executions += frequency;
+        int execute = (int) executions;
+        // execute the task as soon as the counter is above 1.0
         for (int i = 0; i < execute; i++) {
             switch (shape) {
 
@@ -50,9 +52,9 @@ public abstract class AbstractAmbientEffect implements AmbientEffect {
                     break;
             }
         }
-        if (execute > 0) {
-            executions = 0;
-        }
+        // substract the executed amount to soft reset the counter
+        // this is needed when the frequency is 0.75 for example
+        executions -= execute;
     }
 
     protected abstract void runEffect(Location... locations);
