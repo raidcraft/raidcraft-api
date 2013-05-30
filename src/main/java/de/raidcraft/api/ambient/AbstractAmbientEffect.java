@@ -18,6 +18,9 @@ public abstract class AbstractAmbientEffect implements AmbientEffect {
     private final int hOffset;
     private final boolean hollow;
     private final boolean sphere;
+    private final double frequency;
+
+    private int executions = 0;
 
     protected AbstractAmbientEffect(ConfigurationSection config) {
 
@@ -28,20 +31,27 @@ public abstract class AbstractAmbientEffect implements AmbientEffect {
         this.hOffset = config.getInt("h-offset", 1);
         this.hollow = config.getBoolean("hollow", true);
         this.sphere = config.getBoolean("sphere", false);
+        this.frequency = config.getDouble("frequency", 1.0);
     }
 
     @Override
     public final void run(Location location) {
 
-        switch (shape) {
+        int execute = (int) (++executions * frequency);
+        for (int i = 0; i < execute; i++) {
+            switch (shape) {
 
-            case CIRCLE:
-                List<Location> circle = EffectUtil.circle(location, radius, height, hollow, sphere, hOffset);
-                runEffect(circle.toArray(new Location[circle.size()]));
-                break;
-            case POINT:
-                runEffect(location);
-                break;
+                case CIRCLE:
+                    List<Location> circle = EffectUtil.circle(location, radius, height, hollow, sphere, hOffset);
+                    runEffect(circle.toArray(new Location[circle.size()]));
+                    break;
+                case POINT:
+                    runEffect(location);
+                    break;
+            }
+        }
+        if (execute > 0) {
+            executions = 0;
         }
     }
 
