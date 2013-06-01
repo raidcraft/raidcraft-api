@@ -1,6 +1,13 @@
 package de.raidcraft.util;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.api.items.ArmorType;
+import de.raidcraft.api.items.CustomArmor;
+import de.raidcraft.api.items.CustomEquipment;
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.api.items.CustomItemManager;
+import de.raidcraft.api.items.CustomItemStack;
+import de.raidcraft.api.items.CustomWeapon;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -115,5 +122,54 @@ public final class CustomItemUtil {
 
         time = (int)(time * 100) / 100.0;
         return Double.toString(time);
+    }
+
+    public static boolean isEquipment(ItemStack itemStack) {
+
+        if (itemStack == null || itemStack.getTypeId() == 0) {
+            return false;
+        }
+        CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
+        return customItem != null && customItem.getItem() instanceof CustomEquipment;
+    }
+
+    public static boolean isWeapon(ItemStack itemStack) {
+
+        if (itemStack == null || itemStack.getTypeId() == 0) {
+            return false;
+        }
+        CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
+        return customItem != null && customItem.getItem() instanceof CustomWeapon;
+    }
+
+    public static CustomWeapon getWeapon(ItemStack itemStack) {
+
+        CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
+        if (customItem != null && customItem.getItem() instanceof CustomWeapon) {
+            return (CustomWeapon) customItem.getItem();
+        }
+        return null;
+    }
+
+    public static boolean isShield(ItemStack itemStack) {
+
+        if (itemStack == null || itemStack.getTypeId() == 0) {
+            return false;
+        }
+        CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
+        return customItem != null
+                && customItem.getItem() instanceof CustomArmor
+                && ((CustomArmor) customItem.getItem()).getArmorType() == ArmorType.SHIELD;
+    }
+
+    public static boolean isArmor(ItemStack itemStack) {
+
+        if (itemStack == null || itemStack.getTypeId() == 0) {
+            return false;
+        }
+        CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
+        return customItem != null
+                && customItem.getItem() instanceof CustomArmor
+                && ((CustomArmor) customItem.getItem()).getArmorType() != ArmorType.SHIELD;
     }
 }
