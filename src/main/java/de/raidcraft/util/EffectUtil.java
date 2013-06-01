@@ -1,9 +1,7 @@
 package de.raidcraft.util;
 
-import com.comphenix.protocol.Packets;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ambient.ParticleEffect;
 import org.bukkit.Effect;
@@ -12,10 +10,8 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,21 +48,7 @@ public class EffectUtil {
 
     public static void fakeExplosion(Location location) {
 
-        PacketContainer fakeExplosion = protocolManager.createPacket(Packets.Server.EXPLOSION);
-        fakeExplosion.getDoubles().
-                write(0, location.getX()).
-                write(1, location.getY()).
-                write(2, location.getZ());
-        fakeExplosion.getFloat().
-                write(0, 3.0F);
-        for (Player player : location.getWorld().getPlayers()) {
-            try {
-                protocolManager.sendServerPacket(player, fakeExplosion);
-            } catch (InvocationTargetException e) {
-                RaidCraft.LOGGER.warning(e.getMessage());
-                e.printStackTrace();
-            }
-        }
+        ParticleEffect.sendToLocation(ParticleEffect.HUGE_EXPLOSION, location, 0.0F, 0.0F, 0.0F, 1.0F, 1);
     }
 
     public static void fakeWolfHearts(Location location) {
