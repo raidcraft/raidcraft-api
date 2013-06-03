@@ -29,6 +29,20 @@ public final class ItemUtils {
         }
     }
 
+    public static ItemStack getItemStackByString(String name) {
+
+        String[] parts = name.split(":");
+        Material material = getItem(parts[0]);
+        short subid = 0;
+        if(parts.length > 1) {
+            try {
+                subid = Short.valueOf(parts[1]);
+            }
+            catch(NumberFormatException e) {}
+        }
+        return new ItemStack(material, 1, subid);
+    }
+
     public static Material getItem(int id) {
 
         return Material.getMaterial(id);
