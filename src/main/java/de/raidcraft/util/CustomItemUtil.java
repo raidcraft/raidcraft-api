@@ -112,9 +112,17 @@ public final class CustomItemUtil {
         int gold = (int) price / 100;
         sb.append(ChatColor.WHITE).append(gold).append(ChatColor.GOLD).append('●');
         int silver = (int) price % 100;
-        sb.append(ChatColor.WHITE).append(silver).append(ChatColor.GRAY).append('●');
+        sb.append(ChatColor.WHITE);
+        if (silver < 10) {
+            sb.append("0");
+        }
+        sb.append(silver).append(ChatColor.GRAY).append('●');
         int copper = (int) (price * 100) % 100;
-        sb.append(ChatColor.WHITE).append(copper).append(ChatColor.RED).append('●');
+        sb.append(ChatColor.WHITE);
+        if (copper < 10) {
+            sb.append("0");
+        }
+        sb.append(copper).append(ChatColor.RED).append('●');
         return sb.toString();
     }
 
