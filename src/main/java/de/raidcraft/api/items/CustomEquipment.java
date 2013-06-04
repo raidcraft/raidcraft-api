@@ -1,5 +1,7 @@
 package de.raidcraft.api.items;
 
+import org.bukkit.inventory.ItemStack;
+
 import java.util.Set;
 
 /**
@@ -12,4 +14,8 @@ public interface CustomEquipment extends CustomItem {
     public Set<ItemAttribute> getAttributes();
 
     public int getMaxDurability();
+
+    public int parseDurability(ItemStack itemStack);
+
+    public void updateDurability(ItemStack itemStack, int durability);
 }
