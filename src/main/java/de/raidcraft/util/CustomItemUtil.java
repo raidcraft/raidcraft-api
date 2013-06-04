@@ -159,6 +159,15 @@ public final class CustomItemUtil {
         return null;
     }
 
+    public static CustomArmor getArmor(ItemStack itemStack) {
+
+        CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
+        if (customItem != null && customItem.getItem() instanceof CustomArmor) {
+            return (CustomArmor) customItem.getItem();
+        }
+        return null;
+    }
+
     public static boolean isShield(ItemStack itemStack) {
 
         if (itemStack == null || itemStack.getTypeId() == 0) {
