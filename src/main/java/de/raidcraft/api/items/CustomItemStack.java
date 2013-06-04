@@ -9,11 +9,28 @@ public class CustomItemStack {
 
     private final CustomItem item;
     private final ItemStack itemStack;
+    private int durability;
 
     protected CustomItemStack(CustomItem item, ItemStack itemStack) {
 
         this.item = item;
         this.itemStack = itemStack;
+        if (item instanceof CustomEquipment) {
+            this.durability = ((CustomEquipment) item).parseDurability(itemStack);
+        }
+    }
+
+    public int getDurability() {
+
+        return durability;
+    }
+
+    public void setDurability(int durability) {
+
+        this.durability = durability;
+        if (getItem() instanceof CustomEquipment) {
+            ((CustomEquipment) getItem()).updateDurability(getHandle(), durability);
+        }
     }
 
     public CustomItem getItem() {
