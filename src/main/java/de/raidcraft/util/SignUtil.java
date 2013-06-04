@@ -51,6 +51,11 @@ public final class SignUtil {
         return block.getState() instanceof Sign;
     }
 
+    public static Sign getSign(Block block) {
+
+        return (Sign) block.getState();
+    }
+
     public static String parseColor(String line) {
 
         String regex = "&(?<!&&)(?=%c)";

@@ -4,6 +4,7 @@ import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -141,5 +142,12 @@ public final class BlockUtil {
             }
         }
         return blocks;
+    }
+
+    public static void destroyBlock(Block block) {
+
+        ItemStack item = new ItemStack(block.getTypeId(), 1, block.getData());
+        block.getLocation().getWorld().dropItemNaturally(block.getLocation(), item);
+        block.setTypeId(0, true);
     }
 }

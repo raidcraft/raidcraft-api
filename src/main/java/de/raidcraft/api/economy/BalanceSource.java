@@ -11,6 +11,8 @@ public enum BalanceSource {
     ADMIN_COMMAND("Adminüberweisung"),
     LOOT_OBJECT("Loot-Objekt"),
     SELL_ITEM("Itemverkauf"),
+    BUY_REGION("Grundstücks Kauf"),
+    SELL_REGION("Grundstücks Verkauf"),
     PLUGIN("Plugin");
 
     private String friendlyName;
