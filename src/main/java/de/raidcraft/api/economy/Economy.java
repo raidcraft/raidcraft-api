@@ -19,6 +19,14 @@ public interface Economy {
 
     public boolean hasEnough(String accountName, double amount);
 
+    public void substract(String accountName, double amount);
+
+    public void substract(String accountName, double amount, BalanceSource source, String detail);
+
+    public void add(String accountName, double amount);
+
+    public void add(String accountName, double amount, BalanceSource source, String detail);
+
     public void modify(String accountName, double amount);
 
     public void modify(String accountName, double amount, BalanceSource source, String detail);
