@@ -55,7 +55,9 @@ public class QueuedCommand {
                 "No method signature found for " + methodName + " in " + object.getClass().getCanonicalName());
         this.args = args;
         RaidCraft.getComponent(RaidCraftPlugin.class).queueCommand(this);
-        sender.sendMessage(ChatColor.RED + "Bitte bestätige den Befehl mit: " + ChatColor.GREEN + "/rcconfirm");
+        if (!(this instanceof QueuedCaptchaCommand)) {
+            sender.sendMessage(ChatColor.RED + "Bitte bestätige den Befehl mit: " + ChatColor.GREEN + "/rcconfirm");
+        }
     }
 
     public CommandSender getSender() {
