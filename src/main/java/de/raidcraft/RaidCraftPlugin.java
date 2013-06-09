@@ -126,6 +126,9 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onChunkLoad(ChunkLoadEvent event) {
 
+        if (!config.player_placed_block_worlds.contains(event.getChunk().getWorld().getName())) {
+            return;
+        }
         Chunk chunk = event.getChunk();
         Set<PlayerPlacedBlock> set = getDatabase().find(PlayerPlacedBlock.class).where()
                 .eq("chunk_x", chunk.getX())
@@ -139,6 +142,9 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onChunkUnload(ChunkUnloadEvent event) {
 
+        if (!config.player_placed_block_worlds.contains(event.getChunk().getWorld().getName())) {
+            return;
+        }
         Set<PlayerPlacedBlock> remove = playerPlacedBlocks.remove(event.getChunk());
         if (remove == null || remove.isEmpty()) {
             return;
