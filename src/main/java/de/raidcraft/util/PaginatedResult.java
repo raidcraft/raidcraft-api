@@ -49,14 +49,14 @@ public abstract class PaginatedResult<T> {
 
     public void display(CommandSender sender, List<? extends T> results, int page) throws CommandException {
 
-        if (results.size() == 0) throw new CommandException("No results match!");
+        if (results.size() == 0) throw new CommandException("Keine Einträge gefunden!");
         --page;
 
-        int maxPages = ((int)((results.size() / (double) PER_PAGE) * 100)) / 100;
+        int maxPages = (int) ((results.size() / (double) PER_PAGE) + 0.99);
         if (page < 0 || page > maxPages) throw new CommandException(
-                "Unknown page selected! " + (maxPages) + " total pages.");
+                "Unbekannte Seite selektiert! " + (maxPages) + " Seiten existieren.");
 
-        sender.sendMessage(ChatColor.YELLOW + header + " (page " + (page + 1) + "/" + (maxPages) + ")");
+        sender.sendMessage(ChatColor.YELLOW + header + " (Seite " + (page + 1) + "/" + (maxPages) + ")");
         for (int i = PER_PAGE * page; i < PER_PAGE * page + PER_PAGE && i < results.size(); i++) {
             sender.sendMessage(ChatColor.YELLOW.toString() + format(results.get(i)));
             count++;
