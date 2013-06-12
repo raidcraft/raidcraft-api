@@ -7,13 +7,5 @@ import org.bukkit.entity.Player;
  */
 public interface UseableCustomItem extends AttachableCustomItem {
 
-    public UseableItemAttachment getUseableAttachment();
-
-    public double getCooldown();
-
-    public double getRemainingCooldown();
-
-    public boolean isOnCooldown();
-
     public void use(Player player) throws ItemAttachmentException;
 }

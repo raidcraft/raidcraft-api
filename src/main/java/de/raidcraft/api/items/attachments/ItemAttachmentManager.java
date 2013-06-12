@@ -40,11 +40,11 @@ public class ItemAttachmentManager implements Component {
         return itemAttachmentProvider.get(name);
     }
 
-    public ItemAttachment getItemAttachment(AttachableCustomItem item, Player player) throws ItemAttachmentException {
+    public ItemAttachment getItemAttachment(String provider, String name, Player player) throws ItemAttachmentException {
 
-        if (!itemAttachmentProvider.containsKey(item.getProviderName())) {
-            throw new ItemAttachmentException("ItemAttachmentProvider with the name " + item.getProviderName() + " was not found!");
+        if (!itemAttachmentProvider.containsKey(provider)) {
+            throw new ItemAttachmentException("ItemAttachmentProvider with the name " + provider + " was not found!");
         }
-        return itemAttachmentProvider.get(item.getProviderName()).getItemAttachment(player, item.getAttachmentName());
+        return itemAttachmentProvider.get(provider).getItemAttachment(player, name);
     }
 }
