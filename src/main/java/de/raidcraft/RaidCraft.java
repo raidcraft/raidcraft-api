@@ -11,7 +11,6 @@ import de.raidcraft.api.items.CustomItem;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
-import de.raidcraft.api.items.UseableItem;
 import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
@@ -268,11 +267,6 @@ public class RaidCraft implements Listener {
     public static CustomItem getCustomItem(int id) {
 
         return getComponent(CustomItemManager.class).getCustomItem(id);
-    }
-
-    public static <C extends UseableItem<T>, T> C getUseableItem(Class<C> clazz, int id) throws CustomItemException {
-
-        return getComponent(CustomItemManager.class).getCustomUseableItem(clazz, id);
     }
 
     public static CustomItemStack getCustomItemStack(int id) throws CustomItemException {

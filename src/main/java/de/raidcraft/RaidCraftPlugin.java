@@ -6,6 +6,7 @@ import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.api.items.CustomItemManager;
+import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -49,6 +50,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerEvents(new RaidCraft());
         registerCommands(ConfirmCommand.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
+        RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }

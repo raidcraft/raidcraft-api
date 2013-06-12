@@ -3,7 +3,6 @@ package de.raidcraft.api.items;
 import de.raidcraft.api.Component;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +15,6 @@ public final class CustomItemManager implements Component {
 
     // custom item id | custom item
     private final Map<Integer, CustomItem> customItems = new HashMap<>();
-    private final Map<Class<? extends Useable<?>>, Constructor<Useable<?>>> useableItemConstructors = new HashMap<>();
     // minecraft item id | possible list of custom items
     private final Map<Integer, List<CustomItem>> mappedMinecraftItems = new HashMap<>();
 
@@ -38,15 +36,6 @@ public final class CustomItemManager implements Component {
     public CustomItem getCustomItem(int id) {
 
         return customItems.get(id);
-    }
-
-    public <C extends UseableItem<T>, T> C getCustomUseableItem(Class<C> clazz, int id) throws CustomItemException {
-
-        CustomItem customItem = getCustomItem(id);
-        if (customItem == null || !(customItem instanceof UseableItem)) {
-            throw new CustomItemException("Unknown custom useable item with the id: " + id);
-        }
-        return null;
     }
 
     public CustomItemStack getCustomItemStack(int id) throws CustomItemException {
