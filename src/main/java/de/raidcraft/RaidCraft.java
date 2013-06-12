@@ -3,6 +3,7 @@ package de.raidcraft;
 import com.avaje.ebean.EbeanServer;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
+import de.raidcraft.api.RaidCraftException;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
@@ -11,6 +12,8 @@ import de.raidcraft.api.items.CustomItem;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
+import de.raidcraft.api.items.attachments.ItemAttachmentManager;
+import de.raidcraft.api.items.attachments.ItemAttachmentProvider;
 import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
@@ -272,5 +275,10 @@ public class RaidCraft implements Listener {
     public static CustomItemStack getCustomItemStack(int id) throws CustomItemException {
 
         return getComponent(CustomItemManager.class).getCustomItemStack(id);
+    }
+
+    public static void registerItemAttachmentProvider(ItemAttachmentProvider provider) throws RaidCraftException {
+
+        RaidCraft.getComponent(ItemAttachmentManager.class).registerItemAttachmentProvider(provider);
     }
 }
