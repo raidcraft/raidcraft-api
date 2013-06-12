@@ -1,5 +1,6 @@
 package de.raidcraft.api.items;
 
+import com.sk89q.util.StringUtil;
 import de.raidcraft.api.Component;
 import org.bukkit.inventory.ItemStack;
 
@@ -45,6 +46,37 @@ public final class CustomItemManager implements Component {
             return customItem.createNewItem();
         }
         throw new CustomItemException("Unknown custom item with the id: " + id);
+    }
+
+    public CustomItem getCustomItem(String name) throws CustomItemException {
+
+        try {
+            return getCustomItem(Integer.parseInt(name));
+        } catch (NumberFormatException e) {
+            name = name.toLowerCase();
+            List<CustomItem> matching = new ArrayList<>();
+            for (CustomItem item : customItems.values()) {
+                if (item.getName().equalsIgnoreCase(name)) {
+                    return item;
+                } else if (item.getName().toLowerCase().contains(name)) {
+                    matching.add(item);
+                }
+            }
+            if (matching.isEmpty()) {
+                throw new CustomItemException("Es gibt kein Custom Item mit dem Namen: " + name);
+            }
+            if (matching.size() > 1) {
+                throw new CustomItemException("Es gibt mehrere Custom Items mit dem Namen " + name + ": " +
+                        StringUtil.joinString(matching, ", ", 0));
+            }
+            return matching.get(0);
+        }
+    }
+
+    public CustomItemStack getCustomItemStack(String name) throws CustomItemException {
+
+        CustomItem customItem = getCustomItem(name);
+        return customItem.createNewItem();
     }
 
     public void registerCustomItem(CustomItem item) throws DuplicateCustomItemException {
