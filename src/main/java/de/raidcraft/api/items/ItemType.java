@@ -11,7 +11,9 @@ public enum ItemType {
     @EnumValue("WEAPON")
     WEAPON("Waffe"),
     @EnumValue("ARMOR")
-    ARMOR("Rüstung");
+    ARMOR("Rüstung"),
+    @EnumValue("USEABLE")
+    USEABLE("Benutzbar");
 
     private final String germanName;
 
