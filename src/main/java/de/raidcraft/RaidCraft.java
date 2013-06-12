@@ -267,7 +267,7 @@ public class RaidCraft implements Listener {
         return getComponent(CustomItemManager.class).getCustomItem(itemStack);
     }
 
-    public static CustomItem getCustomItem(int id) {
+    public static CustomItem getCustomItem(int id) throws CustomItemException {
 
         return getComponent(CustomItemManager.class).getCustomItem(id);
     }
