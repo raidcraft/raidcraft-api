@@ -37,7 +37,7 @@ public final class CustomItemManager implements Component {
     public CustomItem getCustomItem(int id) throws CustomItemException {
 
         if (!customItems.containsKey(id)) {
-            throw new CustomItemException("Es gibt kein Custom Item mit der ID: " + 1);
+            throw new CustomItemException("Es gibt kein Custom Item mit der ID: " + id);
         }
         return customItems.get(id);
     }
