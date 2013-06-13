@@ -9,6 +9,21 @@ public final class TimeUtil {
 
     }
 
+    public static double secondsToMinutes(double seconds) {
+
+        return ((int) ((seconds / 60.0) * 100)) / 100.0;
+    }
+
+    public static double ticksToMinutes(long ticks) {
+
+        return secondsToMinutes(ticksToSeconds(ticks));
+    }
+
+    public static double millisToMinutes(long millis) {
+
+        return secondsToMinutes(millisToSeconds(millis));
+    }
+
     public static double ticksToSeconds(long ticks) {
 
         return ((int) (((double)ticks / 20.0) * 100.0)) / 100.0;
