@@ -16,6 +16,18 @@ public class CaseInsensitiveMap<V> extends HashMap<String, V> {
     @Override
     public V get(Object key) {
 
-        return super.get(((String) key).toLowerCase());
+        return super.get(key == null ? null : key.toString().toLowerCase());
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+
+        return super.containsKey(key == null ? null : key.toString().toLowerCase());
+    }
+
+    @Override
+    public V remove(Object key) {
+
+        return super.remove(key == null ? null : key.toString().toLowerCase());
     }
 }
