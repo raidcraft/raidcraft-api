@@ -1,11 +1,18 @@
 package de.raidcraft.util;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Silthus
  */
 public class CaseInsensitiveMap<V> extends HashMap<String, V> {
+
+    public CaseInsensitiveMap(Map<? extends String, ? extends V> m) {
+
+        super(m.size());
+        putAll(m);
+    }
 
     @Override
     public V put(String key, V value) {
