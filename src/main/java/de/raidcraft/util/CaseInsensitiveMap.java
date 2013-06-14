@@ -8,6 +8,20 @@ import java.util.Map;
  */
 public class CaseInsensitiveMap<V> extends HashMap<String, V> {
 
+    public CaseInsensitiveMap() {
+
+    }
+
+    public CaseInsensitiveMap(int initialCapacity) {
+
+        super(initialCapacity);
+    }
+
+    public CaseInsensitiveMap(int initialCapacity, float loadFactor) {
+
+        super(initialCapacity, loadFactor);
+    }
+
     public CaseInsensitiveMap(Map<? extends String, ? extends V> m) {
 
         super(m.size());
