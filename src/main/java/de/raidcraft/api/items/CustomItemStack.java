@@ -33,6 +33,14 @@ public class CustomItemStack {
         }
     }
 
+    public int getMaxDurability() {
+
+        if (getItem() instanceof CustomEquipment) {
+            return ((CustomEquipment) getItem()).getMaxDurability();
+        }
+        return getDurability();
+    }
+
     public CustomItem getItem() {
 
         return item;
