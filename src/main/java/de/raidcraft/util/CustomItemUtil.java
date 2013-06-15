@@ -104,21 +104,26 @@ public final class CustomItemUtil {
 
     public static String getSellPriceString(double price) {
 
+        return getSellPriceString(price, ChatColor.WHITE);
+    }
+
+    public static String getSellPriceString(double price, ChatColor textColor) {
+
         StringBuilder sb = new StringBuilder();
         if(price < 0) {
             sb.append(ChatColor.RED).append('-');
             price = Math.abs(price);
         }
         int gold = (int) price / 100;
-        sb.append(ChatColor.WHITE).append(gold).append(ChatColor.GOLD).append('●');
+        sb.append(textColor).append(gold).append(ChatColor.GOLD).append('●');
         int silver = (int) price % 100;
-        sb.append(ChatColor.WHITE);
+        sb.append(textColor);
         if (silver < 10) {
             sb.append("0");
         }
         sb.append(silver).append(ChatColor.GRAY).append('●');
         int copper = (int) (price * 100) % 100;
-        sb.append(ChatColor.WHITE);
+        sb.append(textColor);
         if (copper < 10) {
             sb.append("0");
         }
