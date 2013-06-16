@@ -194,4 +194,14 @@ public final class CustomItemUtil {
                 && customItem.getItem() instanceof CustomArmor
                 && ((CustomArmor) customItem.getItem()).getArmorType() != ArmorType.SHIELD;
     }
+
+    public static short getMinecraftDurability(ItemStack itemStack, int durability, int maxDurability) {
+
+        double durabilityInPercent = (double) durability / (double) maxDurability;
+        // also set the minecraft items durability
+        // minecrafts max durability is when the item is completly broken so we need to invert our durability
+        double mcDurabilityPercent = 1.0 - durabilityInPercent;
+        // always set -1 so we dont break the item
+        return (short) ((itemStack.getType().getMaxDurability() * mcDurabilityPercent) - 1);
+    }
 }

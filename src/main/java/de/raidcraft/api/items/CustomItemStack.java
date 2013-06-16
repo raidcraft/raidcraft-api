@@ -27,6 +27,9 @@ public class CustomItemStack {
 
     public void setDurability(int durability) {
 
+        if (durability < 1) {
+            durability = 0;
+        }
         this.durability = durability;
         if (getItem() instanceof CustomEquipment) {
             ((CustomEquipment) getItem()).updateDurability(getHandle(), durability);
