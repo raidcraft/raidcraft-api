@@ -17,6 +17,8 @@ public interface Economy {
 
     public String getFormattedAmount(double amount);
 
+    public double parseCurrencyInput(String input);
+
     public boolean hasEnough(String accountName, double amount);
 
     public void substract(String accountName, double amount);
