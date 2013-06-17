@@ -17,6 +17,9 @@ import de.raidcraft.api.items.attachments.ItemAttachmentProvider;
 import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
+import de.raidcraft.api.storage.ItemStorage;
+import de.raidcraft.api.storage.StorageException;
+import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MetaDataKey;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -61,6 +64,8 @@ public class RaidCraft implements Listener {
      ///////////////////////////////////////////////////////////////////////////*/
 
     public static final Logger LOGGER = Logger.getLogger("Minecraft.RaidCraft");
+    public static final String CUSTOM_ITEM_IDENTIFIER = "rc";
+    public static final String STORED_OBJECT_IDENTIFIER = "so";
 
     private static final Map<String, RCPlayer> players = new HashMap<>();
     private static final Map<Class<? extends Component>, Component> components = new HashMap<>();
@@ -275,6 +280,33 @@ public class RaidCraft implements Listener {
     public static CustomItemStack getCustomItemStack(int id) throws CustomItemException {
 
         return getComponent(CustomItemManager.class).getCustomItemStack(id);
+    }
+
+    /**
+     * Will try to parse any item out of the given id. The result can be a custom item or stored item.
+     * Even minecraft Items are possible.
+     *
+     * @param id of the item
+     * @return created itemstack out of the id
+     * @throws CustomItemException is thrown if nothing matched
+     */
+    public static ItemStack getItem(String id) throws CustomItemException {
+
+        try {
+            id = id.toLowerCase();
+            if (id.startsWith(CUSTOM_ITEM_IDENTIFIER)) {
+                // its a custom item
+                return getCustomItemStack(Integer.parseInt(id.replace(CUSTOM_ITEM_IDENTIFIER, ""))).getHandle();
+            } else if (id.startsWith(STORED_OBJECT_IDENTIFIER)) {
+                // its a stored item object
+                return new ItemStorage("API").getObject(Integer.parseInt(id.replace(STORED_OBJECT_IDENTIFIER, "")));
+            } else {
+                // its a minecraft item
+                return new ItemStack(ItemUtils.getItem(id), 1, ItemUtils.getItemData(id));
+            }
+        } catch (StorageException | NumberFormatException e) {
+            throw new CustomItemException(e.getMessage());
+        }
     }
 
     public static void registerItemAttachmentProvider(ItemAttachmentProvider provider) throws RaidCraftException {
