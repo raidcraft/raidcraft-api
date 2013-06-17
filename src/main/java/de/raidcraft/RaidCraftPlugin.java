@@ -7,6 +7,7 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
+import de.raidcraft.api.storage.TObjectStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -80,6 +81,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         List<Class<?>> classes = new ArrayList<>();
         classes.add(PlayerPlacedBlock.class);
+        classes.add(TObjectStorage.class);
         return classes;
     }
 
