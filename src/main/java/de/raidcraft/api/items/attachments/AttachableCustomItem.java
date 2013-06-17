@@ -2,7 +2,6 @@ package de.raidcraft.api.items.attachments;
 
 import de.raidcraft.api.items.CustomItem;
 import de.raidcraft.api.items.CustomItemException;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  */
 public interface AttachableCustomItem extends CustomItem {
 
-    public void addAttachment(String name, ConfigurationSection config);
+    public void addAttachment(ConfiguredAttachment attachment);
 
     public List<ItemAttachment> getAttachments(Player player) throws ItemAttachmentException;
 
