@@ -19,6 +19,7 @@ import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
+import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MetaDataKey;
 import net.milkbowl.vault.chat.Chat;
@@ -307,6 +308,25 @@ public class RaidCraft implements Listener {
         } catch (StorageException | NumberFormatException e) {
             throw new CustomItemException(e.getMessage());
         }
+    }
+
+    public static String getItemIdString(ItemStack itemStack) {
+
+        return getItemIdString(itemStack, false);
+    }
+
+    public static String getItemIdString(ItemStack itemStack, boolean storeObject) {
+
+        // lets try some stuff and see what item type this is
+        if (CustomItemUtil.isCustomItem(itemStack)) {
+            return CUSTOM_ITEM_IDENTIFIER + getCustomItem(itemStack).getItem().getId();
+        }
+        // lets check this param after the custom item, but before mc
+        if (storeObject) {
+            return STORED_OBJECT_IDENTIFIER + new ItemStorage("API").storeObject(itemStack);
+        }
+        // so nothing matched :( bukkit here ya go!
+        return itemStack.getTypeId() + ":" + itemStack.getDurability();
     }
 
     public static void registerItemAttachmentProvider(ItemAttachmentProvider provider) throws RaidCraftException {
