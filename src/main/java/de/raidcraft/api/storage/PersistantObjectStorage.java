@@ -9,23 +9,23 @@ import de.raidcraft.RaidCraftPlugin;
  */
 public abstract class PersistantObjectStorage<T> implements ObjectStorage<T> {
 
-    private final String storageName;
+    private final String storageSource;
 
-    public PersistantObjectStorage(String storageName) {
+    public PersistantObjectStorage(String storageSource) {
 
-        this.storageName = storageName;
+        this.storageSource = storageSource;
     }
 
     @Override
-    public final String getStorageName() {
+    public final String getStorageSource() {
 
-        return storageName;
+        return storageSource;
     }
 
     protected int store(String byteStream) {
 
         TObjectStorage storage = new TObjectStorage();
-        storage.setStorageName(getStorageName());
+        storage.setStorageName(getStorageSource());
         storage.setSerialization(byteStream);
         RaidCraft.getDatabase(RaidCraftPlugin.class).save(storage);
         return storage.getId();

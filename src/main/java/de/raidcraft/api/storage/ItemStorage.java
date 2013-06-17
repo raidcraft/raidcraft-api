@@ -8,9 +8,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public class ItemStorage extends PersistantObjectStorage<ItemStack> {
 
-    public ItemStorage(String storageName) {
+    public ItemStorage(String storageSource) {
 
-        super(storageName);
+        super(storageSource);
     }
 
     @Override
