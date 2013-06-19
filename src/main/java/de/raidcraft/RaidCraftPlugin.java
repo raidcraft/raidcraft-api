@@ -5,6 +5,7 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.api.inventory.PersistentInventoryManager;
 import de.raidcraft.api.inventory.TPersistentInventory;
 import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
@@ -54,6 +55,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerCommands(ConfirmCommand.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
+        RaidCraft.registerComponent(PersistentInventoryManager.class, new PersistentInventoryManager(this));
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
