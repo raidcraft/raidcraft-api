@@ -5,6 +5,8 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.api.inventory.TPersistentInventory;
+import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
@@ -82,6 +84,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         List<Class<?>> classes = new ArrayList<>();
         classes.add(PlayerPlacedBlock.class);
         classes.add(TObjectStorage.class);
+        classes.add(TPersistentInventory.class);
+        classes.add(TPersistentInventorySlot.class);
         return classes;
     }
 
