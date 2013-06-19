@@ -1,9 +1,8 @@
 package de.raidcraft.api.inventory;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 /**
  * @author Philip Urban
@@ -17,6 +16,9 @@ public class TPersistentInventory {
     private Timestamp created;
     private Timestamp lastUpdate;
     private int size;
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "inventory_id")
+    private Set<TPersistentInventorySlot> slots;
 
     public int getId() {
 
@@ -56,5 +58,15 @@ public class TPersistentInventory {
     public void setSize(int size) {
 
         this.size = size;
+    }
+
+    public Set<TPersistentInventorySlot> getSlots() {
+
+        return slots;
+    }
+
+    public void setSlots(Set<TPersistentInventorySlot> slots) {
+
+        this.slots = slots;
     }
 }

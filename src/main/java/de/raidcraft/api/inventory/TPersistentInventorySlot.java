@@ -1,8 +1,6 @@
 package de.raidcraft.api.inventory;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author Philip Urban
@@ -13,9 +11,11 @@ public class TPersistentInventorySlot {
 
     @Id
     private int id;
-    private int inventory;
+    private int inventoryId;
     private int slot;
     private int objectId;
+    @ManyToOne
+    private TPersistentInventory inventory;
 
     public int getId() {
 
@@ -27,14 +27,14 @@ public class TPersistentInventorySlot {
         this.id = id;
     }
 
-    public int getInventory() {
+    public int getInventoryId() {
 
-        return inventory;
+        return inventoryId;
     }
 
-    public void setInventory(int inventory) {
+    public void setInventoryId(int inventoryId) {
 
-        this.inventory = inventory;
+        this.inventoryId = inventoryId;
     }
 
     public int getSlot() {
@@ -55,5 +55,15 @@ public class TPersistentInventorySlot {
     public void setObjectId(int objectId) {
 
         this.objectId = objectId;
+    }
+
+    public TPersistentInventory getInventory() {
+
+        return inventory;
+    }
+
+    public void setInventory(TPersistentInventory inventory) {
+
+        this.inventory = inventory;
     }
 }

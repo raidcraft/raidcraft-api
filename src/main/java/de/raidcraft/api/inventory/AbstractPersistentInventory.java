@@ -1,6 +1,9 @@
 package de.raidcraft.api.inventory;
 
+import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -10,8 +13,15 @@ import org.bukkit.inventory.Inventory;
 public abstract class AbstractPersistentInventory implements PersistentInventory {
 
     private PersistentInventoryManager manager = null;
-    private int id;
     private Inventory inventory;
+
+    private TPersistentInventory tPersistentInventory;
+
+    protected AbstractPersistentInventory(TPersistentInventory tPersistentInventory, String title) {
+
+        this.tPersistentInventory = tPersistentInventory;
+        this.inventory = Bukkit.createInventory(null, tPersistentInventory.getSize(), title);
+    }
 
     private PersistentInventoryManager getManager() {
 
@@ -30,7 +40,7 @@ public abstract class AbstractPersistentInventory implements PersistentInventory
     @Override
     public int getId() {
 
-        return id;
+        return tPersistentInventory.getId();
     }
 
     @Override
@@ -40,6 +50,9 @@ public abstract class AbstractPersistentInventory implements PersistentInventory
 
     @Override
     public void delete() {
+
+        EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
+
         //TODO: implement
     }
 
