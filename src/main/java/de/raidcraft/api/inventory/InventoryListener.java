@@ -1,6 +1,7 @@
 package de.raidcraft.api.inventory;
 
 import de.raidcraft.RaidCraft;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -15,9 +16,11 @@ public class InventoryListener implements Listener {
 
         InventoryManager manager = RaidCraft.getComponent(InventoryManager.class);
         for (PersistentInventory inventory : manager.getLoadedInventories()) {
-            if (event.getInventory().equals(inventory.getInventory())) {
-                inventory.save();
-                return;
+            for(HumanEntity human : inventory.getInventory().getViewers()) {
+                if(event.getPlayer().getName().equalsIgnoreCase(human.getName())) {
+                    inventory.save();
+                    return;
+                }
             }
         }
     }
