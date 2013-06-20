@@ -1,6 +1,9 @@
 package de.raidcraft.api.items;
 
+import de.raidcraft.util.CustomItemUtil;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 /**
  * @author Silthus
@@ -52,6 +55,29 @@ public class CustomItemStack {
     public ItemStack getHandle() {
 
         return itemStack;
+    }
+
+    public void setMetaDataId(int id) {
+
+        List<String> lore = getHandle().getItemMeta().getLore();
+        try {
+            CustomItemUtil.decodeItemId(lore.get(lore.size() - 1));
+            // he had an id so replace the last entry
+            lore.remove(lore.size() - 1);
+        } catch (CustomItemException ignored) {
+        }
+        lore.add(CustomItemUtil.encodeItemId(id));
+        getHandle().getItemMeta().setLore(lore);
+    }
+
+    public int getMetaDataId() {
+
+        List<String> lore = getHandle().getItemMeta().getLore();
+        try {
+            return CustomItemUtil.decodeItemId(lore.get(lore.size() - 1));
+        } catch (CustomItemException ignored) {
+            return -1;
+        }
     }
 
     public void rebuild() {
