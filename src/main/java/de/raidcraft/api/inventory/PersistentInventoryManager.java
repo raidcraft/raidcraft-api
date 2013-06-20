@@ -15,6 +15,7 @@ public class PersistentInventoryManager implements Component {
 
     private RaidCraftPlugin plugin;
     private Map<Inventory, OpenInventory> openedInventories = new HashMap<>();
+    private Map<Integer, AbstractPersistentInventory> loadedInventories = new HashMap<>();
 
     public PersistentInventoryManager(RaidCraftPlugin plugin) {
 
@@ -65,5 +66,25 @@ public class PersistentInventoryManager implements Component {
 
             player.closeInventory();
         }
+    }
+
+    public void registerInventory(AbstractPersistentInventory inventory) {
+
+        loadedInventories.put(inventory.getId(), inventory);
+    }
+
+    public boolean inventoryIsLoaded(int id) {
+
+        return loadedInventories.containsKey(id);
+    }
+
+    public void unregisterInventory(AbstractPersistentInventory inventory) {
+
+        loadedInventories.remove(inventory.getId());
+    }
+
+    public AbstractPersistentInventory getLoadedInventory(int id) {
+
+        return loadedInventories.get(id);
     }
 }

@@ -27,7 +27,16 @@ public abstract class AbstractPersistentInventory implements PersistentInventory
     protected AbstractPersistentInventory(int id) {
 
         manager = RaidCraft.getComponent(PersistentInventoryManager.class);
-        tPersistentInventory = RaidCraft.getDatabase(RaidCraftPlugin.class).find(TPersistentInventory.class, id);
+
+        if(manager.inventoryIsLoaded(id)) {
+            AbstractPersistentInventory loadedInventory = manager.getLoadedInventory(id);
+            inventory = loadedInventory.getInventory();
+            tPersistentInventory = loadedInventory.gettPersistentInventory();
+        }
+        else {
+            tPersistentInventory = RaidCraft.getDatabase(RaidCraftPlugin.class).find(TPersistentInventory.class, id);
+            manager.registerInventory(this);
+        }
     }
 
     protected AbstractPersistentInventory(String title, int size) {
@@ -43,6 +52,7 @@ public abstract class AbstractPersistentInventory implements PersistentInventory
         tPersistentInventory.setSize(size);
         tPersistentInventory.setCreated(new Timestamp(System.currentTimeMillis()));
         RaidCraft.getDatabase(RaidCraftPlugin.class).save(tPersistentInventory);
+        manager.registerInventory(this);
     }
 
     @Override
@@ -97,6 +107,7 @@ public abstract class AbstractPersistentInventory implements PersistentInventory
         manager.closeInventory(this);
         RaidCraft.getDatabase(RaidCraftPlugin.class).delete(tPersistentInventory);
         tPersistentInventory = null;
+        manager.unregisterInventory(this);
     }
 
     @Override
@@ -118,5 +129,10 @@ public abstract class AbstractPersistentInventory implements PersistentInventory
     public boolean validate() {
 
         return (tPersistentInventory != null);
+    }
+
+    public TPersistentInventory gettPersistentInventory() {
+
+        return tPersistentInventory;
     }
 }
