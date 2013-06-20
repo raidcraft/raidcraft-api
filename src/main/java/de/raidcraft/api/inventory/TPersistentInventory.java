@@ -13,6 +13,7 @@ public class TPersistentInventory {
 
     @Id
     private int id;
+    private String title;
     private Timestamp created;
     private Timestamp lastUpdate;
     private int size;
@@ -28,6 +29,16 @@ public class TPersistentInventory {
     public void setId(int id) {
 
         this.id = id;
+    }
+
+    public String getTitle() {
+
+        return title;
+    }
+
+    public void setTitle(String title) {
+
+        this.title = title;
     }
 
     public Timestamp getCreated() {
