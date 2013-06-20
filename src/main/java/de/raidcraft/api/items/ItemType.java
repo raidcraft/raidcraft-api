@@ -13,7 +13,9 @@ public enum ItemType {
     @EnumValue("ARMOR")
     ARMOR("Rüstung"),
     @EnumValue("USEABLE")
-    USEABLE("Benutzbar");
+    USEABLE("Benutzbar"),
+    @EnumValue("DEFAULT")
+    DEFAULT("Default");
 
     private final String germanName;
 
