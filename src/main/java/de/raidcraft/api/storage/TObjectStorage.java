@@ -2,6 +2,7 @@ package de.raidcraft.api.storage;
 
 import com.avaje.ebean.validation.NotNull;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,6 +19,7 @@ public class TObjectStorage {
     @NotNull
     private String storageName;
     @NotNull
+    @Column(length = 4096)
     private String serialization;
 
     public int getId() {
