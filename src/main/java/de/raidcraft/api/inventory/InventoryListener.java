@@ -13,11 +13,12 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
 
-        PersistentInventoryManager manager = RaidCraft.getComponent(PersistentInventoryManager.class);
-        PersistentInventory persistentInventory = manager.getOpenedInventory(event.getInventory());
-        if(persistentInventory == null) return;
-
-        persistentInventory.save();
-        manager.closeInventory(persistentInventory);
+        InventoryManager manager = RaidCraft.getComponent(InventoryManager.class);
+        for (PersistentInventory inventory : manager.getLoadedInventories()) {
+            if (event.getInventory().equals(inventory.getInventory())) {
+                inventory.save();
+                return;
+            }
+        }
     }
 }
