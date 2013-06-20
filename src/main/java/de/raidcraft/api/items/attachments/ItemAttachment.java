@@ -1,6 +1,7 @@
 package de.raidcraft.api.items.attachments;
 
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.api.items.CustomItemStack;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -9,7 +10,7 @@ import org.bukkit.entity.Player;
  */
 public interface ItemAttachment {
 
-    public void applyAttachment(AttachableCustomItem item, Player player, ConfigurationSection args) throws CustomItemException;
+    public void applyAttachment(CustomItemStack item, Player player, ConfigurationSection args) throws CustomItemException;
 
-    public void removeAttachment(AttachableCustomItem item, Player player, ConfigurationSection args) throws CustomItemException;
+    public void removeAttachment(CustomItemStack item, Player player, ConfigurationSection args) throws CustomItemException;
 }

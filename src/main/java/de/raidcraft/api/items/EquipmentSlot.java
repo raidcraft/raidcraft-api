@@ -24,7 +24,10 @@ public enum EquipmentSlot {
     LEGS("Beine"),
     @EnumValue("FEET")
     FEET("Füße"),
-    HANDS("Hände");
+    @EnumValue("HANDS")
+    HANDS("Hände"),
+    @EnumValue("INVENTORY")
+    INVENTORY("Inventar");
 
     private final String germanName;
 
