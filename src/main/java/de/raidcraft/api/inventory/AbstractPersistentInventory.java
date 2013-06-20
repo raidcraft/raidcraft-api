@@ -3,7 +3,6 @@ package de.raidcraft.api.inventory;
 import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -17,10 +16,14 @@ public abstract class AbstractPersistentInventory implements PersistentInventory
 
     private TPersistentInventory tPersistentInventory;
 
-    protected AbstractPersistentInventory(TPersistentInventory tPersistentInventory, String title) {
+    protected AbstractPersistentInventory(int id) {
 
-        this.tPersistentInventory = tPersistentInventory;
-        this.inventory = Bukkit.createInventory(null, tPersistentInventory.getSize(), title);
+        //TODO: implement
+    }
+
+    protected AbstractPersistentInventory(String title, int size) {
+
+        //TODO: implement
     }
 
     private PersistentInventoryManager getManager() {
