@@ -2,6 +2,7 @@ package de.raidcraft.api.inventory;
 
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.Component;
+import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,13 +23,23 @@ public class InventoryManager implements Component {
         plugin.registerEvents(new InventoryListener());
     }
 
-    public PersistentInventory getInventory(int id) {
+    public PersistentInventory getInventory(int id) throws InvalidInventoryException {
 
         if (!loadedInventories.containsKey(id)) {
             SQLPersistentInventory inventory = new SQLPersistentInventory(id);
             loadedInventories.put(inventory.getId(), inventory);
         }
         return loadedInventories.get(id);
+    }
+
+    public PersistentInventory createInventory(Inventory inventory) {
+
+        return new SQLPersistentInventory(inventory);
+    }
+
+    public PersistentInventory createInventory(String title, int size) {
+
+        return new SQLPersistentInventory(title, size);
     }
 
     public void loadInventory(PersistentInventory inventory) {

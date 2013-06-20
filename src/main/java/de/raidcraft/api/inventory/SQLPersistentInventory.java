@@ -26,7 +26,7 @@ public final class SQLPersistentInventory implements PersistentInventory {
     private final int id;
     private Inventory inventory;
 
-    protected SQLPersistentInventory(int id) {
+    protected SQLPersistentInventory(int id) throws InvalidInventoryException {
 
         this.id = id;
         setInventory(loadInventory());
@@ -56,7 +56,7 @@ public final class SQLPersistentInventory implements PersistentInventory {
         return table.getId();
     }
 
-    private Inventory loadInventory() {
+    private Inventory loadInventory() throws InvalidInventoryException {
 
         Inventory inventory;
         EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);

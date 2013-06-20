@@ -8,6 +8,9 @@ import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.api.economy.Economy;
+import de.raidcraft.api.inventory.InvalidInventoryException;
+import de.raidcraft.api.inventory.InventoryManager;
+import de.raidcraft.api.inventory.PersistentInventory;
 import de.raidcraft.api.items.CustomItem;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemManager;
@@ -33,6 +36,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -332,5 +336,20 @@ public class RaidCraft implements Listener {
     public static void registerItemAttachmentProvider(ItemAttachmentProvider provider) throws RaidCraftException {
 
         RaidCraft.getComponent(ItemAttachmentManager.class).registerItemAttachmentProvider(provider);
+    }
+
+    public static PersistentInventory getInventory(int id) throws InvalidInventoryException {
+
+        return RaidCraft.getComponent(InventoryManager.class).getInventory(id);
+    }
+
+    public static PersistentInventory createInventory(Inventory inventory) {
+
+        return RaidCraft.getComponent(InventoryManager.class).createInventory(inventory);
+    }
+
+    public static PersistentInventory createInventory(String title, int size) {
+
+        return RaidCraft.getComponent(InventoryManager.class).createInventory(title, size);
     }
 }
