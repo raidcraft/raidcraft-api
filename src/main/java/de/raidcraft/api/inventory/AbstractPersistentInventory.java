@@ -118,6 +118,17 @@ public abstract class AbstractPersistentInventory implements PersistentInventory
     }
 
     @Override
+    public void open(Player player, String newTitle) {
+
+        if(!newTitle.equals(inventory.getTitle())) {
+            tPersistentInventory.setTitle(newTitle);
+            RaidCraft.getDatabase(RaidCraftPlugin.class).save(tPersistentInventory);
+        }
+        manager.openInventory(player, this);
+        player.openInventory(inventory);
+    }
+
+    @Override
     public void close(boolean save) {
 
         manager.closeInventory(this);

@@ -44,6 +44,15 @@ public interface PersistentInventory {
     public void open(Player player);
 
     /*
+     * Opens the inventory for given player.
+     * Register open inventory to track and save changes.
+     * Changed inventory title to given string.
+     *
+     * @Param Inventory owner
+     */
+    public void open(Player player, String newTitle);
+
+    /*
      * Close if inventory is opened by a player.
      * Save changes if flag is set to true.
      *
