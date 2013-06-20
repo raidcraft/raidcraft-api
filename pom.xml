@@ -47,5 +47,10 @@
             <artifactId>ProtocolLib</artifactId>
             <version>2.4.1</version>
         </dependency>
+        <dependency>
+            <groupId>de.kumpelblase2</groupId>
+            <artifactId>remoteentities</artifactId>
+            <version>1.6</version>
+        </dependency>
     </dependencies>
 </project>
