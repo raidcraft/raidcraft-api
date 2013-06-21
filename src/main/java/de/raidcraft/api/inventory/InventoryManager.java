@@ -1,5 +1,6 @@
 package de.raidcraft.api.inventory;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.Component;
 import org.bukkit.inventory.Inventory;
@@ -26,6 +27,9 @@ public class InventoryManager implements Component {
     public PersistentInventory getInventory(int id) throws InvalidInventoryException {
 
         if (!loadedInventories.containsKey(id)) {
+            if(RaidCraft.getDatabase(RaidCraftPlugin.class).find(TPersistentInventory.class, id) == null) {
+                throw new InvalidInventoryException("Inventory with id " + id + " doesn't exists!");
+            }
             SQLPersistentInventory inventory = new SQLPersistentInventory(id);
             loadedInventories.put(inventory.getId(), inventory);
         }
