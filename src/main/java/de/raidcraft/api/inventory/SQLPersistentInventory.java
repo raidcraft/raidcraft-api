@@ -34,8 +34,9 @@ public final class SQLPersistentInventory implements PersistentInventory {
 
     protected SQLPersistentInventory(String title, int size) {
 
-        setInventory(createNewInventory(title, size));
+        createNewInventory(title, size);
         this.id = createTableEntry(inventory);
+        RaidCraft.getComponent(InventoryManager.class).loadInventory(this);
     }
 
     protected SQLPersistentInventory(Inventory inventory) {
@@ -123,7 +124,9 @@ public final class SQLPersistentInventory implements PersistentInventory {
     public void setInventory(Inventory inventory) {
 
         this.inventory = inventory;
-        RaidCraft.getComponent(InventoryManager.class).loadInventory(this);
+        if(getId() != 0) {
+            RaidCraft.getComponent(InventoryManager.class).loadInventory(this);
+        }
     }
 
     @Override
