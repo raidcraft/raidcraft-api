@@ -22,6 +22,9 @@ public final class ItemUtils {
         if (name == null || name.equals("")) {
             return null;
         }
+        if (name.contains(":")) {
+            name = name.split(":")[0];
+        }
         try {
             return getItem(Integer.parseInt(name));
         } catch (NumberFormatException e) {
@@ -54,7 +57,7 @@ public final class ItemUtils {
             String[] split = item.split(":");
             return Short.parseShort(split[1]);
         } catch (Exception e) {
-            return -1;
+            return 0;
         }
     }
 
