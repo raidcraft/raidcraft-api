@@ -25,6 +25,8 @@ public interface CustomItem extends RequirementResolver<Player> {
 
     public ItemQuality getQuality();
 
+    public int getMaxStackSize();
+
     public double getSellPrice();
 
     public boolean matches(ItemStack itemStack);

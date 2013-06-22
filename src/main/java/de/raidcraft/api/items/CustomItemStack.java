@@ -57,6 +57,11 @@ public class CustomItemStack {
         return itemStack;
     }
 
+    public int getMaxStackSize() {
+
+        return (getMetaDataId() > 0 ? 1 : getItem().getMaxStackSize());
+    }
+
     public void setMetaDataId(int id) {
 
         List<String> lore = getHandle().getItemMeta().getLore();
