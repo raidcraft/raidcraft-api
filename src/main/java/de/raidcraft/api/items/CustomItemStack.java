@@ -84,4 +84,21 @@ public class CustomItemStack {
 
         getItem().rebuild(getHandle());
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof CustomItemStack)) return false;
+
+        CustomItemStack that = (CustomItemStack) o;
+
+        return (getMetaDataId() > 0 ? that.getMetaDataId() == getMetaDataId() : item.equals(that.item));
+    }
+
+    @Override
+    public int hashCode() {
+
+        return (getMetaDataId() > 0 ? getMetaDataId() : item.hashCode());
+    }
 }

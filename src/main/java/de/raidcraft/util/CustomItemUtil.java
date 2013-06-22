@@ -204,4 +204,9 @@ public final class CustomItemUtil {
         // always set -1 so we dont break the item
         return (short) ((itemStack.getType().getMaxDurability() * mcDurabilityPercent) - 1);
     }
+
+    public static boolean isEqualCustomItem(ItemStack stack1, ItemStack stack2) {
+
+        return stack1 != null && stack2 != null && RaidCraft.getCustomItem(stack1).equals(RaidCraft.getCustomItem(stack2));
+    }
 }

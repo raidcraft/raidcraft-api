@@ -86,6 +86,11 @@ public final class ItemUtils {
         return getFriendlyName(Material.getMaterial(id));
     }
 
+    public static boolean isStackValid(ItemStack item) {
+
+        return item != null && item.getAmount() > 0 && item.getTypeId() > 0;
+    }
+
     public enum Item {
 
         // tools
