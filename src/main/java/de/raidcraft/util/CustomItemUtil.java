@@ -213,6 +213,10 @@ public final class CustomItemUtil {
         CustomItemStack item1 = RaidCraft.getCustomItem(stack1);
         CustomItemStack item2 = RaidCraft.getCustomItem(stack2);
 
+        if (item1 == null && item2 == null) {
+            return stack1.isSimilar(stack2);
+        }
+
         return !(item1 == null || item2 == null) && item1.equals(item2);
     }
 }
