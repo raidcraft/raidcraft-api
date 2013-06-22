@@ -301,7 +301,7 @@ public class RaidCraft implements Listener {
             id = id.toLowerCase();
             if (id.startsWith(CUSTOM_ITEM_IDENTIFIER)) {
                 // its a custom item
-                return getCustomItemStack(Integer.parseInt(id.replace(CUSTOM_ITEM_IDENTIFIER, ""))).getHandle();
+                return getCustomItemStack(Integer.parseInt(id.replace(CUSTOM_ITEM_IDENTIFIER, "")));
             } else if (id.startsWith(STORED_OBJECT_IDENTIFIER)) {
                 // its a stored item object
                 return new ItemStorage("API").getObject(Integer.parseInt(id.replace(STORED_OBJECT_IDENTIFIER, "")));

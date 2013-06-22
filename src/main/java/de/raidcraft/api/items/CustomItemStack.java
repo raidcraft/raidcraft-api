@@ -8,22 +8,21 @@ import java.util.List;
 /**
  * @author Silthus
  */
-public class CustomItemStack {
+public class CustomItemStack extends ItemStack {
 
     private final CustomItem item;
-    private final ItemStack itemStack;
     private int durability;
 
     protected CustomItemStack(CustomItem item, ItemStack itemStack) {
 
+        super(itemStack);
         this.item = item;
-        this.itemStack = itemStack;
         if (item instanceof CustomEquipment) {
             this.durability = ((CustomEquipment) item).parseDurability(itemStack);
         }
     }
 
-    public int getDurability() {
+    public int getCustomDurability() {
 
         return durability;
     }
@@ -35,7 +34,7 @@ public class CustomItemStack {
         }
         this.durability = durability;
         if (getItem() instanceof CustomEquipment) {
-            ((CustomEquipment) getItem()).updateDurability(getHandle(), durability);
+            ((CustomEquipment) getItem()).updateDurability(this, durability);
         }
     }
 
@@ -44,7 +43,7 @@ public class CustomItemStack {
         if (getItem() instanceof CustomEquipment) {
             return ((CustomEquipment) getItem()).getMaxDurability();
         }
-        return getDurability();
+        return getCustomDurability();
     }
 
     public CustomItem getItem() {
@@ -52,11 +51,7 @@ public class CustomItemStack {
         return item;
     }
 
-    public ItemStack getHandle() {
-
-        return itemStack;
-    }
-
+    @Override
     public int getMaxStackSize() {
 
         return (getMetaDataId() > 0 ? 1 : getItem().getMaxStackSize());
@@ -64,7 +59,7 @@ public class CustomItemStack {
 
     public void setMetaDataId(int id) {
 
-        List<String> lore = getHandle().getItemMeta().getLore();
+        List<String> lore = getItemMeta().getLore();
         try {
             CustomItemUtil.decodeItemId(lore.get(lore.size() - 1));
             // he had an id so replace the last entry
@@ -72,12 +67,12 @@ public class CustomItemStack {
         } catch (CustomItemException ignored) {
         }
         lore.add(CustomItemUtil.encodeItemId(id));
-        getHandle().getItemMeta().setLore(lore);
+        getItemMeta().setLore(lore);
     }
 
     public int getMetaDataId() {
 
-        List<String> lore = getHandle().getItemMeta().getLore();
+        List<String> lore = getItemMeta().getLore();
         try {
             return CustomItemUtil.decodeItemId(lore.get(lore.size() - 1));
         } catch (CustomItemException ignored) {
@@ -87,7 +82,7 @@ public class CustomItemStack {
 
     public void rebuild() {
 
-        getItem().rebuild(getHandle());
+        getItem().rebuild(this);
     }
 
     @Override
@@ -99,11 +94,5 @@ public class CustomItemStack {
         CustomItemStack that = (CustomItemStack) o;
 
         return (getMetaDataId() > 0 ? that.getMetaDataId() == getMetaDataId() : item.equals(that.item));
-    }
-
-    @Override
-    public int hashCode() {
-
-        return (getMetaDataId() > 0 ? getMetaDataId() : item.hashCode());
     }
 }
