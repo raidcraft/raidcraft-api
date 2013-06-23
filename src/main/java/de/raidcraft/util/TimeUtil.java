@@ -48,4 +48,13 @@ public final class TimeUtil {
 
         return secondsToMillis(ticksToSeconds(ticks));
     }
+
+    public static String getFormattedTime(double seconds) {
+
+        if (seconds > 60.0) {
+            return secondsToMinutes(seconds) + "min";
+        } else {
+            return (((int) (seconds * 100)) / 100.0) + "s";
+        }
+    }
 }
