@@ -28,7 +28,7 @@ public abstract class AbstractAmbientEffect implements AmbientEffect {
         // if circle shape
         this.radius = config.getInt("radius", 3);
         this.height = config.getInt("height", 1);
-        this.hOffset = config.getInt("h-offset", 1);
+        this.hOffset = config.getInt("h-offset", 0);
         this.hollow = config.getBoolean("hollow", true);
         this.sphere = config.getBoolean("sphere", false);
         this.frequency = config.getDouble("frequency", 1.0);
@@ -48,7 +48,7 @@ public abstract class AbstractAmbientEffect implements AmbientEffect {
                     runEffect(circle.toArray(new Location[circle.size()]));
                     break;
                 case POINT:
-                    runEffect(location);
+                    runEffect(location.add(0, hOffset, 0));
                     break;
             }
         }
