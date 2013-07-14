@@ -1,14 +1,6 @@
 package de.raidcraft.util;
 
-import net.minecraft.server.v1_6_R2.EntityCreature;
-import net.minecraft.server.v1_6_R2.EntityLiving;
-import net.minecraft.server.v1_6_R2.PathfinderGoalPanic;
-import net.minecraft.server.v1_6_R2.PathfinderGoalSelector;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftCreature;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
-
-import java.lang.reflect.Field;
 
 /**
  * @author Silthus
@@ -17,6 +9,7 @@ public class EntityUtil {
 
      public static void addPanicMode(LivingEntity entity) {
 
+         /*
         if (entity instanceof Creature) {
             try {
                 EntityCreature handle = ((CraftCreature) entity).getHandle();
@@ -30,5 +23,6 @@ public class EntityUtil {
                 e.printStackTrace();
             }
         }
+        */
     }
 }
