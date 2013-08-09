@@ -297,6 +297,7 @@ public class RaidCraft implements Listener {
      */
     public static ItemStack getItem(String id) throws CustomItemException {
 
+        if (id == null || id.equals("")) return null;
         try {
             id = id.toLowerCase();
             if (id.startsWith(CUSTOM_ITEM_IDENTIFIER)) {
@@ -311,6 +312,15 @@ public class RaidCraft implements Listener {
             }
         } catch (StorageException | NumberFormatException e) {
             throw new CustomItemException(e.getMessage());
+        }
+    }
+
+    public static ItemStack getUnsafeItem(String id) {
+
+        try {
+            return getItem(id);
+        } catch (CustomItemException e) {
+            return null;
         }
     }
 
