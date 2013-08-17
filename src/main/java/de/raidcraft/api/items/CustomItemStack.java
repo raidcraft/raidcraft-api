@@ -20,6 +20,8 @@ public class CustomItemStack extends ItemStack {
         if (item instanceof CustomEquipment) {
             this.durability = ((CustomEquipment) item).parseDurability(itemStack);
         }
+        // lets remove the vanilla attributes to clean up the display
+        new Attributes(this).clear();
     }
 
     public int getCustomDurability() {
