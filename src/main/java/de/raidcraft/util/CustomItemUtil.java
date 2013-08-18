@@ -42,7 +42,7 @@ public final class CustomItemUtil {
     public static boolean isStackableCustomItem(ItemStack itemStack) {
 
         // in our custom item stack we override the getMaxStackSize method
-        return isCustomItem(itemStack) && itemStack.getType().getMaxStackSize() != itemStack.getMaxStackSize();
+        return isCustomItem(itemStack) && itemStack.getType().getMaxStackSize() != RaidCraft.getCustomItem(itemStack).getMaxStackSize();
     }
 
     public static boolean isExceedMaxStackableCustomItem(ItemStack itemStack) {
