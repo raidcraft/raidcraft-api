@@ -1,6 +1,8 @@
 package de.raidcraft.api.quests;
 
 import de.raidcraft.RaidCraft;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -53,6 +55,13 @@ public class Quests {
                 queuedTypes.put(plugin, new ArrayList<QuestType>());
             }
             queuedTypes.get(plugin).add(questType);
+        }
+    }
+
+    public static void callTrigger(JavaPlugin plugin, String name, Player player, ConfigurationSection data) {
+
+        if (isEnabled()) {
+            provider.callTrigger(plugin, name, player, data);
         }
     }
 }
