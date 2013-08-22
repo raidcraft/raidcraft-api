@@ -53,6 +53,11 @@
             <version>${rc.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.comphenix.packetwrapper</groupId>
+            <artifactId>PacketWrapper</artifactId>
+            <version>${rc.version}</version>
+        </dependency>
+        <dependency>
             <groupId>de.kumpelblase2</groupId>
             <artifactId>remoteentities</artifactId>
             <version>${rc.version}</version>
