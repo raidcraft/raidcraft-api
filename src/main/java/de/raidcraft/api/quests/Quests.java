@@ -1,10 +1,15 @@
 package de.raidcraft.api.quests;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.util.CaseInsensitiveMap;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +24,10 @@ public class Quests {
 
     private static QuestProvider provider;
     private static Map<JavaPlugin, List<QuestType>> queuedTypes = new HashMap<>();
+    private static Map<String, Constructor<? extends QuestTrigger>> questTrigger = new CaseInsensitiveMap<>();
+    private static Map<String, JavaPlugin> triggerPlugins = new CaseInsensitiveMap<>();
+    // this is just to prevent garbage collection
+    private static List<QuestTrigger> loadedTrigger = new ArrayList<>();
 
     public static void enable(QuestProvider questProvider) {
 
@@ -58,10 +67,47 @@ public class Quests {
         }
     }
 
-    public static void callTrigger(JavaPlugin plugin, String name, Player player, ConfigurationSection data) {
+    public static void registerTrigger(JavaPlugin plugin, Class<? extends QuestTrigger> clazz) throws InvalidTypeException {
+
+        if (!clazz.isAnnotationPresent(QuestTrigger.Name.class)) {
+            throw new InvalidTypeException("Missing annotation on quest trigger: " + clazz.getCanonicalName());
+        }
+        try {
+            String name = plugin.getName().toLowerCase() + "." + clazz.getAnnotation(QuestTrigger.Name.class).value();
+            // check the constructor
+            Constructor<? extends QuestTrigger> constructor = clazz.getDeclaredConstructor();
+            questTrigger.put(name, constructor);
+            triggerPlugins.put(name, plugin);
+        } catch (NoSuchMethodException e) {
+            throw new InvalidTypeException(e.getMessage());
+        }
+    }
+
+    public static void initializeTrigger(String name, ConfigurationSection data) {
+
+        if (!questTrigger.containsKey(name) || triggerPlugins.get(name) == null || !triggerPlugins.get(name).isEnabled()) {
+            return;
+        }
+        try {
+            // reflection time!!!
+            Constructor<? extends QuestTrigger> constructor = questTrigger.get(name);
+            constructor.setAccessible(true);
+            QuestTrigger trigger = constructor.newInstance();
+            if (trigger instanceof Listener) {
+                Bukkit.getPluginManager().registerEvents((Listener) trigger, triggerPlugins.get(name));
+            }
+            trigger.setName(name);
+            trigger.load(data);
+            loadedTrigger.add(trigger);
+        } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+            RaidCraft.LOGGER.warning(e.getMessage());
+        }
+    }
+
+    protected static void callTrigger(QuestTrigger trigger, Player player) {
 
         if (isEnabled()) {
-            provider.callTrigger(plugin, name, player, data);
+            provider.callTrigger(trigger, player);
         }
     }
 }
