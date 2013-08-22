@@ -69,11 +69,19 @@ public class Quests {
 
     public static void registerTrigger(JavaPlugin plugin, Class<? extends QuestTrigger> clazz) throws InvalidTypeException {
 
+        registerTrigger(plugin, clazz, false);
+    }
+
+    public static void registerTrigger(JavaPlugin plugin, Class<? extends QuestTrigger> clazz, boolean global) throws InvalidTypeException {
+
         if (!clazz.isAnnotationPresent(QuestTrigger.Name.class)) {
             throw new InvalidTypeException("Missing annotation on quest trigger: " + clazz.getCanonicalName());
         }
         try {
-            String name = plugin.getName().toLowerCase() + "." + clazz.getAnnotation(QuestTrigger.Name.class).value();
+            String name = clazz.getAnnotation(QuestTrigger.Name.class).value();
+            if (!global) {
+                name = plugin.getName().toLowerCase() + "." + name;
+            }
             // check the constructor
             Constructor<? extends QuestTrigger> constructor = clazz.getDeclaredConstructor();
             questTrigger.put(name, constructor);

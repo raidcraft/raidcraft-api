@@ -3,6 +3,7 @@ package de.raidcraft.api.player;
 import com.sk89q.worldedit.BlockWorldVector;
 import com.sk89q.worldedit.WorldVector;
 import de.raidcraft.api.InvalidTargetException;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -46,6 +47,8 @@ public interface RCPlayer {
     public BlockWorldVector getTargetBlock();
 
     public int getItemInHand();
+
+    public boolean hasMoved(Location location);
 
     public void destroy();
 }
