@@ -1,5 +1,6 @@
-package de.raidcraft.api.quests;
+package de.raidcraft.api.quests.examples;
 
+import de.raidcraft.api.quests.QuestType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -8,6 +9,8 @@ import org.bukkit.entity.Player;
  */
 @QuestType.Name("example")
 public class ExampleAction implements QuestType {
+
+    // TODO: register the Action via Quests.registerQuestType(Plugin, this)
 
     @Method(name = "add", type = Type.ACTION)
     public static void addExp(Player player, ConfigurationSection data) {
