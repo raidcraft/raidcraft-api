@@ -38,4 +38,9 @@ public abstract class QuestTrigger {
 
         Quests.callTrigger(this, player);
     }
+
+    protected final void inform(String subTrigger, Player player) {
+
+        Quests.callTrigger(getName() + "." + subTrigger, player);
+    }
 }

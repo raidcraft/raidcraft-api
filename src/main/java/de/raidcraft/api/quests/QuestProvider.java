@@ -10,5 +10,5 @@ public interface QuestProvider {
 
     public void registerQuestType(JavaPlugin plugin, QuestType actionType) throws InvalidTypeException;
 
-    public void callTrigger(QuestTrigger trigger, Player player);
+    public void callTrigger(String name, Player player);
 }

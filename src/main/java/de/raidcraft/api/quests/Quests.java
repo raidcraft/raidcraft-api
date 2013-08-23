@@ -114,8 +114,13 @@ public class Quests {
 
     protected static void callTrigger(QuestTrigger trigger, Player player) {
 
+        callTrigger(trigger.getName(), player);
+    }
+
+    protected static void callTrigger(String name, Player player) {
+
         if (isEnabled()) {
-            provider.callTrigger(trigger, player);
+            provider.callTrigger(name, player);
         }
     }
 }
