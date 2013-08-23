@@ -97,4 +97,10 @@ public class CustomItemStack extends ItemStack {
 
         return (getMetaDataId() > 0 ? that.getMetaDataId() == getMetaDataId() : item.equals(that.item));
     }
+
+    @Override
+    public CustomItemStack clone() {
+
+        return new CustomItemStack(getItem(), super.clone());
+    }
 }
