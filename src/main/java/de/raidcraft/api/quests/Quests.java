@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,6 +85,12 @@ public class Quests {
             }
             // check the constructor
             Constructor<? extends QuestTrigger> constructor = clazz.getDeclaredConstructor();
+            // add all sub trigger
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.isAnnotationPresent(QuestTrigger.Method.class)) {
+                    questTrigger.put(name + "." + method.getAnnotation(QuestTrigger.Method.class).value(), constructor);
+                }
+            }
             questTrigger.put(name, constructor);
             triggerPlugins.put(name, plugin);
         } catch (NoSuchMethodException e) {

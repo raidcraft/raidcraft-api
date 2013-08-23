@@ -20,6 +20,13 @@ public abstract class QuestTrigger {
         public String value();
     }
 
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Method {
+
+        public String value();
+    }
+
     private String name;
 
     public String getName() {
