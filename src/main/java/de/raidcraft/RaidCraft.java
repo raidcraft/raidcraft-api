@@ -5,6 +5,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
 import de.raidcraft.api.bukkit.BukkitPlayer;
+import de.raidcraft.api.conversations.ConversationProvider;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.api.economy.Economy;
@@ -75,6 +76,7 @@ public class RaidCraft implements Listener {
     private static final Map<String, RCPlayer> players = new HashMap<>();
     private static final Map<Class<? extends Component>, Component> components = new HashMap<>();
     private static Economy economy;
+    private static ConversationProvider conversationProvider;
 
     /**
      * Gets the wrapped Player for interaction with the player and his surroundings.
@@ -211,12 +213,22 @@ public class RaidCraft implements Listener {
 
     public static void setupEconomy(Economy e) {
 
-        economy = e;
+        RaidCraft.economy = e;
     }
 
     public static Economy getEconomy() {
 
         return economy;
+    }
+
+    public static ConversationProvider getConversationProvider() {
+
+        return conversationProvider;
+    }
+
+    public static void setupConversationProvider(ConversationProvider conversationProvider) {
+
+        RaidCraft.conversationProvider = conversationProvider;
     }
 
     public static Permission getPermissions() {
