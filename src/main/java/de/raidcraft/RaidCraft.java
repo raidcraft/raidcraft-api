@@ -29,6 +29,7 @@ import de.raidcraft.util.MetaDataKey;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -144,6 +145,11 @@ public class RaidCraft implements Listener {
             players.put(player.getName(), rcPlayer);
         }
         return rcPlayer;
+    }
+
+    public static boolean hasMoved(Player player, Location location) {
+
+        return getPlayer(player).hasMoved(location);
     }
 
     /**

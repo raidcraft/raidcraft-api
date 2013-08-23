@@ -9,6 +9,7 @@ import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -21,6 +22,9 @@ import java.util.List;
 public class BukkitPlayer extends AbstractPlayer {
 
     private Player player;
+    private int lastX;
+    private int lastY;
+    private int lastZ;
 
     public BukkitPlayer(Player player) {
 
@@ -136,6 +140,18 @@ public class BukkitPlayer extends AbstractPlayer {
     public int getItemInHand() {
 
         return player.getItemInHand().getTypeId();
+    }
+
+    @Override
+    public boolean hasMoved(Location location) {
+
+        boolean moved = location.getBlockX() != lastX || location.getBlockY() != lastY || location.getBlockZ() != lastZ;
+        if (moved) {
+            lastX = location.getBlockX();
+            lastY = location.getBlockY();
+            lastZ = location.getBlockZ();
+        }
+        return moved;
     }
 
     @Override

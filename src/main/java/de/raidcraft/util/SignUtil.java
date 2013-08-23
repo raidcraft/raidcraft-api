@@ -48,7 +48,7 @@ public final class SignUtil {
 
     public static boolean isSign(Block block) {
 
-        return block.getState() instanceof Sign;
+        return block != null && block.getState() instanceof Sign;
     }
 
     public static Sign getSign(Block block) {

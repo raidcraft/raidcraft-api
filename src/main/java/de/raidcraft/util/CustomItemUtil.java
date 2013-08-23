@@ -39,6 +39,17 @@ public final class CustomItemUtil {
         return false;
     }
 
+    public static boolean isStackableCustomItem(ItemStack itemStack) {
+
+        // in our custom item stack we override the getMaxStackSize method
+        return isCustomItem(itemStack) && itemStack.getType().getMaxStackSize() != RaidCraft.getCustomItem(itemStack).getMaxStackSize();
+    }
+
+    public static boolean isExceedMaxStackableCustomItem(ItemStack itemStack) {
+
+        return isStackableCustomItem(itemStack) && itemStack.getAmount() > itemStack.getMaxStackSize();
+    }
+
     public static int decodeItemId(ItemMeta itemMeta) throws CustomItemException {
 
         if (itemMeta == null || !itemMeta.hasDisplayName() || !itemMeta.hasLore()) {
@@ -110,7 +121,7 @@ public final class CustomItemUtil {
     public static String getSellPriceString(double price, ChatColor textColor) {
 
         StringBuilder sb = new StringBuilder();
-        if(price < 0) {
+        if (price < 0) {
             sb.append(ChatColor.RED).append('-');
             price = Math.abs(price);
         }
@@ -133,7 +144,7 @@ public final class CustomItemUtil {
 
     public static String getSwingTimeString(double time) {
 
-        time = (int)(time * 100) / 100.0;
+        time = (int) (time * 100) / 100.0;
         return Double.toString(time);
     }
 
