@@ -10,5 +10,5 @@ public interface ConversationProvider {
 
     public void registerConversation(ConfigurationSection configuration, String name);
 
-    public boolean triggerConversation(Player player, String conversationName, ConversationHost conversationHost);
+    public void triggerConversation(Player player, String conversationName, ConversationHost conversationHost);
 }
