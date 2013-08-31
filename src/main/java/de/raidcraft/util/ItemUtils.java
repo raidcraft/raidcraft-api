@@ -107,8 +107,11 @@ public final class ItemUtils {
         STONE_PICKAXE(Material.STONE_PICKAXE, ItemType.TOOL, "Steinspitzhacke"),
         IRON_PICKAXE(Material.IRON_PICKAXE, ItemType.TOOL, "Eisenspitzhacke"),
         GOLD_PICKAXE(Material.GOLD_PICKAXE, ItemType.TOOL, "Goldspitzhacke"),
-        DIAMOND_PICKAXE(Material.DIAMOND_PICKAXE, ItemType.TOOL, "Diamantspitzhacke");
+        DIAMOND_PICKAXE(Material.DIAMOND_PICKAXE, ItemType.TOOL, "Diamantspitzhacke"),
 
+        // blocks
+        LOG(Material.LOG, ItemType.BLOCK, "Holz"),
+        STONE(Material.STONE, ItemType.BLOCK, "Stein");
 
         private Material material;
         private ItemType type;
@@ -156,7 +159,8 @@ public final class ItemUtils {
     }
 
     public enum ItemType {
-        TOOL
+        TOOL,
+        BLOCK
     }
 
     public enum Language {
