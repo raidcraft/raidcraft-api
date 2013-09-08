@@ -9,7 +9,9 @@ import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.items.CustomWeapon;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
@@ -229,5 +231,32 @@ public final class CustomItemUtil {
         }
 
         return !(item1 == null || item2 == null) && item1.equals(item2);
+    }
+
+    public static int firstEmpty(ItemStack... inventory) {
+
+        for (int i = 9; i < inventory.length; i++)
+            if (inventory[i] == null)
+                return i;
+
+        return -1;
+    }
+
+    public static boolean moveItem(Player player, int slot, ItemStack item) {
+
+        PlayerInventory inv = player.getInventory();
+        int empty = firstEmpty(inv.getContents());
+        if (empty == -1) {
+            player.getWorld().dropItemNaturally(player.getLocation(), item);
+            if (slot != -1) {
+                inv.clear(slot);
+            }
+            return false;
+        }
+        inv.setItem(empty, item);
+        if (slot != -1) {
+            inv.clear(slot);
+        }
+        return true;
     }
 }
