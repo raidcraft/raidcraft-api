@@ -11,12 +11,14 @@ import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
+import de.raidcraft.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
@@ -40,6 +42,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
     private LocalConfiguration config;
     private final Map<Chunk, Set<PlayerPlacedBlock>> playerPlacedBlocks = new HashMap<>();
+    private boolean started = false;
 
     public RaidCraftPlugin() {
 
@@ -58,6 +61,14 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
+        Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+            @Override
+            public void run() {
+
+                started = true;
+            }
+        }, TimeUtil.secondsToTicks(config.startDelay));
     }
 
     @Override
@@ -78,6 +89,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         @Setting("player-placed-block-worlds")
         public List<String> player_placed_block_worlds = new ArrayList<>();
+        @Setting("server-start-delay")
+        public double startDelay = 10.0;
     }
 
     @Override
@@ -160,5 +173,13 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             return;
         }
         getDatabase().save(remove);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onPreLogin(PlayerLoginEvent event) {
+
+        if (!started) {
+            event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, "Server wird gerade gestartet...");
+        }
     }
 }
