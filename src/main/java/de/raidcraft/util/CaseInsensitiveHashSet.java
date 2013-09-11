@@ -6,20 +6,25 @@ import java.util.HashSet;
 /**
  * @author Silthus
  */
-public class CaseInsensitiveSet extends HashSet<String> {
+public class CaseInsensitiveHashSet extends HashSet<String> {
 
-    public CaseInsensitiveSet(Collection<? extends String> c) {
+    public CaseInsensitiveHashSet() {
+
+        super();
+    }
+
+    public CaseInsensitiveHashSet(Collection<? extends String> c) {
 
         super(c.size());
         addAll(c);
     }
 
-    public CaseInsensitiveSet(int initialCapacity, float loadFactor) {
+    public CaseInsensitiveHashSet(int initialCapacity, float loadFactor) {
 
         super(initialCapacity, loadFactor);
     }
 
-    public CaseInsensitiveSet(int initialCapacity) {
+    public CaseInsensitiveHashSet(int initialCapacity) {
 
         super(initialCapacity);
     }
