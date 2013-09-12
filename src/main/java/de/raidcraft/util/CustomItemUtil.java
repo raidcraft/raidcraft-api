@@ -19,6 +19,8 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public final class CustomItemUtil {
 
+    public static final String IGNORE_CODE = "&0&f";
+
     public static String encodeItemId(int id) {
 
         String hex = String.format("%08x", id);
