@@ -104,11 +104,19 @@ public class ConfigUtil {
         return obj;
     }
 
-    public static ConfigurationSection parseKeyValueTable(Collection<KeyValueMap> map) {
+    public static ConfigurationSection parseKeyValueTable(List<KeyValueMap> map) {
 
         ConfigurationSection configuration = new MemoryConfiguration();
         for (KeyValueMap entry : map) {
-            configuration.set(entry.getDataKey(), entry.getDataValue());
+            try {
+                configuration.set(entry.getDataKey(), Double.parseDouble(entry.getDataValue()));
+            } catch (NumberFormatException e) {
+                try {
+                    configuration.set(entry.getDataKey(), Boolean.parseBoolean(entry.getDataValue()));
+                } catch (NumberFormatException e1) {
+                    configuration.set(entry.getDataKey(), entry.getDataValue());
+                }
+            }
         }
         return configuration;
     }
