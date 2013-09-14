@@ -18,7 +18,17 @@
 
 package de.raidcraft.api.config;
 
-import de.raidcraft.api.config.typeconversions.*;
+import de.raidcraft.api.config.typeconversions.BooleanTypeConversion;
+import de.raidcraft.api.config.typeconversions.EnumTypeConversion;
+import de.raidcraft.api.config.typeconversions.ListTypeConversion;
+import de.raidcraft.api.config.typeconversions.MapTypeConversion;
+import de.raidcraft.api.config.typeconversions.NumberTypeConversion;
+import de.raidcraft.api.config.typeconversions.SameTypeConversion;
+import de.raidcraft.api.config.typeconversions.SetTypeConversion;
+import de.raidcraft.api.config.typeconversions.StringTypeConversion;
+import de.raidcraft.api.config.typeconversions.TypeConversion;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -92,5 +102,14 @@ public class ConfigUtil {
             obj = new ArrayList((Collection) obj);
         }
         return obj;
+    }
+
+    public static ConfigurationSection parseKeyValueTable(Collection<KeyValueMap> map) {
+
+        ConfigurationSection configuration = new MemoryConfiguration();
+        for (KeyValueMap entry : map) {
+            configuration.set(entry.getDataKey(), entry.getDataValue());
+        }
+        return configuration;
     }
 }
