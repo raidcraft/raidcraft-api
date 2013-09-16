@@ -119,6 +119,7 @@ public final class ItemUtils {
         CLAY(Material.CLAY, ItemType.BLOCK, "Lehm"),
         SMOOTH_BRICK(Material.SMOOTH_BRICK, ItemType.BLOCK, "Steinziegel"),
         COBBLESTONE(Material.COBBLESTONE, ItemType.BLOCK, "Pflasterstein"),
+        LEAVES(Material.LEAVES, ItemType.BLOCK, "Blätter")
         ;
 
         private Material material;
