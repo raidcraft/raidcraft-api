@@ -111,7 +111,13 @@ public final class ItemUtils {
 
         // blocks
         LOG(Material.LOG, ItemType.BLOCK, "Holz"),
-        STONE(Material.STONE, ItemType.BLOCK, "Stein");
+        STONE(Material.STONE, ItemType.BLOCK, "Stein"),
+        DIRT(Material.DIRT, ItemType.BLOCK, "Erde"),
+        GRAVEL(Material.GRAVEL, ItemType.BLOCK, "Kies"),
+        GRASS(Material.GRASS, ItemType.BLOCK, "Gras"),
+        SAND(Material.SAND, ItemType.BLOCK, "Sand"),
+        CLAY(Material.CLAY, ItemType.BLOCK, "Lehm"),
+        ;
 
         private Material material;
         private ItemType type;
