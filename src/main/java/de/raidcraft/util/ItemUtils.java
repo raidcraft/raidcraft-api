@@ -117,6 +117,8 @@ public final class ItemUtils {
         GRASS(Material.GRASS, ItemType.BLOCK, "Gras"),
         SAND(Material.SAND, ItemType.BLOCK, "Sand"),
         CLAY(Material.CLAY, ItemType.BLOCK, "Lehm"),
+        SMOOTH_BRICK(Material.SMOOTH_BRICK, ItemType.BLOCK, "Steinziegel"),
+        COBBLESTONE(Material.COBBLESTONE, ItemType.BLOCK, "Pflasterstein"),
         ;
 
         private Material material;
