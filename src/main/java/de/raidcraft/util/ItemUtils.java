@@ -117,6 +117,7 @@ public final class ItemUtils {
         GRASS(Material.GRASS, ItemType.BLOCK, "Gras"),
         SAND(Material.SAND, ItemType.BLOCK, "Sand"),
         CLAY(Material.CLAY, ItemType.BLOCK, "Lehm"),
+        LEAVES(Material.LEAVES, ItemType.BLOCK, "Blätter")
         ;
 
         private Material material;
