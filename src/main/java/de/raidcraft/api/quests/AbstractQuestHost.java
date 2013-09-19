@@ -5,7 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * @author Silthus
  */
-public abstract class AbstractQuestHost extends QuestTrigger implements QuestHost {
+public abstract class AbstractQuestHost implements QuestHost {
 
     private final String id;
     private final String name;
