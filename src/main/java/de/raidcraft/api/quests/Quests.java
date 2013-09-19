@@ -25,6 +25,7 @@ public class Quests {
 
     private static QuestProvider provider;
     private static Map<JavaPlugin, List<QuestType>> queuedTypes = new HashMap<>();
+    private static Map<String, Class<? extends QuestHost>> queuedHosts = new CaseInsensitiveMap<>();
     private static Map<String, Constructor<? extends QuestTrigger>> questTrigger = new CaseInsensitiveMap<>();
     private static Map<String, JavaPlugin> triggerPlugins = new CaseInsensitiveMap<>();
     // this is just to prevent garbage collection
@@ -39,11 +40,20 @@ public class Quests {
                 try {
                     provider.registerQuestType(entry.getKey(), questType);
                 } catch (InvalidTypeException e) {
-                    RaidCraft.LOGGER.warning(e.getMessage());
+                    entry.getKey().getLogger().warning(e.getMessage());
                 }
             }
         }
         queuedTypes.clear();
+        // and all queued hosts
+        for (Map.Entry<String, Class<? extends QuestHost>> entry : queuedHosts.entrySet()) {
+            try {
+                provider.registerQuestHost(entry.getKey(), entry.getValue());
+            } catch (InvalidQuestHostException e) {
+                RaidCraft.LOGGER.warning(e.getMessage());
+            }
+        }
+        queuedHosts.clear();
     }
 
     public static void disable(QuestProvider questProvider) {
@@ -65,6 +75,18 @@ public class Quests {
                 queuedTypes.put(plugin, new ArrayList<QuestType>());
             }
             queuedTypes.get(plugin).add(questType);
+        }
+    }
+
+    public static void registerQuestHost(JavaPlugin plugin, String type, Class<? extends QuestHost> clazz) throws InvalidQuestHostException {
+
+        if (isEnabled()) {
+            provider.registerQuestHost(type, clazz);
+        } else {
+            if (queuedHosts.containsKey(type)) {
+                throw new InvalidQuestHostException(plugin.getName() + " tried to register already registered quest host: " + type);
+            }
+            queuedHosts.put(type, clazz);
         }
     }
 
