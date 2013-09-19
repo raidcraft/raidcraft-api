@@ -15,7 +15,12 @@ public enum ItemType {
     @EnumValue("USEABLE")
     USEABLE("Benutzbar"),
     @EnumValue("EQUIPMENT")
-    EQUIPMENT("Equipment");
+    EQUIPMENT("Equipment"),
+    @EnumValue("QUEST")
+    QUEST("Quest"),
+    @EnumValue("UNDEFINED")
+    UNDEFINED("Undefined");
+
 
     private final String germanName;
 
