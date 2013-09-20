@@ -144,6 +144,8 @@ public class CustomItemStack extends ItemStack {
                 Collections.addAll(lore, getTooltip(slot).getTooltip());
             }
         }
+        itemMeta.setLore(lore);
+        setItemMeta(itemMeta);
     }
 
     @Override
