@@ -4,6 +4,8 @@ import de.raidcraft.api.requirement.RequirementResolver;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Map;
+
 /**
  * @author Silthus
  */
@@ -29,9 +31,11 @@ public interface CustomItem extends RequirementResolver<Player> {
 
     public double getSellPrice();
 
-    public boolean matches(ItemStack itemStack);
+    public Tooltip getTooltip(TooltipSlot slot);
 
-    public void rebuild(ItemStack itemStack);
+    public Map<TooltipSlot, Tooltip> getTooltips();
+
+    public boolean matches(ItemStack itemStack);
 
     public CustomItemStack createNewItem();
 }
