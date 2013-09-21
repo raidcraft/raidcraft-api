@@ -11,6 +11,7 @@ import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
+import de.raidcraft.util.AttributeHider;
 import de.raidcraft.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -41,6 +42,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     }
 
     private LocalConfiguration config;
+    private AttributeHider attributeHider;
     private final Map<Chunk, Set<PlayerPlacedBlock>> playerPlacedBlocks = new HashMap<>();
     private boolean started = false;
 
@@ -59,6 +61,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
+
+        if (config.hideAttributes) attributeHider = new AttributeHider(this);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
@@ -91,6 +95,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public List<String> player_placed_block_worlds = new ArrayList<>();
         @Setting("server-start-delay")
         public double startDelay = 10.0;
+        @Setting("hide-attributes")
+        public boolean hideAttributes = true;
     }
 
     @Override
