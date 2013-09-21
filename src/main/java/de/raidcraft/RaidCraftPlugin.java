@@ -62,7 +62,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
 
-        if (config.hideAttributes) attributeHider = new AttributeHider(this);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
@@ -73,6 +72,9 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 started = true;
             }
         }, TimeUtil.secondsToTicks(config.startDelay));
+
+        // lets run this last if any mc errors occur
+        if (config.hideAttributes) attributeHider = new AttributeHider(this);
     }
 
     @Override
