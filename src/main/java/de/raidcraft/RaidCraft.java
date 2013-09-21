@@ -329,7 +329,7 @@ public class RaidCraft implements Listener {
             } else {
                 // its a minecraft item
                 Material item = ItemUtils.getItem(id);
-                if (item == Material.SKULL_ITEM) {
+                if (item == Material.SKULL_ITEM || item == Material.SKULL) {
                     return Skull.getSkull(id);
                 } else {
                     return new ItemStack(item, 1, ItemUtils.getItemData(id));

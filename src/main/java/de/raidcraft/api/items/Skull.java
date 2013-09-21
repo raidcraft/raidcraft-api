@@ -51,6 +51,7 @@ public class Skull {
     }
 
     private static ItemStack getPlayerSkull(String name, String displayName) {
+
         ItemStack skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
         SkullMeta skullMeta = (SkullMeta)skullItem.getItemMeta();
         skullMeta.setOwner(name);

@@ -1,7 +1,5 @@
 package de.raidcraft.api.items.tooltip;
 
-import de.raidcraft.util.CustomItemUtil;
-
 /**
  * @author Silthus
  */
@@ -31,19 +29,7 @@ public abstract class Tooltip {
 
     public int getWidth() {
 
-        if (this.width >= DEFAULT_WIDTH) {
-            return this.width;
-        }
-        int maxWidth = DEFAULT_WIDTH;
-        for (String line : getTooltip()) {
-
-            int width = CustomItemUtil.checkWidth(line, maxWidth, true);
-            if (width > maxWidth) {
-                maxWidth = width;
-            }
-        }
-        setWidth(maxWidth);
-        return maxWidth;
+        return width;
     }
 
     protected abstract void updateLineWidth();
