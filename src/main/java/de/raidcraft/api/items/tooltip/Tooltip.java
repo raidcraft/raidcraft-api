@@ -9,7 +9,7 @@ public abstract class Tooltip {
     public static final int DEFAULT_WIDTH = 150;
 
     private final TooltipSlot slot;
-    private int width;
+    private int width = DEFAULT_WIDTH;
 
     public Tooltip(TooltipSlot slot) {
 
