@@ -16,41 +16,37 @@ public class Skull {
         if (name.contains(":")) {
             name = name.split(":")[0];
         }
-        ItemStack skullItem = null;
 
         if (name.equalsIgnoreCase("creeper")) {
-            skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.CREEPER.ordinal());
+            return new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.CREEPER.ordinal());
         }
         if (name.equalsIgnoreCase("skeleton")) {
-            skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.SKELETON.ordinal());
+            return new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.SKELETON.ordinal());
         }
         if (name.equalsIgnoreCase("wither")) {
-            skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.WITHER.ordinal());
+            return new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.WITHER.ordinal());
         }
         if (name.equalsIgnoreCase("zombie")) {
-            skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.ZOMBIE.ordinal());
+            return new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.ZOMBIE.ordinal());
         }
-
         if (name.equalsIgnoreCase("enderman")) {
-            skullItem = getPlayerSkull("Violit", "Enderman");
+            return getPlayerSkull("Violit", "Enderman");
         }
-
         if (name.equalsIgnoreCase("blaze")) {
-            skullItem = getPlayerSkull("Blaze_Head", "Blaze");
+            return getPlayerSkull("Blaze_Head", "Blaze");
         }
-
         if (name.equalsIgnoreCase("spider")) {
-            skullItem = getPlayerSkull("Kelevra_V", "Spider");
+            return getPlayerSkull("Kelevra_V", "Spider");
         }
-
-        if (skullItem == null) {
-            skullItem = getPlayerSkull(name, name);
-        }
-
-        return skullItem;
+        return getPlayerSkull(name, name);
     }
 
-    private static ItemStack getPlayerSkull(String name, String displayName) {
+    public static ItemStack getPlayerSkull(String name) {
+
+        return getPlayerSkull(name, name);
+    }
+
+    public static ItemStack getPlayerSkull(String name, String displayName) {
 
         ItemStack skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.PLAYER.ordinal());
         SkullMeta skullMeta = (SkullMeta)skullItem.getItemMeta();

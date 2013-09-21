@@ -60,7 +60,6 @@ public class AttributeTooltip extends Tooltip {
         String[] array = new String[attributes.size()];
         for (int i = 0; i < attributes.size(); i++) {
             array[i] = attributes.get(i).getItemLine();
-            i++;
         }
         return array;
     }
