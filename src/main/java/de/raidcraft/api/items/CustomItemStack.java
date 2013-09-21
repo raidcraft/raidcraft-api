@@ -37,8 +37,6 @@ public class CustomItemStack extends ItemStack {
         if (item instanceof CustomEquipment && ((CustomEquipment) item).getMaxDurability() > 0) {
             setCustomDurability(parseDurability());
         }
-        // lets remove the vanilla attributes to clean up the display
-        new Attributes(this).clear();
     }
 
     public int getCustomDurability() {
