@@ -19,6 +19,12 @@ public final class CustomItemManager implements Component {
     // minecraft item id | possible list of custom items
     private final Map<Integer, List<CustomItem>> mappedMinecraftItems = new HashMap<>();
 
+    public CustomItemStack getCustomItemStack(CustomItem customItem) {
+
+        ItemStack itemStack = new ItemStack(customItem.getMinecraftId(), 1, customItem.getMinecraftDataValue());
+        return new CustomItemStack(customItem, itemStack);
+    }
+
     public CustomItemStack getCustomItem(ItemStack itemStack) {
 
         if (itemStack == null || itemStack.getTypeId() == 0) {

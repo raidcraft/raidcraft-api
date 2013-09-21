@@ -15,8 +15,8 @@ public class SingleLineTooltip extends Tooltip {
     public SingleLineTooltip(TooltipSlot slot, String text, ChatColor color) {
 
         super(slot);
-        this.text = new String[]{color + text};
-        this.color = color;
+        this.color = color == null ? ChatColor.WHITE : color;
+        this.text = new String[]{this.color + text};
         updateLineWidth();
     }
 
