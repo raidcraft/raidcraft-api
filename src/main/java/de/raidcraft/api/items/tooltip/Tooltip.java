@@ -31,7 +31,7 @@ public abstract class Tooltip {
 
     public int getWidth() {
 
-        if (this.width > DEFAULT_WIDTH) {
+        if (this.width >= DEFAULT_WIDTH) {
             return this.width;
         }
         int maxWidth = DEFAULT_WIDTH;
