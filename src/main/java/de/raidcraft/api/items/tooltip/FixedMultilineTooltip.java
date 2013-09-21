@@ -1,4 +1,4 @@
-package de.raidcraft.api.items;
+package de.raidcraft.api.items.tooltip;
 
 import de.raidcraft.util.CustomItemUtil;
 

@@ -1,5 +1,8 @@
 package de.raidcraft.api.items;
 
+import de.raidcraft.api.items.tooltip.SingleLineTooltip;
+import de.raidcraft.api.items.tooltip.Tooltip;
+import de.raidcraft.api.items.tooltip.TooltipSlot;
 import de.raidcraft.util.CustomItemUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
