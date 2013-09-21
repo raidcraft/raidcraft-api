@@ -13,34 +13,37 @@ public class Skull {
 
     public static ItemStack getSkull(String name) {
 
+        if (name.contains(":")) {
+            name = name.split(":")[0];
+        }
         ItemStack skullItem = null;
 
-        if(name.equalsIgnoreCase("creeper")) {
+        if (name.equalsIgnoreCase("creeper")) {
             skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.CREEPER.ordinal());
         }
-        if(name.equalsIgnoreCase("skeleton")) {
+        if (name.equalsIgnoreCase("skeleton")) {
             skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.SKELETON.ordinal());
         }
-        if(name.equalsIgnoreCase("wither")) {
+        if (name.equalsIgnoreCase("wither")) {
             skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.WITHER.ordinal());
         }
-        if(name.equalsIgnoreCase("zombie")) {
+        if (name.equalsIgnoreCase("zombie")) {
             skullItem = new ItemStack(Material.SKULL_ITEM, 1, (short) SkullType.ZOMBIE.ordinal());
         }
 
-        if(name.equalsIgnoreCase("enderman")) {
+        if (name.equalsIgnoreCase("enderman")) {
             skullItem = getPlayerSkull("Violit", "Enderman");
         }
 
-        if(name.equalsIgnoreCase("blaze")) {
+        if (name.equalsIgnoreCase("blaze")) {
             skullItem = getPlayerSkull("Blaze_Head", "Blaze");
         }
 
-        if(name.equalsIgnoreCase("spider")) {
+        if (name.equalsIgnoreCase("spider")) {
             skullItem = getPlayerSkull("Kelevra_V", "Spider");
         }
 
-        if(skullItem == null) {
+        if (skullItem == null) {
             skullItem = getPlayerSkull(name, name);
         }
 

@@ -16,6 +16,7 @@ import de.raidcraft.api.items.CustomItem;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
+import de.raidcraft.api.items.Skull;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentProvider;
 import de.raidcraft.api.player.PlayerComponent;
@@ -30,6 +31,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -326,9 +328,14 @@ public class RaidCraft implements Listener {
                 return new ItemStorage("API").getObject(Integer.parseInt(id.replace(STORED_OBJECT_IDENTIFIER, "")));
             } else {
                 // its a minecraft item
-                return new ItemStack(ItemUtils.getItem(id), 1, ItemUtils.getItemData(id));
+                Material item = ItemUtils.getItem(id);
+                if (item == Material.SKULL_ITEM) {
+                    return Skull.getSkull(id);
+                } else {
+                    return new ItemStack(item, 1, ItemUtils.getItemData(id));
+                }
             }
-        } catch (StorageException | NumberFormatException e) {
+        } catch (StorageException | IndexOutOfBoundsException | NumberFormatException e) {
             throw new CustomItemException(e.getMessage());
         }
     }
