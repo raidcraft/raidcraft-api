@@ -1,10 +1,13 @@
 package de.raidcraft.api.items;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.api.items.tooltip.AttributeTooltip;
 import de.raidcraft.api.items.tooltip.SingleLineTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
 import de.raidcraft.util.CustomItemUtil;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -128,6 +131,32 @@ public class CustomItemStack extends ItemStack {
         } catch (CustomItemException ignored) {
         }
         return -1;
+    }
+
+    public void rebuild(Player player) {
+
+        for (ItemStack itemStack : player.getEquipment().getArmorContents()) {
+            updateEquipedValue(itemStack);
+        }
+    }
+
+    private void updateEquipedValue(ItemStack itemStack) {
+
+        AttributeTooltip thisAttributes = (AttributeTooltip) getTooltip(TooltipSlot.ATTRIBUTES);
+        // set the equiped item attributes
+        CustomItemStack customItemStack = RaidCraft.getCustomItem(itemStack);
+        if (customItemStack != null) {
+            if (!(customItemStack.getItem() instanceof CustomEquipment) || !(getItem() instanceof CustomEquipment)) {
+                return;
+            }
+            if (((CustomEquipment) customItemStack.getItem()).getEquipmentSlot() != ((CustomEquipment) getItem()).getEquipmentSlot()) {
+                return;
+            }
+            AttributeTooltip tooltip = (AttributeTooltip) customItemStack.getTooltip(TooltipSlot.ATTRIBUTES);
+            for (ItemAttribute attribute : tooltip.getAttributes()) {
+                thisAttributes.getAttribute(attribute.getType()).setEquipedValue(attribute.getValue());
+            }
+        }
     }
 
     public void rebuild() {

@@ -9,17 +9,36 @@ public class ItemAttribute implements Comparable<ItemAttribute>, Cloneable {
 
     private final AttributeType type;
     private final int value;
+    private int equipedValue;
     private String itemLine;
 
     public ItemAttribute(AttributeType type, int value) {
 
         this.type = type;
         this.value = value;
-        String str = ChatColor.GREEN + "+";
+        rebuildItemLine();
+    }
+
+    private void rebuildItemLine() {
+
+        ChatColor color = ChatColor.WHITE;
+        if (value < equipedValue) {
+            color = ChatColor.RED;
+        } else if (value > equipedValue) {
+            color = ChatColor.GREEN;
+        }
+        String str = color + "+";
         if (getValue() < 0) {
-            str = ChatColor.RED + "-";
+            str = color + "-";
         }
         str += getValue() + " " + getDisplayName();
+        if (value != equipedValue) {
+            if (value < equipedValue) {
+                str += color + " [" + (value - equipedValue) + "]";
+            } else {
+                str += color + " [+" + (value - equipedValue) + "]";
+            }
+        }
         itemLine = str;
     }
 
@@ -51,6 +70,17 @@ public class ItemAttribute implements Comparable<ItemAttribute>, Cloneable {
     public void setItemLine(String itemLine) {
 
         this.itemLine = itemLine;
+    }
+
+    public void setEquipedValue(int equipedValue) {
+
+        this.equipedValue = equipedValue;
+        rebuildItemLine();
+    }
+
+    public int getEquipedValue() {
+
+        return equipedValue;
     }
 
     @Override

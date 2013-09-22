@@ -31,6 +31,11 @@ public class AttributeTooltip extends Tooltip {
         }
     }
 
+    public Collection<ItemAttribute> getAttributes() {
+
+        return attributes.values();
+    }
+
     public ItemAttribute getAttribute(AttributeType type) {
 
         return attributes.get(type);
