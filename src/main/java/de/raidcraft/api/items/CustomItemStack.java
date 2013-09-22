@@ -169,6 +169,12 @@ public class CustomItemStack extends ItemStack {
                     attribute.setEquipedValue(0);
                 }
             }
+        } else {
+            for (AttributeType type : AttributeType.values()) {
+                if (thisAttributes.hasAttribute(type)) {
+                    thisAttributes.getAttribute(type).setEquipedValue(0);
+                }
+            }
         }
     }
 
