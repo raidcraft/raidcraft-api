@@ -2,6 +2,7 @@ package de.raidcraft.api.items;
 
 import com.sk89q.util.StringUtil;
 import de.raidcraft.api.Component;
+import de.raidcraft.util.CustomItemUtil;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -29,6 +30,13 @@ public final class CustomItemManager implements Component {
 
         if (itemStack == null || itemStack.getTypeId() == 0) {
             return null;
+        }
+        if (itemStack.hasItemMeta()) {
+            try {
+                int id = CustomItemUtil.decodeItemId(itemStack.getItemMeta());
+                return new CustomItemStack(getCustomItem(id), itemStack);
+            } catch (CustomItemException ignored) {
+            }
         }
         if (mappedMinecraftItems.containsKey(itemStack.getTypeId())) {
             for (CustomItem customItem : mappedMinecraftItems.get(itemStack.getTypeId())) {
