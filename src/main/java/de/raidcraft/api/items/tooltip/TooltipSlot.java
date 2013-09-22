@@ -15,6 +15,7 @@ public enum TooltipSlot {
     LORE(TooltipSlotType.MULTI_LINE),
     ATTACHMENT(TooltipSlotType.MULTI_LINE),
     SPACER(TooltipSlotType.SINGLE),
+    REQUIREMENT(TooltipSlotType.MULTI_LINE),
     SELL_PRICE(TooltipSlotType.SINGLE),
     DURABILITY(TooltipSlotType.SINGLE),
     META_ID(TooltipSlotType.SINGLE);

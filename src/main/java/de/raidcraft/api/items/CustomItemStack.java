@@ -101,7 +101,7 @@ public class CustomItemStack extends ItemStack {
         return (getMetaDataId() > 0 ? 1 : getItem().getMaxStackSize());
     }
 
-    protected void setTooltip(Tooltip tooltip) {
+    public void setTooltip(Tooltip tooltip) {
 
         this.tooltips.put(tooltip.getSlot(), tooltip);
     }
@@ -138,10 +138,15 @@ public class CustomItemStack extends ItemStack {
         for (ItemStack itemStack : player.getEquipment().getArmorContents()) {
             updateEquipedValue(itemStack);
         }
+        updateEquipedValue(player.getItemInHand());
+        rebuild();
     }
 
     private void updateEquipedValue(ItemStack itemStack) {
 
+        if (!hasTooltip(TooltipSlot.ATTRIBUTES)) {
+            return;
+        }
         AttributeTooltip thisAttributes = (AttributeTooltip) getTooltip(TooltipSlot.ATTRIBUTES);
         // set the equiped item attributes
         CustomItemStack customItemStack = RaidCraft.getCustomItem(itemStack);
@@ -153,8 +158,16 @@ public class CustomItemStack extends ItemStack {
                 return;
             }
             AttributeTooltip tooltip = (AttributeTooltip) customItemStack.getTooltip(TooltipSlot.ATTRIBUTES);
-            for (ItemAttribute attribute : tooltip.getAttributes()) {
-                thisAttributes.getAttribute(attribute.getType()).setEquipedValue(attribute.getValue());
+            for (AttributeType type : AttributeType.values()) {
+                if (!thisAttributes.hasAttribute(type)) {
+                    continue;
+                }
+                ItemAttribute attribute = thisAttributes.getAttribute(type);
+                if (tooltip.hasAttribute(type)) {
+                    attribute.setEquipedValue(tooltip.getAttribute(type).getValue());
+                } else {
+                    attribute.setEquipedValue(0);
+                }
             }
         }
     }
