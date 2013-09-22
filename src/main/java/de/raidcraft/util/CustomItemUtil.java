@@ -8,6 +8,7 @@ import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.items.CustomWeapon;
+import de.raidcraft.api.items.EquipmentSlot;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -168,6 +169,11 @@ public final class CustomItemUtil {
         }
         CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
         return customItem != null && customItem.getItem() instanceof CustomWeapon;
+    }
+
+    public static boolean isOffhandWeapon(ItemStack itemStack) {
+
+        return isWeapon(itemStack) && getWeapon(itemStack).getEquipmentSlot() == EquipmentSlot.SHIELD_HAND;
     }
 
     public static CustomWeapon getWeapon(ItemStack itemStack) {
