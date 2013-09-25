@@ -13,7 +13,8 @@ public enum BalanceSource {
     SELL_ITEM("Itemverkauf"),
     BUY_REGION("Grundstücks Kauf"),
     SELL_REGION("Grundstücks Verkauf"),
-    PLUGIN("Plugin");
+    PLUGIN("Plugin"),
+    GUILD("Gilde");
 
     private String friendlyName;
 
