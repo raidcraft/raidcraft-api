@@ -57,7 +57,7 @@ public final class CustomItemUtil {
 
     public static int decodeItemId(ItemMeta itemMeta) throws CustomItemException {
 
-        if (itemMeta == null || !itemMeta.hasDisplayName() || !itemMeta.hasLore()) {
+        if (itemMeta == null || !itemMeta.hasDisplayName()) {
             throw new CustomItemException("Item ist kein Custom Item.");
         }
         return decodeItemId(itemMeta.getDisplayName());
