@@ -13,7 +13,7 @@ public class EntityUtil {
     private static final char HEALTH_BAR_FILLER = '|';
     private static final char HEALTH_BAR_MAIN_SYMBOL = '█';
     private static final char HEALTH_BAR_HALF_SYMBOL = '▌';
-    private static final int HEALTH_BAR_LENGTH = 30;
+    private static final int HEALTH_BAR_LENGTH = 10;
 
      public static void addPanicMode(LivingEntity entity) {
 
@@ -34,7 +34,7 @@ public class EntityUtil {
         */
     }
 
-    public static String drawHealthBar(double health, double maxHealth, ChatColor mobColor) {
+/*    public static String drawHealthBar(double health, double maxHealth, ChatColor mobColor) {
 
         ChatColor barColor = ChatColor.GREEN;
         double healthInPercent = health / maxHealth;
@@ -65,9 +65,9 @@ public class EntityUtil {
         healthBar.append(mobColor).append(HEALTH_BAR_OUTTER_RIGHT);
 
         return healthBar.toString();
-    }
+    }*/
 
-/*    public static String drawHealthBar(double health, double maxHealth) {
+    public static String drawHealthBar(double health, double maxHealth, ChatColor mobColor) {
 
         ChatColor barColor = ChatColor.GREEN;
         double healthInPercent = health / maxHealth;
@@ -83,8 +83,9 @@ public class EntityUtil {
             barColor = ChatColor.DARK_GREEN;
         }
 
-        StringBuilder healthBar = new StringBuilder(ChatColor.BLACK + "[" + barColor + health + ChatColor.BLACK
-                + "/" + ChatColor.GREEN + maxHealth + ChatColor.BLACK + "]").append(barColor);
+        StringBuilder healthBar = new StringBuilder();
+        healthBar.append(mobColor).append(HEALTH_BAR_OUTTER_LEFT);
+        healthBar.append(barColor);
 
         int count = (int) (healthInPercent * HEALTH_BAR_LENGTH);
         double modulo = (healthInPercent * (HEALTH_BAR_LENGTH * 10)) % 10;
@@ -101,6 +102,9 @@ public class EntityUtil {
         for (int i = 0; i < HEALTH_BAR_LENGTH - count; i++) {
             healthBar.append("  ");
         }
+        // and append the ending
+        healthBar.append(mobColor).append(HEALTH_BAR_OUTTER_RIGHT);
+
         return healthBar.toString();
-    }*/
+    }
 }
