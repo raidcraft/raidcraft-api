@@ -14,8 +14,7 @@ public enum BalanceSource {
     BUY_REGION("Grundstücks Kauf"),
     SELL_REGION("Grundstücks Verkauf"),
     PLUGIN("Plugin"),
-    CITY_DEPOSIT("Einzahlung in Gildenkasse"),
-    CITY_WITHDRAW("Auszahlung aus Gildenkasse");
+    GUILD("Gilde");
 
     private String friendlyName;
 
