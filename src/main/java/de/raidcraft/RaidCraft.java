@@ -324,20 +324,20 @@ public class RaidCraft implements Listener {
 
         if (id == null || id.equals("")) return null;
         try {
-            id = id.toLowerCase();
-            if (id.startsWith(CUSTOM_ITEM_IDENTIFIER)) {
+            String lowercaseId = id.toLowerCase();
+            if (lowercaseId.startsWith(CUSTOM_ITEM_IDENTIFIER)) {
                 // its a custom item
-                return getCustomItemStack(Integer.parseInt(id.replace(CUSTOM_ITEM_IDENTIFIER, "")));
-            } else if (id.startsWith(STORED_OBJECT_IDENTIFIER)) {
+                return getCustomItemStack(Integer.parseInt(lowercaseId.replace(CUSTOM_ITEM_IDENTIFIER, "")));
+            } else if (lowercaseId.startsWith(STORED_OBJECT_IDENTIFIER)) {
                 // its a stored item object
-                return new ItemStorage("API").getObject(Integer.parseInt(id.replace(STORED_OBJECT_IDENTIFIER, "")));
+                return new ItemStorage("API").getObject(Integer.parseInt(lowercaseId.replace(STORED_OBJECT_IDENTIFIER, "")));
             } else {
                 // its a minecraft item
-                Material item = ItemUtils.getItem(id);
+                Material item = ItemUtils.getItem(lowercaseId);
                 if (item == Material.SKULL_ITEM || item == Material.SKULL) {
                     return Skull.getSkull(id);
                 } else {
-                    return new ItemStack(item, 1, ItemUtils.getItemData(id));
+                    return new ItemStack(item, 1, ItemUtils.getItemData(lowercaseId));
                 }
             }
         } catch (StorageException | IndexOutOfBoundsException | NumberFormatException e) {
