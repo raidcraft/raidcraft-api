@@ -1,6 +1,7 @@
 package de.raidcraft.api.requirement;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 public final class RequirementManager {
 
-    private static final Map<String, Class<? extends Requirement<?>>> requirementClasses = new HashMap<>();
+    private static final Map<String, Class<? extends Requirement<?>>> requirementClasses = new CaseInsensitiveMap<>();
     private static final Map<Class<? extends Requirement<?>>, Constructor<? extends Requirement<?>>> constructors = new HashMap<>();
 
     private RequirementManager() {}
