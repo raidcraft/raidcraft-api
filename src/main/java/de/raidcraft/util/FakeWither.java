@@ -3,6 +3,7 @@ package de.raidcraft.util;
 import com.comphenix.packetwrapper.Packet18SpawnMob;
 import com.comphenix.packetwrapper.Packet1DDestroyEntity;
 import com.comphenix.packetwrapper.Packet28EntityMetadata;
+import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
@@ -32,10 +33,12 @@ public class FakeWither {
     private static final int METADATA_NAME = 10;        // 1.5.2 -> Change to 5
     private static final int METADATA_SHOW_NAME = 11;   // 1.5.2 -> Change to 6
 
+    private static final int WITHER_HEALTH = 300;
+
     // Unique ID
     private int id = NEXT_ID++;
     // Default health
-    private int health = 300;
+    private float health = 1.0F;
 
     private boolean visible;
     private String customName;
@@ -44,23 +47,23 @@ public class FakeWither {
     private Location location;
     private ProtocolManager manager;
 
-    public FakeWither(Location location, ProtocolManager manager) {
+    public FakeWither(Location location) {
 
         this.location = location;
-        this.manager = manager;
+        this.manager = ProtocolLibrary.getProtocolManager();
     }
 
-    public int getHealth() {
+    public float getHealth() {
 
         return health;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(float health) {
         // Update the health of the entity
         if (created) {
             WrappedDataWatcher watcher = new WrappedDataWatcher();
 
-            watcher.setObject(METADATA_WITHER_HEALTH, (float) health); // 1.5.2 -> Change to (int)
+            watcher.setObject(METADATA_WITHER_HEALTH, health * WITHER_HEALTH); // 1.5.2 -> Change to (int)
             sendMetadata(watcher);
         }
         this.health = health;
@@ -110,13 +113,13 @@ public class FakeWither {
         return id;
     }
 
-    public void create(Player player) {
+    public void create() {
 
         Packet18SpawnMob spawnMob = new Packet18SpawnMob();
         WrappedDataWatcher watcher = new WrappedDataWatcher();
 
         watcher.setObject(METADATA_FLAGS, visible ? (byte) 0 : INVISIBLE);
-        watcher.setObject(METADATA_WITHER_HEALTH, (float) health); // 1.5.2 -> Change to (int)
+        watcher.setObject(METADATA_WITHER_HEALTH, health * WITHER_HEALTH); // 1.5.2 -> Change to (int)
 
         if (customName != null) {
             watcher.setObject(METADATA_NAME, customName);
@@ -128,9 +131,11 @@ public class FakeWither {
         spawnMob.setX(location.getX());
         spawnMob.setY(location.getY());
         spawnMob.setZ(location.getZ());
+        spawnMob.setYaw(location.getYaw());
+        spawnMob.setPitch(location.getPitch());
         spawnMob.setMetadata(watcher);
 
-        sendPacketToPlayer(spawnMob.getHandle(), player);
+        broadcastPacket(spawnMob.getHandle(), true);
         created = true;
     }
 
