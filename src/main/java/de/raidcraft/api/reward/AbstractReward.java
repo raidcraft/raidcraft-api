@@ -16,4 +16,10 @@ public abstract class AbstractReward<T> implements Reward<T> {
     }
 
     public abstract void load(ConfigurationSection config);
+
+    @Override
+    public String getName() {
+
+        return name;
+    }
 }
