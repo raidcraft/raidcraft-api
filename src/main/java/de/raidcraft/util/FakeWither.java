@@ -2,6 +2,7 @@ package de.raidcraft.util;
 
 import com.comphenix.packetwrapper.Packet18SpawnMob;
 import com.comphenix.packetwrapper.Packet1DDestroyEntity;
+import com.comphenix.packetwrapper.Packet1FEntityRelativeMove;
 import com.comphenix.packetwrapper.Packet28EntityMetadata;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
@@ -149,6 +150,16 @@ public class FakeWither {
 
         broadcastPacket(destroyMe.getHandle(), false);
         created = false;
+    }
+
+    public void move(double x, double y, double z) {
+
+        Packet1FEntityRelativeMove relativeMove = new Packet1FEntityRelativeMove();
+        relativeMove.setEntityID(getId());
+        relativeMove.setDx(x);
+        relativeMove.setDy(y);
+        relativeMove.setDz(z);
+        broadcastPacket(relativeMove.getHandle(), false);
     }
 
     private void sendPacketToPlayer(PacketContainer packet, Player player) {
