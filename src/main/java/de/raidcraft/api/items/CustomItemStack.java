@@ -193,6 +193,27 @@ public class CustomItemStack extends ItemStack {
         }
     }
 
+    private void updateMaxWidth() {
+
+        int maxWidth = Tooltip.DEFAULT_WIDTH;
+        for (TooltipSlot slot : TooltipSlot.values()) {
+            if (!hasTooltip(slot) || slot == TooltipSlot.NAME) {
+                continue;
+            }
+            if (getTooltip(slot).getWidth() > maxWidth) {
+                maxWidth = getTooltip(slot).getWidth();
+            }
+        }
+        if (maxWidth > Tooltip.DEFAULT_WIDTH) {
+            for (TooltipSlot slot : TooltipSlot.values()) {
+                if (!hasTooltip(slot) || slot == TooltipSlot.NAME) {
+                    continue;
+                }
+                getTooltip(slot).setWidth(maxWidth);
+            }
+        }
+    }
+
     public void rebuild() {
 
         ItemMeta itemMeta = getItemMeta();

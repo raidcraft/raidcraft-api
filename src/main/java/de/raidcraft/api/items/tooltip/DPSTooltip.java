@@ -32,12 +32,16 @@ public class DpsTooltip extends Tooltip {
 
     public void setEquipedDps(double equipedDps) {
 
+        ChatColor color = ChatColor.WHITE;
         this.equipedDps = equipedDps;
         if (getEquipedDps() < getDps()) {
-            lineMessage = ChatColor.GREEN + "(" + getDps() + " [+" + (getDps() - getEquipedDps()) + "] Schaden pro Sekunde)";
+            color = ChatColor.GREEN;
+            // lineMessage = ChatColor.GREEN + "(" + getDps() + " [+" + (getDps() - getEquipedDps()) + "] Schaden pro Sekunde)";
         } else if (getEquipedDps() > getDps()) {
-            lineMessage = ChatColor.RED + "(" + getDps() + " [-" + (getEquipedDps() - getDps()) + "] Schaden pro Sekunde)";
+            color = ChatColor.RED;
+            // lineMessage = ChatColor.RED + "(" + getDps() + " [-" + (getEquipedDps() - getDps()) + "] Schaden pro Sekunde)";
         }
+        lineMessage = color + "(" + getDps() + " Schaden pro Sekunde)";
     }
 
     @Override
