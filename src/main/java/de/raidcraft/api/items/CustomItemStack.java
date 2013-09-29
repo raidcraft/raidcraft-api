@@ -2,7 +2,7 @@ package de.raidcraft.api.items;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.tooltip.AttributeTooltip;
-import de.raidcraft.api.items.tooltip.DpsTooltip;
+import de.raidcraft.api.items.tooltip.DPSTooltip;
 import de.raidcraft.api.items.tooltip.SingleLineTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
@@ -150,10 +150,10 @@ public class CustomItemStack extends ItemStack {
         if (!hasTooltip(TooltipSlot.DPS)) {
             return;
         }
-        DpsTooltip tooltip = (DpsTooltip) getTooltip(TooltipSlot.DPS);
+        DPSTooltip tooltip = (DPSTooltip) getTooltip(TooltipSlot.DPS);
         CustomItemStack customItem = RaidCraft.getCustomItem(itemStack);
         if (customItem != null && customItem.hasTooltip(TooltipSlot.DPS)) {
-            tooltip.setEquipedDps(((DpsTooltip)customItem.getTooltip(TooltipSlot.DPS)).getDps());
+            tooltip.setEquipedDps(((DPSTooltip)customItem.getTooltip(TooltipSlot.DPS)).getDps());
         }
     }
 

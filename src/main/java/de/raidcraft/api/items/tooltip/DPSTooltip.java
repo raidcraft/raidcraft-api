@@ -6,13 +6,13 @@ import org.bukkit.ChatColor;
 /**
  * @author Silthus
  */
-public class DpsTooltip extends Tooltip {
+public class DPSTooltip extends Tooltip {
 
     private final double dps;
     private double equipedDps;
     private String lineMessage;
 
-    public DpsTooltip(double dps) {
+    public DPSTooltip(double dps) {
 
         super(TooltipSlot.DPS);
         this.dps = dps;
