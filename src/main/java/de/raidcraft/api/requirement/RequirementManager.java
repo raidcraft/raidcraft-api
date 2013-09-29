@@ -33,7 +33,7 @@ public final class RequirementManager {
 
         if (config.getKeys(false) == null) return requirements;
         for (String key : config.getKeys(false)) {
-            key = StringUtils.formatName(key);
+//            key = StringUtils.formatName(key);
             if (requirementClasses.containsKey(key)) {
                 if (config.getConfigurationSection(key).getKeys(false) == null) continue;
 
