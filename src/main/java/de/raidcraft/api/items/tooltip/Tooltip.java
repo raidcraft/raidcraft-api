@@ -23,8 +23,10 @@ public abstract class Tooltip {
 
     public void setWidth(int width) {
 
-        this.width = width;
-        updateLineWidth();
+        if (width != this.width) {
+            this.width = width;
+            updateLineWidth();
+        }
     }
 
     public int getWidth() {

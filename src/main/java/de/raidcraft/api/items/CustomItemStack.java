@@ -2,6 +2,7 @@ package de.raidcraft.api.items;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.tooltip.AttributeTooltip;
+import de.raidcraft.api.items.tooltip.DPSTooltip;
 import de.raidcraft.api.items.tooltip.SingleLineTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
@@ -140,7 +141,20 @@ public class CustomItemStack extends ItemStack {
             updateEquipedValue(itemStack);
         }
         updateEquipedValue(player.getItemInHand());
+        updateDamagePerSecond(player.getItemInHand());
         rebuild();
+    }
+
+    private void updateDamagePerSecond(ItemStack itemStack) {
+
+        if (!hasTooltip(TooltipSlot.DPS)) {
+            return;
+        }
+        DPSTooltip tooltip = (DPSTooltip) getTooltip(TooltipSlot.DPS);
+        CustomItemStack customItem = RaidCraft.getCustomItem(itemStack);
+        if (customItem != null && customItem.hasTooltip(TooltipSlot.DPS)) {
+            tooltip.setEquipedDps(((DPSTooltip)customItem.getTooltip(TooltipSlot.DPS)).getDps());
+        }
     }
 
     private void updateEquipedValue(ItemStack itemStack) {
@@ -175,6 +189,27 @@ public class CustomItemStack extends ItemStack {
                 if (thisAttributes.hasAttribute(type)) {
                     thisAttributes.getAttribute(type).setEquipedValue(0);
                 }
+            }
+        }
+    }
+
+    private void updateMaxWidth() {
+
+        int maxWidth = Tooltip.DEFAULT_WIDTH;
+        for (TooltipSlot slot : TooltipSlot.values()) {
+            if (!hasTooltip(slot) || slot == TooltipSlot.NAME) {
+                continue;
+            }
+            if (getTooltip(slot).getWidth() > maxWidth) {
+                maxWidth = getTooltip(slot).getWidth();
+            }
+        }
+        if (maxWidth > Tooltip.DEFAULT_WIDTH) {
+            for (TooltipSlot slot : TooltipSlot.values()) {
+                if (!hasTooltip(slot) || slot == TooltipSlot.NAME) {
+                    continue;
+                }
+                getTooltip(slot).setWidth(maxWidth);
             }
         }
     }
