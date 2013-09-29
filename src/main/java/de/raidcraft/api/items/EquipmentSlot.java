@@ -11,34 +11,41 @@ import de.raidcraft.util.EnumUtils;
 public enum EquipmentSlot {
 
     @EnumValue("ONE_HANDED")
-    ONE_HANDED("Einhändig"),
+    ONE_HANDED("Einhändig", 0.4129),
     @EnumValue("SHIELD_HAND")
-    SHIELD_HAND("Schildhand"),
+    SHIELD_HAND("Schildhand", 0.4129),
     @EnumValue("TWO_HANDED")
-    TWO_HANDED("Zweihändig"),
+    TWO_HANDED("Zweihändig", 1.0),
     @EnumValue("HEAD")
-    HEAD("Kopf"),
+    HEAD("Kopf", 0.75),
     @EnumValue("CHEST")
-    CHEST("Brust"),
+    CHEST("Brust", 1.0),
     @EnumValue("LEGS")
-    LEGS("Beine"),
+    LEGS("Beine", 1.0),
     @EnumValue("FEET")
-    FEET("Füße"),
+    FEET("Füße", 0.5625),
     @EnumValue("HANDS")
-    HANDS("Hände"),
+    HANDS("Hände", 0.4129),
     @EnumValue("INVENTORY")
-    INVENTORY("Inventar");
+    INVENTORY("Inventar", 1.0);
 
     private final String germanName;
+    private final double slotModifier;
 
-    private EquipmentSlot(String germanName) {
+    private EquipmentSlot(String germanName, double slotModifier) {
 
         this.germanName = germanName;
+        this.slotModifier = slotModifier;
     }
 
     public String getGermanName() {
 
         return germanName;
+    }
+
+    public double getSlotModifier() {
+
+        return slotModifier;
     }
 
     public static EquipmentSlot fromItemId(int id) {
