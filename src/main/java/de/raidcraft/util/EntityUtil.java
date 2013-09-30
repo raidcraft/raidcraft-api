@@ -3,6 +3,8 @@ package de.raidcraft.util;
 import net.minecraft.server.v1_6_R3.EntityCreature;
 import net.minecraft.server.v1_6_R3.EntityInsentient;
 import net.minecraft.server.v1_6_R3.EntityLiving;
+import net.minecraft.server.v1_6_R3.IRangedEntity;
+import net.minecraft.server.v1_6_R3.PathfinderGoalArrowAttack;
 import net.minecraft.server.v1_6_R3.PathfinderGoalPanic;
 import net.minecraft.server.v1_6_R3.PathfinderGoalSelector;
 import org.bukkit.ChatColor;
@@ -39,6 +41,25 @@ public class EntityUtil {
                 field.set(handle, selector);
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    public static void setRangedMode(LivingEntity entity) {
+
+        if (entity instanceof Creature) {
+            EntityCreature handle = ((CraftCreature) entity).getHandle();
+            if (handle instanceof IRangedEntity) {
+                try {
+                    PathfinderGoalArrowAttack goal = new PathfinderGoalArrowAttack((IRangedEntity) handle, 0.25F, 60, 10.0F);
+                    Field field = EntityLiving.class.getDeclaredField("goalSelector");
+                    field.setAccessible(true);
+                    PathfinderGoalSelector selector = (PathfinderGoalSelector) field.get(handle);
+                    selector.a(1, goal);
+                    field.set(handle, selector);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
