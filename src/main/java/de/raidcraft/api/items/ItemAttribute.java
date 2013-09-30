@@ -21,7 +21,7 @@ public class ItemAttribute implements Comparable<ItemAttribute>, Cloneable {
 
     private void rebuildItemLine() {
 
-        ChatColor color = ChatColor.WHITE;
+        ChatColor color = getType().getDisplayType() == AttributeDisplayType.BELOW ? ChatColor.GREEN : ChatColor.WHITE;
         if (value < equipedValue) {
             color = ChatColor.RED;
         } else if (value > equipedValue) {

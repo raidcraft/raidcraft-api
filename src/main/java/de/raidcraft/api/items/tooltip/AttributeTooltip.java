@@ -1,5 +1,6 @@
 package de.raidcraft.api.items.tooltip;
 
+import de.raidcraft.api.items.AttributeDisplayType;
 import de.raidcraft.api.items.AttributeType;
 import de.raidcraft.api.items.ItemAttribute;
 import de.raidcraft.util.CustomItemUtil;
@@ -61,10 +62,21 @@ public class AttributeTooltip extends Tooltip {
     public String[] getTooltip() {
 
         List<ItemAttribute> attributes = new ArrayList<>(this.attributes.values());
+        List<ItemAttribute> addLater = new ArrayList<>();
+        for (ItemAttribute attribute : attributes) {
+            if (attribute.getType().getDisplayType() == AttributeDisplayType.BELOW) {
+                addLater.add(attribute);
+            }
+        }
+        attributes.removeAll(addLater);
         Collections.sort(attributes);
-        String[] array = new String[attributes.size()];
+        Collections.sort(addLater);
+        String[] array = new String[attributes.size() + addLater.size()];
         for (int i = 0; i < attributes.size(); i++) {
             array[i] = attributes.get(i).getItemLine();
+        }
+        for (int i = attributes.size(); i < addLater.size() + attributes.size(); i++) {
+            array[i] = addLater.get(i).getItemLine();
         }
         return array;
     }

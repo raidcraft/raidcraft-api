@@ -9,47 +9,49 @@ import de.raidcraft.util.EnumUtils;
 public enum AttributeType {
 
     @EnumValue("STRENGTH")
-    STRENGTH("Stärke", 1.0),
+    STRENGTH("Stärke", AttributeDisplayType.INLINE, 1.0),
     @EnumValue("AGILITY")
-    AGILITY("Beweglichtkeit", 1.0),
+    AGILITY("Beweglichtkeit", AttributeDisplayType.INLINE, 1.0),
     @EnumValue("STAMINA")
-    STAMINA("Ausdauer", 1.0),
+    STAMINA("Ausdauer", AttributeDisplayType.INLINE, 1.0),
     @EnumValue("INTELLECT")
-    INTELLECT("Intelligenz", 1.0),
+    INTELLECT("Intelligenz", AttributeDisplayType.INLINE, 1.0),
     @EnumValue("SPIRIT")
-    SPIRIT("Willenskraft", 1.0),
+    SPIRIT("Willenskraft", AttributeDisplayType.INLINE, 1.0),
     @EnumValue("CRITICAL_STRIKE")
-    CRITICAL_STRIKE("Kritische Trefferwertung", 1.0),
+    CRITICAL_STRIKE("Kritische Trefferwertung", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("HIT")
-    HIT("Trefferwertung", 1.0),
+    HIT("Trefferwertung", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("MAGICAL_HIT")
-    MAGICAL_HIT("Magische Trefferwertung", 1.0),
+    MAGICAL_HIT("Magische Trefferwertung", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("ATTACK_POWER")
-    ATTACK_POWER("Angriffskraft", 0.5),
+    ATTACK_POWER("Angriffskraft", AttributeDisplayType.BELOW, 0.5),
     @EnumValue("MAGIC_DAMAGE")
-    MAGIC_DAMAGE("Zauberschaden", 0.86),
+    MAGIC_DAMAGE("Zauberschaden", AttributeDisplayType.BELOW, 0.86),
     @EnumValue("EVADE")
-    EVADE("Ausweichen", 1.0),
+    EVADE("Ausweichen", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("PARRY")
-    PARRY("Parieren", 1.0),
+    PARRY("Parieren", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("BLOCK")
-    BLOCK("Block Wert", 0.6),
+    BLOCK("Block Wert", AttributeDisplayType.BELOW, 0.6),
     @EnumValue("DEFENSE")
-    DEFENSE("Verteidigung", 1.0),
+    DEFENSE("Verteidigung", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("HEAL")
-    HEAL("Bonus Heilung", 0.45),
+    HEAL("Bonus Heilung", AttributeDisplayType.BELOW, 0.45),
     @EnumValue("HASTE")
-    HASTE("Hast", 1.0),
+    HASTE("Hast", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("ARMOR_PENETRATION")
-    ARMOR_PENETRATION("Rüstungsdurchschlag", 1.0);
+    ARMOR_PENETRATION("Rüstungsdurchschlag", AttributeDisplayType.BELOW, 1.0);
 
     private final String germanName;
     private final double itemLevelValue;
+    private final AttributeDisplayType displayType;
 
-    private AttributeType(String germanName, double itemLevelValue) {
+    private AttributeType(String germanName, AttributeDisplayType displayType, double itemLevelValue) {
 
         this.germanName = germanName;
         this.itemLevelValue = itemLevelValue;
+        this.displayType = displayType;
     }
 
     public String getGermanName() {
@@ -60,6 +62,11 @@ public enum AttributeType {
     public double getItemLevelValue() {
 
         return itemLevelValue;
+    }
+
+    public AttributeDisplayType getDisplayType() {
+
+        return displayType;
     }
 
     public static AttributeType fromGermanName(String name) {
