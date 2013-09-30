@@ -334,15 +334,16 @@ public class RaidCraft implements Listener {
             } else {
                 // its a minecraft item
                 Material item = ItemUtils.getItem(lowercaseId);
-                if (item == Material.SKULL_ITEM || item == Material.SKULL) {
+                if (item != null && (item == Material.SKULL_ITEM || item == Material.SKULL)) {
                     return Skull.getSkull(id);
-                } else {
+                } else if (item != null) {
                     return new ItemStack(item, 1, ItemUtils.getItemData(lowercaseId));
                 }
             }
         } catch (StorageException | IndexOutOfBoundsException | NumberFormatException e) {
             throw new CustomItemException(e.getMessage());
         }
+        throw new CustomItemException("Unknown item type specified: " + id);
     }
 
     public static ItemStack getUnsafeItem(String id) {
