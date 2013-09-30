@@ -61,6 +61,11 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         getOverrideConfig().merge(config);
     }
 
+    public void merge(ConfigurationSection config) {
+
+        getOverrideConfig().merge(config);
+    }
+
     public <V> V getOverride(String key, V def) {
 
         if (!isSet(key)) {
