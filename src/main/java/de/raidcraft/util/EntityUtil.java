@@ -1,6 +1,9 @@
 package de.raidcraft.util;
 
+import net.minecraft.server.v1_6_R3.EntityInsentient;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.LivingEntity;
 
 /**
@@ -106,5 +109,10 @@ public class EntityUtil {
         healthBar.append(mobColor).append(HEALTH_BAR_OUTTER_RIGHT);
 
         return healthBar.toString();
+    }
+
+    public static void walkToLocation(LivingEntity entity, Location loc, float speed) {
+
+        ((EntityInsentient) ((CraftLivingEntity) entity).getHandle()).getNavigation().a(loc.getX(), loc.getY(), loc.getZ(), speed);
     }
 }
