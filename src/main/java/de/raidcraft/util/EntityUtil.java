@@ -1,10 +1,18 @@
 package de.raidcraft.util;
 
+import net.minecraft.server.v1_6_R3.EntityCreature;
 import net.minecraft.server.v1_6_R3.EntityInsentient;
+import net.minecraft.server.v1_6_R3.EntityLiving;
+import net.minecraft.server.v1_6_R3.PathfinderGoalPanic;
+import net.minecraft.server.v1_6_R3.PathfinderGoalSelector;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftCreature;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
+
+import java.lang.reflect.Field;
 
 /**
  * @author Silthus
@@ -18,9 +26,8 @@ public class EntityUtil {
     private static final char HEALTH_BAR_HALF_SYMBOL = '▌';
     private static final int HEALTH_BAR_LENGTH = 10;
 
-     public static void addPanicMode(LivingEntity entity) {
+    public static void addPanicMode(LivingEntity entity) {
 
-         /*
         if (entity instanceof Creature) {
             try {
                 EntityCreature handle = ((CraftCreature) entity).getHandle();
@@ -34,7 +41,6 @@ public class EntityUtil {
                 e.printStackTrace();
             }
         }
-        */
     }
 
 /*    public static String drawHealthBar(double health, double maxHealth, ChatColor mobColor) {
