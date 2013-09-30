@@ -20,7 +20,13 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public final class CustomItemUtil {
 
+    public static final int ARMOR_SLOT = 1000;
     public static final String IGNORE_CODE = "&0&f";
+
+    public static boolean isArmorSlot(int slot) {
+
+        return slot > 1000 && slot < 1004;
+    }
 
     public static String encodeItemId(int id) {
 
@@ -248,6 +254,27 @@ public final class CustomItemUtil {
                 return i;
 
         return -1;
+    }
+
+    public static boolean moveArmor(Player player, int slot, ItemStack item) {
+
+        ItemStack[] armor = player.getInventory().getArmorContents();
+        PlayerInventory inv = player.getInventory();
+        int empty = firstEmpty(inv.getContents());
+        if (empty == -1) {
+            player.getWorld().dropItemNaturally(player.getLocation(), item);
+            if (slot != -1) {
+                armor[slot] = null;
+                player.getInventory().setArmorContents(armor);
+            }
+            return false;
+        }
+        inv.setItem(empty, item);
+        if (slot != -1) {
+            armor[slot] = null;
+            player.getInventory().setArmorContents(armor);
+        }
+        return true;
     }
 
     public static boolean moveItem(Player player, int slot, ItemStack item) {

@@ -41,7 +41,6 @@ public class CustomItemStack extends ItemStack {
         if (item instanceof CustomEquipment && ((CustomEquipment) item).getMaxDurability() > 0) {
             setCustomDurability(parseDurability());
         }
-        rebuild();
     }
 
     public int getCustomDurability() {
@@ -140,8 +139,7 @@ public class CustomItemStack extends ItemStack {
         for (ItemStack itemStack : player.getEquipment().getArmorContents()) {
             updateEquipedValue(itemStack);
         }
-        updateEquipedValue(player.getItemInHand());
-        updateDamagePerSecond(player.getItemInHand());
+        updateWeaponEquipedValue(player);
         rebuild();
     }
 
@@ -154,6 +152,20 @@ public class CustomItemStack extends ItemStack {
         CustomItemStack customItem = RaidCraft.getCustomItem(itemStack);
         if (customItem != null && customItem.hasTooltip(TooltipSlot.DPS)) {
             tooltip.setEquipedDps(((DPSTooltip)customItem.getTooltip(TooltipSlot.DPS)).getDps());
+        }
+    }
+
+    private void updateWeaponEquipedValue(Player player) {
+
+        if (getItem() instanceof CustomEquipment) {
+            ItemStack itemStack;
+            if (((CustomEquipment) getItem()).getEquipmentSlot() == EquipmentSlot.SHIELD_HAND) {
+                itemStack = player.getInventory().getItem(1);
+            } else {
+                itemStack = player.getInventory().getItem(0);
+            }
+            updateEquipedValue(itemStack);
+            updateDamagePerSecond(itemStack);
         }
     }
 

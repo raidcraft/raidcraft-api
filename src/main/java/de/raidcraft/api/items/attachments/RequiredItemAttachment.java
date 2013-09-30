@@ -11,7 +11,7 @@ public interface RequiredItemAttachment extends ItemAttachment {
 
     public boolean isRequirementMet(Player player);
 
-    public String getItemText(Player player);
+    public String getItemText();
 
-    public String getErrorMessage(Player player);
+    public String getErrorMessage();
 }
