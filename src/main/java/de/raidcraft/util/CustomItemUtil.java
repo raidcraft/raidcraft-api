@@ -25,7 +25,40 @@ public final class CustomItemUtil {
 
     public static boolean isArmorSlot(int slot) {
 
-        return slot > 1000 && slot < 1004;
+        return slot >= ARMOR_SLOT && slot < ARMOR_SLOT + 4;
+    }
+
+    public static int getArmorSlot(ItemStack itemStack) {
+
+        switch (itemStack.getType()) {
+
+            case CHAINMAIL_HELMET:
+            case DIAMOND_HELMET:
+            case IRON_HELMET:
+            case LEATHER_HELMET:
+            case GOLD_HELMET:
+                return 0;
+            case CHAINMAIL_CHESTPLATE:
+            case DIAMOND_CHESTPLATE:
+            case IRON_CHESTPLATE:
+            case LEATHER_CHESTPLATE:
+            case GOLD_CHESTPLATE:
+                return 1;
+            case CHAINMAIL_LEGGINGS:
+            case DIAMOND_LEGGINGS:
+            case IRON_LEGGINGS:
+            case LEATHER_LEGGINGS:
+            case GOLD_LEGGINGS:
+                return 2;
+            case CHAINMAIL_BOOTS:
+            case DIAMOND_BOOTS:
+            case IRON_BOOTS:
+            case LEATHER_BOOTS:
+            case GOLD_BOOTS:
+                return 3;
+            default:
+                return -1;
+        }
     }
 
     public static String encodeItemId(int id) {
