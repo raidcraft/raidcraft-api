@@ -14,6 +14,10 @@ public enum ArmorType {
         public double getArmorModifier(ItemQuality quality, int itemLevel) {
 
             switch (quality) {
+                case POOR:
+                    return itemLevel * 2 + 10;
+                case COMMON:
+                    return itemLevel * 2 + 11;
                 case UNCOMMON:
                     return itemLevel * 1.19 + 5.1;
                 case RARE:
