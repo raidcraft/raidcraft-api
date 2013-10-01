@@ -23,7 +23,8 @@ public class EntityUtil {
 
     private static final char HEALTH_BAR_OUTTER_LEFT = '╣';
     private static final char HEALTH_BAR_OUTTER_RIGHT = '╠';
-    private static final char HEALTH_BAR_FILLER = '|';
+    private static final char ELITE_SYMBOL = '†';
+    private static final char RARE_SYMBOL = '♣';
     private static final char HEALTH_BAR_MAIN_SYMBOL = '█';
     private static final char HEALTH_BAR_HALF_SYMBOL = '▌';
     private static final int HEALTH_BAR_LENGTH = 10;
@@ -97,7 +98,34 @@ public class EntityUtil {
         return healthBar.toString();
     }*/
 
+    public static String drawMobName(String name, ChatColor color, boolean elite, boolean rare) {
+
+        StringBuilder sb = new StringBuilder();
+
+        if (elite) sb.append(ChatColor.DARK_RED).append(ELITE_SYMBOL);
+        if (rare) sb.append(ChatColor.BLUE).append(RARE_SYMBOL);
+
+        if (elite || rare) sb.append(" ");
+        sb.append(color).append(name);
+        if (elite || rare) sb.append(" ");
+
+        if (rare)  sb.append(ChatColor.BLUE).append(RARE_SYMBOL);
+        if (elite) sb.append(ChatColor.DARK_RED).append(ELITE_SYMBOL);
+
+        return sb.toString();
+    }
+
+    public static String drawMobName(String name, int mobLevel, int playerLevel, boolean elite, boolean rare) {
+
+        return drawMobName(name, getConColor(playerLevel, mobLevel), elite, rare);
+    }
+
     public static String drawHealthBar(double health, double maxHealth, ChatColor mobColor) {
+
+        return drawHealthBar(health, maxHealth, mobColor, false, false);
+    }
+
+    public static String drawHealthBar(double health, double maxHealth, ChatColor mobColor, boolean elite, boolean rare) {
 
         ChatColor barColor = ChatColor.GREEN;
         double healthInPercent = health / maxHealth;
@@ -114,6 +142,11 @@ public class EntityUtil {
         }
 
         StringBuilder healthBar = new StringBuilder();
+
+        if (elite) healthBar.append(ChatColor.DARK_RED).append(ELITE_SYMBOL);
+        if (rare) healthBar.append(ChatColor.BLUE).append(RARE_SYMBOL);
+        if (elite || rare) healthBar.append(" ");
+
         healthBar.append(mobColor).append(HEALTH_BAR_OUTTER_LEFT);
         healthBar.append(barColor);
 
@@ -135,6 +168,10 @@ public class EntityUtil {
         // and append the ending
         healthBar.append(mobColor).append(HEALTH_BAR_OUTTER_RIGHT);
 
+        if (elite || rare) healthBar.append(" ");
+        if (rare)  healthBar.append(ChatColor.BLUE).append(RARE_SYMBOL);
+        if (elite) healthBar.append(ChatColor.DARK_RED).append(ELITE_SYMBOL);
+
         return healthBar.toString();
     }
 
@@ -151,9 +188,9 @@ public class EntityUtil {
 
         if (playerlvl + 5 <= moblvl) {
             if (playerlvl + 10 <= moblvl) {
-                return ChatColor.BLACK;
-            } else {
                 return ChatColor.DARK_RED;
+            } else {
+                return ChatColor.RED;
             }
         } else {
             switch (moblvl - playerlvl) {
