@@ -19,6 +19,11 @@ public class RequirementTooltip extends Tooltip {
         requirements.put(requirement.getName(), requirement);
     }
 
+    public void removeRequirement(RequiredItemAttachment requirement) {
+
+        requirements.remove(requirement.getName());
+    }
+
     public void addRequirement(RequiredItemAttachment requirement) {
 
         requirements.put(requirement.getName(), requirement);
