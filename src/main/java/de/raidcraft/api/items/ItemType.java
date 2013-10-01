@@ -18,6 +18,8 @@ public enum ItemType {
     EQUIPMENT("Equipment"),
     @EnumValue("QUEST")
     QUEST("Quest"),
+    @EnumValue("ENHANCEMENT")
+    ENHANCEMENT("Verbesserung"),
     @EnumValue("UNDEFINED")
     UNDEFINED("Undefined");
 
