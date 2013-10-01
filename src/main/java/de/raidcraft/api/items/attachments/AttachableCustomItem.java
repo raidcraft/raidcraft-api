@@ -16,7 +16,7 @@ public interface AttachableCustomItem extends CustomItem {
 
     public List<ItemAttachment> getAttachments(Player player) throws ItemAttachmentException;
 
-    public void apply(Player player, CustomItemStack itemStack) throws CustomItemException;
+    public void apply(Player player, CustomItemStack itemStack, boolean loadOnly) throws CustomItemException;
 
     public void remove(Player player, CustomItemStack itemStack) throws CustomItemException;
 }
