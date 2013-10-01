@@ -27,7 +27,9 @@ public enum EquipmentSlot {
     @EnumValue("HANDS")
     HANDS("Hände", 0.4129, 0.0),
     @EnumValue("INVENTORY")
-    INVENTORY("Inventar", 1.0, 0.0);
+    INVENTORY("Inventar", 1.0, 0.0),
+    @EnumValue("UNDEFINED")
+    UNDEFINED("Undefiniert", 1.0, 0.0);
 
     private final String germanName;
     private final double slotModifier;
