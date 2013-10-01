@@ -26,8 +26,8 @@ public enum AttributeType {
     MAGICAL_HIT("Magische Trefferwertung", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("ATTACK_POWER")
     ATTACK_POWER("Angriffskraft", AttributeDisplayType.BELOW, 0.5),
-    @EnumValue("MAGIC_DAMAGE")
-    MAGIC_DAMAGE("Zauberschaden", AttributeDisplayType.BELOW, 0.86),
+    @EnumValue("SPELL_POWER")
+    SPELL_POWER("Zauberschaden", AttributeDisplayType.BELOW, 0.86),
     @EnumValue("EVADE")
     EVADE("Ausweichen", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("PARRY")
