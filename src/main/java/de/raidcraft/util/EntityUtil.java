@@ -65,39 +65,6 @@ public class EntityUtil {
         }
     }
 
-/*    public static String drawHealthBar(double health, double maxHealth, ChatColor mobColor) {
-
-        ChatColor barColor = ChatColor.GREEN;
-        double healthInPercent = health / maxHealth;
-        if (healthInPercent < 0.20) {
-            barColor = ChatColor.DARK_RED;
-        } else if (healthInPercent < 0.35) {
-            barColor = ChatColor.RED;
-        } else if (healthInPercent < 0.50) {
-            barColor = ChatColor.GOLD;
-        } else if (healthInPercent < 0.75) {
-            barColor = ChatColor.YELLOW;
-        } else if (healthInPercent < 0.90) {
-            barColor = ChatColor.DARK_GREEN;
-        }
-
-        StringBuilder healthBar = new StringBuilder();
-        // lets start out with an always green left part
-        healthBar.append(ChatColor.BOLD).append(mobColor).append(HEALTH_BAR_OUTTER_LEFT);
-        int count = (int) (healthInPercent * HEALTH_BAR_LENGTH);
-        healthBar.append(barColor);
-        for (int i = 0; i < HEALTH_BAR_LENGTH; i++) {
-            if (i == count) {
-                healthBar.append(ChatColor.BLACK);
-            }
-            healthBar.append(HEALTH_BAR_FILLER);
-        }
-        // and append the ending
-        healthBar.append(mobColor).append(HEALTH_BAR_OUTTER_RIGHT);
-
-        return healthBar.toString();
-    }*/
-
     public static String drawMobName(String name, ChatColor color, boolean elite, boolean rare) {
 
         StringBuilder sb = new StringBuilder();
