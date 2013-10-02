@@ -20,8 +20,8 @@ public enum AttributeType {
     SPIRIT("Willenskraft", AttributeDisplayType.INLINE, 1.0),
     @EnumValue("CRITICAL_STRIKE")
     CRITICAL_STRIKE("Kritische Trefferwertung", AttributeDisplayType.BELOW, 1.0),
-    @EnumValue("HIT")
-    HIT("Trefferwertung", AttributeDisplayType.BELOW, 1.0),
+    @EnumValue("HIT_RATING")
+    HIT_RATING("Trefferwertung", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("MAGICAL_HIT")
     MAGICAL_HIT("Magische Trefferwertung", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("ATTACK_POWER")
