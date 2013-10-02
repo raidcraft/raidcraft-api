@@ -18,8 +18,8 @@ public enum AttributeType {
     INTELLECT("Intelligenz", AttributeDisplayType.INLINE, 1.0),
     @EnumValue("SPIRIT")
     SPIRIT("Willenskraft", AttributeDisplayType.INLINE, 1.0),
-    @EnumValue("CRITICAL_STRIKE")
-    CRITICAL_STRIKE("Kritische Trefferwertung", AttributeDisplayType.BELOW, 1.0),
+    @EnumValue("CRITICAL_STRIKE_RATE")
+    CRITICAL_STRIKE_RATE("Kritische Trefferwertung", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("HIT_RATING")
     HIT_RATING("Trefferwertung", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("MAGICAL_HIT")
