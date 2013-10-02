@@ -10,14 +10,20 @@ public enum WeaponType {
 
     @EnumValue("SWORD")
     SWORD("Schwert", EquipmentSlot.ONE_HANDED),
+    @EnumValue("TWO_HAND_SWORD")
+    TWO_HAND_SWORD("Zweihand Schwert", EquipmentSlot.TWO_HANDED),
     @EnumValue("DAGGER")
     DAGGER("Dolch", EquipmentSlot.ONE_HANDED),
     @EnumValue("AXE")
     AXE("Axt", EquipmentSlot.ONE_HANDED),
+    @EnumValue("TWO_HAND_AXE")
+    TWO_HAND_AXE("Zweihand Axt", EquipmentSlot.TWO_HANDED),
     @EnumValue("POLEARM")
     POLEARM("Stangenwaffe", EquipmentSlot.TWO_HANDED),
     @EnumValue("MACE")
-    MACE("Streitkolben", EquipmentSlot.TWO_HANDED),
+    MACE("Streitkolben", EquipmentSlot.ONE_HANDED),
+    @EnumValue("TWO_HAND_MACE")
+    TWO_HAND_MACE("Zweihand Streitkolben", EquipmentSlot.TWO_HANDED),
     @EnumValue("STAFF")
     STAFF("Stab", EquipmentSlot.TWO_HANDED),
     @EnumValue("BOW")
