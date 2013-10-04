@@ -46,6 +46,8 @@ public enum AttributeType {
     WEAPON_SKILL_RATING("Waffenfähigkeit", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("RANGED_CRITICAL_STRIKE_RATING")
     RANGED_CRITICAL_STRIKE_RATING("Kritische Fernkampf Trefferwertung", AttributeDisplayType.BELOW, 1.0),
+    @EnumValue("EXPERTISE_RATING_2")
+    EXPERTISE_RATING_2("Waffenkunde", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("EXPERTISE_RATING")
     EXPERTISE_RATING("Waffenkunde", AttributeDisplayType.BELOW, 1.0),
     @EnumValue("RESILIENCE_RATING")
