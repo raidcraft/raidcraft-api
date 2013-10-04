@@ -22,6 +22,8 @@ public final class CustomItemUtil {
 
     public static final int ARMOR_SLOT = 1000;
     public static final String IGNORE_CODE = "&0&f";
+    public static final int MAIN_WEAPON_SLOT = 0;
+    public static final int OFFHAND_WEAPON_SLOT = 1;
 
     public static boolean isArmorSlot(int slot) {
 
