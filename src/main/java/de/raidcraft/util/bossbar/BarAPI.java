@@ -73,14 +73,14 @@ public class BarAPI implements Listener {
         sendDragon(dragon, player);
     }
 
-    public static void setMessage(final Player player, String message, int seconds) {
+    public static void setMessage(final Player player, String message, long ticks) {
 
         FakeDragon dragon = getDragon(player, message);
 
         dragon.name = cleanMessage(message);
         dragon.health = FakeDragon.MAX_HEALTH;
 
-        final int dragonHealthMinus = FakeDragon.MAX_HEALTH / seconds;
+        final long dragonHealthMinus = FakeDragon.MAX_HEALTH / ticks;
 
         cancelTimer(player);
 
@@ -100,7 +100,7 @@ public class BarAPI implements Listener {
                 }
             }
 
-        }, 20L, 20L).getTaskId());
+        }, 0L, 1L).getTaskId());
 
         sendDragon(dragon, player);
     }
