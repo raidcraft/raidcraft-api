@@ -75,10 +75,15 @@ public class BarAPI implements Listener {
 
     public static void setMessage(final Player player, String message, long ticks) {
 
+        setMessage(player, message, ticks, true);
+    }
+
+    public static void setMessage(final Player player, String message, long ticks, final boolean countDown) {
+
         FakeDragon dragon = getDragon(player, message);
 
         dragon.name = cleanMessage(message);
-        dragon.health = FakeDragon.MAX_HEALTH;
+        dragon.health = countDown ? FakeDragon.MAX_HEALTH : 0;
 
         final long dragonHealthMinus = FakeDragon.MAX_HEALTH / ticks;
 
@@ -90,7 +95,11 @@ public class BarAPI implements Listener {
             public void run() {
 
                 FakeDragon drag = getDragon(player, "");
-                drag.health -= dragonHealthMinus;
+                if (countDown) {
+                    drag.health -= dragonHealthMinus;
+                } else {
+                    drag.health += dragonHealthMinus;
+                }
 
                 if (drag.health <= 0) {
                     removeBar(player);
