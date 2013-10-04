@@ -31,7 +31,7 @@ public class SingleLineTooltip extends Tooltip {
         for (int i = 0; i < this.text.length; i++) {
             if (this.text[i].contains(LINE_SEPARATOR)) {
                 String[] split = this.text[i].split(LINE_SEPARATOR);
-                String buffer = StringUtils.repeat(" ", (getWidth() - CustomItemUtil.getStringWidth(split[0] + split[1])) / 4);
+                String buffer = StringUtils.repeat("  ", (getWidth() - CustomItemUtil.getStringWidth(split[0] + split[1])) / 4);
                 this.text[i] = color + split[0] + buffer + split[1];
             }
         }

@@ -3,7 +3,6 @@ package de.raidcraft.api.items;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.attachments.AttachableCustomItem;
 import de.raidcraft.api.items.attachments.ItemAttachment;
-import de.raidcraft.api.items.attachments.ItemAttachmentException;
 import de.raidcraft.api.items.attachments.RequiredItemAttachment;
 import de.raidcraft.api.items.tooltip.AttributeTooltip;
 import de.raidcraft.api.items.tooltip.DPSTooltip;
@@ -139,7 +138,7 @@ public class CustomItemStack extends ItemStack {
         return -1;
     }
 
-    public void rebuild(Player player) throws ItemAttachmentException {
+    public void rebuild(Player player) throws CustomItemException {
 
         for (ItemStack itemStack : player.getEquipment().getArmorContents()) {
             updateEquipedValue(itemStack);
@@ -149,7 +148,7 @@ public class CustomItemStack extends ItemStack {
         rebuild();
     }
 
-    private void updateRequirements(Player player) throws ItemAttachmentException {
+    private void updateRequirements(Player player) throws CustomItemException {
 
         if (!(getItem() instanceof AttachableCustomItem)) {
             return;
@@ -157,6 +156,7 @@ public class CustomItemStack extends ItemStack {
         // lets also add our requirement lore
         for (ItemAttachment attachment : ((AttachableCustomItem) getItem()).getAttachments(player)) {
             if (attachment instanceof RequiredItemAttachment) {
+                ((AttachableCustomItem) getItem()).apply(player, this, true);
                 if (hasTooltip(TooltipSlot.REQUIREMENT)) {
                     RequirementTooltip tooltip = (RequirementTooltip) getTooltip(TooltipSlot.REQUIREMENT);
                     tooltip.addRequirement((RequiredItemAttachment) attachment);
