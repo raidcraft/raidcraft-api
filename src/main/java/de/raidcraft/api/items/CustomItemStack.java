@@ -34,6 +34,7 @@ public class CustomItemStack extends ItemStack {
     private final CustomItem item;
     private final Map<TooltipSlot, Tooltip> tooltips = new EnumMap<>(TooltipSlot.class);
     private int durability;
+    private boolean soulbound = false;
 
     protected CustomItemStack(CustomItem item, ItemStack itemStack) {
 
@@ -93,6 +94,11 @@ public class CustomItemStack extends ItemStack {
             }
         }
         return getMaxDurability();
+    }
+
+    public boolean isSoulbound() {
+
+        return soulbound;
     }
 
     public CustomItem getItem() {

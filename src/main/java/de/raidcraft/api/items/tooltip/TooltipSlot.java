@@ -7,6 +7,7 @@ public enum TooltipSlot {
 
     NAME(TooltipSlotType.SINGLE),
     ITEM_LEVEL(TooltipSlotType.SINGLE),
+    BIND_TYPE(TooltipSlotType.SINGLE),
     EQUIPMENT_TYPE(TooltipSlotType.SINGLE),
     ARMOR(TooltipSlotType.SINGLE),
     DAMAGE(TooltipSlotType.SINGLE),

@@ -29,9 +29,7 @@ public interface CustomItem extends RequirementResolver<Player> {
 
     public int getItemLevel();
 
-    public void setTradeable(boolean tradeable);
-
-    public boolean isTradeable();
+    public ItemBindType getBindType();
 
     public ItemQuality getQuality();
 
