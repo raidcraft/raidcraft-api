@@ -121,6 +121,11 @@ public class CustomItemStack extends ItemStack {
         return tooltips.containsKey(slot);
     }
 
+    public void removeTooltip(TooltipSlot slot) {
+
+        tooltips.remove(slot);
+    }
+
     public void setMetaDataId(int id) {
 
         setTooltip(new SingleLineTooltip(TooltipSlot.META_ID, CustomItemUtil.encodeItemId(id)));
@@ -157,11 +162,19 @@ public class CustomItemStack extends ItemStack {
         for (ItemAttachment attachment : ((AttachableCustomItem) getItem()).getAttachments(player)) {
             if (attachment instanceof RequiredItemAttachment) {
                 ((AttachableCustomItem) getItem()).apply(player, this, true);
+                RequirementTooltip tooltip;
                 if (hasTooltip(TooltipSlot.REQUIREMENT)) {
-                    RequirementTooltip tooltip = (RequirementTooltip) getTooltip(TooltipSlot.REQUIREMENT);
+                    tooltip = (RequirementTooltip) getTooltip(TooltipSlot.REQUIREMENT);
                     tooltip.addRequirement((RequiredItemAttachment) attachment);
                 } else {
-                    setTooltip(new RequirementTooltip((RequiredItemAttachment) attachment));
+                    tooltip = new RequirementTooltip((RequiredItemAttachment) attachment);
+                    setTooltip(tooltip);
+                }
+                // set the tooltip color
+                if (((RequiredItemAttachment) attachment).isRequirementMet(player)) {
+                    tooltip.setColor(ChatColor.WHITE);
+                } else {
+                    tooltip.setColor(ChatColor.RED);
                 }
             }
         }

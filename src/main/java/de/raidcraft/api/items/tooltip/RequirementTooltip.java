@@ -3,6 +3,7 @@ package de.raidcraft.api.items.tooltip;
 import de.raidcraft.api.items.attachments.RequiredItemAttachment;
 import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.CustomItemUtil;
+import org.bukkit.ChatColor;
 
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 public class RequirementTooltip extends Tooltip {
 
     private final Map<String, RequiredItemAttachment> requirements = new CaseInsensitiveMap<>();
+    private ChatColor color = ChatColor.RED;
 
     public RequirementTooltip(RequiredItemAttachment requirement) {
 
@@ -39,6 +41,11 @@ public class RequirementTooltip extends Tooltip {
         return requirements.get(name);
     }
 
+    public void setColor(ChatColor color) {
+
+        this.color = color;
+    }
+
     @Override
     protected void updateLineWidth() {
 
@@ -56,7 +63,7 @@ public class RequirementTooltip extends Tooltip {
         String[] strings = new String[requirements.size()];
         int i = 0;
         for (RequiredItemAttachment requirement : requirements.values()) {
-            strings[i] = requirement.getItemText();
+            strings[i] = color + requirement.getItemText();
             i++;
         }
         return strings;
