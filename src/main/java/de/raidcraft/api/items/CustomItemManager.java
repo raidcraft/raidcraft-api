@@ -118,4 +118,9 @@ public final class CustomItemManager implements Component {
         }
         return item;
     }
+
+    public List<CustomItem> getLoadedCustomItems() {
+
+        return new ArrayList<>(customItems.values());
+    }
 }
