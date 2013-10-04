@@ -9,14 +9,14 @@ import org.bukkit.ChatColor;
  */
 public class SingleLineTooltip extends Tooltip {
 
-    private final String[] text;
-    private final ChatColor color;
+    protected String[] tooltip;
+    protected ChatColor color;
 
     public SingleLineTooltip(TooltipSlot slot, String text, ChatColor color) {
 
         super(slot);
         this.color = color == null ? ChatColor.WHITE : color;
-        this.text = new String[]{this.color + text};
+        this.tooltip = new String[]{this.color + text};
         updateLineWidth();
     }
 
@@ -28,11 +28,11 @@ public class SingleLineTooltip extends Tooltip {
     @Override
     protected void updateLineWidth() {
 
-        for (int i = 0; i < this.text.length; i++) {
-            if (this.text[i].contains(LINE_SEPARATOR)) {
-                String[] split = this.text[i].split(LINE_SEPARATOR);
-                String buffer = StringUtils.repeat("  ", (getWidth() - CustomItemUtil.getStringWidth(split[0] + split[1])) / 4);
-                this.text[i] = color + split[0] + buffer + split[1];
+        for (int i = 0; i < this.tooltip.length; i++) {
+            if (this.tooltip[i].contains(LINE_SEPARATOR)) {
+                String[] split = this.tooltip[i].split(LINE_SEPARATOR);
+                String buffer = StringUtils.repeat(" ", (getWidth() - CustomItemUtil.getStringWidth(split[0] + split[1])) / 4);
+                this.tooltip[i] = color + split[0] + buffer + split[1];
             }
         }
     }
@@ -40,6 +40,6 @@ public class SingleLineTooltip extends Tooltip {
     @Override
     public String[] getTooltip() {
 
-        return text;
+        return tooltip;
     }
 }

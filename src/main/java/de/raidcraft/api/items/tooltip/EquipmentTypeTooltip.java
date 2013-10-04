@@ -8,8 +8,6 @@ import org.bukkit.ChatColor;
 public class EquipmentTypeTooltip extends SingleLineTooltip {
 
     private final String text;
-    private ChatColor color;
-    private String[] tooltip;
 
     public EquipmentTypeTooltip(String text, ChatColor color) {
 
