@@ -7,6 +7,8 @@ import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
+import de.raidcraft.api.language.ConfigTranslationProvider;
+import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -28,7 +30,7 @@ import java.util.Map;
 /**
  * @author Silthus
  */
-public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component {
+public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component, TranslationProvider {
 
     // vault variables
     private static Chat chat;
@@ -36,6 +38,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
     // member variables
     private final Map<String, QueuedCommand> queuedCommands = new HashMap<>();
     private Database database;
+    private TranslationProvider translationProvider;
     private CommandsManager<CommandSender> commands;
     private CommandsManagerRegistration commandRegistration;
 
@@ -46,6 +49,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
         // create default folders
         getDataFolder().mkdirs();
+        // add translation provider
+        this.translationProvider = new ConfigTranslationProvider(this);
 
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
         if (plugin != null) {
@@ -207,6 +212,11 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
     public final Permission getPermissions() {
 
         return permission;
+    }
+
+    public TranslationProvider getTranslationProvider() {
+
+        return translationProvider;
     }
 
     private boolean setupPermissions() {
