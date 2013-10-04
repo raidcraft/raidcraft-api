@@ -13,6 +13,7 @@ import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
 import de.raidcraft.util.AttributeHider;
 import de.raidcraft.util.TimeUtil;
+import de.raidcraft.util.bossbar.BarAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -57,6 +58,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         this.config = configure(new LocalConfiguration(this), true);
         registerEvents(this);
         registerEvents(new RaidCraft());
+        registerEvents(new BarAPI(this));
         registerCommands(ConfirmCommand.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
