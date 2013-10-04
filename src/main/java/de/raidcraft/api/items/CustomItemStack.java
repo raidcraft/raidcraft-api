@@ -1,8 +1,13 @@
 package de.raidcraft.api.items;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.items.attachments.AttachableCustomItem;
+import de.raidcraft.api.items.attachments.ItemAttachment;
+import de.raidcraft.api.items.attachments.ItemAttachmentException;
+import de.raidcraft.api.items.attachments.RequiredItemAttachment;
 import de.raidcraft.api.items.tooltip.AttributeTooltip;
 import de.raidcraft.api.items.tooltip.DPSTooltip;
+import de.raidcraft.api.items.tooltip.RequirementTooltip;
 import de.raidcraft.api.items.tooltip.SingleLineTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
@@ -134,13 +139,32 @@ public class CustomItemStack extends ItemStack {
         return -1;
     }
 
-    public void rebuild(Player player) {
+    public void rebuild(Player player) throws ItemAttachmentException {
 
         for (ItemStack itemStack : player.getEquipment().getArmorContents()) {
             updateEquipedValue(itemStack);
         }
         updateWeaponEquipedValue(player);
+        updateRequirements(player);
         rebuild();
+    }
+
+    private void updateRequirements(Player player) throws ItemAttachmentException {
+
+        if (!(getItem() instanceof AttachableCustomItem)) {
+            return;
+        }
+        // lets also add our requirement lore
+        for (ItemAttachment attachment : ((AttachableCustomItem) getItem()).getAttachments(player)) {
+            if (attachment instanceof RequiredItemAttachment) {
+                if (hasTooltip(TooltipSlot.REQUIREMENT)) {
+                    RequirementTooltip tooltip = (RequirementTooltip) getTooltip(TooltipSlot.REQUIREMENT);
+                    tooltip.addRequirement((RequiredItemAttachment) attachment);
+                } else {
+                    setTooltip(new RequirementTooltip((RequiredItemAttachment) attachment));
+                }
+            }
+        }
     }
 
     private void updateDamagePerSecond(ItemStack itemStack) {

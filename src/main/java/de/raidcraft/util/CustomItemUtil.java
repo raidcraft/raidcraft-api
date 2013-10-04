@@ -310,6 +310,16 @@ public final class CustomItemUtil {
         return true;
     }
 
+    public static void denyItem(Player player, int slot, ItemStack itemStack, CustomItemException e) {
+
+        player.sendMessage(ChatColor.RED + e.getMessage());
+        if (CustomItemUtil.isArmorSlot(slot)) {
+            CustomItemUtil.moveArmor(player, slot - CustomItemUtil.ARMOR_SLOT, itemStack);
+        } else {
+            CustomItemUtil.moveItem(player, slot, itemStack);
+        }
+    }
+
     public static boolean moveItem(Player player, int slot, ItemStack item) {
 
         PlayerInventory inv = player.getInventory();
