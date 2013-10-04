@@ -11,6 +11,8 @@ import de.raidcraft.api.items.CustomWeapon;
 import de.raidcraft.api.items.EquipmentSlot;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -312,9 +314,9 @@ public final class CustomItemUtil {
         return true;
     }
 
-    public static void denyItem(Player player, int slot, ItemStack itemStack, CustomItemException e) {
+    public static void denyItem(Player player, int slot, ItemStack itemStack, String message) {
 
-        player.sendMessage(ChatColor.RED + e.getMessage());
+        player.sendMessage(ChatColor.RED + message);
         if (CustomItemUtil.isArmorSlot(slot)) {
             CustomItemUtil.moveArmor(player, slot - CustomItemUtil.ARMOR_SLOT, itemStack);
         } else {
@@ -338,5 +340,29 @@ public final class CustomItemUtil {
             inv.clear(slot);
         }
         return true;
+    }
+
+    public static int getPickupSlot(PlayerPickupItemEvent event) {
+
+        // The event isn't canceled, this means this player can pick the item up.
+        Inventory inventory = event.getPlayer().getInventory();
+
+        ItemStack itemStack = event.getItem().getItemStack();
+        int maxStackSize = itemStack.getMaxStackSize();
+
+        int slotIndex = -1;
+        for(int stackSize=1; stackSize<maxStackSize; stackSize++) // Loop 1 less than max stack size so there is room for this item in the stack.
+        {
+            itemStack.setAmount(stackSize);
+            slotIndex = inventory.first(itemStack);
+
+            if(slotIndex != -1)
+                break;
+        }
+
+        if(slotIndex == -1)
+            slotIndex = inventory.firstEmpty();
+
+        return slotIndex;
     }
 }
