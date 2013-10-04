@@ -29,6 +29,7 @@ public class EquipmentTypeTooltip extends SingleLineTooltip {
 
         this.color = color;
         this.tooltip = new String[]{color + text};
+        updateLineWidth();
     }
 
     @Override

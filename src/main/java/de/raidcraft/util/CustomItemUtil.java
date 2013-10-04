@@ -9,6 +9,8 @@ import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.items.CustomWeapon;
 import de.raidcraft.api.items.EquipmentSlot;
+import de.raidcraft.api.items.tooltip.EquipmentTypeTooltip;
+import de.raidcraft.api.items.tooltip.TooltipSlot;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -364,5 +366,22 @@ public final class CustomItemUtil {
             slotIndex = inventory.firstEmpty();
 
         return slotIndex;
+    }
+
+    public static void setEquipmentTypeColor(Player player, ItemStack stack, ChatColor color) {
+
+        if (stack == null || !isCustomItem(stack)) {
+            return;
+        }
+        CustomItemStack itemStack = RaidCraft.getCustomItem(stack);
+        if (itemStack == null || !itemStack.hasTooltip(TooltipSlot.EQUIPMENT_TYPE)) {
+            return;
+        }
+        try {
+            EquipmentTypeTooltip tooltip = (EquipmentTypeTooltip) itemStack.getTooltip(TooltipSlot.EQUIPMENT_TYPE);
+            tooltip.setColor(color);
+            itemStack.rebuild(player);
+        } catch (CustomItemException ignored) {
+        }
     }
 }
