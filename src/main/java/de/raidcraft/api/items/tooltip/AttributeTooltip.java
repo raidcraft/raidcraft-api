@@ -75,7 +75,7 @@ public class AttributeTooltip extends Tooltip {
         for (int i = 0; i < attributes.size(); i++) {
             array[i] = attributes.get(i).getItemLine();
         }
-        for (int i = attributes.size(); i < addLater.size() + attributes.size(); i++) {
+        for (int i = 0; i < addLater.size(); i++) {
             array[i] = addLater.get(i).getItemLine();
         }
         return array;
