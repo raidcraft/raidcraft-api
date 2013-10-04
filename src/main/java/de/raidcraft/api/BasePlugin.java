@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * @author Silthus
  */
-public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component, TranslationProvider {
+public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component {
 
     // vault variables
     private static Chat chat;
