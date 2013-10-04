@@ -62,6 +62,7 @@ public class AttributeTooltip extends Tooltip {
     public String[] getTooltip() {
 
         List<ItemAttribute> attributes = new ArrayList<>(this.attributes.values());
+        String[] array = new String[attributes.size()];
         List<ItemAttribute> addLater = new ArrayList<>();
         for (ItemAttribute attribute : attributes) {
             if (attribute.getType().getDisplayType() == AttributeDisplayType.BELOW) {
@@ -71,12 +72,14 @@ public class AttributeTooltip extends Tooltip {
         attributes.removeAll(addLater);
         Collections.sort(attributes);
         Collections.sort(addLater);
-        String[] array = new String[attributes.size() + addLater.size()];
-        for (int i = 0; i < attributes.size(); i++) {
-            array[i] = attributes.get(i).getItemLine();
+        int i = 0;
+        for (ItemAttribute attribute : attributes) {
+            array[i] = attribute.getItemLine();
+            i++;
         }
-        for (int i = 0; i < addLater.size(); i++) {
-            array[i] = addLater.get(i).getItemLine();
+        for (ItemAttribute attribute : addLater) {
+            array[i] = attribute.getItemLine();
+            i++;
         }
         return array;
     }
