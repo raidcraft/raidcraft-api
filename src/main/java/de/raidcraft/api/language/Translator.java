@@ -12,12 +12,12 @@ public class Translator {
     public static String tr(Class<? extends BasePlugin> clazz, Language language, String key) {
 
         BasePlugin plugin = RaidCraft.getComponent(clazz);
-        return plugin.tr(language, key);
+        return plugin.getTranslationProvider().tr(language, key);
     }
 
     public static String tr(Class<? extends BasePlugin> clazz, Player player, String key) {
 
         BasePlugin plugin = RaidCraft.getComponent(clazz);
-        return plugin.tr(player, key);
+        return plugin.getTranslationProvider().tr(player, key);
     }
 }
