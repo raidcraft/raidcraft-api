@@ -372,7 +372,7 @@ public class RaidCraft implements Listener {
             return CUSTOM_ITEM_IDENTIFIER + getCustomItem(itemStack).getItem().getId();
         }
         // lets check this param after the custom item, but before mc
-        if (storeObject || itemStack.hasItemMeta()) {
+        if (storeObject || (itemStack.hasItemMeta() && (itemStack.getItemMeta().hasDisplayName() || itemStack.getItemMeta().hasLore()))) {
             return STORED_OBJECT_IDENTIFIER + new ItemStorage("API").storeObject(itemStack);
         }
         // so nothing matched :( bukkit here ya go!
