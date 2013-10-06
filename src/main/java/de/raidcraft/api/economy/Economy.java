@@ -1,5 +1,7 @@
 package de.raidcraft.api.economy;
 
+import org.bukkit.command.CommandSender;
+
 /**
  * @author Philip Urban
  */
@@ -40,4 +42,6 @@ public interface Economy {
     public String getCurrencyNameSingular();
 
     public String getCurrencyNamePlural();
+
+    public void printFlow(CommandSender sender, String accountName, int entries);
 }
