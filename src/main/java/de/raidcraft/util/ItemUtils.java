@@ -28,7 +28,7 @@ public final class ItemUtils {
         try {
             return getItem(Integer.parseInt(name));
         } catch (NumberFormatException e) {
-            return Material.getMaterial(name.toUpperCase());
+            return Material.matchMaterial(name);
         }
     }
 
@@ -41,7 +41,7 @@ public final class ItemUtils {
             try {
                 subid = Short.valueOf(parts[1]);
             }
-            catch(NumberFormatException e) {}
+            catch(NumberFormatException ignored) {}
         }
         return new ItemStack(material, 1, subid);
     }

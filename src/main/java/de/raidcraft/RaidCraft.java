@@ -312,6 +312,11 @@ public class RaidCraft implements Listener {
         return getComponent(CustomItemManager.class).getCustomItemStack(id);
     }
 
+    public static boolean isCustomItem(ItemStack itemStack) {
+
+        return CustomItemUtil.isCustomItem(itemStack);
+    }
+
     /**
      * Will try to parse any item out of the given id. The result can be a custom item or stored item.
      * Even minecraft Items are possible.
@@ -367,11 +372,11 @@ public class RaidCraft implements Listener {
             return CUSTOM_ITEM_IDENTIFIER + getCustomItem(itemStack).getItem().getId();
         }
         // lets check this param after the custom item, but before mc
-        if (storeObject) {
+        if (storeObject || itemStack.hasItemMeta()) {
             return STORED_OBJECT_IDENTIFIER + new ItemStorage("API").storeObject(itemStack);
         }
         // so nothing matched :( bukkit here ya go!
-        return itemStack.getTypeId() + ":" + itemStack.getDurability();
+        return itemStack.getType().name() + ":" + itemStack.getDurability();
     }
 
     public static void registerItemAttachmentProvider(ItemAttachmentProvider provider) throws RaidCraftException {
