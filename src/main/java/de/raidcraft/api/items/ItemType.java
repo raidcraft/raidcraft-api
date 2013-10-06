@@ -20,6 +20,8 @@ public enum ItemType {
     QUEST("Quest"),
     @EnumValue("ENHANCEMENT")
     ENHANCEMENT("Verbesserung"),
+    @EnumValue("CRAFTING")
+    CRAFTING("Handwerksmaterial"),
     @EnumValue("UNDEFINED")
     UNDEFINED("Undefined");
 
