@@ -369,7 +369,10 @@ public class RaidCraft implements Listener {
 
         // lets try some stuff and see what item type this is
         if (CustomItemUtil.isCustomItem(itemStack)) {
-            return CUSTOM_ITEM_IDENTIFIER + getCustomItem(itemStack).getItem().getId();
+            CustomItemStack customItem = getCustomItem(itemStack);
+            if (customItem != null) {
+                return CUSTOM_ITEM_IDENTIFIER + customItem.getItem().getId();
+            }
         }
         // lets check this param after the custom item, but before mc
         if (storeObject || (itemStack.hasItemMeta() && (itemStack.getItemMeta().hasDisplayName() || itemStack.getItemMeta().hasLore()))) {
