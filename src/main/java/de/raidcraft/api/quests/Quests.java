@@ -141,6 +141,14 @@ public class Quests {
         }
     }
 
+    public static String getFriendlyHostName(String id) {
+
+        if (isEnabled()) {
+            return provider.getFriendlyHostName(id);
+        }
+        return id;
+    }
+
     protected static void callTrigger(QuestTrigger trigger, Player player) {
 
         callTrigger(trigger.getName(), player);

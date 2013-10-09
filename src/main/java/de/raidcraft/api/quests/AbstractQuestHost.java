@@ -52,4 +52,10 @@ public abstract class AbstractQuestHost implements QuestHost {
 
         return friendlyName;
     }
+
+    @Override
+    public String toString() {
+
+        return getFriendlyName();
+    }
 }

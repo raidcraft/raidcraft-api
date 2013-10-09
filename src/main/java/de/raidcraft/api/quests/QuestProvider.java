@@ -12,5 +12,7 @@ public interface QuestProvider {
 
     public void registerQuestHost(String type, Class<? extends QuestHost> clazz) throws InvalidQuestHostException;
 
+    public String getFriendlyHostName(String id);
+
     public void callTrigger(String name, Player player);
 }

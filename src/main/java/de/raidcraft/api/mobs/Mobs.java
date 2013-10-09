@@ -48,4 +48,12 @@ public class Mobs {
         }
         mobProvider.registerMobGroup(id, data);
     }
+
+    public static String getFriendlyName(String name) {
+
+        if (mobProvider != null) {
+            return mobProvider.getFriendlyName(name);
+        }
+        return name;
+    }
 }
