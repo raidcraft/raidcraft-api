@@ -14,6 +14,8 @@ public interface ConversationHost {
 
     public String getUniqueId();
 
+    public String getDefaultConversationName();
+
     public void setConversation(Player player, String conversation);
 
     public String getConversation(Player player);

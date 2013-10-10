@@ -27,6 +27,12 @@ public abstract class AbstractConversationHost implements ConversationHost {
     }
 
     @Override
+    public String getDefaultConversationName() {
+
+        return defaultConversationName;
+    }
+
+    @Override
     public void setConversation(Player player, String conversation) {
 
         playerConversations.put(player.getName(), conversation);
