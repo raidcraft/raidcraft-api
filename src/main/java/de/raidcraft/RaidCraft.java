@@ -378,6 +378,8 @@ public class RaidCraft implements Listener {
         if (storeObject
                 || (itemStack.hasItemMeta() && (itemStack.getItemMeta().hasDisplayName() || itemStack.getItemMeta().hasLore()))
                 || itemStack.getType() == Material.WRITTEN_BOOK
+                || itemStack.getType() == Material.ENCHANTED_BOOK
+                || itemStack.getType() == Material.BOOK_AND_QUILL
                 || !itemStack.getEnchantments().isEmpty()) {
             return STORED_OBJECT_IDENTIFIER + new ItemStorage("RaidCraft-API").storeObject(itemStack);
         }
