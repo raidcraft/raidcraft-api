@@ -375,7 +375,10 @@ public class RaidCraft implements Listener {
             }
         }
         // lets check this param after the custom item, but before mc
-        if (storeObject || (itemStack.hasItemMeta() && (itemStack.getItemMeta().hasDisplayName() || itemStack.getItemMeta().hasLore()))) {
+        if (storeObject
+                || (itemStack.hasItemMeta() && (itemStack.getItemMeta().hasDisplayName() || itemStack.getItemMeta().hasLore()))
+                || itemStack.getType() == Material.WRITTEN_BOOK
+                || !itemStack.getEnchantments().isEmpty()) {
             return STORED_OBJECT_IDENTIFIER + new ItemStorage("RaidCraft-API").storeObject(itemStack);
         }
         // so nothing matched :( bukkit here ya go!
