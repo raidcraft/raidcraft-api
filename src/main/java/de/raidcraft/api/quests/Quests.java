@@ -141,12 +141,9 @@ public class Quests {
         }
     }
 
-    public static String getFriendlyHostName(String id) {
+    public static QuestHost getQuestHost(String id) throws InvalidQuestHostException {
 
-        if (isEnabled()) {
-            return provider.getFriendlyHostName(id);
-        }
-        return id;
+        return provider.getQuestHost(id);
     }
 
     protected static void callTrigger(QuestTrigger trigger, Player player) {
