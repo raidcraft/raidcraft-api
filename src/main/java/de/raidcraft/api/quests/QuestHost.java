@@ -1,5 +1,7 @@
 package de.raidcraft.api.quests;
 
+import org.bukkit.entity.Player;
+
 /**
  * @author Silthus
  */
@@ -14,4 +16,6 @@ public interface QuestHost {
     public String getBasePath();
 
     public String getFriendlyName();
+
+    public void interact(Player player);
 }

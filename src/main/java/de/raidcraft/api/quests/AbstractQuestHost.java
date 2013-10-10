@@ -1,6 +1,8 @@
 package de.raidcraft.api.quests;
 
+import de.raidcraft.RaidCraft;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 /**
  * @author Silthus
@@ -57,5 +59,11 @@ public abstract class AbstractQuestHost implements QuestHost {
     public String toString() {
 
         return getFriendlyName();
+    }
+
+    @Override
+    public final void interact(Player player) {
+
+        RaidCraft.callEvent(new QuesHostInteractEvent(this, player));
     }
 }
