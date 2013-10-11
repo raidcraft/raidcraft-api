@@ -64,6 +64,6 @@ public abstract class AbstractQuestHost implements QuestHost {
     @Override
     public final void interact(Player player) {
 
-        RaidCraft.callEvent(new QuesHostInteractEvent(this, player));
+        RaidCraft.callEvent(new QuestHostInteractEvent(this, player));
     }
 }

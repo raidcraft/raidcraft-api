@@ -7,12 +7,12 @@ import org.bukkit.event.HandlerList;
 /**
  * @author Silthus
  */
-public class QuesHostInteractEvent extends Event {
+public class QuestHostInteractEvent extends Event {
 
     private final QuestHost host;
     private final Player player;
 
-    public QuesHostInteractEvent(QuestHost host, Player player) {
+    public QuestHostInteractEvent(QuestHost host, Player player) {
 
         this.host = host;
         this.player = player;
