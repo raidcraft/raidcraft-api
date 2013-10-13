@@ -45,13 +45,4 @@ public abstract class QuestTrigger {
 
         Quests.callTrigger(this, player);
     }
-
-    protected final void inform(String subTrigger, Player player) {
-
-        if (subTrigger == null || subTrigger.equals("")) {
-            inform(player);
-            return;
-        }
-        Quests.callTrigger(getName() + "." + subTrigger, player);
-    }
 }

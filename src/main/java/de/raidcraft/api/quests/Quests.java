@@ -110,7 +110,9 @@ public class Quests {
             // add all sub trigger
             for (Method method : clazz.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(QuestTrigger.Method.class)) {
-                    questTrigger.put(name + "." + method.getAnnotation(QuestTrigger.Method.class).value(), constructor);
+                    String methodName = name + "." + method.getAnnotation(QuestTrigger.Method.class).value();
+                    questTrigger.put(methodName, constructor);
+                    triggerPlugins.put(methodName, plugin);
                 }
             }
             questTrigger.put(name, constructor);
