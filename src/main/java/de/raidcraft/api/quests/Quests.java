@@ -150,8 +150,8 @@ public class Quests {
 
     protected static void callTrigger(QuestTrigger trigger, String action, Player player) {
 
-        if (isEnabled()) {
-            provider.callTrigger(trigger.getName() + "." + action, player);
+        if (isEnabled() && trigger.getName().endsWith("." + action)) {
+            provider.callTrigger(trigger, player);
         }
     }
 }

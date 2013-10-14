@@ -14,5 +14,5 @@ public interface QuestProvider {
 
     public QuestHost getQuestHost(String id) throws InvalidQuestHostException;
 
-    public void callTrigger(String name, Player player);
+    public void callTrigger(QuestTrigger trigger, Player player);
 }
