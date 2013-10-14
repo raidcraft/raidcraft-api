@@ -41,8 +41,8 @@ public abstract class QuestTrigger {
 
     protected abstract void load(ConfigurationSection data);
 
-    protected final void inform(Player player) {
+    protected final void inform(String action, Player player) {
 
-        Quests.callTrigger(this, player);
+        Quests.callTrigger(this, action, player);
     }
 }

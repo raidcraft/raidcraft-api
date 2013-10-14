@@ -32,7 +32,7 @@ public class ExampleTrigger extends QuestTrigger implements Listener {
 
         Location to = event.getTo();
         if (to.getBlockX() == x && to.getBlockY() == y && to.getBlockZ() == z) {
-            inform(event.getPlayer());
+            inform("example", event.getPlayer());
         }
     }
 }

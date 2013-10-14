@@ -148,15 +148,10 @@ public class Quests {
         return provider.getQuestHost(id);
     }
 
-    protected static void callTrigger(QuestTrigger trigger, Player player) {
-
-        callTrigger(trigger.getName(), player);
-    }
-
-    protected static void callTrigger(String name, Player player) {
+    protected static void callTrigger(QuestTrigger trigger, String action, Player player) {
 
         if (isEnabled()) {
-            provider.callTrigger(name, player);
+            provider.callTrigger(trigger.getName() + "." + action, player);
         }
     }
 }
