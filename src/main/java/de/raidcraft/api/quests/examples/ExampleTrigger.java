@@ -1,6 +1,7 @@
 package de.raidcraft.api.quests.examples;
 
 import de.raidcraft.api.quests.QuestTrigger;
+import de.raidcraft.api.quests.quest.QuestTemplate;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,11 @@ public class ExampleTrigger extends QuestTrigger implements Listener {
     private int y;
     private int z;
 
+    protected ExampleTrigger(QuestTemplate questTemplate, String name) {
+
+        super(questTemplate, name);
+    }
+
     @Override
     protected void load(ConfigurationSection data) {
 
@@ -32,7 +38,7 @@ public class ExampleTrigger extends QuestTrigger implements Listener {
 
         Location to = event.getTo();
         if (to.getBlockX() == x && to.getBlockY() == y && to.getBlockZ() == z) {
-            inform("example", event.getPlayer());
+            inform(event.getPlayer());
         }
     }
 }

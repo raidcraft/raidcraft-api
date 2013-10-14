@@ -1,6 +1,7 @@
 package de.raidcraft.api.quests;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.quests.quest.QuestTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -106,7 +107,7 @@ public class Quests {
                 name = plugin.getName().toLowerCase() + "." + name;
             }
             // check the constructor
-            Constructor<? extends QuestTrigger> constructor = clazz.getDeclaredConstructor();
+            Constructor<? extends QuestTrigger> constructor = clazz.getDeclaredConstructor(QuestTemplate.class, String.class);
             // add all sub trigger
             for (Method method : clazz.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(QuestTrigger.Method.class)) {
@@ -122,7 +123,7 @@ public class Quests {
         }
     }
 
-    public static void initializeTrigger(String name, ConfigurationSection data) {
+    public static void initializeTrigger(QuestTemplate questTemplate, String name, ConfigurationSection data) {
 
         if (!questTrigger.containsKey(name) || triggerPlugins.get(name) == null || !triggerPlugins.get(name).isEnabled()) {
             return;
@@ -131,11 +132,10 @@ public class Quests {
             // reflection time!!!
             Constructor<? extends QuestTrigger> constructor = questTrigger.get(name);
             constructor.setAccessible(true);
-            QuestTrigger trigger = constructor.newInstance();
+            QuestTrigger trigger = constructor.newInstance(questTemplate, name);
             if (trigger instanceof Listener) {
                 Bukkit.getPluginManager().registerEvents((Listener) trigger, triggerPlugins.get(name));
             }
-            trigger.setName(name);
             trigger.load(data);
             loadedTrigger.add(trigger);
         } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
@@ -148,9 +148,9 @@ public class Quests {
         return provider.getQuestHost(id);
     }
 
-    protected static void callTrigger(QuestTrigger trigger, String action, Player player) {
+    protected static void callTrigger(QuestTrigger trigger, Player player) {
 
-        if (isEnabled() && trigger.getName().endsWith("." + action)) {
+        if (isEnabled()) {
             provider.callTrigger(trigger, player);
         }
     }
