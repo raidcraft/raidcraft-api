@@ -21,11 +21,21 @@ public class QuestUtil {
             basePath = basePath.replaceFirst("\\.", "");
         }
         for (String key : section.getKeys(true)) {
-            if (section.getString(key).startsWith("this")) {
-                section.set(key, section.getString(key).replaceFirst("this", basePath));
+            if (section.isString(key)) {
+                String value = section.getString(key);
+                if (value.startsWith("this")) {
+                    value = value.replaceFirst("this", basePath);
+                }
+                value = replaceRefrences(basePath, value);
+                section.set(key, value);
             }
         }
         return section;
+    }
+
+    public static String replaceCount(String value, int count, int maxCount) {
+
+        return value.replace("%current%", String.valueOf(count)).replace("%count%", String.valueOf(maxCount));
     }
 
     public static String replaceRefrences(String basePath, String value) {

@@ -1,6 +1,7 @@
 package de.raidcraft.api.quests.quest;
 
 import de.raidcraft.api.quests.player.QuestHolder;
+import de.raidcraft.api.quests.quest.trigger.Trigger;
 import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
@@ -22,6 +23,12 @@ public abstract class AbstractQuest implements Quest {
         this.id = id;
         this.template = template;
         this.holder = holder;
+        if (!isCompleted()) {
+            // lets register ourselves as trigger listener
+            for (Trigger trigger : getTemplate().getCompleteTrigger()) {
+                trigger.registerListener(this);
+            }
+        }
     }
 
     @Override

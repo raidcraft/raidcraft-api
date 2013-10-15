@@ -85,7 +85,7 @@ public abstract class AbstractTrigger implements Trigger {
     @Override
     public List<TriggerListener> getListeners() {
 
-        return listeners;
+        return new ArrayList<>(listeners);
     }
 
     @Override

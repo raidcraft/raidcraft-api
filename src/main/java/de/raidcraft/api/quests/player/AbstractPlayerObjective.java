@@ -1,8 +1,8 @@
 package de.raidcraft.api.quests.player;
 
-import de.raidcraft.api.quests.quest.objective.Objective;
 import de.raidcraft.api.quests.quest.Quest;
-import org.bukkit.entity.Player;
+import de.raidcraft.api.quests.quest.objective.Objective;
+import de.raidcraft.api.quests.quest.trigger.Trigger;
 
 import java.sql.Timestamp;
 
@@ -21,6 +21,12 @@ public abstract class AbstractPlayerObjective implements PlayerObjective {
         this.id = id;
         this.quest = quest;
         this.objective = objective;
+        if (!isCompleted()) {
+            // lets register ourselves as trigger listener
+            for (Trigger trigger : getObjective().getTrigger()) {
+                trigger.registerListener(this);
+            }
+        }
     }
 
     @Override
@@ -42,9 +48,9 @@ public abstract class AbstractPlayerObjective implements PlayerObjective {
     }
 
     @Override
-    public Player getPlayer() {
+    public QuestHolder getQuestHolder() {
 
-        return quest.getPlayer();
+        return quest.getHolder();
     }
 
     @Override
@@ -62,6 +68,12 @@ public abstract class AbstractPlayerObjective implements PlayerObjective {
     protected void setCompleted(Timestamp timestamp) {
 
         this.completionTime = timestamp;
+        if (isCompleted()) {
+            // unregister ourselves as trigger listener
+            for (Trigger trigger : getObjective().getTrigger()) {
+                trigger.unregisterListener(this);
+            }
+        }
     }
 
     @Override
@@ -93,6 +105,6 @@ public abstract class AbstractPlayerObjective implements PlayerObjective {
     @Override
     public String toString() {
 
-        return getPlayer().getName() + "." + getObjective().toString();
+        return getQuestHolder().getName() + "." + getObjective().toString();
     }
 }

@@ -1,9 +1,8 @@
 package de.raidcraft.api.quests.player;
 
+import de.raidcraft.api.quests.quest.Quest;
 import de.raidcraft.api.quests.quest.objective.Objective;
 import de.raidcraft.api.quests.quest.trigger.TriggerListener;
-import de.raidcraft.api.quests.quest.Quest;
-import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
 
@@ -18,7 +17,7 @@ public interface PlayerObjective extends TriggerListener, Comparable<PlayerObjec
 
     public Objective getObjective();
 
-    public Player getPlayer();
+    public QuestHolder getQuestHolder();
 
     public Timestamp getCompletionTime();
 
