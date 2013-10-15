@@ -131,7 +131,10 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     @Override
     public void abortQuest(Quest quest) {
 
-        quest.abort();
+        Quest remove = allQuests.remove(quest.getFullName());
+        if (remove != null) {
+            remove.abort();
+        }
     }
 
     @Override

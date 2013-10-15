@@ -1,7 +1,8 @@
 package de.raidcraft.api.quests;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.quests.quest.QuestTemplate;
+import de.raidcraft.api.quests.player.QuestHolder;
+import de.raidcraft.api.quests.quest.trigger.Trigger;
 import de.raidcraft.util.CaseInsensitiveMap;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -107,7 +108,7 @@ public class Quests {
                 name = plugin.getName().toLowerCase() + "." + name;
             }
             // check the constructor
-            Constructor<? extends QuestTrigger> constructor = clazz.getDeclaredConstructor(QuestTemplate.class, String.class);
+            Constructor<? extends QuestTrigger> constructor = clazz.getDeclaredConstructor(Trigger.class);
             // add all sub trigger
             for (Method method : clazz.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(QuestTrigger.Method.class)) {
@@ -123,8 +124,9 @@ public class Quests {
         }
     }
 
-    public static void initializeTrigger(QuestTemplate questTemplate, String name, ConfigurationSection data) {
+    public static void initializeTrigger(Trigger trigger, ConfigurationSection data) {
 
+        String name = trigger.getName();
         if (!questTrigger.containsKey(name) || triggerPlugins.get(name) == null || !triggerPlugins.get(name).isEnabled()) {
             return;
         }
@@ -132,26 +134,24 @@ public class Quests {
             // reflection time!!!
             Constructor<? extends QuestTrigger> constructor = questTrigger.get(name);
             constructor.setAccessible(true);
-            QuestTrigger trigger = constructor.newInstance(questTemplate, name);
-            if (trigger instanceof Listener) {
-                Bukkit.getPluginManager().registerEvents((Listener) trigger, triggerPlugins.get(name));
+            QuestTrigger questTrigger = constructor.newInstance(trigger);
+            if (questTrigger instanceof Listener) {
+                Bukkit.getPluginManager().registerEvents((Listener) questTrigger, triggerPlugins.get(name));
             }
-            trigger.load(data);
-            loadedTrigger.add(trigger);
+            questTrigger.load(data);
+            loadedTrigger.add(questTrigger);
         } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
         }
     }
 
+    public static QuestHolder getQuestHolder(Player player) {
+
+        return provider.getQuestHolder(player);
+    }
+
     public static QuestHost getQuestHost(String id) throws InvalidQuestHostException {
 
         return provider.getQuestHost(id);
-    }
-
-    protected static void callTrigger(QuestTrigger trigger, Player player) {
-
-        if (isEnabled()) {
-            provider.callTrigger(trigger, player);
-        }
     }
 }

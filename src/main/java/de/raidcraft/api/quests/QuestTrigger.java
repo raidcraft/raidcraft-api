@@ -1,6 +1,6 @@
 package de.raidcraft.api.quests;
 
-import de.raidcraft.api.quests.quest.QuestTemplate;
+import de.raidcraft.api.quests.quest.trigger.Trigger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -28,29 +28,29 @@ public abstract class QuestTrigger {
         public String value();
     }
 
-    private final QuestTemplate questTemplate;
-    private final String name;
+    private final Trigger trigger;
 
-    protected QuestTrigger(QuestTemplate questTemplate, String name) {
+    protected QuestTrigger(Trigger trigger) {
 
-        this.questTemplate = questTemplate;
-        this.name = name;
+        this.trigger = trigger;
     }
 
-    public QuestTemplate getQuestTemplate() {
+    public Trigger getTrigger() {
 
-        return questTemplate;
+        return trigger;
     }
 
     public String getName() {
 
-        return name;
+        return getTrigger().getName();
     }
 
     protected abstract void load(ConfigurationSection data);
 
-    protected final void inform(Player player) {
+    protected final void inform(String action, Player player) {
 
-        Quests.callTrigger(this, player);
+        if (getName().endsWith(action)) {
+            trigger.trigger(Quests.getQuestHolder(player));
+        }
     }
 }

@@ -105,4 +105,24 @@ public abstract class AbstractTrigger implements Trigger {
 
         return getName();
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof AbstractTrigger)) return false;
+
+        AbstractTrigger that = (AbstractTrigger) o;
+
+        return id == that.id && questTemplate.equals(that.questTemplate) && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = id;
+        result = 31 * result + type.hashCode();
+        result = 31 * result + questTemplate.hashCode();
+        return result;
+    }
 }

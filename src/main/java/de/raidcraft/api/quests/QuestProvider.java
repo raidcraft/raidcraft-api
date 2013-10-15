@@ -1,5 +1,6 @@
 package de.raidcraft.api.quests;
 
+import de.raidcraft.api.quests.player.QuestHolder;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,5 +15,5 @@ public interface QuestProvider {
 
     public QuestHost getQuestHost(String id) throws InvalidQuestHostException;
 
-    public void callTrigger(QuestTrigger trigger, Player player);
+    public QuestHolder getQuestHolder(Player player);
 }
