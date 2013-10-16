@@ -1,5 +1,6 @@
 package de.raidcraft.util;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.util.items.serialazition.BookSerialization;
 import de.raidcraft.util.items.serialazition.EnchantmentSerialization;
 import de.raidcraft.util.items.serialazition.FireworkEffectSerialization;
@@ -15,6 +16,15 @@ public final class ItemUtils {
 
     private ItemUtils() {
 
+    }
+
+    public static String toString(ItemStack itemStack) {
+
+        if (CustomItemUtil.isCustomItem(itemStack)) {
+            return itemStack.getAmount() + "x " + RaidCraft.getCustomItem(itemStack).getItem().toString();
+        } else {
+            return itemStack.getAmount() + "x " + RaidCraft.getItemIdString(itemStack, false);
+        }
     }
 
     public static Material getItem(String name) {
