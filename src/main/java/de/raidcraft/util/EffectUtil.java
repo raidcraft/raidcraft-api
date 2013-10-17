@@ -1,23 +1,21 @@
 package de.raidcraft.util;
 
+import com.comphenix.packetwrapper.Packet47SpawnGlobalEntity;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ambient.ParticleEffect;
-import net.minecraft.server.v1_6_R3.EntityLightning;
-import net.minecraft.server.v1_6_R3.Packet71Weather;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +25,7 @@ import java.util.List;
  */
 public class EffectUtil {
 
+    private static final byte LIGHTNING_BOLT_ENTITY_TYPE_ID = 1;
     private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     private static final EffectUtil instance = new EffectUtil();
 
@@ -98,12 +97,18 @@ public class EffectUtil {
 
     public static void strikeLightning(Location location, int radius) {
 
-        EntityLightning el = new EntityLightning(((CraftWorld) location.getWorld()).getHandle(),
-                location.getX(), location.getY(), location.getZ(), true);
-        Packet71Weather packet = new Packet71Weather(el);
+        Packet47SpawnGlobalEntity lightning = new Packet47SpawnGlobalEntity();
+        lightning.setX(location.getX());
+        lightning.setY(location.getY());
+        lightning.setZ(location.getZ());
+        lightning.setType(LIGHTNING_BOLT_ENTITY_TYPE_ID);
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (LocationUtil.isWithinRadius(player.getLocation(), location, radius)) {
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+                try {
+                    ProtocolLibrary.getProtocolManager().sendServerPacket(player, lightning.getHandle());
+                } catch (InvocationTargetException e) {
+                    RaidCraft.LOGGER.warning(e.getMessage());
+                }
             }
         }
     }
