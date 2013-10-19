@@ -29,6 +29,8 @@ public interface CustomItem extends RequirementResolver<Player> {
 
     public int getItemLevel();
 
+    public ItemType getType();
+
     public ItemBindType getBindType();
 
     public ItemQuality getQuality();
