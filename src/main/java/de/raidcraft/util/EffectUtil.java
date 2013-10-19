@@ -106,6 +106,7 @@ public class EffectUtil {
             if (LocationUtil.isWithinRadius(player.getLocation(), location, radius)) {
                 try {
                     ProtocolLibrary.getProtocolManager().sendServerPacket(player, lightning.getHandle());
+                    player.playSound(player.getLocation(), Sound.AMBIENCE_THUNDER, 10, 1);
                 } catch (InvocationTargetException e) {
                     RaidCraft.LOGGER.warning(e.getMessage());
                 }
