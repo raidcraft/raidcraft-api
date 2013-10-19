@@ -22,6 +22,8 @@ public enum ItemType {
     ENHANCEMENT("Verbesserung"),
     @EnumValue("CRAFTING")
     CRAFTING("Handwerksmaterial"),
+    @EnumValue("TRASH")
+    TRASH("Sonstiges"),
     @EnumValue("UNDEFINED")
     UNDEFINED("Undefined");
 
