@@ -83,7 +83,7 @@ public class CustomItemStack extends ItemStack {
 
     public int parseDurability() {
 
-        if (getItemMeta().hasLore()) {
+        if (hasItemMeta() && getItemMeta().hasLore()) {
             Matcher matcher;
             for (String line : getItemMeta().getLore()) {
                 matcher = DURABILITY_PATTERN.matcher(ChatColor.stripColor(line));
