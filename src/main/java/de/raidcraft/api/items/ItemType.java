@@ -21,9 +21,11 @@ public enum ItemType {
     @EnumValue("ENHANCEMENT")
     ENHANCEMENT("Verbesserung"),
     @EnumValue("CRAFTING")
-    CRAFTING("Handwerksmaterial"),
+    CRAFTING("Handwerkswaren"),
+    @EnumValue("CONSUMEABLE")
+    CONSUMEABLE("Verbrauchbar"),
     @EnumValue("TRASH")
-    TRASH("Sonstiges"),
+    TRASH("Plunder"),
     @EnumValue("UNDEFINED")
     UNDEFINED("Undefined");
 
