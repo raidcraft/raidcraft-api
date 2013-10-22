@@ -29,5 +29,11 @@ public abstract class AbstractRequirement<T> implements Requirement<T> {
         return name;
     }
 
+    @Override
+    public String getDescription() {
+
+        return "";
+    }
+
     protected abstract void load(ConfigurationSection data);
 }

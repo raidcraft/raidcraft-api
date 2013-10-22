@@ -22,4 +22,10 @@ public abstract class AbstractReward<T> implements Reward<T> {
 
         return name;
     }
+
+    @Override
+    public String getDescription() {
+
+        return "";
+    }
 }

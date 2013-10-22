@@ -7,6 +7,8 @@ public interface Requirement<T> {
 
     public String getName();
 
+    public String getDescription();
+
     public RequirementResolver<T> getResolver();
 
     public boolean isMet(T object);
