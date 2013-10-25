@@ -14,7 +14,8 @@ public enum BalanceSource {
     BUY_REGION("Grundstücks Kauf"),
     SELL_REGION("Grundstücks Verkauf"),
     PLUGIN("Plugin"),
-    GUILD("Gilde");
+    GUILD("Gilde"),
+    TRADE("Handel");
 
     private String friendlyName;
 
