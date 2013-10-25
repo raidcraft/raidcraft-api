@@ -19,7 +19,8 @@ public enum TooltipSlot {
     REQUIREMENT(TooltipSlotType.MULTI_LINE),
     SELL_PRICE(TooltipSlotType.SINGLE),
     DURABILITY(TooltipSlotType.SINGLE),
-    META_ID(TooltipSlotType.SINGLE);
+    META_ID(TooltipSlotType.SINGLE),
+    MISC(TooltipSlotType.MULTI_LINE);
 
     private final TooltipSlotType lineType;
 
