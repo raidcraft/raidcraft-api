@@ -24,6 +24,7 @@ import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
+import de.raidcraft.api.trades.TradeProvider;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MetaDataKey;
@@ -80,6 +81,7 @@ public class RaidCraft implements Listener {
     private static final Map<Class<? extends Component>, Component> components = new HashMap<>();
     private static Economy economy;
     private static ConversationProvider conversationProvider;
+    private static TradeProvider tradeProvider;
 
     /**
      * Gets the wrapped Player for interaction with the player and his surroundings.
@@ -237,6 +239,16 @@ public class RaidCraft implements Listener {
     public static void setupConversationProvider(ConversationProvider conversationProvider) {
 
         RaidCraft.conversationProvider = conversationProvider;
+    }
+
+    public static TradeProvider getTradeProvider() {
+
+        return tradeProvider;
+    }
+
+    public static void setupTradeProvider(TradeProvider tradeProvider) {
+
+        RaidCraft.tradeProvider = tradeProvider;
     }
 
     public static Permission getPermissions() {
