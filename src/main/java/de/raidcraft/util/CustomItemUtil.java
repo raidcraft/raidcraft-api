@@ -12,6 +12,7 @@ import de.raidcraft.api.items.EquipmentSlot;
 import de.raidcraft.api.items.tooltip.EquipmentTypeTooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
@@ -333,13 +334,13 @@ public final class CustomItemUtil {
         if (empty == -1) {
             player.getWorld().dropItemNaturally(player.getLocation(), item);
             if (slot != -1) {
-                inv.setItem(slot, null);
+                inv.setItem(slot, new ItemStack(Material.AIR));
             }
             return false;
         }
         inv.setItem(empty, item);
         if (slot != -1) {
-            inv.setItem(slot, null);
+            inv.setItem(slot, new ItemStack(Material.AIR));
         }
         return true;
     }
