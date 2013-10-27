@@ -333,13 +333,13 @@ public final class CustomItemUtil {
         if (empty == -1) {
             player.getWorld().dropItemNaturally(player.getLocation(), item);
             if (slot != -1) {
-                inv.clear(slot);
+                inv.setItem(slot, null);
             }
             return false;
         }
         inv.setItem(empty, item);
         if (slot != -1) {
-            inv.clear(slot);
+            inv.setItem(slot, null);
         }
         return true;
     }
