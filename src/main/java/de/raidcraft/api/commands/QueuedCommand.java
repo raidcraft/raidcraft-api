@@ -71,8 +71,8 @@ public class QueuedCommand {
             method.setAccessible(true);
             method.invoke(object, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            sender.sendMessage(ChatColor.RED + e.getMessage());
-            e.printStackTrace();
+            sender.sendMessage(ChatColor.RED + e.getCause().getMessage());
+//            e.printStackTrace();
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + e.getMessage());
         }
