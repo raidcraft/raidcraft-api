@@ -15,8 +15,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -28,6 +30,7 @@ public class Quests {
     private static QuestProvider provider;
     private static Map<JavaPlugin, List<QuestType>> queuedTypes = new HashMap<>();
     private static Map<String, Class<? extends QuestHost>> queuedHosts = new CaseInsensitiveMap<>();
+    private static Set<QuestConfigLoader> queuedConfigLoader = new HashSet<>();
     private static Map<String, Constructor<? extends QuestTrigger>> questTrigger = new CaseInsensitiveMap<>();
     private static Map<String, JavaPlugin> triggerPlugins = new CaseInsensitiveMap<>();
     // this is just to prevent garbage collection
@@ -56,6 +59,15 @@ public class Quests {
             }
         }
         queuedHosts.clear();
+        // and all queued config loader
+        for (QuestConfigLoader loader : queuedConfigLoader) {
+            try {
+                provider.registerQuestConfigLoader(loader);
+            } catch (QuestException e) {
+                RaidCraft.LOGGER.warning(e.getMessage());
+            }
+        }
+        queuedConfigLoader.clear();
     }
 
     public static void disable(QuestProvider questProvider) {
@@ -66,6 +78,18 @@ public class Quests {
     public static boolean isEnabled() {
 
         return provider != null;
+    }
+
+    public static void registerQuestLoader(QuestConfigLoader loader) throws QuestException {
+
+        if (isEnabled()) {
+            provider.registerQuestConfigLoader(loader);
+        } else {
+            if (queuedConfigLoader.contains(loader)) {
+                throw new QuestException("Config loaded with same suffix is arelady registered: " + loader.getSuffix());
+            }
+            queuedConfigLoader.add(loader);
+        }
     }
 
     public static void registerQuestType(JavaPlugin plugin, QuestType questType) throws InvalidTypeException {
