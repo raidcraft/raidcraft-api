@@ -178,4 +178,9 @@ public class Quests {
 
         return provider.getQuestHost(id);
     }
+
+    public static List<QuestTrigger> getLoadedTrigger() {
+
+        return new ArrayList<>(loadedTrigger);
+    }
 }

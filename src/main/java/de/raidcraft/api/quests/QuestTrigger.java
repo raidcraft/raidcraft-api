@@ -26,6 +26,8 @@ public abstract class QuestTrigger {
     public @interface Method {
 
         public String value();
+
+        public String desc() default "";
     }
 
     private final Trigger trigger;
