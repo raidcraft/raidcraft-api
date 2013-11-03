@@ -23,6 +23,8 @@ public interface QuestType {
 
         public String name();
 
+        public String desc() default "";
+
         public Type type();
     }
 
