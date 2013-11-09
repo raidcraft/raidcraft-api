@@ -54,4 +54,17 @@ public final class DateUtil {
         }
         return 0;
     }
+
+    public String formatSeconds(int secondsTotal) {
+
+        int hours   = (int)Math.floor(secondsTotal / 3600);
+        int minutes = (int)Math.floor((secondsTotal - (hours * 3600)) / 60);
+        int seconds = secondsTotal - (hours * 3600) - (minutes * 60);
+
+        String hPre, mPre, sPre;
+        hPre = (hours   < 10) ? "0" : "";
+        mPre = (minutes < 10) ? "0" : "";
+        sPre = (seconds < 10) ? "0" : "";
+        return hPre + hours + ":" + mPre + minutes + ":" + sPre + seconds;
+    }
 }
