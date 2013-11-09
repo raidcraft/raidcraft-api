@@ -55,7 +55,7 @@ public final class DateUtil {
         return 0;
     }
 
-    public String formatSeconds(int secondsTotal) {
+    public static String formatSeconds(int secondsTotal) {
 
         int hours   = (int)Math.floor(secondsTotal / 3600);
         int minutes = (int)Math.floor((secondsTotal - (hours * 3600)) / 60);
