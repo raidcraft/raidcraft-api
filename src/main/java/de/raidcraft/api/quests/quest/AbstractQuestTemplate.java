@@ -99,6 +99,12 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
     }
 
     @Override
+    public boolean isLocked() {
+
+        return locked;
+    }
+
+    @Override
     public Requirement[] getRequirements() {
 
         return requirements;
