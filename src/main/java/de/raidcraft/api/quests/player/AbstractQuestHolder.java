@@ -79,7 +79,7 @@ public abstract class AbstractQuestHolder implements QuestHolder {
             if (!quest.isActive() || quest.isCompleted()) {
                 continue;
             }
-            if (quest.getFriendlyName().contains(name)) {
+            if (quest.getFriendlyName().toLowerCase().contains(name.toLowerCase())) {
                 foundQuests.add(quest);
             }
         }
