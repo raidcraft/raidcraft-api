@@ -21,6 +21,7 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
     private final String description;
     private final int requiredObjectiveAmount;
     private final boolean ordered;
+    private final boolean locked;
     private List<Action<QuestTemplate>> actions = new ArrayList<>();
     protected Requirement[] requirements = new Requirement[0];
     protected Objective[] objectives = new Objective[0];
@@ -37,6 +38,7 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
         this.description = data.getString("desc");
         this.requiredObjectiveAmount = data.getInt("required", 0);
         this.ordered = data.getBoolean("ordered", false);
+        this.locked = data.getBoolean("locked", true);
         loadRequirements(data.getConfigurationSection("requirements"));
         loadObjectives(data.getConfigurationSection("objectives"));
         loadTrigger(data.getConfigurationSection("trigger"));

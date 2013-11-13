@@ -123,6 +123,14 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     }
 
     @Override
+    public void startQuest(QuestTemplate template) throws QuestException {
+
+        if (template.isLocked() && !getPlayer().hasPermission("rcquests.admin")) {
+            throw new QuestException("Diese Quest ist aktuell gesperrt und kann nicht angenommen werden.");
+        }
+    }
+
+    @Override
     public void addQuest(Quest quest) {
 
         allQuests.put(quest.getFullName(), quest);

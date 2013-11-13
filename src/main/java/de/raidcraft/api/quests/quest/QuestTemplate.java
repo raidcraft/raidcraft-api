@@ -26,6 +26,8 @@ public interface QuestTemplate {
 
     public boolean isOrdered();
 
+    public boolean isLocked();
+
     public Requirement[] getRequirements();
 
     public Objective[] getObjectives();
