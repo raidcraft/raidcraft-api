@@ -154,18 +154,10 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         save(file);
     }
 
-    public void load(boolean annotations) {
-
-        load(file);
-        if (annotations) {
-            // load the annoations
-            loadAnnotations();
-        }
-    }
-
     public void load() {
 
-        load(true);
+        load(file);
+        loadAnnotations();
     }
 
     @Override
@@ -186,18 +178,18 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
     private void loadAnnotations() {
 
-        loadAnnotations(this);
-        save(file);
+        if (loadAnnotations(this)) save(file);
     }
 
-    private void loadAnnotations(Object object) {
+    private boolean loadAnnotations(Object object) {
 
+        boolean foundAnnotations = false;
         for (Field field : getFieldsRecur(object.getClass())) {
             field.setAccessible(true);
 
             try {
                 if (field.isAnnotationPresent(ConfigSubClass.class) && field.get(object) != null) {
-                    loadAnnotations(field.get(object));
+                    foundAnnotations = loadAnnotations(field.get(object));
                 } else if (field.isAnnotationPresent(Setting.class)) {
 
                     String key = field.getAnnotation(Setting.class).value();
@@ -208,12 +200,14 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
                     } else {
                         set(key, prepareSerialization(field.get(object)));
                     }
+                    foundAnnotations = true;
                 }
             } catch (IllegalAccessException e) {
                 plugin.getLogger().log(Level.SEVERE, "Error setting configuration value of field: ", e);
                 e.printStackTrace();
             }
         }
+        return foundAnnotations;
     }
 
     @Override

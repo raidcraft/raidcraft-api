@@ -122,9 +122,14 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         enable();
     }
 
+    @Deprecated
+    /**
+     * @deprecated Please use the configure(T config) method instead.
+     * Annotations are now only loaded if there are any.
+     */
     public final <T extends Config> T configure(T config, boolean annotations) {
 
-        config.load(annotations);
+        config.load();
         return config;
     }
 
