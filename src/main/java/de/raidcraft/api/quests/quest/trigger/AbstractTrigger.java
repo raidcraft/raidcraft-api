@@ -1,7 +1,7 @@
 package de.raidcraft.api.quests.quest.trigger;
 
-import de.raidcraft.api.quests.quest.action.Action;
 import de.raidcraft.api.quests.quest.QuestTemplate;
+import de.raidcraft.api.quests.quest.action.Action;
 import de.raidcraft.util.TimeUtil;
 import org.bukkit.configuration.ConfigurationSection;
 
