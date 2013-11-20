@@ -13,12 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Silthus
@@ -68,6 +63,12 @@ public class Quests {
             }
         }
         queuedConfigLoader.clear();
+
+        for(QuestTrigger trigger : loadedTrigger) {
+            trigger.unregister();
+        }
+        questTrigger.clear();
+        loadedTrigger.clear();
     }
 
     public static void disable(QuestProvider questProvider) {

@@ -55,4 +55,9 @@ public abstract class QuestTrigger {
             trigger.trigger(Quests.getQuestHolder(player));
         }
     }
+
+    /**
+     * Here all event handler should be unregister to avoid duplication problems
+     */
+    public abstract void unregister();
 }
