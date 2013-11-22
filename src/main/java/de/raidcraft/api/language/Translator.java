@@ -15,9 +15,21 @@ public class Translator {
         return plugin.getTranslationProvider().tr(language, key);
     }
 
+    public static String tr(Class<? extends BasePlugin> clazz, Language language, String key, String def) {
+
+        BasePlugin plugin = RaidCraft.getComponent(clazz);
+        return plugin.getTranslationProvider().tr(language, key, def);
+    }
+
     public static String tr(Class<? extends BasePlugin> clazz, Player player, String key) {
 
         BasePlugin plugin = RaidCraft.getComponent(clazz);
         return plugin.getTranslationProvider().tr(player, key);
+    }
+
+    public static String tr(Class<? extends BasePlugin> clazz, Player player, String key, String def) {
+
+        BasePlugin plugin = RaidCraft.getComponent(clazz);
+        return plugin.getTranslationProvider().tr(player, key, def);
     }
 }

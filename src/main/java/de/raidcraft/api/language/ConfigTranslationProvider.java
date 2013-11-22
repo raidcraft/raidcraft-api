@@ -33,10 +33,16 @@ public class ConfigTranslationProvider implements TranslationProvider {
     @Override
     public String tr(Language lang, String key) {
 
+        return tr(lang, key, "No translation for language " + lang + " and key: \"" + key + "\"");
+    }
+
+    @Override
+    public String tr(Language lang, String key, String def) {
+
         if (loadedConfigs.containsKey(lang)) {
             return loadedConfigs.get(lang).getString(key);
         }
-        return "No translation for key: \"" + key + "\"";
+        return def;
     }
 
     @Override
@@ -44,4 +50,11 @@ public class ConfigTranslationProvider implements TranslationProvider {
 
         return tr(Language.getLanguage(player), key);
     }
+
+    @Override
+    public String tr(Player player, String key, String def) {
+
+        return tr(Language.getLanguage(player), key, def);
+    }
+
 }
