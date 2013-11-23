@@ -1,6 +1,7 @@
 package de.raidcraft.api.language;
 
 import de.raidcraft.api.BasePlugin;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -40,9 +41,27 @@ public class ConfigTranslationProvider implements TranslationProvider {
     public String tr(Language lang, String key, String def, Object... args) {
 
         if (loadedConfigs.containsKey(lang)) {
-            return String.format(loadedConfigs.get(lang).getString(key),args);
+            return String.format(loadedConfigs.get(lang).getString(key), args);
         }
         return String.format(def, args);
+    }
+
+    @Override
+    public String tr(CommandSender sender, String key, Object... args) {
+
+        if (sender instanceof Player) {
+            return tr((Player) sender, key, args);
+        }
+        return tr(Language.enUS, key, args);
+    }
+
+    @Override
+    public String tr(CommandSender sender, String key, String def, Object... args) {
+
+        if (sender instanceof Player) {
+            return tr((Player) sender, key, def, args);
+        }
+        return tr(Language.enUS, key, def, args);
     }
 
     @Override
