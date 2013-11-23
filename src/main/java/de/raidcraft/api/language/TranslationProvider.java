@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
  */
 public interface TranslationProvider {
 
-    public String tr(Language lang, String key);
+    public String tr(Language lang, String key, Object... args);
 
-    public String tr(Language lang, String key, String def);
+    public String tr(Language lang, String key, String def, Object... args);
 
-    public String tr(Player player, String key);
+    public String tr(Player player, String key, Object... args);
 
-    public String tr(Player player, String key, String def);
+    public String tr(Player player, String key, String def, Object... args);
 }
