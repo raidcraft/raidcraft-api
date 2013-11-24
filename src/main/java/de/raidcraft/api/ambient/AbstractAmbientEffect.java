@@ -58,4 +58,19 @@ public abstract class AbstractAmbientEffect implements AmbientEffect {
     }
 
     protected abstract void runEffect(Location... locations);
+
+    @Override
+    public String toString() {
+
+        return "AbstractAmbientEffect{" +
+                "shape=" + shape +
+                ", radius=" + radius +
+                ", height=" + height +
+                ", hOffset=" + hOffset +
+                ", hollow=" + hollow +
+                ", sphere=" + sphere +
+                ", frequency=" + frequency +
+                ", executions=" + executions +
+                '}';
+    }
 }

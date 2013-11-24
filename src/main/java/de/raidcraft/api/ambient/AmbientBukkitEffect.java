@@ -28,4 +28,14 @@ public class AmbientBukkitEffect extends AbstractAmbientEffect {
             location.getWorld().playEffect(location, effectType, data, radius);
         }
     }
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{AmbientBukkitEffect{" +
+                "effectType=" + effectType +
+                ", data=" + data +
+                ", radius=" + radius +
+                "}}";
+    }
 }

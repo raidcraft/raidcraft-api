@@ -28,4 +28,14 @@ public class AmbientSoundEffect extends AbstractAmbientEffect {
             location.getWorld().playSound(location, sound, volume, pitch);
         }
     }
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{AmbientSoundEffect{" +
+                "sound=" + sound +
+                ", volume=" + volume +
+                ", pitch=" + pitch +
+                "}}";
+    }
 }

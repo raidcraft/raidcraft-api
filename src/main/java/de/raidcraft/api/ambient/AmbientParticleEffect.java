@@ -33,4 +33,17 @@ public class AmbientParticleEffect extends AbstractAmbientEffect {
             ParticleEffect.sendToLocation(particleEffect, location, xOffset, yOffset, zOffset, speed, amount);
         }
     }
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{AmbientParticleEffect{" +
+                "particleEffect=" + particleEffect +
+                ", speed=" + speed +
+                ", amount=" + amount +
+                ", xOffset=" + xOffset +
+                ", yOffset=" + yOffset +
+                ", zOffset=" + zOffset +
+                "}}";
+    }
 }

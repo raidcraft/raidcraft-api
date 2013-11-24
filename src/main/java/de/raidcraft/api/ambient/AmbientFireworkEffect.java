@@ -45,4 +45,12 @@ public class AmbientFireworkEffect extends AbstractAmbientEffect {
             EffectUtil.playFirework(location.getWorld(), location, fireworkEffect);
         }
     }
+
+    @Override
+    public String toString() {
+
+        return super.toString() + "{AmbientFireworkEffect{" +
+                "fireworkEffect=" + fireworkEffect +
+                "}}";
+    }
 }
