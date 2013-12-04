@@ -76,4 +76,39 @@ public class ConfigTranslationProvider implements TranslationProvider {
         return tr(Language.getLanguage(player), key, def, args);
     }
 
+    @Override
+    public String var(Language language, String key) {
+
+        return tr(language, key);
+    }
+
+    @Override
+    public String var(Language language, String key, String def) {
+
+        return tr(language, key, def);
+    }
+
+    @Override
+    public String var(CommandSender sender, String key) {
+
+        return tr(sender, key);
+    }
+
+    @Override
+    public String var(CommandSender sender, String key, String def) {
+
+        return tr(sender, key, def);
+    }
+
+    @Override
+    public String var(Player player, String key) {
+
+        return tr(player, key);
+    }
+
+    @Override
+    public String var(Player player, String key, String def) {
+
+        return tr(player, key, def);
+    }
 }

@@ -19,4 +19,16 @@ public interface TranslationProvider {
     public String tr(Player player, String key, Object... args);
 
     public String tr(Player player, String key, String def, Object... args);
+
+    public String var(Language language, String key);
+
+    public String var(Language language, String key, String def);
+
+    public String var(CommandSender sender, String key);
+
+    public String var(CommandSender sender, String key, String def);
+
+    public String var(Player player, String key);
+
+    public String var(Player player, String key, String def);
 }
