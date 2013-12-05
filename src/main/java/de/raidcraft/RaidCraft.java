@@ -253,12 +253,12 @@ public class RaidCraft implements Listener {
 
     public static Permission getPermissions() {
 
-        return RaidCraftPlugin.getInstance().getPermissions();
+        return getComponent(RaidCraftPlugin.class).getPermissions();
     }
 
     public static Chat getChat() {
 
-        return RaidCraftPlugin.getInstance().getChat();
+        return getComponent(RaidCraftPlugin.class).getChat();
     }
 
     @SuppressWarnings("unchecked")

@@ -36,21 +36,10 @@ import java.util.Set;
  */
 public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
-    private static RaidCraftPlugin instance;
-    public static RaidCraftPlugin getInstance() {
-
-        return instance;
-    }
-
     private LocalConfiguration config;
     private AttributeHider attributeHider;
     private final Map<Chunk, Set<PlayerPlacedBlock>> playerPlacedBlocks = new HashMap<>();
     private boolean started = false;
-
-    public RaidCraftPlugin() {
-
-        instance = this;
-    }
 
     @Override
     public void enable() {
