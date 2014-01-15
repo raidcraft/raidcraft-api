@@ -11,7 +11,6 @@ import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
-import de.raidcraft.util.AttributeHider;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
 import org.bukkit.Bukkit;
@@ -37,7 +36,6 @@ import java.util.Set;
 public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
     private LocalConfiguration config;
-    private AttributeHider attributeHider;
     private final Map<Chunk, Set<PlayerPlacedBlock>> playerPlacedBlocks = new HashMap<>();
     private boolean started = false;
 
@@ -65,7 +63,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }, TimeUtil.secondsToTicks(config.startDelay));
 
         // lets run this last if any mc errors occur
-        if (config.hideAttributes) attributeHider = new AttributeHider(this);
+        // TODO: reimplement and find fix
+        // if (config.hideAttributes) attributeHider = new AttributeHider(this);
     }
 
     @Override
