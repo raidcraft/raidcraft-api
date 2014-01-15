@@ -3,23 +3,24 @@ package de.raidcraft.api.projectiles.projectile;
 import de.raidcraft.api.projectiles.Particles;
 import de.raidcraft.api.projectiles.event.BlockProjectileHitEvent;
 import de.raidcraft.api.projectiles.event.CustomProjectileHitEvent;
-import net.minecraft.server.v1_6_R3.AxisAlignedBB;
-import net.minecraft.server.v1_6_R3.Block;
-import net.minecraft.server.v1_6_R3.Entity;
-import net.minecraft.server.v1_6_R3.EntityFallingBlock;
-import net.minecraft.server.v1_6_R3.EntityLiving;
-import net.minecraft.server.v1_6_R3.EnumMovingObjectType;
-import net.minecraft.server.v1_6_R3.IProjectile;
-import net.minecraft.server.v1_6_R3.MathHelper;
-import net.minecraft.server.v1_6_R3.MinecraftServer;
-import net.minecraft.server.v1_6_R3.MovingObjectPosition;
-import net.minecraft.server.v1_6_R3.Vec3D;
+import net.minecraft.server.v1_7_R1.AxisAlignedBB;
+import net.minecraft.server.v1_7_R1.Block;
+import net.minecraft.server.v1_7_R1.Entity;
+import net.minecraft.server.v1_7_R1.EntityFallingBlock;
+import net.minecraft.server.v1_7_R1.EntityLiving;
+import net.minecraft.server.v1_7_R1.EnumMovingObjectType;
+import net.minecraft.server.v1_7_R1.IProjectile;
+import net.minecraft.server.v1_7_R1.MathHelper;
+import net.minecraft.server.v1_7_R1.MinecraftServer;
+import net.minecraft.server.v1_7_R1.MovingObjectPosition;
+import net.minecraft.server.v1_7_R1.Vec3D;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R3.block.CraftBlock;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
@@ -40,8 +41,8 @@ public class BlockProjectile extends EntityFallingBlock implements CustomProject
      * Instantiates a new block projectile.
      *
      * @param name    projectile name
-     * @param loc     location of projectile (sets position of projectile and shoots
-     *                in pitch and yaw direction)
+     * @param loc     location of projectile (sets position of projectile and shoots in pitch
+     *                and yaw direction)
      * @param blockId block id
      * @param data    damage value of block
      * @param shooter projectile shooter
@@ -49,7 +50,7 @@ public class BlockProjectile extends EntityFallingBlock implements CustomProject
      */
     public BlockProjectile(String name, Location loc, int blockId, int data, LivingEntity shooter, float power) {
 
-        super(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ(), blockId, data);
+        super(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ(), Block.e(blockId), data);
         this.shooter = ((CraftLivingEntity) shooter).getHandle();
         this.name = name;
         lastTick = MinecraftServer.currentTick;
@@ -73,15 +74,15 @@ public class BlockProjectile extends EntityFallingBlock implements CustomProject
      * Instantiates a new block projectile.
      *
      * @param name    projectile name
-     * @param shooter projectile shooter (it uses entity's location to set x, y, z,
-     *                pitch and yaw of projectile)
+     * @param shooter projectile shooter (it uses entity's location to set x, y, z, pitch and
+     *                yaw of projectile)
      * @param blockId block id
      * @param data    damage value of block
      * @param power   projectile power
      */
     public BlockProjectile(String name, LivingEntity shooter, int blockId, int data, float power) {
 
-        super(((CraftLivingEntity) shooter).getHandle().world, shooter.getLocation().getX(), shooter.getLocation().getX(), shooter.getLocation().getX(), blockId, data);
+        super(((CraftLivingEntity) shooter).getHandle().world, shooter.getLocation().getX(), shooter.getLocation().getX(), shooter.getLocation().getX(), Block.e(blockId), data);
         this.shooter = ((CraftLivingEntity) shooter).getHandle();
         this.name = name;
         lastTick = MinecraftServer.currentTick;
@@ -101,6 +102,7 @@ public class BlockProjectile extends EntityFallingBlock implements CustomProject
         this.dropItem = false;
     }
 
+    @Override
     public void shoot(double d0, double d1, double d2, float f, float f1) {
 
         float f2 = MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
@@ -143,9 +145,9 @@ public class BlockProjectile extends EntityFallingBlock implements CustomProject
 
     @SuppressWarnings("rawtypes")
     @Override
-    public void l_() {
+    public void h() {
 
-        y();
+        C();
         int elapsedTicks = MinecraftServer.currentTick - this.lastTick;
         this.age += elapsedTicks;
         lastTick = MinecraftServer.currentTick;
@@ -154,17 +156,17 @@ public class BlockProjectile extends EntityFallingBlock implements CustomProject
         this.lastY = this.locY;
         this.lastZ = this.locZ;
         this.motY -= 0.03999999910593033D;
-        this.Z = i(this.locX, (this.boundingBox.b + this.boundingBox.e) / 2.0D, this.locZ);
+        this.Y = j(this.locX, (this.boundingBox.b + this.boundingBox.e) / 2.0D, this.locZ);
         move(this.motX, this.motY, this.motZ);
 
         float f = 0.98F;
 
         if (this.onGround) {
             f = 0.5880001F;
-            int i = this.world.getTypeId(MathHelper.floor(this.locX), MathHelper.floor(this.boundingBox.b) - 1, MathHelper.floor(this.locZ));
+            Block i = this.world.getType(MathHelper.floor(this.locX), MathHelper.floor(this.boundingBox.b) - 1, MathHelper.floor(this.locZ));
 
-            if (i > 0) {
-                f = Block.byId[i].frictionFactor * 0.98F;
+            if (i != null) {
+                f = i.frictionFactor * 0.98F;
             }
         }
 
@@ -216,26 +218,26 @@ public class BlockProjectile extends EntityFallingBlock implements CustomProject
             if (entity != null) movingobjectposition = new MovingObjectPosition(entity);
         }
 
-        if (movingobjectposition != null) if (movingobjectposition.type == EnumMovingObjectType.TILE) {
-            CustomProjectileHitEvent event = new BlockProjectileHitEvent(this, world.getWorld().getBlockAt(movingobjectposition.b, movingobjectposition.c, movingobjectposition.d), CraftBlock.notchToBlockFace(movingobjectposition.face), getBlockId(), getData());
+        if (movingobjectposition != null) if (movingobjectposition.type == EnumMovingObjectType.BLOCK) {
+            CustomProjectileHitEvent event = new BlockProjectileHitEvent(this, world.getWorld().getBlockAt(movingobjectposition.b, movingobjectposition.c, movingobjectposition.d), CraftBlock.notchToBlockFace(movingobjectposition.face), getMaterial(), getData());
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
-                Particles.playTileCrack(getBukkitEntity().getLocation(), id, (byte) 0, 0, 0, 0, 60);
+                Particles.displayBlockCrack(getBukkitEntity().getLocation(), Block.b(id), (byte) 0, 0F, 0F, 0F, 1F, 60);
                 die();
             }
         } else if (movingobjectposition.entity != null && movingobjectposition.entity instanceof EntityLiving) {
             LivingEntity living = (LivingEntity) movingobjectposition.entity.getBukkitEntity();
-            CustomProjectileHitEvent event = new BlockProjectileHitEvent(this, living, getBlockId(), getData());
+            CustomProjectileHitEvent event = new BlockProjectileHitEvent(this, living, getMaterial(), getData());
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
-                Particles.playTileCrack(getBukkitEntity().getLocation(), id, (byte) 0, 0, 0, 0, 60);
+                Particles.displayBlockCrack(getBukkitEntity().getLocation(), Block.b(id), (byte) 0, 0F, 0F, 0F, 1F, 60);
                 die();
             }
         } else if (this.onGround) {
-            CustomProjectileHitEvent event = new BlockProjectileHitEvent(this, getBukkitEntity().getLocation().getBlock().getRelative(BlockFace.DOWN), BlockFace.UP, getBlockId(), getData());
+            CustomProjectileHitEvent event = new BlockProjectileHitEvent(this, getBukkitEntity().getLocation().getBlock().getRelative(BlockFace.DOWN), BlockFace.UP, getMaterial(), getData());
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
-                Particles.playTileCrack(getBukkitEntity().getLocation(), id, (byte) 0, 0, 0, 0, 60);
+                Particles.displayBlockCrack(getBukkitEntity().getLocation(), Block.b(id), (byte) 0, 0F, 0F, 0F, 1F, 60);
                 die();
             }
         }
@@ -252,9 +254,10 @@ public class BlockProjectile extends EntityFallingBlock implements CustomProject
      *
      * @return the block id
      */
-    public int getBlockId() {
+    @SuppressWarnings("deprecation")
+    public Material getMaterial() {
 
-        return id;
+        return Material.getMaterial(Block.b(id));
     }
 
     /**

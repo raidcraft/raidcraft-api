@@ -4,9 +4,9 @@ import de.raidcraft.api.projectiles.event.CustomProjectileHitEvent;
 import net.minecraft.server.v1_7_R1.AxisAlignedBB;
 import net.minecraft.server.v1_7_R1.Block;
 import net.minecraft.server.v1_7_R1.Entity;
-import net.minecraft.server.v1_7_R1.EntityExperienceOrb;
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.EntityLiving;
+import net.minecraft.server.v1_7_R1.EntityTNTPrimed;
 import net.minecraft.server.v1_7_R1.EnumMovingObjectType;
 import net.minecraft.server.v1_7_R1.IProjectile;
 import net.minecraft.server.v1_7_R1.MathHelper;
@@ -16,29 +16,30 @@ import net.minecraft.server.v1_7_R1.Vec3D;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Explosive;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 /**
- * Projectile made from exp orb entity. Warning! Becouse of minecraft bug client
- * see orb after delay of about 1 second. I couldn't find any solution for that
- * :/
+ * Projectile made from primed tnt entity.
  */
-public class OrbProjectile extends EntityExperienceOrb implements CustomProjectile, IProjectile {
+public class TNTProjectile extends EntityTNTPrimed implements CustomProjectile, IProjectile {
 
-    private EntityLiving shooter;
     private String name;
     private int lastTick;
     private int age;
 
     /**
-     * Instantiates a new orb projectile.
+     * Instantiates a new primed tnt projectile.
      *
      * @param name    projectile name
      * @param loc     location of projectile (sets position of projectile and shoots in pitch
@@ -46,11 +47,11 @@ public class OrbProjectile extends EntityExperienceOrb implements CustomProjecti
      * @param shooter projectile shooter
      * @param power   projectile power
      */
-    public OrbProjectile(String name, Location loc, LivingEntity shooter, float power) {
+    public TNTProjectile(String name, Location loc, LivingEntity shooter, float power) {
 
-        super(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ(), 0);
-        this.shooter = ((CraftLivingEntity) shooter).getHandle();
+        super(((CraftWorld) loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ(), ((CraftLivingEntity) shooter).getHandle());
         this.name = name;
+        this.fuseTicks = 20;
         lastTick = MinecraftServer.currentTick;
         this.a(0.25F, 0.25F);
         setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
@@ -68,18 +69,18 @@ public class OrbProjectile extends EntityExperienceOrb implements CustomProjecti
     }
 
     /**
-     * Instantiates a new orb projectile.
+     * Instantiates a new primed tnt projectile.
      *
      * @param name    projectile name
      * @param shooter projectile shooter (it uses entity's location to set x, y, z, pitch and
      *                yaw of projectile)
      * @param power   projectile power
      */
-    public OrbProjectile(String name, LivingEntity shooter, float power) {
+    public TNTProjectile(String name, LivingEntity shooter, float power) {
 
-        super(((CraftLivingEntity) shooter).getHandle().world, shooter.getLocation().getX(), shooter.getLocation().getX(), shooter.getLocation().getX(), 0);
-        this.shooter = ((CraftLivingEntity) shooter).getHandle();
+        super(((CraftLivingEntity) shooter).getHandle().world, shooter.getLocation().getX(), shooter.getLocation().getX(), shooter.getLocation().getX(), ((CraftLivingEntity) shooter).getHandle());
         this.name = name;
+        this.fuseTicks = 20;
         lastTick = MinecraftServer.currentTick;
         this.a(0.25F, 0.25F);
         setPositionRotation(shooter.getLocation().getX(), shooter.getLocation().getY() + shooter.getEyeHeight(), shooter.getLocation().getZ(), shooter.getLocation().getYaw(), shooter.getLocation().getPitch());
@@ -122,7 +123,7 @@ public class OrbProjectile extends EntityExperienceOrb implements CustomProjecti
     @Override
     public EntityType getEntityType() {
 
-        return EntityType.EXPERIENCE_ORB;
+        return EntityType.PRIMED_TNT;
     }
 
     @Override
@@ -134,7 +135,7 @@ public class OrbProjectile extends EntityExperienceOrb implements CustomProjecti
     @Override
     public LivingEntity getShooter() {
 
-        return (LivingEntity) shooter.getBukkitEntity();
+        return (LivingEntity) getSource().getBukkitEntity();
     }
 
     @Override
@@ -143,6 +144,9 @@ public class OrbProjectile extends EntityExperienceOrb implements CustomProjecti
         return name;
     }
 
+    /**
+     * On update method
+     */
     @SuppressWarnings("rawtypes")
     @Override
     public void h() {
@@ -194,7 +198,7 @@ public class OrbProjectile extends EntityExperienceOrb implements CustomProjecti
             Entity entity = null;
             List list = world.getEntities(this, boundingBox.a(motX, motY, motZ).grow(1.5D, 1.5D, 1.5D));
             double d0 = 0.0D;
-            EntityLiving entityliving = shooter;
+            EntityLiving entityliving = getSource();
 
             for (int j = 0; j < list.size(); ++j) {
                 Entity entity1 = (Entity) list.get(j);
@@ -237,13 +241,34 @@ public class OrbProjectile extends EntityExperienceOrb implements CustomProjecti
             if (!event.isCancelled()) {
                 die();
             }
+        } else if (this.fuseTicks-- <= 0) {
+            if (!(this.world.isStatic)) {
+                explode();
+            }
+            die();
+        } else {
+            this.world.addParticle("smoke", this.locX, this.locY + 0.5D, this.locZ, 0.0D, 0.0D, 0.0D);
         }
+    }
+
+    /**
+     * Method added becouse of visibility of the original.
+     */
+    private void explode() {
+
+        CraftServer server = this.world.getServer();
+
+        ExplosionPrimeEvent event = new ExplosionPrimeEvent((Explosive) CraftEntity.getEntity(server, this));
+        server.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return;
+        this.world.createExplosion(this, this.locX, this.locY, this.locZ, event.getRadius(), event.getFire(), true);
     }
 
     @Override
     public void b_(EntityHuman entityhuman) {
 
-        if (entityhuman == shooter && age <= 3) return;
+        if (entityhuman == getSource() && age <= 3) return;
         LivingEntity living = entityhuman.getBukkitEntity();
         CustomProjectileHitEvent event = new CustomProjectileHitEvent(this, living);
         Bukkit.getPluginManager().callEvent(event);
