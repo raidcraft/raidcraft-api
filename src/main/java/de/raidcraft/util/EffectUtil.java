@@ -1,21 +1,17 @@
 package de.raidcraft.util;
 
-import com.comphenix.packetwrapper.Packet47SpawnGlobalEntity;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ambient.ParticleEffect;
-import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +93,8 @@ public class EffectUtil {
 
     public static void strikeLightning(Location location, int radius) {
 
-        Packet47SpawnGlobalEntity lightning = new Packet47SpawnGlobalEntity();
+        // TODO: FIX
+        /*Packet47SpawnGlobalEntity lightning = new Packet47SpawnGlobalEntity();
         lightning.setX(location.getX());
         lightning.setY(location.getY());
         lightning.setZ(location.getZ());
@@ -111,7 +108,7 @@ public class EffectUtil {
                     RaidCraft.LOGGER.warning(e.getMessage());
                 }
             }
-        }
+        }*/
     }
 
     /*
