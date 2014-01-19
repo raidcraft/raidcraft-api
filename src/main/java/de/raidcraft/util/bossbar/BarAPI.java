@@ -1,5 +1,6 @@
 package de.raidcraft.util.bossbar;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import de.raidcraft.RaidCraftPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,8 +21,7 @@ import java.util.HashMap;
 
 public class BarAPI implements Listener {
 
-    private static final int ENTITY_ID = 6000;
-    private static HashMap<String, FakeDragon> players = new HashMap<>();
+    private static HashMap<String, FakeWither> players = new HashMap<>();
     private static HashMap<String, Integer> timers = new HashMap<>();
 
     private static RaidCraftPlugin plugin;
@@ -50,27 +50,22 @@ public class BarAPI implements Listener {
 
     public static void setMessage(Player player, String message) {
 
-        FakeDragon dragon = getDragon(player, message);
+        FakeWither bossBar = getBossBar(player, message);
 
-        dragon.name = cleanMessage(message);
-        dragon.health = FakeDragon.MAX_HEALTH;
+        bossBar.setCustomName(cleanMessage(message));
+        bossBar.setHealth(FakeWither.DEFAULT_HEALTH);
 
         cancelTimer(player);
-
-        sendDragon(dragon, player);
-
     }
 
     public static void setMessage(Player player, String message, float percent) {
 
-        FakeDragon dragon = getDragon(player, message);
+        FakeWither bossBar = getBossBar(player, message);
 
-        dragon.name = cleanMessage(message);
-        dragon.health = (percent / 100f) * FakeDragon.MAX_HEALTH;
+        bossBar.setCustomName(cleanMessage(message));
+        bossBar.setHealth((int) ((percent / 100f) * FakeWither.DEFAULT_HEALTH));
 
         cancelTimer(player);
-
-        sendDragon(dragon, player);
     }
 
     public static void setMessage(final Player player, String message, long ticks) {
@@ -80,12 +75,12 @@ public class BarAPI implements Listener {
 
     public static void setMessage(final Player player, String message, long ticks, final boolean countDown) {
 
-        FakeDragon dragon = getDragon(player, message);
+        FakeWither bossBar = getBossBar(player, message);
 
-        dragon.name = cleanMessage(message);
-        dragon.health = countDown ? FakeDragon.MAX_HEALTH : 0;
+        bossBar.setCustomName(cleanMessage(message));
+        bossBar.setHealth(countDown ? FakeWither.DEFAULT_HEALTH : 0);
 
-        final long dragonHealthMinus = FakeDragon.MAX_HEALTH / ticks;
+        final long dragonHealthMinus = FakeWither.DEFAULT_HEALTH / ticks;
 
         cancelTimer(player);
 
@@ -94,24 +89,20 @@ public class BarAPI implements Listener {
             @Override
             public void run() {
 
-                FakeDragon drag = getDragon(player, "");
+                FakeWither bossBar = getBossBar(player, "");
                 if (countDown) {
-                    drag.health -= dragonHealthMinus;
+                    bossBar.setHealth((int) (bossBar.getHealth() - dragonHealthMinus));
                 } else {
-                    drag.health += dragonHealthMinus;
+                    bossBar.setHealth((int) (bossBar.getHealth() + dragonHealthMinus));
                 }
 
-                if (drag.health <= 0) {
+                if (bossBar.getHealth() <= 0) {
                     removeBar(player);
                     cancelTimer(player);
-                } else {
-                    sendDragon(drag, player);
                 }
             }
 
         }, 0L, 1L).getTaskId());
-
-        sendDragon(dragon, player);
     }
 
     public static boolean hasBar(Player player) {
@@ -124,9 +115,7 @@ public class BarAPI implements Listener {
         if (!hasBar(player))
             return;
 
-        Object destroyPacket = getDragon(player, "").getDestroyEntityPacket();
-        BarAPIUtil.sendPacket(player, destroyPacket);
-
+        getBossBar(player, "").destroy();
         players.remove(player.getName());
 
         cancelTimer(player);
@@ -137,12 +126,10 @@ public class BarAPI implements Listener {
         if (!hasBar(player))
             return;
 
-        FakeDragon dragon = getDragon(player, "");
-        dragon.health = (percent / 100f) * FakeDragon.MAX_HEALTH;
+        FakeWither bossBar = getBossBar(player, "");
+        bossBar.setHealth((int) ((percent / 100f) * FakeWither.DEFAULT_HEALTH));
 
         cancelTimer(player);
-
-        sendDragon(dragon, player);
     }
 
     private static String cleanMessage(String message) {
@@ -162,32 +149,24 @@ public class BarAPI implements Listener {
         }
     }
 
-    private static void sendDragon(FakeDragon dragon, Player player) {
-
-        Object metaPacket = dragon.getMetadataPacket(dragon.getWatcher());
-        Object teleportPacket = dragon.getTeleportPacket(player.getLocation().add(0, -200, 0));
-
-        BarAPIUtil.sendPacket(player, metaPacket);
-        BarAPIUtil.sendPacket(player, teleportPacket);
-    }
-
-    private static FakeDragon getDragon(Player player, String message) {
+    private static FakeWither getBossBar(Player player, String message) {
 
         if (hasBar(player)) {
             return players.get(player.getName());
-        } else
-            return addDragon(player, message);
+        } else {
+            return addBossBar(player, message);
+        }
     }
 
-    private static FakeDragon addDragon(Player player, String message) {
+    private static FakeWither addBossBar(Player player, String message) {
 
-        FakeDragon dragon = new FakeDragon(message, ENTITY_ID, player.getLocation().add(0, -200, 0));
+        FakeWither bossBar = new FakeWither(player.getLocation().add(0, -200, 0), ProtocolLibrary.getProtocolManager());
 
-        Object mobPacket = dragon.getMobPacket();
-        BarAPIUtil.sendPacket(player, mobPacket);
+        bossBar.setCustomName(message);
+        bossBar.create();
 
-        players.put(player.getName(), dragon);
+        players.put(player.getName(), bossBar);
 
-        return dragon;
+        return bossBar;
     }
 }
