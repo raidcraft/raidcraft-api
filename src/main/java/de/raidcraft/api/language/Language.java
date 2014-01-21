@@ -1,6 +1,5 @@
 package de.raidcraft.api.language;
 
-import de.raidcraft.util.EnumUtils;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
@@ -10,10 +9,9 @@ import java.lang.reflect.Method;
 /**
  * @author Silthus
  */
-public enum Language {
+public class Language {
 
-    deDE("de_DE"),
-    enUS("en_US");
+    public static final Language DEFAULT_LANGUAGE = new Language("enUS");
 
     private final String languageString;
 
@@ -29,12 +27,7 @@ public enum Language {
 
     public static Language fromString(String lang) {
 
-        for (Language language : values()) {
-            if (lang.equalsIgnoreCase(language.getLanguageString())) {
-                return language;
-            }
-        }
-        return EnumUtils.getEnumFromString(Language.class, lang);
+        return new Language(lang);
     }
 
     public static Language getLanguage(Player player) {
@@ -45,7 +38,7 @@ public enum Language {
             f.setAccessible(true);
             return fromString((String) f.get(ep));
         } catch (IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
-            return enUS;
+            return DEFAULT_LANGUAGE;
         }
     }
 

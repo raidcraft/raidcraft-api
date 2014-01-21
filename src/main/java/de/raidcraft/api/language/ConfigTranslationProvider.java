@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,7 +14,7 @@ import java.util.Map;
 public class ConfigTranslationProvider implements TranslationProvider {
 
     private final BasePlugin plugin;
-    private final Map<Language, TranslationConfig<?>> loadedConfigs = new EnumMap<>(Language.class);
+    private final Map<Language, TranslationConfig<?>> loadedConfigs = new HashMap<>();
 
     public ConfigTranslationProvider(BasePlugin plugin) {
 
@@ -52,7 +52,7 @@ public class ConfigTranslationProvider implements TranslationProvider {
         if (sender instanceof Player) {
             return tr((Player) sender, key, args);
         }
-        return tr(Language.enUS, key, args);
+        return tr(Language.DEFAULT_LANGUAGE, key, args);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ConfigTranslationProvider implements TranslationProvider {
         if (sender instanceof Player) {
             return tr((Player) sender, key, def, args);
         }
-        return tr(Language.enUS, key, def, args);
+        return tr(Language.DEFAULT_LANGUAGE, key, def, args);
     }
 
     @Override
