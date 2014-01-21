@@ -31,4 +31,12 @@ public interface TranslationProvider {
     public String var(Player player, String key);
 
     public String var(Player player, String key, String def);
+
+    public void msg(CommandSender sender, String key, Object... args);
+
+    public void msg(CommandSender sender, String key, String def, Object... args);
+
+    public void msg(Player player, String key, Object... args);
+
+    public void msg(Player player, String key, String def, Object... args);
 }

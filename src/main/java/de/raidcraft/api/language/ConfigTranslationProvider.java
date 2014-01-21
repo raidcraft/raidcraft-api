@@ -111,4 +111,28 @@ public class ConfigTranslationProvider implements TranslationProvider {
 
         return tr(player, key, def);
     }
+
+    @Override
+    public void msg(CommandSender sender, String key, Object... args) {
+
+        sender.sendMessage(tr(sender, key, args));
+    }
+
+    @Override
+    public void msg(CommandSender sender, String key, String def, Object... args) {
+
+        sender.sendMessage(tr(sender, key, def, args));
+    }
+
+    @Override
+    public void msg(Player player, String key, Object... args) {
+
+        player.sendMessage(tr(player, key, args));
+    }
+
+    @Override
+    public void msg(Player player, String key, String def, Object... args) {
+
+        player.sendMessage(tr(player, key, def, args));
+    }
 }
