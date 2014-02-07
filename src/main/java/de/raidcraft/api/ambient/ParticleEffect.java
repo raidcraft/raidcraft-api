@@ -199,7 +199,7 @@ public enum ParticleEffect {
 
     private static Object getPacket63WorldParticles() throws Exception {
 
-        Class<?> packet = Class.forName(getPackageName() + ".Packet63WorldParticles");
+        Class<?> packet = Class.forName(getPackageName() + ".PacketPlayOutWorldParticles");
         return packet.getConstructors()[0].newInstance();
     }
 
