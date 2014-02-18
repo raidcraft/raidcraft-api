@@ -49,7 +49,7 @@ public class EntityUtil {
         ((EntityInsentient) ((CraftLivingEntity) entity).getHandle()).getNavigation().a(loc.getX(), loc.getY(), loc.getZ(), speed);
     }
 
-    public static String drawMobName(String name, ChatColor color, boolean elite, boolean rare) {
+    public static String drawMobName(String name, int level, ChatColor color, boolean elite, boolean rare) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -57,6 +57,7 @@ public class EntityUtil {
         if (rare) sb.append(ChatColor.BLUE).append(RARE_SYMBOL);
 
         if (elite || rare) sb.append(" ");
+        sb.append(ChatColor.DARK_PURPLE).append("[").append(color).append(level).append(ChatColor.DARK_PURPLE).append("] ");
         sb.append(color).append(name);
         if (elite || rare) sb.append(" ");
 
@@ -68,7 +69,7 @@ public class EntityUtil {
 
     public static String drawMobName(String name, int mobLevel, int playerLevel, boolean elite, boolean rare) {
 
-        return drawMobName(name, getConColor(playerLevel, mobLevel), elite, rare);
+        return drawMobName(name, mobLevel, getConColor(playerLevel, mobLevel), elite, rare);
     }
 
     public static String drawHealthBar(double health, double maxHealth, ChatColor mobColor) {
