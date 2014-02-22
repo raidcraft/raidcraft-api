@@ -1,5 +1,9 @@
 package de.raidcraft.util;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import de.raidcraft.RaidCraft;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,7 +13,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Silthus, Me4502
@@ -292,5 +300,15 @@ public final class LocationUtil {
                 }
         }
         return players;
+    }
+
+    public static boolean isSafeZone(Location location) {
+
+        WorldGuardPlugin worldGuard = RaidCraft.getWorldGuard();
+        if (worldGuard != null) {
+            ApplicableRegionSet regions = worldGuard.getRegionManager(location.getWorld()).getApplicableRegions(location);
+            return regions.allows(DefaultFlag.PVP) && regions.allows(DefaultFlag.MOB_DAMAGE);
+        }
+        return false;
     }
 }

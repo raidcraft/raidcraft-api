@@ -1,6 +1,7 @@
 package de.raidcraft;
 
 import com.avaje.ebean.EbeanServer;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
@@ -46,6 +47,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
+import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -259,6 +261,15 @@ public class RaidCraft implements Listener {
     public static Chat getChat() {
 
         return getComponent(RaidCraftPlugin.class).getChat();
+    }
+
+    public static WorldGuardPlugin getWorldGuard() {
+
+        Plugin worldGuard = Bukkit.getPluginManager().getPlugin("WorldGuard");
+        if (worldGuard != null) {
+            return (WorldGuardPlugin) worldGuard;
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
