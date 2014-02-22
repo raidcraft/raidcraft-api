@@ -9,27 +9,27 @@ import org.bukkit.entity.Player;
  */
 public class Translator {
 
-    public static String tr(Class<? extends BasePlugin> clazz, Language language, String key) {
+    public static String tr(Class<? extends BasePlugin> clazz, Language language, String key, Object... args) {
 
         BasePlugin plugin = RaidCraft.getComponent(clazz);
-        return plugin.getTranslationProvider().tr(language, key);
+        return plugin.getTranslationProvider().tr(language, key, args);
     }
 
-    public static String tr(Class<? extends BasePlugin> clazz, Language language, String key, String def) {
+    public static String tr(Class<? extends BasePlugin> clazz, Language language, String key, String def, Object... args) {
 
         BasePlugin plugin = RaidCraft.getComponent(clazz);
-        return plugin.getTranslationProvider().tr(language, key, def);
+        return plugin.getTranslationProvider().tr(language, key, def, args);
     }
 
-    public static String tr(Class<? extends BasePlugin> clazz, Player player, String key) {
+    public static String tr(Class<? extends BasePlugin> clazz, Player player, String key, Object... args) {
 
         BasePlugin plugin = RaidCraft.getComponent(clazz);
-        return plugin.getTranslationProvider().tr(player, key);
+        return plugin.getTranslationProvider().tr(player, key, args);
     }
 
-    public static String tr(Class<? extends BasePlugin> clazz, Player player, String key, String def) {
+    public static String tr(Class<? extends BasePlugin> clazz, Player player, String key, String def, Object... args) {
 
         BasePlugin plugin = RaidCraft.getComponent(clazz);
-        return plugin.getTranslationProvider().tr(player, key, def);
+        return plugin.getTranslationProvider().tr(player, key, def, args);
     }
 }
