@@ -41,7 +41,12 @@ public class ConfigTranslationProvider implements TranslationProvider {
     public String tr(Language lang, String key, String def, Object... args) {
 
         if (loadedConfigs.containsKey(lang)) {
-            return String.format(loadedConfigs.get(lang).getString(key), args);
+            TranslationConfig<?> config = loadedConfigs.get(lang);
+            if (!config.isSet(key)) {
+                config.set(key, def);
+                config.save();
+            }
+            return String.format(config.getString(key), args);
         }
         return String.format(def, args);
     }
