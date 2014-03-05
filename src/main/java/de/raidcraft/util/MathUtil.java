@@ -13,4 +13,9 @@ public final class MathUtil {
 
         return ((int)((percent * 100.0) * 100)) / 100.0;
     }
+    
+    public static double round(double number) {
+        
+        return ((int)(100.0 * number)) / 100.0;
+    }
 }
