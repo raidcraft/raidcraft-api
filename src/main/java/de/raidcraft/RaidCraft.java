@@ -374,6 +374,13 @@ public class RaidCraft implements Listener {
         throw new CustomItemException("Unknown item type specified: " + id);
     }
 
+    public static ItemStack getItem(String id, int amount) throws CustomItemException {
+
+        ItemStack item = getItem(id);
+        item.setAmount(amount);
+        return item;
+    }
+
     public static ItemStack getUnsafeItem(String id) {
 
         try {
