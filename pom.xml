@@ -26,13 +26,13 @@
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
-        <version>LATEST</version>
+        <version>RELEASE</version>
     </parent>
 
     <scm>
         <developerConnection>scm:git:ssh://git@raid-craft.de:22109/raid-craft-de/${project.artifactId}.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <repositories>
         <repository>
@@ -61,6 +61,16 @@
             <groupId>de.kumpelblase2</groupId>
             <artifactId>remoteentities</artifactId>
             <version>${rc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.7.2-R0.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.7.2-R0.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
