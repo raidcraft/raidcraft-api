@@ -64,6 +64,7 @@ public abstract class AbstractQuestHost implements QuestHost {
     @Override
     public final void interact(Player player) {
 
+        RaidCraft.LOGGER.info("[Quest] Host triggered: '" + this.getId() + "' by player: " + player.getName());
         RaidCraft.callEvent(new QuestHostInteractEvent(this, player));
     }
 }
