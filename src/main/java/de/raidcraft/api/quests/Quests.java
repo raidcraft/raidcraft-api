@@ -7,7 +7,6 @@ import de.raidcraft.util.CaseInsensitiveMap;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -65,13 +64,13 @@ public class Quests {
         }
         queuedConfigLoader.clear();
 
-        for(QuestTrigger trigger : loadedTrigger) {
-            if(trigger instanceof Listener) {
-                HandlerList.unregisterAll((Listener) trigger);
-            }
-        }
-        questTrigger.clear();
-        loadedTrigger.clear();
+//        for(QuestTrigger trigger : loadedTrigger) {
+//            if(trigger instanceof Listener) {
+//                HandlerList.unregisterAll((Listener) trigger);
+//            }
+//        }
+//        questTrigger.clear();
+//        loadedTrigger.clear();
     }
 
     public static void disable(QuestProvider questProvider) {
