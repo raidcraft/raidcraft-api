@@ -1,6 +1,5 @@
 package de.raidcraft.api.quests;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.quests.quest.trigger.Trigger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -53,7 +52,6 @@ public abstract class QuestTrigger {
     protected final void inform(String action, Player player) {
 
         if (getName().endsWith(action)) {
-            RaidCraft.LOGGER.info("[Quest] Quest trigger: '" + action + "' by player: " + player.getName());
             trigger.trigger(Quests.getQuestHolder(player));
         }
     }
