@@ -56,6 +56,12 @@ public abstract class AbstractQuest implements Quest {
     }
 
     @Override
+    public String getAuthor() {
+
+        return getTemplate().getAuthor();
+    }
+
+    @Override
     public String getDescription() {
 
         return getTemplate().getDescription();

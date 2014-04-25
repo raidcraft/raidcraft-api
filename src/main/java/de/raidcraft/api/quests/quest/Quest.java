@@ -17,6 +17,8 @@ public interface Quest extends TriggerListener {
 
     public String getName();
 
+    public String getAuthor();
+
     public String getFullName();
 
     public String getFriendlyName();

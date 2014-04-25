@@ -20,6 +20,8 @@ public interface QuestTemplate {
 
     public String getFriendlyName();
 
+    public String getAuthor();
+
     public String getDescription();
 
     public int getRequiredObjectiveAmount();

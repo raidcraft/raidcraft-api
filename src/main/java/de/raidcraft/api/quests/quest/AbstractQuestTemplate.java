@@ -16,6 +16,7 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
 
     private final String id;
     private final String name;
+    private final String author;
     private final String basePath;
     private final String friendlyName;
     private final String description;
@@ -35,6 +36,7 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
         this.name = split[split.length - 1];
         this.basePath = id.replace("." + name, "");
         this.friendlyName = data.getString("name", name);
+        this.author = data.getString("author", "Raid-Craft Team");
         this.description = data.getString("desc");
         this.requiredObjectiveAmount = data.getInt("required", 0);
         this.ordered = data.getBoolean("ordered", false);
@@ -78,6 +80,12 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
     public String getFriendlyName() {
 
         return friendlyName;
+    }
+
+    @Override
+    public String getAuthor() {
+
+        return author;
     }
 
     @Override
