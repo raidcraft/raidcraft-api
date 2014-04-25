@@ -75,8 +75,8 @@ public class Quests {
                 HandlerList.unregisterAll((Listener) trigger);
             }
         }
-        questTrigger.clear();
-        loadedTrigger.clear();
+//        questTrigger.clear();
+//        loadedTrigger.clear();
     }
 
     public static boolean isEnabled() {
