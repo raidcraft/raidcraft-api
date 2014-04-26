@@ -76,9 +76,9 @@ public abstract class AbstractQuestHolder implements QuestHolder {
         }
         ArrayList<Quest> foundQuests = new ArrayList<>();
         for (Quest quest : allQuests.values()) {
-            if (!quest.isActive() || quest.isCompleted()) {
-                continue;
-            }
+//            if (!quest.isActive() || quest.isCompleted()) {
+//                continue;
+//            }
             if (quest.getFriendlyName().toLowerCase().contains(name.toLowerCase())) {
                 foundQuests.add(quest);
             }
