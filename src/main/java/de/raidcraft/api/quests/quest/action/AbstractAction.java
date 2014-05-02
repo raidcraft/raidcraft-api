@@ -4,8 +4,9 @@ import de.raidcraft.util.TimeUtil;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.action.Action}
  */
+@Deprecated
 public abstract class AbstractAction<T> implements Action<T> {
 
     private final int id;

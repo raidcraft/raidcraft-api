@@ -2,6 +2,9 @@ package de.raidcraft;
 
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
+import de.raidcraft.api.action.action.ActionFactory;
+import de.raidcraft.api.action.requirement.RequirementFactory;
+import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
@@ -50,6 +53,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
+        // inizialize action API
+        RequirementFactory.getInstance();
+        ActionFactory.getInstance();
+        TriggerManager.getInstance();
 
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");

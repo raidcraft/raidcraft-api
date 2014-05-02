@@ -8,8 +8,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.List;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.trigger.Trigger}
  */
+@Deprecated
 public interface Trigger {
 
     public enum Type {

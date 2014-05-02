@@ -4,8 +4,9 @@ import de.raidcraft.util.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.requirement.Requirement} API
  */
+@Deprecated
 public abstract class AbstractRequirement<T> implements Requirement<T> {
 
     private final RequirementResolver<T> resolver;

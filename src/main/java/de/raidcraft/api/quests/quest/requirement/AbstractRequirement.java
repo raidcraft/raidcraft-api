@@ -4,8 +4,9 @@ import de.raidcraft.api.quests.util.QuestUtil;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.requirement.Requirement}
  */
+@Deprecated
 public abstract class AbstractRequirement implements Requirement {
 
     private final int id;

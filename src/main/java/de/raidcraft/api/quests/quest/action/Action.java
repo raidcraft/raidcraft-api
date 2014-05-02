@@ -4,8 +4,9 @@ import de.raidcraft.api.quests.QuestException;
 import de.raidcraft.api.quests.player.QuestHolder;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.action.Action}
  */
+@Deprecated
 public interface Action<T> {
 
     public int getId();
