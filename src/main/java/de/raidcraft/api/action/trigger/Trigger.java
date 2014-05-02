@@ -2,7 +2,7 @@ package de.raidcraft.api.action.trigger;
 
 import de.raidcraft.api.action.ReflectionUtil;
 import de.raidcraft.util.CaseInsensitiveMap;
-import lombok.Data;
+import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -13,13 +13,13 @@ import java.util.function.Predicate;
 /**
  * @author Silthus
  */
-@Data
 public abstract class Trigger {
 
+    @Getter
     private final String identifier;
     private final Map<String, List<TriggerListenerConfigWrapper<?>>> registeredListeners = new CaseInsensitiveMap<>();
 
-    protected Trigger(String identifier) {
+    public Trigger(String identifier) {
 
         this.identifier = identifier;
     }
@@ -38,10 +38,15 @@ public abstract class Trigger {
                 .forEach(list -> list.removeIf(wrapper -> wrapper.getTriggerListener().equals(listener)));
     }
 
+    protected final <T> void informListeners(String action, T triggeringEntity) {
+
+        informListeners(action, triggeringEntity, config -> true);
+    }
+
     @SuppressWarnings("unchecked")
     protected final <T> void informListeners(String action, T triggeringEntity, Predicate<ConfigurationSection> predicate) {
 
-        String identifier = this.identifier + "." + action;
+        String identifier = getIdentifier() + "." + action;
         if (registeredListeners.containsKey(identifier)) {
             registeredListeners.get(identifier).stream()
                     .filter(wrapper -> ReflectionUtil.genericClassMatchesType(wrapper.getClass(), triggeringEntity.getClass()))
