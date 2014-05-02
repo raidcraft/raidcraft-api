@@ -3,8 +3,9 @@ package de.raidcraft.api.requirement;
 import java.util.List;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.requirement.Requirement} API
  */
+@Deprecated
 public interface RequirementResolver<T> {
 
     public T getObject();

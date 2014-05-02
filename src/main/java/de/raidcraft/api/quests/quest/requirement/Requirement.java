@@ -4,8 +4,9 @@ import de.raidcraft.api.quests.QuestException;
 import org.bukkit.entity.Player;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.requirement.Requirement}
  */
+@Deprecated
 public interface Requirement extends Comparable<Requirement> {
 
     public int getId();
@@ -16,5 +17,5 @@ public interface Requirement extends Comparable<Requirement> {
 
     public String getCountText(int count);
 
-    public boolean isMet(Player player) throws QuestException;
+    public boolean test(Player player) throws QuestException;
 }

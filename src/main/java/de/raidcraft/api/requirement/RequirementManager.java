@@ -14,8 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.requirement.RequirementFactory}
  */
+@Deprecated
 public final class RequirementManager {
 
     private static final Map<String, Class<? extends Requirement<?>>> requirementClasses = new CaseInsensitiveMap<>();

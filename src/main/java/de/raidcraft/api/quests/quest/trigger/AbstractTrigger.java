@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.trigger.Trigger}
  */
+@Deprecated
 public abstract class AbstractTrigger implements Trigger {
 
     private final int id;

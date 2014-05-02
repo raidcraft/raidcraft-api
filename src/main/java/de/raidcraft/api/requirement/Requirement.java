@@ -1,8 +1,9 @@
 package de.raidcraft.api.requirement;
 
 /**
- * @author Silthus
+ * @deprecated see {@link de.raidcraft.api.action.requirement.Requirement} API
  */
+@Deprecated
 public interface Requirement<T> {
 
     public String getName();
