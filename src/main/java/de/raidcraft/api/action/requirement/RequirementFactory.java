@@ -29,10 +29,10 @@ public final class RequirementFactory implements Component {
     private RequirementFactory() {
 
         RaidCraft.registerComponent(RequirementFactory.class, this);
-        registerGlobalActions();
+        registerGlobalRequirements();
     }
 
-    private void registerGlobalActions() {
+    private void registerGlobalRequirements() {
 
         registerRequirement("server.time", new Requirement<Object>() {
             @Override
