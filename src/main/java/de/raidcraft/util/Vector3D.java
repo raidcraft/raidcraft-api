@@ -83,7 +83,6 @@ public class Vector3D {
 
     /**
      * Adds the current vector and a given vector together, producing a result vector.
-     * @param other - the other vector.
      * @return The new result vector.
      */
     public Vector3D add(double x, double y, double z) {
@@ -103,7 +102,6 @@ public class Vector3D {
 
     /**
      * Substracts the current vector and a given vector together, producing a result vector.
-     * @param other - the other vector.
      * @return The new result vector.
      */
     public Vector3D subtract(double x, double y, double z) {

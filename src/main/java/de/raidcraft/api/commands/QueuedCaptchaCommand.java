@@ -24,7 +24,7 @@ public class QueuedCaptchaCommand extends QueuedCommand {
     }
 
     /**
-     *  Generate a CAPTCHA String consisting of random lowercase & uppercase letters, and numbers.
+     *  Generate a CAPTCHA String consisting of random lowercase and uppercase letters, and numbers.
      */
     public String generateCaptchaString() {
         int length = 5 + (Math.abs(MathUtil.RANDOM.nextInt()) % 3);
