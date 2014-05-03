@@ -33,14 +33,7 @@
         <developerConnection>scm:git:ssh://git@raid-craft.de:22109/raid-craft-de/${project.artifactId}.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
-    <repositories>
-        <repository>
-            <id>raidcraft</id>
-            <url>http://dev.raid-craft.de/nexus/content/groups/public/</url>
-        </repository>
-    </repositories>
-
+    
     <dependencies>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -61,16 +54,6 @@
             <groupId>de.kumpelblase2</groupId>
             <artifactId>remoteentities</artifactId>
             <version>${rc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.7.2-R0.4-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.7.2-R0.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
