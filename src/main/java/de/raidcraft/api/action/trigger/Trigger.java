@@ -1,5 +1,7 @@
 package de.raidcraft.api.action.trigger;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ReflectionUtil;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * @author Silthus
@@ -50,8 +53,14 @@ public abstract class Trigger {
 
         String identifier = getIdentifier() + "." + action;
         if (registeredListeners.containsKey(identifier)) {
-            registeredListeners.get(identifier).stream()
-                    .filter(wrapper -> ReflectionUtil.genericClassMatchesType(wrapper.getClass(), triggeringEntity.getClass()))
+            Stream<TriggerListenerConfigWrapper<?>> stream;
+            if (RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().parallelActionAPI) {
+                stream = registeredListeners.get(identifier).parallelStream();
+            } else {
+                stream = registeredListeners.get(identifier).stream();
+            }
+
+            stream.filter(wrapper -> ReflectionUtil.genericClassMatchesType(wrapper.getClass(), triggeringEntity.getClass()))
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
                     .forEach(wrapper -> wrapper.getTriggerListener().processTrigger());

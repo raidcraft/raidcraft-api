@@ -96,6 +96,11 @@ public final class TriggerManager implements Component {
         registeredTrigger.values().forEach(trigger -> trigger.unregisterListener(listener));
     }
 
+    public TriggerFactory getTrigger(String identifier, ConfigurationSection config) {
+
+        return new TriggerFactory(this, identifier, config);
+    }
+
     public Map<String, Trigger> getTrigger() {
 
         return new HashMap<>(registeredTrigger);

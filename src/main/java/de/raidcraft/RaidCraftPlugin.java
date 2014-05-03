@@ -17,6 +17,7 @@ import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -39,6 +40,7 @@ import java.util.Set;
  */
 public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
+    @Getter
     private LocalConfiguration config;
     private final Map<Chunk, Set<PlayerPlacedBlock>> playerPlacedBlocks = new HashMap<>();
     private boolean started = false;
@@ -46,7 +48,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @Override
     public void enable() {
 
-        this.config = configure(new LocalConfiguration(this), true);
+        this.config = configure(new LocalConfiguration(this));
         registerEvents(this);
         registerEvents(new RaidCraft());
         registerEvents(new BarAPI(this));
@@ -98,6 +100,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public double startDelay = 10.0;
         @Setting("hide-attributes")
         public boolean hideAttributes = true;
+        @Setting("action-api.parallel")
+        public boolean parallelActionAPI = true;
     }
 
     @Override

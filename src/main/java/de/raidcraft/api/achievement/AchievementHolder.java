@@ -33,6 +33,14 @@ public interface AchievementHolder<T> {
     public T getType();
 
     /**
+     * Checks if the holder has the given permission.
+     *
+     * @param permission to check
+     * @return true if holder has the permission
+     */
+    public boolean hasPermission(String permission);
+
+    /**
      * Checks if the holder has an achievement with the given identifier.
      * This does not mean the achievement is complete or active.
      *
@@ -69,9 +77,9 @@ public interface AchievementHolder<T> {
      */
     public default boolean hasGainedAchievement(@NonNull AchievementTemplate template) {
 
-        return getGainedAchievements().parallelStream().anyMatch(
-                achievement -> achievement.getTemplate().equals(template)
-        );
+        return getGainedAchievements().parallelStream()
+                .filter(achievement -> achievement.getTemplate().equals(template))
+                .anyMatch(achievement -> achievement.getGainedDate() != null);
     }
 
     /**
