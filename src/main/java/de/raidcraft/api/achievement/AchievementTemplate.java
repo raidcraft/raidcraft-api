@@ -38,6 +38,14 @@ public interface AchievementTemplate extends RequirementHolder, ActionHolder, Tr
     public String getDescription();
 
     /**
+     * Gets the amount of points the achievement is worth. This has no effect
+     * and is only for toplist calculations and e-penis comparisons :).
+     *
+     * @return achievement points
+     */
+    public int getPoints();
+
+    /**
      * Sets the achievement as enabled allowing it to be gained by players.
      * This will also enable the listening to triggers for active achievements.
      *

@@ -24,6 +24,14 @@ public interface AchievementHolder<T> {
     public String getDisplayName();
 
     /**
+     * Gets the total amount of achievement points for this holder.
+     * Only counts completed achievements.
+     *
+     * @return sum of achievement points for completed achievements
+     */
+    public int getTotalPoints();
+
+    /**
      * Gets the type of the achievement holder. This can be anything
      * ranging from a player to guilds. The type defines what kind of
      * requirements and triggers the achievement can have.
@@ -73,13 +81,13 @@ public interface AchievementHolder<T> {
      *
      * @param template to check
      *
-     * @return true if {@link #getGainedAchievements()} contains template
+     * @return true if {@link #getCompletedAchievements()} contains template
      */
     public default boolean hasGainedAchievement(@NonNull AchievementTemplate template) {
 
-        return getGainedAchievements().parallelStream()
+        return getCompletedAchievements().parallelStream()
                 .filter(achievement -> achievement.getTemplate().equals(template))
-                .anyMatch(achievement -> achievement.getGainedDate() != null);
+                .anyMatch(achievement -> achievement.getCompletionDate() != null);
     }
 
     /**
@@ -117,7 +125,7 @@ public interface AchievementHolder<T> {
      *
      * @return list of gained achievements
      */
-    public default Collection<Achievement<T>> getGainedAchievements() {
+    public default Collection<Achievement<T>> getCompletedAchievements() {
 
         return getAchievements().parallelStream()
                 .filter(Achievement::isGained)
@@ -168,7 +176,7 @@ public interface AchievementHolder<T> {
      *
      * @param template to add as achievement
      */
-    public void addAchievement(@NonNull AchievementTemplate template);
+    public Achievement<T> addAchievement(@NonNull AchievementTemplate template);
 
     /**
      * Adds the already created achievement to the holder. This will check what state the
@@ -176,7 +184,7 @@ public interface AchievementHolder<T> {
      *
      * @param achievement to add
      */
-    public void addAchievement(@NonNull Achievement<T> achievement);
+    public Achievement<T> addAchievement(@NonNull Achievement<T> achievement);
 
     /**
      * Removes the given achievement from the holder marking it as inactive.

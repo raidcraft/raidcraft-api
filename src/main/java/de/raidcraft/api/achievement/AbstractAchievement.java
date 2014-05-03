@@ -28,7 +28,7 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
     private final Collection<Action<T>> applicableActions;
     @NonNull
     private final Collection<TriggerFactory> triggerFactories;
-    private Timestamp gainedDate;
+    private Timestamp completionDate;
 
     @SuppressWarnings("unchecked")
     public AbstractAchievement(AchievementHolder<T> holder, AchievementTemplate template) {
@@ -43,22 +43,23 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
     }
 
     @Override
-    public void unlock() {
+    public boolean unlock() {
 
-        if (!getTemplate().isEnabled() && !getHolder().hasPermission("rcachievement.ignore-disabled")) return;
+        if (!getTemplate().isEnabled() && !getHolder().hasPermission("rcachievement.ignore-disabled")) return false;
         // disable all trigger listener
         triggerFactories.forEach(factory -> factory.unregisterListener(this));
         // check if achievement is already unlocked
-        if (getGainedDate() != null) return;
+        if (getCompletionDate() != null) return false;
         // inform other plugins that the holder gained an achievement
         AchievementGainEvent event = new AchievementGainEvent(this);
         RaidCraft.callEvent(event);
 
         getHolder().addAchievement(this);
-        setGainedDate(Timestamp.from(Instant.now()));
+        this.setCompletionDate(Timestamp.from(Instant.now()));
         // trigger all applicable actions
         getApplicableActions().forEach(action -> action.accept(getHolder().getType()));
         save();
+        return true;
     }
 
     @Override
@@ -67,7 +68,7 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
         // disable all trigger listener
         triggerFactories.forEach(factory -> factory.unregisterListener(this));
 
-        setGainedDate(null);
+        this.setCompletionDate(null);
         getHolder().removeAchievement(this);
         save();
     }

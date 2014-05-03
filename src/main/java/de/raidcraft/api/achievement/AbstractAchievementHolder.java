@@ -28,6 +28,14 @@ public abstract class AbstractAchievementHolder<T> implements AchievementHolder<
     protected abstract CaseInsensitiveMap<Achievement<T>> loadAchievements();
 
     @Override
+    public int getTotalPoints() {
+
+        return getCompletedAchievements().stream()
+                .mapToInt(achievement -> achievement.getTemplate().getPoints())
+                .sum();
+    }
+
+    @Override
     public boolean hasAchievement(@NonNull AchievementTemplate template) {
 
         return achievements.containsKey(template.getIdentifier());
@@ -46,17 +54,18 @@ public abstract class AbstractAchievementHolder<T> implements AchievementHolder<
     }
 
     @Override
-    public void addAchievement(@NonNull AchievementTemplate template) {
+    public Achievement<T> addAchievement(@NonNull AchievementTemplate template) {
 
-        addAchievement(template.createAchievement(this));
+        return addAchievement(template.createAchievement(this));
     }
 
     @Override
-    public void addAchievement(@NonNull Achievement<T> achievement) {
+    public Achievement<T> addAchievement(@NonNull Achievement<T> achievement) {
 
         achievements.remove(achievement.getIdentifier());
         achievements.put(achievement.getIdentifier(), achievement);
         save();
+        return achievement;
     }
 
     @Override

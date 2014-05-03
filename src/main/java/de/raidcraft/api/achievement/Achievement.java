@@ -61,7 +61,7 @@ public interface Achievement<T> extends TriggerListener<T> {
      */
     public default boolean isActive() {
 
-        return getGainedDate() == null || getGainedDate().before(Timestamp.from(Instant.now()));
+        return getCompletionDate() == null || getCompletionDate().before(Timestamp.from(Instant.now()));
     }
 
     /**
@@ -71,7 +71,7 @@ public interface Achievement<T> extends TriggerListener<T> {
      */
     public default boolean isGained() {
 
-        return getGainedDate() != null && getGainedDate().after(Timestamp.from(Instant.now()));
+        return getCompletionDate() != null && getCompletionDate().after(Timestamp.from(Instant.now()));
     }
 
     /**
@@ -80,9 +80,9 @@ public interface Achievement<T> extends TriggerListener<T> {
      *
      * @return completion time of the achievement. can be null if not completed
      */
-    public Timestamp getGainedDate();
+    public Timestamp getCompletionDate();
 
-    public void unlock();
+    public boolean unlock();
 
     public void remove();
 

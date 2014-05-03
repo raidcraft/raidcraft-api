@@ -28,6 +28,7 @@ public abstract class AbstractAchievementTemplate implements AchievementTemplate
     private final Collection<TriggerFactory> trigger;
     @Setter(AccessLevel.PROTECTED)
     private String description = "";
+    private int points = 10;
     private boolean enabled = true;
     private boolean secret = false;
     private boolean broadcasting = true;
