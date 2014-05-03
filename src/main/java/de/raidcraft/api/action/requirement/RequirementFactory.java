@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -77,6 +78,11 @@ public final class RequirementFactory implements Component {
                 .filter(key -> key.startsWith(plugin.getName().toLowerCase()))
                 .forEach(requirements::remove);
         RaidCraft.LOGGER.info("removed all requirements of: " + plugin.getName());
+    }
+
+    public Map<String, Requirement<?>> getRequirements() {
+
+        return new HashMap<>(requirements);
     }
 
     @SneakyThrows

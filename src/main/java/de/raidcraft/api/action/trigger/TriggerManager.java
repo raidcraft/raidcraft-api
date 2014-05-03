@@ -12,6 +12,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -93,5 +94,10 @@ public final class TriggerManager implements Component {
     public <T> void unregisterListener(TriggerListener<T> listener) {
 
         registeredTrigger.values().forEach(trigger -> trigger.unregisterListener(listener));
+    }
+
+    public Map<String, Trigger> getTrigger() {
+
+        return new HashMap<>(registeredTrigger);
     }
 }

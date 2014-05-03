@@ -14,7 +14,7 @@ public class PlayerTrigger extends Trigger implements Listener {
 
     public PlayerTrigger() {
 
-        super("player");
+        super("player", "interact", "block.break");
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

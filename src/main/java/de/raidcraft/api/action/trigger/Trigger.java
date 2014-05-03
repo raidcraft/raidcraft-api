@@ -2,7 +2,7 @@ package de.raidcraft.api.action.trigger;
 
 import de.raidcraft.api.action.ReflectionUtil;
 import de.raidcraft.util.CaseInsensitiveMap;
-import lombok.Getter;
+import lombok.Data;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -13,15 +13,17 @@ import java.util.function.Predicate;
 /**
  * @author Silthus
  */
+@Data
 public abstract class Trigger {
 
-    @Getter
     private final String identifier;
+    private final String[] actions;
     private final Map<String, List<TriggerListenerConfigWrapper<?>>> registeredListeners = new CaseInsensitiveMap<>();
 
-    public Trigger(String identifier) {
+    public Trigger(String identifier, String... actions) {
 
         this.identifier = identifier;
+        this.actions = actions;
     }
 
     public final <T> void registerListener(TriggerListener<T> listener, String triggerIdentifier, ConfigurationSection config) {
