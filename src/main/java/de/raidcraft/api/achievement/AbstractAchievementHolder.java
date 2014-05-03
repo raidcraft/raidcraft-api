@@ -46,6 +46,12 @@ public abstract class AbstractAchievementHolder<T> implements AchievementHolder<
     }
 
     @Override
+    public void addAchievement(@NonNull AchievementTemplate template) {
+
+        addAchievement(template.createAchievement(this));
+    }
+
+    @Override
     public void addAchievement(@NonNull Achievement<T> achievement) {
 
         achievements.remove(achievement.getIdentifier());

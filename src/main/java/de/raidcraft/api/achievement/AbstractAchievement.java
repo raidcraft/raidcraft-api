@@ -37,8 +37,12 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
     @Override
     public void unlock() {
 
+        if (getGainedDate() != null) return;
+        getHolder().addAchievement(this);
         setGainedDate(Timestamp.from(Instant.now()));
-        // TODO: add rewards and stuff
+        // trigger all applicable actions
+        getApplicableActions().forEach(action -> action.accept(getHolder().getType()));
+        save();
     }
 
     @Override
@@ -46,11 +50,16 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
 
         setGainedDate(null);
         getHolder().removeAchievement(this);
+        save();
     }
 
     @Override
     public void processTrigger() {
 
-
+        if (getApplicableRequirements().stream().sorted().allMatch(
+                requirement -> requirement.test(getHolder().getType())
+        )) {
+            unlock();
+        }
     }
 }
