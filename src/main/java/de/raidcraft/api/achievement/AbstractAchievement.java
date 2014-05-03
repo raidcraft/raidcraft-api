@@ -16,8 +16,6 @@ import java.util.Collection;
 public abstract class AbstractAchievement<T> implements Achievement<T> {
 
     @NonNull
-    private final int id;
-    @NonNull
     private final AchievementHolder<T> holder;
     @NonNull
     private final AchievementTemplate template;
@@ -28,9 +26,8 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
     private Timestamp gainedDate;
 
     @SuppressWarnings("unchecked")
-    public AbstractAchievement(int id, AchievementHolder<T> holder, AchievementTemplate template) {
+    public AbstractAchievement(AchievementHolder<T> holder, AchievementTemplate template) {
 
-        this.id = id;
         this.holder = holder;
         this.template = template;
         this.applicableRequirements = template.getRequirements(holder.getType().getClass());
@@ -49,5 +46,11 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
 
         setGainedDate(null);
         getHolder().removeAchievement(this);
+    }
+
+    @Override
+    public void processTrigger() {
+
+
     }
 }

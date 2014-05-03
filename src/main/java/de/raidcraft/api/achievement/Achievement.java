@@ -21,14 +21,6 @@ public interface Achievement<T> extends TriggerListener<T> {
     }
 
     /**
-     * Gets the unique database id of the achievement.
-     * Every instance of this class must be saved in the database.
-     *
-     * @return database id
-     */
-    public int getId();
-
-    /**
      * @see AchievementTemplate#getIdentifier()
      */
     public default String getIdentifier() {
@@ -93,4 +85,8 @@ public interface Achievement<T> extends TriggerListener<T> {
     public void unlock();
 
     public void remove();
+
+    public void save();
+
+    public void delete();
 }

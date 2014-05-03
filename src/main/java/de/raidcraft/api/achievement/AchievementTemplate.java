@@ -9,8 +9,6 @@ import de.raidcraft.api.action.requirement.RequirementHolder;
  * The achievement templates should be loaded and popuplated on server startup.
  * Depending on the implementation templates can be generated from a database,
  * file system or any other source.
- *
- * Templates need to be registered with the {@link de.raidcraft.achievements.AchievementManager#registerAchievementTemplate(AchievementTemplate)}
  */
 public interface AchievementTemplate extends RequirementHolder, ActionHolder {
 
@@ -37,4 +35,13 @@ public interface AchievementTemplate extends RequirementHolder, ActionHolder {
      * @return achievement description
      */
     public String getDescription();
+
+    /**
+     * Creates a valid achievement from this template and the given holder.
+     *
+     * @param holder to create achievement for
+     * @param <T> type of the holder
+     * @return active achievement
+     */
+    public <T> Achievement<T> createAchievement(AchievementHolder<T> holder);
 }

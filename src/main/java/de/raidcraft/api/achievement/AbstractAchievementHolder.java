@@ -1,10 +1,10 @@
 package de.raidcraft.api.achievement;
 
+import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.NonNull;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,17 +16,21 @@ public abstract class AbstractAchievementHolder<T> implements AchievementHolder<
     @NonNull
     private final T type;
     @NonNull
-    private final Map<String, Achievement<T>> achievements = new HashMap<>(); // TODO: make case insenstive
+    private final Map<String, Achievement<T>> achievements;
 
     public AbstractAchievementHolder(T type) {
 
         this.type = type;
+        this.achievements = loadAchievements();
     }
 
-    @Override
-    public boolean hasAchievement(AchievementTemplate template) {
+    @NonNull
+    protected abstract CaseInsensitiveMap<Achievement<T>> loadAchievements();
 
-        return template != null && achievements.containsKey(template.getIdentifier());
+    @Override
+    public boolean hasAchievement(@NonNull AchievementTemplate template) {
+
+        return achievements.containsKey(template.getIdentifier());
     }
 
     @Override
@@ -36,11 +40,26 @@ public abstract class AbstractAchievementHolder<T> implements AchievementHolder<
     }
 
     @Override
-    public Achievement<T> removeAchievement(AchievementTemplate template) {
+    public Achievement<T> getAchievement(String identifier) {
+
+        return achievements.get(identifier);
+    }
+
+    @Override
+    public void addAchievement(@NonNull Achievement<T> achievement) {
+
+        achievements.remove(achievement.getIdentifier());
+        achievements.put(achievement.getIdentifier(), achievement);
+        save();
+    }
+
+    @Override
+    public Achievement<T> removeAchievement(@NonNull AchievementTemplate template) {
 
         Achievement<T> achievement = achievements.remove(template.getIdentifier());
         if (achievement != null) {
             achievement.remove();
+            save();
         }
         return achievement;
     }

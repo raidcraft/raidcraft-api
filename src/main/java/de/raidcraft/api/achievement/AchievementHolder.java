@@ -1,6 +1,9 @@
 package de.raidcraft.api.achievement;
 
+import lombok.NonNull;
+
 import java.util.Collection;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -9,6 +12,8 @@ import java.util.stream.Collectors;
  * by an implementing because some requirements and trigger may only take specific holder types.
  */
 public interface AchievementHolder<T> {
+
+    public UUID getUniqueIdentifier();
 
     /**
      * Gets the friendly display name of the holder as it is displayed
@@ -27,7 +32,14 @@ public interface AchievementHolder<T> {
      */
     public T getType();
 
-    public default boolean hasAchievement(String identifier) {
+    /**
+     * Checks if the holder has an achievement with the given identifier.
+     * This does not mean the achievement is complete or active.
+     *
+     * @param identifier to check for
+     * @return true if achievement exists for the holder
+     */
+    public default boolean hasAchievement(@NonNull String identifier) {
 
         return getAchievements().parallelStream().anyMatch(
                 achievement -> achievement.getIdentifier().equals(identifier)
@@ -41,7 +53,7 @@ public interface AchievementHolder<T> {
      * @param template to check
      * @return true if holder has achievement
      */
-    public default boolean hasAchievement(AchievementTemplate template) {
+    public default boolean hasAchievement(@NonNull AchievementTemplate template) {
 
         return getAchievements().parallelStream().anyMatch(
                 achievement -> achievement.getTemplate().equals(template)
@@ -55,7 +67,7 @@ public interface AchievementHolder<T> {
      *
      * @return true if {@link #getGainedAchievements()} contains template
      */
-    public default boolean hasGainedAchievement(AchievementTemplate template) {
+    public default boolean hasGainedAchievement(@NonNull AchievementTemplate template) {
 
         return getGainedAchievements().parallelStream().anyMatch(
                 achievement -> achievement.getTemplate().equals(template)
@@ -69,7 +81,7 @@ public interface AchievementHolder<T> {
      * @param template to check
      * @return true if {@link #getActiveAchievements()} contains template
      */
-    public default boolean hasActiveAchievement(AchievementTemplate template) {
+    public default boolean hasActiveAchievement(@NonNull AchievementTemplate template) {
 
         return getActiveAchievements().parallelStream().anyMatch(
                 achievement -> achievement.getTemplate().equals(template)
@@ -113,6 +125,34 @@ public interface AchievementHolder<T> {
     public Collection<Achievement<T>> getAchievements();
 
     /**
+     * Gets the given achievement based on the unique identifier string.
+     * Can return null if no achievement is found.
+     *
+     * @param identifier to check for
+     * @return null if no achievement is found
+     */
+    public default Achievement<T> getAchievement(@NonNull String identifier) {
+
+        return getAchievements().stream()
+                .filter(achievement -> achievement.getTemplate().getIdentifier().equals(identifier.toLowerCase()))
+                .findAny().get();
+    }
+
+    /**
+     * Gets the given achievement based on the achievement template.
+     * Can return null if no achievement is found.
+     *
+     * @param template to check for
+     * @return null if no achievement is found
+     */
+    public default Achievement<T> getAchievement(@NonNull AchievementTemplate template) {
+
+        return getAchievements().stream()
+                .filter(achievement -> achievement.getTemplate().equals(template))
+                .findAny().get();
+    }
+
+    /**
      * Adds the given achievement template to the holder as an {@link de.raidcraft.api.achievement.Achievement}.
      * This will mark the achievement as active and start checking requirements.
      * If the holder already has the achievement but it is inactive, because it was removed, it will
@@ -120,7 +160,15 @@ public interface AchievementHolder<T> {
      *
      * @param template to add as achievement
      */
-    public void addAchievement(AchievementTemplate template);
+    public void addAchievement(@NonNull AchievementTemplate template);
+
+    /**
+     * Adds the already created achievement to the holder. This will check what state the
+     * achievement has and will not restart the achievement process.
+     *
+     * @param achievement to add
+     */
+    public void addAchievement(@NonNull Achievement<T> achievement);
 
     /**
      * Removes the given achievement from the holder marking it as inactive.
@@ -130,7 +178,7 @@ public interface AchievementHolder<T> {
      * @param template achievement to remove
      * @return null if achievement did not exists
      */
-    public Achievement<T> removeAchievement(AchievementTemplate template);
+    public Achievement<T> removeAchievement(@NonNull AchievementTemplate template);
 
     /**
      * Removes the given achievement from the holder.
@@ -139,8 +187,18 @@ public interface AchievementHolder<T> {
      * @param achievement to remove
      * @return null if achievement did not exists
      */
-    public default Achievement<T> removeAchievement(Achievement<T> achievement) {
+    public default Achievement<T> removeAchievement(@NonNull Achievement<T> achievement) {
 
         return removeAchievement(achievement.getTemplate());
     }
+
+    /**
+     * Saves the achievement holder by the underlying serialization method.
+     */
+    public void save();
+
+    /**
+     * Deletes the saved achievement holder with the underlying serialization method.
+     */
+    public void delete();
 }
