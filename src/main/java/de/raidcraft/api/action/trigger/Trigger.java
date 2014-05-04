@@ -2,7 +2,6 @@ package de.raidcraft.api.action.trigger;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
-import de.raidcraft.api.action.ReflectionUtil;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -64,7 +63,7 @@ public abstract class Trigger {
                 stream = registeredListeners.get(identifier).stream();
             }
             RaidCraft.LOGGER.info("informing listeners of " + identifier);
-            stream.filter(wrapper -> ReflectionUtil.genericClassMatchesType(wrapper.getClass(), triggeringEntity.getClass()))
+            stream.filter(wrapper -> wrapper.matchesType(triggeringEntity.getClass()))
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
                     .forEach(wrapper -> wrapper.getTriggerListener().processTrigger());

@@ -4,6 +4,7 @@ import de.raidcraft.api.action.ReflectionUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
+import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
 /**
@@ -18,6 +19,11 @@ public interface Action<T> extends Consumer<T> {
 
     public default boolean matchesType(Class<?> entity) {
 
-        return ReflectionUtil.genericClassMatchesType(getClass(), entity);
+        for (Method method : getClass().getMethods()) {
+            if (method.getName().equals("accept")) {
+                return ReflectionUtil.isMatchingGenericMethodType(method, entity);
+            }
+        }
+        return false;
     }
 }

@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -41,9 +42,19 @@ class TriggerListenerConfigWrapper<T> {
         actions = section.getKeys(false).stream()
                 .map(key -> RaidCraft.getComponent(ActionFactory.class)
                         .create(section.getString(key + ".type"), section.getConfigurationSection(key)))
-                .filter(action -> ReflectionUtil.genericClassMatchesType(action.getClass(), getTriggerListener().getTriggerEntityType().getClass()))
+                .filter(action -> action.matchesType(getTriggerListener().getTriggerEntityType().getClass()))
                 .map(action -> (Action<T>) action)
                 .collect(Collectors.toList());
+    }
+
+    public boolean matchesType(Class<?> type) {
+
+        for (Method method : getClass().getMethods()) {
+            if (method.getName().equals("test")) {
+                return ReflectionUtil.isMatchingGenericMethodType(method, type);
+            }
+        }
+        return false;
     }
 
     protected boolean test(T triggeringEntity, Predicate<ConfigurationSection> predicate) {
