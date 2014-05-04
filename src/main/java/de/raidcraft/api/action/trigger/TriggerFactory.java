@@ -1,6 +1,5 @@
 package de.raidcraft.api.action.trigger;
 
-import de.raidcraft.RaidCraft;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -31,11 +30,9 @@ public class TriggerFactory {
 
     public void registerListener(TriggerListener listener) {
 
-        RaidCraft.LOGGER.info("trying to register trigger " + identifier + " for " + listener + "...");
         if (registeredListeners.contains(listener)) return;
         getManager().registerListener(listener, getIdentifier(), getConfig());
         registeredListeners.add(listener);
-        RaidCraft.LOGGER.info("...success");
     }
 
     public void unregisterListener(TriggerListener listener) {

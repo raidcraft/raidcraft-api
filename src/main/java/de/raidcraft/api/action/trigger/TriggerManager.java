@@ -87,7 +87,7 @@ public final class TriggerManager implements Component {
         String id = triggerIdentifier.toLowerCase();
         // we need to check partial names because actions are not listed in the map
         registeredTrigger.keySet().stream()
-                .filter(key -> key.startsWith(id))
+                .filter(id::startsWith)
                 .forEach(key -> registeredTrigger.get(key).registerListener(listener, id, config));
     }
 

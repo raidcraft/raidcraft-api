@@ -35,7 +35,6 @@ public abstract class Trigger {
 
     public final <T> void registerListener(TriggerListener<T> listener, String triggerIdentifier, ConfigurationSection config) {
 
-        RaidCraft.LOGGER.info("registered listener: " + listener + " for " + triggerIdentifier);
         if (!registeredListeners.containsKey(triggerIdentifier)) {
             registeredListeners.put(triggerIdentifier, new ArrayList<>());
         }
@@ -44,7 +43,6 @@ public abstract class Trigger {
 
     public final <T> void unregisterListener(TriggerListener<T> listener) {
 
-        RaidCraft.LOGGER.info("unregistered listener: " + listener);
         registeredListeners.values().parallelStream()
                 .forEach(list -> list.removeIf(wrapper -> wrapper.getTriggerListener().equals(listener)));
     }
