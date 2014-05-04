@@ -5,6 +5,7 @@ import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.TriggerFactory;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.util.Collection;
 /**
  * @author mdoering
  */
+@EqualsAndHashCode(of = {"identifier"})
 @Data
 public abstract class AbstractAchievementTemplate implements AchievementTemplate {
 

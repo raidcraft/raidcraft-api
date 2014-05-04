@@ -1,6 +1,7 @@
 package de.raidcraft.api.action.trigger;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.Set;
 /**
  * @author Silthus
  */
+@EqualsAndHashCode(of = {"identifier"})
 @Data
 public class TriggerFactory {
 

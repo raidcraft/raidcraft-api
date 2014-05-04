@@ -1,11 +1,13 @@
 package de.raidcraft.api.action.requirement;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Silthus
  */
+@EqualsAndHashCode(of = {"requirement", "config"})
 @Data
 class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<RequirementConfigWrapper<T>> {
 

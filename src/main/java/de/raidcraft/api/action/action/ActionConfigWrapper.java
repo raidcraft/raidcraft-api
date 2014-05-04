@@ -1,11 +1,13 @@
 package de.raidcraft.api.action.action;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
  * @author Silthus
  */
+@EqualsAndHashCode(of = {"action", "config"})
 @Data
 class ActionConfigWrapper<T> implements Action<T> {
 

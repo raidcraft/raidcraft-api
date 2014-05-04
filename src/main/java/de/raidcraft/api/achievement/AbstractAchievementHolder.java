@@ -2,6 +2,7 @@ package de.raidcraft.api.achievement;
 
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.Map;
 /**
  * @author mdoering
  */
+@EqualsAndHashCode(of = {"type"})
 @Data
 public abstract class AbstractAchievementHolder<T> implements AchievementHolder<T> {
 

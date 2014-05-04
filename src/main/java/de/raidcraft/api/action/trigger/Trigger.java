@@ -5,6 +5,7 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ReflectionUtil;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.stream.Stream;
 /**
  * @author Silthus
  */
+@EqualsAndHashCode(of = {"identifier", "actions"})
 @Data
 public abstract class Trigger {
 

@@ -6,6 +6,7 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.TriggerFactory;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 
 import java.sql.Timestamp;
@@ -15,6 +16,7 @@ import java.util.Collection;
 /**
  * @author mdoering
  */
+@EqualsAndHashCode(of = {"holder", "template"})
 @Data
 public abstract class AbstractAchievement<T> implements Achievement<T> {
 
