@@ -45,7 +45,7 @@ public class Database {
 
     public static class DatabaseConfig extends ConfigurationBase<BasePlugin> {
 
-        private static final String CONFIG_NAME = "database.yml";
+        private static final String CONFIG_NAME = "legacy_database.yml";
 
         @Setting("database.hostname")
         public String hostname = "localhost:3306";
