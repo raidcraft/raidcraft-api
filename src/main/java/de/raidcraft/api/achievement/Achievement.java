@@ -3,7 +3,6 @@ package de.raidcraft.api.achievement;
 import de.raidcraft.api.action.trigger.TriggerListener;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 
 /**
  * Represents the achievement attached to the achievement holder (e.g. player).
@@ -61,7 +60,7 @@ public interface Achievement<T> extends TriggerListener<T> {
      */
     public default boolean isActive() {
 
-        return getCompletionDate() == null || getCompletionDate().before(Timestamp.from(Instant.now()));
+        return getCompletionDate() == null;
     }
 
     /**
@@ -69,9 +68,9 @@ public interface Achievement<T> extends TriggerListener<T> {
      *
      * @return true if achievement was completed
      */
-    public default boolean isGained() {
+    public default boolean isCompleted() {
 
-        return getCompletionDate() != null && getCompletionDate().after(Timestamp.from(Instant.now()));
+        return getCompletionDate() != null;
     }
 
     /**

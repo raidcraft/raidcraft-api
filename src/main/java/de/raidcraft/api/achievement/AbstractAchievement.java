@@ -49,7 +49,7 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
     @Override
     public void registerListeners() {
 
-        if (isGained() || !isActive()) return;
+        if (isCompleted() || !isActive()) return;
         triggerFactories.forEach(factory -> factory.registerListener(this));
     }
 

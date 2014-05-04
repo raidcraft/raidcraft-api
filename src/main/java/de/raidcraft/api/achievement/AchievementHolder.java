@@ -128,7 +128,7 @@ public interface AchievementHolder<T> {
     public default Collection<Achievement<T>> getCompletedAchievements() {
 
         return getAchievements().parallelStream()
-                .filter(Achievement::isGained)
+                .filter(Achievement::isCompleted)
                 .collect(Collectors.toList());
     }
 
