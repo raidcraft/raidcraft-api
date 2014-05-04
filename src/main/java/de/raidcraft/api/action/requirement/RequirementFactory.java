@@ -9,7 +9,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,15 +34,7 @@ public final class RequirementFactory implements Component {
 
     private void registerGlobalRequirements() {
 
-        registerRequirement("server.time", new Requirement<Object>() {
-            @Override
-            public boolean test(Object o) {
-
-                return Instant.parse(getConfig().getString("time")).equals(Instant.now());
-            }
-        });
         registerRequirement("player.is-sprinting", Player::isSprinting);
-        // TODO: add more
     }
 
     private <T> void registerRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
