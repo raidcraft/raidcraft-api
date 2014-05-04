@@ -19,7 +19,7 @@ public interface Action<T> extends Consumer<T> {
 
     public default boolean matchesType(Class<?> entity) {
 
-        for (Method method : getClass().getMethods()) {
+        for (Method method : getClass().getDeclaredMethods()) {
             if (method.getName().equals("accept")) {
                 return ReflectionUtil.isMatchingGenericMethodType(method, entity);
             }
