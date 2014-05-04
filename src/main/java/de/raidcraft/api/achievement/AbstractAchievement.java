@@ -42,15 +42,14 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
         this.applicableRequirements = template.getRequirements(holder.getType().getClass());
         this.applicableActions = template.getActions(holder.getType().getClass());
         this.triggerFactories = template.getTrigger();
-        if (isActive() && !isGained()) {
-            // enable all trigger listeners
-            registerListeners();
-        }
+        // enable all trigger listeners
+        registerListeners();
     }
 
     @Override
     public void registerListeners() {
 
+        if (isGained() || !isActive()) return;
         triggerFactories.forEach(factory -> factory.registerListener(this));
     }
 

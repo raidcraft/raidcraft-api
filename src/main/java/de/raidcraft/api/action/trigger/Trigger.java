@@ -58,7 +58,6 @@ public abstract class Trigger {
     protected final <T> void informListeners(String action, T triggeringEntity, Predicate<ConfigurationSection> predicate) {
 
         String identifier = getIdentifier() + "." + action;
-        RaidCraft.LOGGER.info("informed listeners: " + identifier);
         if (registeredListeners.containsKey(identifier)) {
             Stream<TriggerListenerConfigWrapper<?>> stream;
             if (RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().parallelActionAPI) {
