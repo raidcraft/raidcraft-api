@@ -51,11 +51,16 @@ public final class TriggerManager implements Component {
     @SneakyThrows
     public void registerTrigger(@NonNull JavaPlugin plugin, @NonNull Trigger trigger) {
 
+        String triggerName;
         String identifier = plugin.getName() + "." + trigger.getIdentifier();
-        if (registeredTrigger.containsKey(identifier)) {
-            throw new TriggerException("Trigger '" + identifier + "' is already registered!");
+        for (String action : trigger.getActions()) {
+            triggerName = identifier + "." + action;
+            if (registeredTrigger.containsKey(triggerName)) {
+                RaidCraft.LOGGER.warning("duplicate trigger found: " + triggerName);
+                continue;
+            }
+            registeredTrigger.put(triggerName, trigger);
         }
-        registeredTrigger.put(identifier, trigger);
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
         }
@@ -65,6 +70,16 @@ public final class TriggerManager implements Component {
 
         Trigger trigger = registeredTrigger.remove(identifier);
         if (trigger == null) trigger = registeredTrigger.remove(plugin.getName() + "." + identifier);
+        if (trigger == null) {
+            registeredTrigger.entrySet().forEach(entry -> {
+                if (entry.getKey().startsWith(identifier.toLowerCase())) {
+                    registeredTrigger.remove(entry.getKey());
+                    if (entry.getValue() instanceof Listener) {
+                        HandlerList.unregisterAll((Listener) entry.getValue());
+                    }
+                }
+            });
+        }
         if (trigger != null) {
             if (trigger instanceof Listener) HandlerList.unregisterAll((Listener) trigger);
             RaidCraft.LOGGER.info("removed trigger: " + identifier + " (" + plugin.getName() + ")");
@@ -86,9 +101,10 @@ public final class TriggerManager implements Component {
 
         String id = triggerIdentifier.toLowerCase();
         // we need to check partial names because actions are not listed in the map
-        registeredTrigger.keySet().stream()
-                .filter(id::startsWith)
-                .forEach(key -> registeredTrigger.get(key).registerListener(listener, id, config));
+        Trigger trigger = registeredTrigger.get(id);
+        if (trigger != null) {
+            trigger.registerListener(listener, id, config);
+        }
     }
 
     public <T> void unregisterListener(TriggerListener<T> listener) {
