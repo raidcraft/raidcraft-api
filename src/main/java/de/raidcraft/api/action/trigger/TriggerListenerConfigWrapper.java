@@ -6,6 +6,7 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 /**
  * @author Silthus
  */
+@ToString(of = {"triggerListener", "config"})
 @EqualsAndHashCode(of = {"triggerListener", "config"})
 @Data
 class TriggerListenerConfigWrapper<T> {

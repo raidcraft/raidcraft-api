@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +16,7 @@ import java.util.Collection;
 /**
  * @author mdoering
  */
+@ToString(exclude = {"requirements", "actions", "trigger"})
 @EqualsAndHashCode(of = {"identifier"})
 @Data
 public abstract class AbstractAchievementTemplate implements AchievementTemplate {
