@@ -15,6 +15,7 @@ public class ReflectionUtil {
         RaidCraft.LOGGER.info("matching clazz type: " + clazzToMatch + " against " + matchingType);
         Type[] genericInterfaces = clazzToMatch.getGenericInterfaces();
         for (Type genericInterface : genericInterfaces) {
+            RaidCraft.LOGGER.info("matching " + genericInterface.getTypeName());
             if (genericInterface instanceof ParameterizedType) {
                 Type[] genericTypes = ((ParameterizedType) genericInterface).getActualTypeArguments();
                 for (Type genericType : genericTypes) {
