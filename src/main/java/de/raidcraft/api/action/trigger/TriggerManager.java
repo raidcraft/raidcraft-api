@@ -45,7 +45,6 @@ public final class TriggerManager implements Component {
         for (String action : trigger.getActions()) {
             registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
         }
-        registeredTrigger.put(trigger.getIdentifier(), trigger);
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
         }
