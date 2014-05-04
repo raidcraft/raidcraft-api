@@ -76,6 +76,13 @@ public interface AchievementHolder<T> {
         );
     }
 
+    public default boolean hasGainedAchievement(@NonNull String identifier) {
+
+        return getCompletedAchievements().parallelStream()
+                .filter(achievement -> achievement.getIdentifier().equals(identifier.toLowerCase()))
+                .anyMatch(Achievement::isCompleted);
+    }
+
     /**
      * Checks if the holder has gained the given achievement.
      *
