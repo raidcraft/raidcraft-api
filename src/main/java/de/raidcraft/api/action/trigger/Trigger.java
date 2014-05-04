@@ -33,6 +33,7 @@ public abstract class Trigger {
 
     public final <T> void registerListener(TriggerListener<T> listener, String triggerIdentifier, ConfigurationSection config) {
 
+        RaidCraft.LOGGER.info("registered listener: " + listener + " for " + triggerIdentifier);
         if (!registeredListeners.containsKey(triggerIdentifier)) {
             registeredListeners.put(triggerIdentifier, new ArrayList<>());
         }
@@ -41,6 +42,7 @@ public abstract class Trigger {
 
     public final <T> void unregisterListener(TriggerListener<T> listener) {
 
+        RaidCraft.LOGGER.info("unregistered listener: " + listener);
         registeredListeners.values().parallelStream()
                 .forEach(list -> list.removeIf(wrapper -> wrapper.getTriggerListener().equals(listener)));
     }
@@ -54,6 +56,7 @@ public abstract class Trigger {
     protected final <T> void informListeners(String action, T triggeringEntity, Predicate<ConfigurationSection> predicate) {
 
         String identifier = getIdentifier() + "." + action;
+        RaidCraft.LOGGER.info("informed listeners: " + identifier);
         if (registeredListeners.containsKey(identifier)) {
             Stream<TriggerListenerConfigWrapper<?>> stream;
             if (RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().parallelActionAPI) {
