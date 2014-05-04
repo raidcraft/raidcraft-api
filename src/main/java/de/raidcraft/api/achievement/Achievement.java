@@ -84,6 +84,8 @@ public interface Achievement<T> extends TriggerListener<T> {
      */
     public void unregisterListeners();
 
+    public void setCompletionDate(Timestamp timestamp);
+
     /**
      * Gets the time the achievement was gained. Can be null if the achievement
      * is still active and not yet finished.
