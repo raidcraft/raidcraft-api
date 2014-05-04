@@ -32,21 +32,21 @@ public class ActionCommand {
     public void createHTML(CommandContext args, CommandSender sender) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("########### ACTIONS ###########");
+        sb.append("########### ACTIONS ###########\n");
         ActionFactory.getInstance().getActions().keySet().forEach(
                 key -> {
                     sb.append(key);
                     sb.append("\n");
                 }
         );
-        sb.append("\n\n########### REQUIREMENTS ###########");
+        sb.append("\n\n########### REQUIREMENTS ###########\n");
         RequirementFactory.getInstance().getRequirements().keySet().forEach(
                 key -> {
                     sb.append(key);
                     sb.append("\n");
                 }
         );
-        sb.append("\n\n########### TRIGGER ###########");
+        sb.append("\n\n########### TRIGGER ###########\n");
         TriggerManager.getInstance().getTrigger().entrySet().forEach(
                 entry -> {
                     Arrays.asList(entry.getValue().getActions()).forEach(

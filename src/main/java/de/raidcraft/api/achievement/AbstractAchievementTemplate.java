@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -21,11 +22,11 @@ public abstract class AbstractAchievementTemplate implements AchievementTemplate
     @NonNull
     private final String displayName;
     @NonNull
-    private final Collection<Requirement<?>> requirements;
+    private Collection<Requirement<?>> requirements = new ArrayList<>();
     @NonNull
-    private final Collection<Action<?>> actions;
+    private Collection<Action<?>> actions = new ArrayList<>();
     @NonNull
-    private final Collection<TriggerFactory> trigger;
+    private Collection<TriggerFactory> trigger = new ArrayList<>();
     @Setter(AccessLevel.PROTECTED)
     private String description = "";
     private int points = 10;
@@ -42,9 +43,6 @@ public abstract class AbstractAchievementTemplate implements AchievementTemplate
 
         this.identifier = identifier;
         this.displayName = displayName;
-        this.requirements = loadRequirements();
-        this.actions = loadActions();
-        this.trigger = loadTrigger();
     }
 
     protected abstract Collection<Requirement<?>> loadRequirements();
