@@ -74,7 +74,7 @@
                             <minimizeJar>true</minimizeJar>
                             <artifactSet>
                                 <includes>
-                                    <include>org.projectlombok:lombok</include>
+                                    <include>lombok:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
