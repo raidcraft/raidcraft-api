@@ -37,7 +37,7 @@ public abstract class Trigger {
         if (!registeredListeners.containsKey(triggerIdentifier)) {
             registeredListeners.put(triggerIdentifier, new ArrayList<>());
         }
-        registeredListeners.get(triggerIdentifier).add(new TriggerListenerConfigWrapper<T>(listener, config));
+        registeredListeners.get(triggerIdentifier).add(new TriggerListenerConfigWrapper<>(listener, config));
     }
 
     public final <T> void unregisterListener(TriggerListener<T> listener) {
@@ -62,7 +62,7 @@ public abstract class Trigger {
             } else {
                 stream = registeredListeners.get(identifier).stream();
             }
-            RaidCraft.LOGGER.info("informing listeners of " + identifier);
+            RaidCraft.LOGGER.info("informing " + stream.count() + " listeners of " + identifier);
             stream.filter(wrapper -> wrapper.matchesType(triggeringEntity.getClass()))
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
