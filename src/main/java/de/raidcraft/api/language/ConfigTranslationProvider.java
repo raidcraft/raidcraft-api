@@ -15,20 +15,29 @@ public class ConfigTranslationProvider implements TranslationProvider {
 
     private final BasePlugin plugin;
     private final Map<Language, TranslationConfig<?>> loadedConfigs = new HashMap<>();
+    private final File folder;
 
     public ConfigTranslationProvider(BasePlugin plugin) {
 
         this.plugin = plugin;
-        File folder = new File(plugin.getDataFolder(), "languages/");
+        folder = new File(plugin.getDataFolder(), "languages/");
         folder.mkdirs();
         for (File file : folder.listFiles()) {
             if (file.getName().endsWith(".yml")) {
                 Language language = Language.fromString(file.getName().replace(".yml", ""));
                 if (language != null) {
-                    loadedConfigs.put(language, plugin.configure(new TranslationConfig<>(plugin, file), false));
+                    loadedConfigs.put(language, plugin.configure(new TranslationConfig<>(plugin, file)));
                 }
             }
         }
+    }
+
+    private void createConfig(Language lang) {
+
+        TranslationConfig<BasePlugin> config = plugin.configure(
+                new TranslationConfig<>(plugin, new File(folder, lang.getLanguageString() + ".yml")));
+        config.save();
+        loadedConfigs.put(lang, config);
     }
 
     @Override
@@ -40,15 +49,15 @@ public class ConfigTranslationProvider implements TranslationProvider {
     @Override
     public String tr(Language lang, String key, String def, Object... args) {
 
-        if (loadedConfigs.containsKey(lang)) {
-            TranslationConfig<?> config = loadedConfigs.get(lang);
-            if (!config.isSet(key)) {
-                config.set(key, def);
-                config.save();
-            }
-            return String.format(config.getString(key), args);
+        if (!loadedConfigs.containsKey(lang)) {
+            createConfig(lang);
         }
-        return String.format(def, args);
+        TranslationConfig<?> config = loadedConfigs.get(lang);
+        if (!config.isSet(key)) {
+            config.set(key, def);
+            config.save();
+        }
+        return String.format(config.getString(key), args);
     }
 
     @Override
