@@ -75,6 +75,16 @@ public interface Achievement<T> extends TriggerListener<T> {
     }
 
     /**
+     * Registers all trigger listeners of this achievement.
+     */
+    public void registerListeners();
+
+    /**
+     * Unregisters all trigger listeners associated with this achievement.
+     */
+    public void unregisterListeners();
+
+    /**
      * Gets the time the achievement was gained. Can be null if the achievement
      * is still active and not yet finished.
      *

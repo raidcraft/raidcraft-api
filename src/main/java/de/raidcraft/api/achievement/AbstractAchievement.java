@@ -38,8 +38,22 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
         this.applicableRequirements = template.getRequirements(holder.getType().getClass());
         this.applicableActions = template.getActions(holder.getType().getClass());
         this.triggerFactories = template.getTrigger();
-        // enable all trigger listeners
+        if (isActive() && !isGained()) {
+            // enable all trigger listeners
+            registerListeners();
+        }
+    }
+
+    @Override
+    public void registerListeners() {
+
         triggerFactories.forEach(factory -> factory.registerListener(this));
+    }
+
+    @Override
+    public void unregisterListeners() {
+
+        triggerFactories.forEach(factory -> factory.unregisterListener(this));
     }
 
     @Override
@@ -47,7 +61,7 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
 
         if (!getTemplate().isEnabled() && !getHolder().hasPermission("rcachievement.ignore-disabled")) return false;
         // disable all trigger listener
-        triggerFactories.forEach(factory -> factory.unregisterListener(this));
+        unregisterListeners();
         // check if achievement is already unlocked
         if (getCompletionDate() != null) return false;
         // inform other plugins that the holder gained an achievement
@@ -66,7 +80,7 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
     public void remove() {
 
         // disable all trigger listener
-        triggerFactories.forEach(factory -> factory.unregisterListener(this));
+        unregisterListeners();
 
         this.setCompletionDate(null);
         getHolder().removeAchievement(this);
