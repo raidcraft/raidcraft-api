@@ -63,7 +63,7 @@ public abstract class Trigger {
             } else {
                 stream = registeredListeners.get(identifier).stream();
             }
-
+            RaidCraft.LOGGER.info("informing listeners of " + identifier);
             stream.filter(wrapper -> ReflectionUtil.genericClassMatchesType(wrapper.getClass(), triggeringEntity.getClass()))
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
