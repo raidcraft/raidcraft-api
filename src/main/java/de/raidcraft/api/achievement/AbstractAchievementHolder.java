@@ -66,7 +66,6 @@ public abstract class AbstractAchievementHolder<T> implements AchievementHolder<
     @Override
     public Achievement<T> addAchievement(@NonNull Achievement<T> achievement) {
 
-        achievements.remove(achievement.getIdentifier());
         achievements.put(achievement.getIdentifier(), achievement);
         save();
         return achievement;
