@@ -10,8 +10,6 @@ import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.util.PastebinPoster;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
-
 /**
  * @author Silthus
  */
@@ -47,11 +45,9 @@ public class ActionCommand {
                 }
         );
         sb.append("\n\n########### TRIGGER ###########\n");
-        TriggerManager.getInstance().getTrigger().entrySet().forEach(
-                entry -> {
-                    Arrays.asList(entry.getValue().getActions()).forEach(
-                            action -> sb.append(entry.getKey()).append(".").append(action).append("\n")
-                    );
+        TriggerManager.getInstance().getTrigger().keySet().forEach(
+                key -> {
+                    sb.append(key);
                     sb.append("\n");
                 }
         );
