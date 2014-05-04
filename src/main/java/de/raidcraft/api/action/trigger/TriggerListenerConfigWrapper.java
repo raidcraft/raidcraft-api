@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -48,15 +49,13 @@ class TriggerListenerConfigWrapper<T> {
 
     public boolean matchesType(Class<?> type) {
 
-        try {
-            RaidCraft.LOGGER.info("matchesType called");
-            return ReflectionUtil.isMatchingGenericMethodType(
-                    getClass().getMethod("test", getTriggerListener().getTriggerEntityType().getClass(), Predicate.class),
-                    type
-            );
-        } catch (NoSuchMethodException e) {
-            return false;
+        RaidCraft.LOGGER.info("matchesType called");
+        for (Method method : getClass().getDeclaredMethods()) {
+            if (method.getName().equals("test")) {
+                return ReflectionUtil.isMatchingGenericMethodType(method, type);
+            }
         }
+        return false;
     }
 
     protected boolean test(T triggeringEntity, Predicate<ConfigurationSection> predicate) {
