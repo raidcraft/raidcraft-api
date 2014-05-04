@@ -58,28 +58,29 @@
             <version>${rc.version}</version>
         </dependency>
     </dependencies>
-    
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>RELEASE</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                    <configuration>
-                        <minimizeJar>true</minimizeJar>
-                        <artifactSet>
-                            <includes>
-                                <include>org.projectlombok:lombok</include>
-                            </includes>
-                        </artifactSet>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>RELEASE</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.projectlombok:lombok</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
