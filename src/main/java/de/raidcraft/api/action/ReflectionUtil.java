@@ -14,7 +14,7 @@ public class ReflectionUtil {
 
         RaidCraft.LOGGER.info("matching method types");
         for (Type type : method.getGenericParameterTypes()) {
-            RaidCraft.LOGGER.info("matching " + type.getTypeName() + " against " + matchingType.getTypeName());
+            RaidCraft.LOGGER.info("matching " + type.getClass().getName() + " against " + matchingType.getTypeName());
             if (type.getClass().isAssignableFrom(matchingType)) return true;
         }
         return false;
