@@ -16,7 +16,7 @@ public abstract class AbstractAchievementHolder<T> implements AchievementHolder<
     @NonNull
     private final T type;
     @NonNull
-    private final Map<String, Achievement<T>> achievements;
+    private Map<String, Achievement<T>> achievements = new CaseInsensitiveMap<>();
 
     public AbstractAchievementHolder(T type) {
 
