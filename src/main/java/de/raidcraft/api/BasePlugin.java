@@ -1,5 +1,6 @@
 package de.raidcraft.api;
 
+import com.avaje.ebean.EbeanServer;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
@@ -13,6 +14,8 @@ import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
+import de.raidcraft.api.ebean.DatabaseConfig;
+import de.raidcraft.api.ebean.RaidCraftDatabase;
 import de.raidcraft.api.language.ConfigTranslationProvider;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
@@ -44,6 +47,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
     // member variables
     private final Map<String, QueuedCommand> queuedCommands = new HashMap<>();
     private Database database;
+    private RaidCraftDatabase ebeanDatabase;
     private TranslationProvider translationProvider;
     private CommandsManager<CommandSender> commands;
     private CommandsManagerRegistration commandRegistration;
@@ -84,7 +88,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         this.commandRegistration = new CommandsManagerRegistration(this, this, this.commands);
         // check if the database needs to be setup
         if (getDatabaseClasses().size() > 0) {
-            loadDatabase();
+            getDatabase();
         }
         // call the sub plugins to enable
         enable();
@@ -107,19 +111,16 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     public abstract void disable();
 
-    protected void loadDatabase() {
+    @Override
+    public EbeanServer getDatabase() {
 
-        // load the persistance database if used
-        if (getDatabaseClasses().size() > 0) {
-            try {
-                for (Class<?> clazz : getDatabaseClasses()) {
-                    getDatabase().find(clazz).findRowCount();
-                }
-            } catch (Throwable e) {
-                // install the dll
-                installDDL();
-            }
+        if (this.ebeanDatabase == null) {
+            this.ebeanDatabase = new RaidCraftDatabase(this);
+            DatabaseConfig config = new DatabaseConfig(this);
+            config.save();
+            this.ebeanDatabase.initializeDatabase(configure(config));
         }
+        return this.ebeanDatabase.getDatabase();
     }
 
     public void reload() {
