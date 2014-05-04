@@ -38,7 +38,7 @@ public abstract class Trigger {
         if (!registeredListeners.containsKey(triggerIdentifier)) {
             registeredListeners.put(triggerIdentifier, new ArrayList<>());
         }
-        registeredListeners.get(triggerIdentifier).add(new TriggerListenerConfigWrapper(listener, config));
+        registeredListeners.get(triggerIdentifier).add(new TriggerListenerConfigWrapper<T>(listener, config));
     }
 
     public final <T> void unregisterListener(TriggerListener<T> listener) {

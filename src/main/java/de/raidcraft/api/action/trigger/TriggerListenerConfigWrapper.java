@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 @Data
 class TriggerListenerConfigWrapper<T> {
 
-    private final TriggerListener triggerListener;
+    private final TriggerListener<T> triggerListener;
     private final ConfigurationSection config;
     private List<Action<T>> actions = new ArrayList<>();
 
-    protected TriggerListenerConfigWrapper(TriggerListener triggerListener, ConfigurationSection config) {
+    protected TriggerListenerConfigWrapper(TriggerListener<T> triggerListener, ConfigurationSection config) {
 
         this.triggerListener = triggerListener;
         this.config = config;
