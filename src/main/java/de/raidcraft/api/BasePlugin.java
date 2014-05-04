@@ -116,9 +116,9 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
         if (this.ebeanDatabase == null) {
             this.ebeanDatabase = new RaidCraftDatabase(this);
-            DatabaseConfig config = new DatabaseConfig(this);
+            DatabaseConfig config = configure(new DatabaseConfig(this));
             config.save();
-            this.ebeanDatabase.initializeDatabase(configure(config));
+            this.ebeanDatabase.initializeDatabase(config);
         }
         return this.ebeanDatabase.getDatabase();
     }
