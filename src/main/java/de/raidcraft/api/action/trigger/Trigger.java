@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -66,6 +67,7 @@ public abstract class Trigger {
             stream/*.filter(wrapper -> wrapper.matchesType(triggeringEntity.getClass()))*/
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
+                    .collect(Collectors.toList())
                     .forEach(wrapper -> wrapper.getTriggerListener().processTrigger());
         }
     }
