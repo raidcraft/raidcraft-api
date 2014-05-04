@@ -48,9 +48,11 @@ class TriggerListenerConfigWrapper<T> {
 
     protected boolean test(T triggeringEntity, Predicate<ConfigurationSection> predicate) {
 
+        RaidCraft.LOGGER.info("testing trigger: " + predicate);
         if (triggerListener.getTriggerEntityType().equals(triggeringEntity) && predicate.test(config)) {
             // trigger our actions
             actions.forEach(action -> action.accept(triggeringEntity));
+            RaidCraft.LOGGER.info("success!");
             return true;
         }
         return false;

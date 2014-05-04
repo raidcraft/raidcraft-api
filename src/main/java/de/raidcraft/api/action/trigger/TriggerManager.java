@@ -102,7 +102,9 @@ public final class TriggerManager implements Component {
         String id = triggerIdentifier.toLowerCase();
         // we need to check partial names because actions are not listed in the map
         Trigger trigger = registeredTrigger.get(id);
+        RaidCraft.LOGGER.info("registering listener for " + id + " ...");
         if (trigger != null) {
+            RaidCraft.LOGGER.info("...success!");
             trigger.registerListener(listener, id, config);
         }
     }
