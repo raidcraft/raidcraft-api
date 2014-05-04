@@ -17,5 +17,5 @@ public interface Requirement extends Comparable<Requirement> {
 
     public String getCountText(int count);
 
-    public boolean test(Player player) throws QuestException;
+    public boolean isMet(Player player) throws QuestException;
 }
