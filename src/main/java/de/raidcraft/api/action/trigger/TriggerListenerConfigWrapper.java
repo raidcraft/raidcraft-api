@@ -49,7 +49,6 @@ class TriggerListenerConfigWrapper<T> {
 
     public boolean matchesType(Class<?> type) {
 
-        RaidCraft.LOGGER.info("matchesType called");
         for (Method method : getClass().getDeclaredMethods()) {
             if (method.getName().equals("test")) {
                 return ReflectionUtil.isMatchingGenericMethodType(method, type);
