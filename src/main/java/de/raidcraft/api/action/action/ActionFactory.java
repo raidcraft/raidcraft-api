@@ -41,7 +41,7 @@ public final class ActionFactory implements Component {
             public void accept(Player player) {
 
                 try {
-                    ItemStack item = RaidCraft.getItem(getConfig().getString("item"), getConfig().getInt("amount"));
+                    ItemStack item = RaidCraft.getItem(getConfig().getString("item"), getConfig().getInt("amount", 1));
                     player.getInventory().addItem(item);
                 } catch (CustomItemException e) {
                     RaidCraft.LOGGER.warning("player.give.item (" + player.getName() + "): " + e.getMessage());
