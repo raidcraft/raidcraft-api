@@ -31,7 +31,7 @@ public final class LocationUtil {
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
 
         if (l1.getWorld() != null && l2.getWorld() != null) {
-            return l1.getWorld().getName().equalsIgnoreCase(l2.getWorld().getName()) && getDistanceSquared(l1,
+            return l1.getWorld().equals(l2.getWorld()) && getDistanceSquared(l1,
                     l2) <= radius * radius;
         }
         return false;
