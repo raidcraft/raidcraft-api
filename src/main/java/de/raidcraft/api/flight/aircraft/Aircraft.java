@@ -3,7 +3,6 @@ package de.raidcraft.api.flight.aircraft;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.flight.flight.Flight;
-import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Waypoint;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -116,7 +115,6 @@ public interface Aircraft<T> {
     public default void takeoff(Flight flight) {
 
         if (!isFlying()) {
-            try {
                 setFlying(true);
                 if (!isSpawned()) spawn(flight.getFirstWaypoint());
                 mountPassenger(flight);
@@ -127,8 +125,6 @@ public interface Aircraft<T> {
                         new de.raidcraft.api.flight.aircraft.AircraftMoverTask(this, flight),
                         flight.getMoveInterval(),
                         flight.getMoveInterval()));
-            } catch (FlightException ignored) {
-            }
         }
     }
 
@@ -168,10 +164,8 @@ public interface Aircraft<T> {
 
     /**
      * Mounts all attached passengers onto the aircraft.
-     *
-     * @throws de.raidcraft.api.flight.flight.FlightException if entity was not spawned
      */
-    public void mountPassenger(Flight flight) throws FlightException;
+    public void mountPassenger(Flight flight);
 
     /**
      * Unmounts all passengers from the aircraft.
