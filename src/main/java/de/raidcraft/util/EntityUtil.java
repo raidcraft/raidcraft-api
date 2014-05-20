@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import java.util.*;
+import java.lang.reflect.*;
 
 /**
  * @author Silthus
