@@ -169,4 +169,28 @@ public class EntityUtil {
             }
         }
     }
+    
+    @SuppressWarnings("unchecked")
+    public static void registerEntity(String name, int id, Class<?> customClass) {
+        try {
+         
+            // we need to check if the class is a valid transistent entity
+            // and because we dont want to break every version we are using reflection
+            if (!ReflectionUtil.getNmsClass("net.minecraft.server", "EntityInsentient").isAssignableFrom(customClass)) {
+                return;
+            }
+            List<Map<?, ?>> dataMaps = new ArrayList<Map<?, ?>>();
+            for (Field f : ReflectionUtil.getNmsClass("net.minecraft.server", "EntityTypes").getDeclaredFields()) {
+                if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
+                    f.setAccessible(true);
+                    dataMaps.add((Map<?, ?>) f.get(null));
+                }
+            }
+            
+            ((Map<Class<?>, String>) dataMaps.get(1)).put(customClass, name);
+            ((Map<Class<?>, Integer>) dataMaps.get(3)).put(customClass, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
