@@ -1,8 +1,10 @@
 package de.raidcraft.api.requirement;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 
@@ -50,7 +52,10 @@ public final class RequirementManager {
                                 resolver,
                                 section);
                         if (requirement instanceof AbstractRequirement) {
-                            ((AbstractRequirement) requirement).load(section);
+                            // load the config one tick later to allow all processing to take place
+                            // this helps to avoid stack overflow errors when a skill requires itself
+                            Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class),
+                                    () -> ((AbstractRequirement) requirement).load(section), 1L);
                         }
                         requirements.add(requirement);
                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
