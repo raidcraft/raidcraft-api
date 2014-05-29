@@ -1,11 +1,11 @@
 package de.raidcraft.api.action.trigger.global;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,10 +14,16 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
  * @author Silthus
  */
 public class PlayerTrigger extends Trigger implements Listener {
+
+    private Map<UUID, Location> playerLocations = new HashMap<>();
 
     public PlayerTrigger() {
 
@@ -51,7 +57,7 @@ public class PlayerTrigger extends Trigger implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event) {
 
-        if (!RaidCraft.hasMoved(event.getPlayer(), event.getTo())) return;
+        if (!hasMoved(event.getPlayer(), event.getTo())) return;
 
         // if no coordinates are defined always return true
         // otherwise check the coordinates and the radius
@@ -67,5 +73,18 @@ public class PlayerTrigger extends Trigger implements Listener {
                         config.getInt("radius", 0)
                 )
         );
+    }
+
+    private boolean hasMoved(Player player, Location to) {
+
+        if (!playerLocations.containsKey(player.getUniqueId())) {
+            playerLocations.put(player.getUniqueId(), player.getLocation());
+        }
+        Location current = playerLocations.get(player.getUniqueId());
+        if (current.getBlockX() != to.getBlockX() || current.getBlockY() != to.getBlockY() || current.getBlockZ() != to.getBlockZ()) {
+            playerLocations.put(player.getUniqueId(), to);
+            return true;
+        }
+        return false;
     }
 }
