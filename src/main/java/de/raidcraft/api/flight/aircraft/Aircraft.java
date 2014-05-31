@@ -115,16 +115,18 @@ public interface Aircraft<T> {
     public default void takeoff(Flight flight) {
 
         if (!isFlying()) {
-                setFlying(true);
-                if (!isSpawned()) spawn(flight.getFirstWaypoint());
-                mountPassenger(flight);
-                move(flight, flight.getPath().getFirstWaypoint());
+            setFlying(true);
+            if (!isSpawned()) spawn(flight.getFirstWaypoint());
+            mountPassenger(flight);
+            move(flight, flight.getPath().getFirstWaypoint());
+            if (flight.getMoveInterval() > 0) {
                 // lets start the task that moves the aircraft around from waypoint to waypoint
                 RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
                 setAircraftMoverTask(Bukkit.getScheduler().runTaskTimer(plugin,
                         new de.raidcraft.api.flight.aircraft.AircraftMoverTask(this, flight),
                         flight.getMoveInterval(),
                         flight.getMoveInterval()));
+            }
         }
     }
 

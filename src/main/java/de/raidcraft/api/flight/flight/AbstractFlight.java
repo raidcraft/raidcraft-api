@@ -100,27 +100,48 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     }
 
     @Override
-    public void startFlight() throws de.raidcraft.api.flight.flight.FlightException {
+    public final void startFlight() {
 
         if (isActive()) return;
-        getAircraft().takeoff(this);
-        getPassenger().setFlight(this);
+        try {
+            onStartFlight();
+            getAircraft().takeoff(this);
+            getPassenger().setFlight(this);
+        } catch (FlightException e) {
+            getPassenger();
+        }
     }
+
+    public abstract void onStartFlight() throws FlightException;
 
     @Override
-    public void abortFlight() {
+    public final void abortFlight() {
 
         if (!isActive()) return;
-        getAircraft().abortFlight(this);
-        getPassenger().getEntity().teleport(getFirstWaypoint());
+        try {
+            onAbortFlight();
+            getAircraft().abortFlight(this);
+            getPassenger().getEntity().teleport(getFirstWaypoint());
+        } catch (FlightException e) {
+            // TODO: catch exception
+        }
     }
+
+    public abstract void onAbortFlight() throws FlightException;
 
     @Override
-    public void endFlight() throws de.raidcraft.api.flight.flight.FlightException {
+    public final void endFlight() {
 
         if (!isActive()) return;
-        getAircraft().land(this);
+        try {
+            onEndFlight();
+            getAircraft().land(this);
+        } catch (FlightException e) {
+            // TODO: catch exception
+        }
     }
+
+    public abstract void onEndFlight() throws FlightException;
 
     @Override
     public boolean equals(Object o) {
