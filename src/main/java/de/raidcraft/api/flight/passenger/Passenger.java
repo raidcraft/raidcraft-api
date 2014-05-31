@@ -40,4 +40,11 @@ public interface Passenger<T extends LivingEntity> {
      * @return true if player is in an active flight
      */
     public boolean isFlying();
+
+    /**
+     * Sends a message to the passenger if it is an entity that can receive messages.
+     *
+     * @param message to send
+     */
+    public void sendMessage(String message);
 }

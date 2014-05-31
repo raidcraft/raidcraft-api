@@ -2,6 +2,7 @@ package de.raidcraft.api.flight.flight;
 
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.passenger.Passenger;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
@@ -108,7 +109,8 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
             getAircraft().takeoff(this);
             getPassenger().setFlight(this);
         } catch (FlightException e) {
-            getPassenger();
+            getPassenger().sendMessage(ChatColor.RED + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -123,7 +125,8 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
             getAircraft().abortFlight(this);
             getPassenger().getEntity().teleport(getFirstWaypoint());
         } catch (FlightException e) {
-            // TODO: catch exception
+            getPassenger().sendMessage(ChatColor.RED + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -137,7 +140,8 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
             onEndFlight();
             getAircraft().land(this);
         } catch (FlightException e) {
-            // TODO: catch exception
+            getPassenger().sendMessage(ChatColor.RED + e.getMessage());
+            e.printStackTrace();
         }
     }
 
