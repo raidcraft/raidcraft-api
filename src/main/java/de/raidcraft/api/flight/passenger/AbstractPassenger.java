@@ -73,8 +73,6 @@ public abstract class AbstractPassenger<T extends LivingEntity> implements de.ra
     @Override
     public int hashCode() {
 
-        int result = entity.hashCode();
-        result = 31 * result + flight.hashCode();
-        return result;
+        return entity.hashCode();
     }
 }
