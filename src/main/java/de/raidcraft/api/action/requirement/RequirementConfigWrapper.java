@@ -15,6 +15,8 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     private final ConfigurationSection config;
     private final boolean persistant;
     private final int order;
+    private final int requiredCount;
+    private int count;
     private boolean successfullyChecked = false;
 
     protected RequirementConfigWrapper(Requirement<T> requirement, ConfigurationSection config) {
@@ -23,6 +25,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         this.config = config;
         this.persistant = config.getBoolean("persistant", false);
         this.order = config.getInt("order", 0);
+        this.requiredCount = config.getInt("count", 0);
     }
 
     @Override
@@ -35,8 +38,10 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     public boolean test(T t) {
 
         if (isPersistant() && successfullyChecked) return true;
+        if (requiredCount > 0 && requiredCount <= count) return true;
         successfullyChecked = requirement.test(t);
-        return successfullyChecked;
+        if (successfullyChecked) count++;
+        return (requiredCount > 0 && requiredCount <= count) || successfullyChecked;
     }
 
     @Override
