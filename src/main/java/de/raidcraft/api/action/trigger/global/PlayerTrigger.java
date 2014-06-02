@@ -57,7 +57,10 @@ public class PlayerTrigger extends Trigger implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event) {
 
+        World world = Bukkit.getWorld(config.getString("world"));
+        if (config.isSet("world") && (world == null || !event.getPlayer().getWorld().equals(world))) return;
         if (!hasMoved(event.getPlayer(), event.getTo())) return;
+        if (world == null) world = event.getPlayer().getWorld();
 
         // if no coordinates are defined always return true
         // otherwise check the coordinates and the radius
@@ -66,7 +69,7 @@ public class PlayerTrigger extends Trigger implements Listener {
                         || LocationUtil.isWithinRadius(
                         event.getPlayer().getLocation(),
                         new Location(
-                                Bukkit.getWorld(config.getString("world", event.getPlayer().getWorld().getName())),
+                                world,
                                 config.getInt("x"),
                                 config.getInt("y"),
                                 config.getInt("z")),
