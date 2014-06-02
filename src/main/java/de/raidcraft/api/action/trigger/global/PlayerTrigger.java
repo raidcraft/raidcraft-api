@@ -58,15 +58,16 @@ public class PlayerTrigger extends Trigger implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event) {
 
-        World world = Bukkit.getWorld(config.getString("world"));
-        if (config.isSet("world") && (world == null || !event.getPlayer().getWorld().equals(world))) return;
         if (!hasMoved(event.getPlayer(), event.getTo())) return;
-        if (world == null) world = event.getPlayer().getWorld();
 
         // if no coordinates are defined always return true
         // otherwise check the coordinates and the radius
-        informListeners("move", event.getPlayer(), config ->
-                (!config.isSet("x") || !config.isSet("y") || !config.isSet("z"))
+        informListeners("move", event.getPlayer(), config -> {
+            
+            World world = Bukkit.getWorld(config.getString("world"));
+            if (config.isSet("world") && (world == null || !event.getPlayer().getWorld().equals(world))) return false;
+            if (world == null) world = event.getPlayer().getWorld();
+            return ((!config.isSet("x") || !config.isSet("y") || !config.isSet("z"))
                         || LocationUtil.isWithinRadius(
                         event.getPlayer().getLocation(),
                         new Location(
@@ -74,9 +75,8 @@ public class PlayerTrigger extends Trigger implements Listener {
                                 config.getInt("x"),
                                 config.getInt("y"),
                                 config.getInt("z")),
-                        config.getInt("radius", 0)
-                )
-        );
+                        config.getInt("radius", 0)));
+        });
     }
 
     private boolean hasMoved(Player player, Location to) {
