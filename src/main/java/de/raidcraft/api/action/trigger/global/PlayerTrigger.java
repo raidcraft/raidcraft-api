@@ -3,6 +3,7 @@ package de.raidcraft.api.action.trigger.global;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
