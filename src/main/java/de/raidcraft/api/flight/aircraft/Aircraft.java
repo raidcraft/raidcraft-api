@@ -142,7 +142,7 @@ public interface Aircraft<T> {
             setFlying(false);
             stopMoving();
             unmountPassenger(flight);
-            getAircraftMoverTask().cancel();
+            if (getAircraftMoverTask() != null) getAircraftMoverTask().cancel();
             if (isSpawned()) despawn();
         }
     }
