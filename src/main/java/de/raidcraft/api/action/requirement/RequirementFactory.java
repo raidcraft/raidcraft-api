@@ -45,8 +45,8 @@ public final class RequirementFactory implements Component {
 
                 Location location = player.getLocation();
                 ConfigurationSection config = getConfig();
-                World world = Bukkit.getWorld(config.getString("world"));
-                if (world == null) return false;
+                World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
+                if (config.isSet("world") && world == null) return false;
 
                 if (config.isSet("x") && config.isSet("y") && config.isSet("z") && config.isSet("world")) {
                     if (config.isSet("radius")) {
