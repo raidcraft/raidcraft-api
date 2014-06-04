@@ -13,6 +13,8 @@ import lombok.ToString;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author mdoering
@@ -96,10 +98,35 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
         if (!getTemplate().isEnabled() && !getHolder().hasPermission("rcachievement.ignore-disabled")) {
             return;
         }
-        if (getApplicableRequirements().isEmpty() || getApplicableRequirements().stream().sorted().allMatch(
-                requirement -> requirement.test(getHolder().getType())
-        )) {
+        if (getApplicableRequirements().isEmpty()) {
             unlock();
+            return;
         }
+
+        // first lets filter out all ordered and unordered requirements
+        List<Requirement<T>> orderedRequirements = getApplicableRequirements().stream()
+                .filter(Requirement::isOrdered)
+                .sorted()
+                .collect(Collectors.toList());
+        List<Requirement<T>> unorderedRequirements = getApplicableRequirements().stream()
+                .filter(req -> !req.isOrdered())
+                .collect(Collectors.toList());
+
+        boolean allMatch = true;
+        // now we go thru all unordered requirements and test them
+        for (Requirement<T> requirement : unorderedRequirements) {
+            boolean test = requirement.test(getHolder().getType());
+            // only set to false and not back to true
+            // also dont set to false when the requirement is optional
+            if (allMatch && !requirement.isOptional()) {
+                allMatch = test;
+            }
+        }
+
+        // we can check the ordered requirements via stream
+        // since the stream aborts as soon one does not match
+        allMatch = orderedRequirements.stream().allMatch(requirement -> requirement.test(getHolder().getType()));
+
+        if (allMatch) unlock();
     }
 }
