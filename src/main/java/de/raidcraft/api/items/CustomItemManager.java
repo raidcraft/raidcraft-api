@@ -34,7 +34,15 @@ public final class CustomItemManager implements Component {
         if (itemStack.hasItemMeta()) {
             try {
                 int id = CustomItemUtil.decodeItemId(itemStack.getItemMeta());
-                return new CustomItemStack(getCustomItem(id), itemStack);
+                try {
+                    CustomItem item = getCustomItem(id);
+                    return new CustomItemStack(item, itemStack);
+                } catch (CustomItemException e) {
+                    // if we have a valid id it is a valid "custom item" but
+                    // this exception got thrown so we dont have a database entry
+                    // this means we need to strip the lore of the item
+                    itemStack.setItemMeta(null);
+                }
             } catch (CustomItemException ignored) {
             }
         }
