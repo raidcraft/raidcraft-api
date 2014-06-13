@@ -6,6 +6,7 @@ import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,18 +54,14 @@ public abstract class AbstractPath implements Path {
     public void showWaypoints() {
 
         showingWaypoints = true;
-        for (Waypoint waypoint : getWaypoints()) {
-            spawnEnderCrystal(waypoint);
-        }
+        getWaypoints().forEach(this::spawnEnderCrystal);
     }
 
     @Override
     public void hideWaypoints() {
 
         showingWaypoints = false;
-        for (Waypoint waypoint : getWaypoints()) {
-            removeEnderCrystal(waypoint);
-        }
+        getWaypoints().forEach(this::removeEnderCrystal);
     }
 
     @Override
@@ -103,9 +100,11 @@ public abstract class AbstractPath implements Path {
         return null;
     }
 
-    protected void clearWaypoints() {
+    protected List<Waypoint> clearWaypoints() {
 
-        waypoints.clear();
+        ArrayList<Waypoint> waypoints = new ArrayList<>(this.waypoints);
+        this.waypoints.clear();
+        return waypoints;
     }
 
     @Override
