@@ -11,8 +11,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -95,5 +98,13 @@ public final class ActionFactory implements Component {
             throw new ActionException("unknown action: " + identifier);
         }
         return new ActionConfigWrapper<>(actions.get(identifier), config);
+    }
+
+    public Collection<Action<?>> createActions(ConfigurationSection actions) {
+
+        if (actions == null) return new ArrayList<>();
+        return actions.getKeys(false).stream()
+                .map(key -> create(actions.getString(key + ".type"), actions.getConfigurationSection(key)))
+                .collect(Collectors.toList());
     }
 }

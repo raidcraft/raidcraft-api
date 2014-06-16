@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -310,5 +311,17 @@ public final class LocationUtil {
             return regions.allows(DefaultFlag.PVP) && regions.allows(DefaultFlag.MOB_DAMAGE);
         }
         return false;
+    }
+
+    public static Vector getRevertedViewDirection(Location location) {
+
+        double pitch = ((90 - location.getPitch()) * Math.PI) / 180;
+        double yaw  = ((location.getYaw() + 90 + 180) * Math.PI) / 180;
+
+        double x = Math.sin(pitch) * Math.cos(yaw);
+        double y = Math.sin(pitch) * Math.sin(yaw);
+        double z = Math.cos(pitch);
+
+        return new Vector(x, z, y);
     }
 }
