@@ -13,8 +13,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -113,5 +116,13 @@ public final class RequirementFactory implements Component {
             throw new RequirementException("unknown requirement: " + identifier);
         }
         return new RequirementConfigWrapper<>(requirements.get(identifier), config);
+    }
+
+    public Collection<Requirement<?>> createRequirements(ConfigurationSection requirements) {
+
+        if (requirements == null) return new ArrayList<>();
+        return requirements.getKeys(false).stream()
+                .map(key -> create(requirements.getString(key + ".type"), requirements.getConfigurationSection(key)))
+                .collect(Collectors.toList());
     }
 }

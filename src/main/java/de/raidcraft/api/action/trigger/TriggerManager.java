@@ -12,8 +12,12 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -122,5 +126,16 @@ public final class TriggerManager implements Component {
     public Map<String, Trigger> getTrigger() {
 
         return new HashMap<>(registeredTrigger);
+    }
+
+    public Collection<TriggerFactory> createTriggerFactories(ConfigurationSection trigger) {
+
+        List<TriggerFactory> list = new ArrayList<>();
+        if (trigger != null) {
+            list = trigger.getKeys(false).stream()
+                    .map(key -> TriggerManager.getInstance().getTrigger(trigger.getString(key + ".type"), trigger.getConfigurationSection(key)))
+                    .collect(Collectors.toList());
+        }
+        return list;
     }
 }
