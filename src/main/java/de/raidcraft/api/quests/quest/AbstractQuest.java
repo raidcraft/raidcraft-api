@@ -1,19 +1,28 @@
 package de.raidcraft.api.quests.quest;
 
+import de.raidcraft.api.action.trigger.TriggerFactory;
 import de.raidcraft.api.quests.player.QuestHolder;
-import de.raidcraft.api.quests.quest.trigger.Trigger;
-import org.bukkit.entity.Player;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 
 /**
  * @author Silthus
  */
+@Getter
+@Setter
 public abstract class AbstractQuest implements Quest {
 
     private final int id;
     private final QuestTemplate template;
     private final QuestHolder holder;
+    @NonNull
+    private final Collection<TriggerFactory> startTrigger;
+    @NonNull
+    private final Collection<TriggerFactory> completionTrigger;
 
     private Timestamp startTime;
     private Timestamp completionTime;
@@ -23,66 +32,39 @@ public abstract class AbstractQuest implements Quest {
         this.id = id;
         this.template = template;
         this.holder = holder;
-        if (!isCompleted()) {
-            // lets register ourselves as trigger listener
-            for (Trigger trigger : getTemplate().getCompleteTrigger()) {
-                trigger.registerListener(this);
-            }
+        this.startTrigger = template.getStartTrigger();
+        this.completionTrigger = template.getCompletionTrigger();
+        registerListeners();
+    }
+
+    public void registerListeners() {
+
+        unregisterListeners();
+        if (!isCompleted() && !isActive()) {
+            // register our start trigger
+            startTrigger.forEach(factory -> factory.registerListener(this));
+        } else if (hasCompletedAllObjectives() && isActive()) {
+            // register the completion trigger
+            completionTrigger.forEach(factory -> factory.registerListener(this));
         }
     }
 
-    @Override
-    public int getId() {
+    public void unregisterListeners() {
 
-        return id;
+        startTrigger.forEach(factory -> factory.unregisterListener(this));
+        completionTrigger.forEach(factory -> factory.unregisterListener(this));
     }
 
     @Override
-    public String getName() {
+    public void processTrigger() {
 
-        return getTemplate().getName();
+
     }
 
     @Override
-    public String getFullName() {
+    public QuestHolder getTriggerEntityType() {
 
-        return getTemplate().getId();
-    }
-
-    @Override
-    public String getFriendlyName() {
-
-        return getTemplate().getFriendlyName();
-    }
-
-    @Override
-    public String getAuthor() {
-
-        return getTemplate().getAuthor();
-    }
-
-    @Override
-    public String getDescription() {
-
-        return getTemplate().getDescription();
-    }
-
-    @Override
-    public QuestTemplate getTemplate() {
-
-        return template;
-    }
-
-    @Override
-    public QuestHolder getHolder() {
-
-        return holder;
-    }
-
-    @Override
-    public Player getPlayer() {
-
-        return getHolder().getPlayer();
+        return getHolder();
     }
 
     @Override
@@ -94,29 +76,7 @@ public abstract class AbstractQuest implements Quest {
     @Override
     public boolean isActive() {
 
-        return startTime != null && !isCompleted();
-    }
-
-    @Override
-    public Timestamp getStartTime() {
-
-        return startTime;
-    }
-
-    protected void setStartTime(Timestamp startTime) {
-
-        this.startTime = startTime;
-    }
-
-    @Override
-    public Timestamp getCompletionTime() {
-
-        return completionTime;
-    }
-
-    protected void setCompletionTime(Timestamp completionTime) {
-
-        this.completionTime = completionTime;
+        return getStartTime() != null && !isCompleted();
     }
 
     @Override

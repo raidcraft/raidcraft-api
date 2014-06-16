@@ -1,10 +1,11 @@
 package de.raidcraft.api.quests.quest;
 
+import de.raidcraft.api.action.trigger.TriggerFactory;
 import de.raidcraft.api.quests.quest.action.Action;
 import de.raidcraft.api.quests.quest.objective.Objective;
 import de.raidcraft.api.quests.quest.requirement.Requirement;
-import de.raidcraft.api.quests.quest.trigger.Trigger;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,9 +35,9 @@ public interface QuestTemplate {
 
     public Objective[] getObjectives();
 
-    public Trigger[] getTrigger();
+    public Collection<TriggerFactory> getStartTrigger();
 
-    public Trigger[] getCompleteTrigger();
+    public Collection<TriggerFactory> getCompletionTrigger();
 
     public List<Action<QuestTemplate>> getCompleteActions();
 }

@@ -1,8 +1,8 @@
 package de.raidcraft.api.quests.quest;
 
+import de.raidcraft.api.action.trigger.TriggerListener;
 import de.raidcraft.api.quests.player.PlayerObjective;
 import de.raidcraft.api.quests.player.QuestHolder;
-import de.raidcraft.api.quests.quest.trigger.TriggerListener;
 import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
@@ -11,19 +11,34 @@ import java.util.List;
 /**
  * @author Silthus
  */
-public interface Quest extends TriggerListener {
+public interface Quest extends TriggerListener<QuestHolder> {
 
     public int getId();
 
-    public String getName();
+    public default String getName() {
 
-    public String getAuthor();
+        return getTemplate().getName();
+    }
 
-    public String getFullName();
+    public default String getFullName() {
 
-    public String getFriendlyName();
+        return getTemplate().getId();
+    }
 
-    public String getDescription();
+    public default String getFriendlyName() {
+
+        return getTemplate().getFriendlyName();
+    }
+
+    public default String getAuthor() {
+
+        return getTemplate().getAuthor();
+    }
+
+    public default String getDescription() {
+
+        return getTemplate().getDescription();
+    }
 
     public List<PlayerObjective> getPlayerObjectives();
 
@@ -33,7 +48,10 @@ public interface Quest extends TriggerListener {
 
     public QuestHolder getHolder();
 
-    public Player getPlayer();
+    public default Player getPlayer() {
+
+        return getHolder().getPlayer();
+    }
 
     public boolean isCompleted();
 

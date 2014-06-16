@@ -125,13 +125,13 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
     }
 
     @Override
-    public Trigger[] getTrigger() {
+    public Trigger[] getStartTrigger() {
 
         return trigger;
     }
 
     @Override
-    public Trigger[] getCompleteTrigger() {
+    public Trigger[] getCompletionTrigger() {
 
         return completeTrigger;
     }
