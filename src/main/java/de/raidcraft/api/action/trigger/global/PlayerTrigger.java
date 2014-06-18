@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -34,7 +35,20 @@ public class PlayerTrigger extends Trigger implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        informListeners("interact", event.getPlayer());
+        informListeners("interact", event.getPlayer(), config -> {
+
+            Block block = event.getClickedBlock();
+            if (config.isSet("x") && config.isSet("y") && config.isSet("z")) {
+                Location blockLocation = block.getLocation();
+                if (blockLocation.getBlockX() != config.getInt("x")
+                        || blockLocation.getBlockY() != config.getInt("y")
+                        || blockLocation.getBlockZ() != config.getInt("z")
+                        || !blockLocation.getWorld().equals(Bukkit.getWorld(config.getString("world", blockLocation.getWorld().getName())))) {
+                    return false;
+                }
+            }
+            return !config.isSet("type") || Material.valueOf(config.getString("type", "minecraft:air")) == block.getType();
+        });
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

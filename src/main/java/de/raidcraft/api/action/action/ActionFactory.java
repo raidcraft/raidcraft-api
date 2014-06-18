@@ -2,13 +2,11 @@ package de.raidcraft.api.action.action;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
-import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -34,27 +32,10 @@ public final class ActionFactory implements Component {
     private ActionFactory() {
 
         RaidCraft.registerComponent(ActionFactory.class, this);
-        registerGlobalActions();
+        ActionAPI.registerGlobalActions(this);
     }
 
-    private void registerGlobalActions() {
-
-        registerAction("player.give.item", new Action<Player>() {
-            @Override
-            public void accept(Player player) {
-
-                try {
-                    ItemStack item = RaidCraft.getItem(getConfig().getString("item"), getConfig().getInt("amount", 1));
-                    player.getInventory().addItem(item);
-                } catch (CustomItemException e) {
-                    RaidCraft.LOGGER.warning("player.give.item (" + player.getName() + "): " + e.getMessage());
-                }
-            }
-        });
-        registerAction("player.kill", (Player player) -> player.setHealth(0.0));
-    }
-
-    private <T> void registerAction(@NonNull String identifier, @NonNull Action<T> action) {
+    public <T> void registerGlobalAction(@NonNull String identifier, @NonNull Action<T> action) {
 
         actions.put(identifier, action);
         RaidCraft.LOGGER.info("registered global action: " + identifier);
