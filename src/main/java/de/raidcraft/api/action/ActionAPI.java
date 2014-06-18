@@ -3,6 +3,8 @@ package de.raidcraft.api.action;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionFactory;
+import de.raidcraft.api.action.action.global.DoorAction;
+import de.raidcraft.api.action.action.global.SetBlockAction;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.trigger.TriggerManager;
@@ -36,6 +38,41 @@ public final class ActionAPI {
             }
         });
         factory.registerGlobalAction("player.kill", (Player player) -> player.setHealth(0.0));
+        factory.registerGlobalAction("player.message", new Action<Player>() {
+            @Override
+            public void accept(Player player) {
+
+                String[] text = getConfig().getString("text").split("|");
+                for (String msg : text) {
+                    player.sendMessage(msg);
+                }
+            }
+        });
+        factory.registerGlobalAction("door.open", new DoorAction());
+        factory.registerGlobalAction("block.set", new SetBlockAction());
+        factory.registerGlobalAction("teleport.coords", new Action<Player>() {
+            @Override
+            public void accept(Player player) {
+
+                World world = Bukkit.getWorld(getConfig().getString("world", player.getWorld().getName()));
+                if (world == null) return;
+                Location location = new Location(world,
+                        getConfig().getInt("x"),
+                        getConfig().getInt("y"),
+                        getConfig().getInt("z"),
+                        (float) getConfig().getDouble("yaw"),
+                        (float) getConfig().getDouble("pitch"));
+                player.teleport(location);
+            }
+        });
+        factory.registerGlobalAction("teleport.player", new Action<Player>() {
+            @Override
+            public void accept(Player player) {
+
+                Player targetPlayer = Bukkit.getPlayer(getConfig().getString("player"));
+                if (targetPlayer != null) player.teleport(targetPlayer);
+            }
+        });
     }
 
     public static void registerGlobalRequirements(RequirementFactory factory) {
@@ -64,6 +101,18 @@ public final class ActionAPI {
                             && config.getInt("y") == location.getBlockY()
                             && config.getInt("z") == location.getBlockZ()
                             && world.equals(location.getWorld());
+                }
+                return false;
+            }
+        });
+        factory.registerGlobalRequirement("player.has-item", new Requirement<Player>() {
+            @Override
+            public boolean test(Player player) {
+
+                try {
+                    ItemStack item = RaidCraft.getItem(getConfig().getString("item"));
+                    return player.getInventory().contains(item);
+                } catch (CustomItemException ignored) {
                 }
                 return false;
             }

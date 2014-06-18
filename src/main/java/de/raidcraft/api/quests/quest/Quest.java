@@ -2,8 +2,8 @@ package de.raidcraft.api.quests.quest;
 
 import com.avaje.ebean.annotation.EnumValue;
 import de.raidcraft.api.action.trigger.TriggerListener;
-import de.raidcraft.api.quests.player.PlayerObjective;
-import de.raidcraft.api.quests.player.QuestHolder;
+import de.raidcraft.api.quests.objective.PlayerObjective;
+import de.raidcraft.api.quests.holder.QuestHolder;
 import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
@@ -86,6 +86,8 @@ public interface Quest extends TriggerListener<Player> {
     public Timestamp getStartTime();
 
     public Timestamp getCompletionTime();
+
+    public void updateObjectiveListeners();
 
     public void start();
 

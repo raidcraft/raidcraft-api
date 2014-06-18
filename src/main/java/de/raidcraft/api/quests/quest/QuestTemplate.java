@@ -1,12 +1,12 @@
 package de.raidcraft.api.quests.quest;
 
+import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.TriggerFactory;
-import de.raidcraft.api.quests.quest.action.Action;
-import de.raidcraft.api.quests.quest.objective.Objective;
-import de.raidcraft.api.quests.quest.requirement.Requirement;
+import de.raidcraft.api.quests.objective.ObjectiveTemplate;
+import org.bukkit.entity.Player;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Silthus
@@ -31,13 +31,13 @@ public interface QuestTemplate {
 
     public boolean isLocked();
 
-    public Requirement[] getRequirements();
+    public Collection<ObjectiveTemplate> getObjectiveTemplates();
 
-    public Objective[] getObjectives();
+    public Collection<Requirement<Player>> getRequirements();
 
     public Collection<TriggerFactory> getStartTrigger();
 
     public Collection<TriggerFactory> getCompletionTrigger();
 
-    public List<Action<QuestTemplate>> getCompleteActions();
+    public Collection<Action<Player>> getCompletionActions();
 }

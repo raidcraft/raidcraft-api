@@ -1,6 +1,7 @@
 package de.raidcraft.api.action.requirement;
 
 import de.raidcraft.api.action.ReflectionUtil;
+import de.raidcraft.api.quests.util.QuestUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -46,6 +47,18 @@ public interface Requirement<T> extends Predicate<T> {
     public default int getCount() {
 
         return 0;
+    }
+
+    public default boolean hasCountText() {
+
+        return getConfig().isSet("count-text");
+    }
+
+    public default String getCountText() {
+
+        String string = getConfig().getString("count-text", "%current%/%count%");
+        string = QuestUtil.replaceCount(string, getCount(), getRequiredCount());
+        return string;
     }
 
     public default boolean isOptional() {

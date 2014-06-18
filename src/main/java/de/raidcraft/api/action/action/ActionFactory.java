@@ -7,6 +7,7 @@ import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -86,6 +87,15 @@ public final class ActionFactory implements Component {
         if (actions == null) return new ArrayList<>();
         return actions.getKeys(false).stream()
                 .map(key -> create(actions.getString(key + ".type"), actions.getConfigurationSection(key)))
+                .collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
+
+        return ActionFactory.getInstance().createActions(actions).stream()
+                .filter(action -> action.matchesType(Player.class))
+                .map(action -> (Action<T>) action)
                 .collect(Collectors.toList());
     }
 }

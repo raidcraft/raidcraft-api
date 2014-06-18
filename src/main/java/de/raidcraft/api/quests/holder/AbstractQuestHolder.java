@@ -1,9 +1,11 @@
-package de.raidcraft.api.quests.player;
+package de.raidcraft.api.quests.holder;
 
 import de.raidcraft.api.quests.QuestException;
 import de.raidcraft.api.quests.quest.Quest;
 import de.raidcraft.api.quests.quest.QuestTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -11,10 +13,13 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
  */
+@Data
+@EqualsAndHashCode(of = "id")
 public abstract class AbstractQuestHolder implements QuestHolder {
 
     private final int id;
@@ -28,15 +33,9 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     }
 
     @Override
-    public int getId() {
-
-        return id;
-    }
-
-    @Override
     public String getName() {
 
-        return player;
+        return getPlayer().getName();
     }
 
     @Override
@@ -113,13 +112,10 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     @Override
     public List<Quest> getActiveQuests() {
 
-        ArrayList<Quest> activeQuests = new ArrayList<>();
-        for (Quest quest : getAllQuests()) {
-            if (quest.isActive()) {
-                activeQuests.add(quest);
-            }
-        }
-        return activeQuests;
+        return getAllQuests().stream()
+                .filter(Quest::isActive)
+                .map(quest -> quest)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -143,28 +139,5 @@ public abstract class AbstractQuestHolder implements QuestHolder {
         if (remove != null) {
             remove.abort();
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o) return true;
-        if (!(o instanceof AbstractQuestHolder)) return false;
-
-        AbstractQuestHolder that = (AbstractQuestHolder) o;
-
-        return player.equals(that.player);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return player.hashCode();
-    }
-
-    @Override
-    public String toString() {
-
-        return player;
     }
 }

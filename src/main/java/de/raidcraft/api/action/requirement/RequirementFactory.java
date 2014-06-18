@@ -3,10 +3,12 @@ package de.raidcraft.api.action.requirement;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -88,6 +90,15 @@ public final class RequirementFactory implements Component {
         if (requirements == null) return new ArrayList<>();
         return requirements.getKeys(false).stream()
                 .map(key -> create(requirements.getString(key + ".type"), requirements.getConfigurationSection(key)))
+                .collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Collection<Requirement<T>> createRequirements(ConfigurationSection requirements, Class<T> type) {
+
+        return ActionFactory.getInstance().createActions(requirements).stream()
+                .filter(action -> action.matchesType(Player.class))
+                .map(action -> (Requirement<T>) action)
                 .collect(Collectors.toList());
     }
 }

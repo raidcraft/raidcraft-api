@@ -1,7 +1,7 @@
 package de.raidcraft.api.quests;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.quests.player.QuestHolder;
+import de.raidcraft.api.quests.holder.QuestHolder;
 import de.raidcraft.api.quests.quest.trigger.Trigger;
 import de.raidcraft.util.CaseInsensitiveMap;
 import org.bukkit.Bukkit;
@@ -14,7 +14,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Silthus

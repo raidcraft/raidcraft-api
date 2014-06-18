@@ -1,4 +1,4 @@
-package de.raidcraft.api.quests.player;
+package de.raidcraft.api.quests.holder;
 
 import de.raidcraft.api.quests.QuestException;
 import de.raidcraft.api.quests.quest.QuestTemplate;
@@ -31,6 +31,12 @@ public interface QuestHolder {
     public List<Quest> getCompletedQuests();
 
     public List<Quest> getActiveQuests();
+
+    public default void sendMessage(String text) {
+
+        if (text == null || text.equals("")) return;
+        getPlayer().sendMessage(text);
+    }
 
     public void addQuest(Quest quest);
 

@@ -1,21 +1,16 @@
 package de.raidcraft.api.quests.quest;
 
+import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.TriggerFactory;
-import de.raidcraft.api.quests.QuestException;
-import de.raidcraft.api.quests.player.PlayerObjective;
-import de.raidcraft.api.quests.player.QuestHolder;
-import de.raidcraft.api.quests.quest.action.Action;
-import de.raidcraft.api.quests.quest.requirement.Requirement;
-import de.raidcraft.api.quests.quest.trigger.Trigger;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import de.raidcraft.api.quests.holder.QuestHolder;
+import de.raidcraft.api.quests.objective.PlayerObjective;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +18,8 @@ import java.util.List;
 /**
  * @author Silthus
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(of = "id")
 public abstract class AbstractQuest implements Quest {
 
     private final int id;
@@ -54,31 +49,11 @@ public abstract class AbstractQuest implements Quest {
     @Override
     public void processTrigger() {
 
-        boolean meetsRequirements = false;
-        if (getTemplate().getRequirements().length > 0) {
-            try {
-                for (Requirement requirement : getTemplate().getRequirements()) {
-                    if (!requirement.isMet(questHolder.getPlayer())) {
-                        meetsRequirements = false;
-                        break;
-                    }
-                }
-            } catch (QuestException e) {
-                meetsRequirements = false;
-                getPlayer().sendMessage(ChatColor.RED + e.getMessage());
-            }
-        } else {
-            meetsRequirements = true;
-        }
-        // dont trigger objectives when no requirements are met
-        if (meetsRequirements) {
-            for (PlayerObjective playerObjective : getUncompletedObjectives()) {
-                playerObjective.trigger(questHolder);
-
-                // abort if we are dealing with ordered required objectives
-                if (!playerObjective.getObjective().isOptional() && getTemplate().isOrdered()) {
-                    return;
-                }
+        if (isActive()) {
+            Collection<Requirement<Player>> requirements = getTemplate().getRequirements();
+            if (requirements.stream().allMatch(requirement -> requirement.test(getPlayer()))) {
+                unregisterListeners();
+                registerListeners();
             }
         }
     }
@@ -88,9 +63,14 @@ public abstract class AbstractQuest implements Quest {
         if (!isCompleted() && !isActive()) {
             // register our start trigger
             startTrigger.forEach(factory -> factory.registerListener(this));
-        } else if (hasCompletedAllObjectives() && isActive()) {
-            // register the completion trigger
-            completionTrigger.forEach(factory -> factory.registerListener(this));
+        } else if (isActive()) {
+            if (hasCompletedAllObjectives()) {
+                // register the completion trigger
+                completionTrigger.forEach(factory -> factory.registerListener(this));
+            } else {
+                // we need to register the objective trigger
+                updateObjectiveListeners();
+            }
         }
     }
 
@@ -98,6 +78,26 @@ public abstract class AbstractQuest implements Quest {
 
         startTrigger.forEach(factory -> factory.unregisterListener(this));
         completionTrigger.forEach(factory -> factory.unregisterListener(this));
+    }
+
+    @Override
+    public void updateObjectiveListeners() {
+
+        if (hasCompletedAllObjectives()) {
+            unregisterListeners();
+            registerListeners();
+            return;
+        }
+        for (PlayerObjective playerObjective : getUncompletedObjectives()) {
+            if (!playerObjective.isCompleted()) {
+                // lets register the listeners of our objectives
+                playerObjective.registerListeners();
+            }
+            // abort if we are dealing with ordered required objectives
+            if (!playerObjective.getObjectiveTemplate().isOptional() && getTemplate().isOrdered()) {
+                return;
+            }
+        }
     }
 
     @Override
@@ -119,29 +119,6 @@ public abstract class AbstractQuest implements Quest {
     }
 
     @Override
-    public boolean equals(Object o) {
-
-        if (this == o) return true;
-        if (!(o instanceof AbstractQuest)) return false;
-
-        AbstractQuest that = (AbstractQuest) o;
-
-        return id == that.id;
-    }
-
-    @Override
-    public int hashCode() {
-
-        return id;
-    }
-
-    @Override
-    public String toString() {
-
-        return getTemplate().toString() + "." + getHolder().toString();
-    }
-
-    @Override
     public boolean hasCompletedAllObjectives() {
 
         List<PlayerObjective> uncompletedObjectives = getUncompletedObjectives();
@@ -151,7 +128,7 @@ public abstract class AbstractQuest implements Quest {
         if (!uncompletedObjectives.isEmpty() && !completed) {
             int optionalObjectives = 0;
             for (PlayerObjective objective : uncompletedObjectives) {
-                if (objective.getObjective().isOptional()) optionalObjectives++;
+                if (objective.getObjectiveTemplate().isOptional()) optionalObjectives++;
             }
             if (optionalObjectives == uncompletedObjectives.size()) {
                 completed = true;
@@ -170,9 +147,10 @@ public abstract class AbstractQuest implements Quest {
     @Override
     public void onObjectCompletion(PlayerObjective objective) {
 
+        updateObjectiveListeners();
         getHolder().getPlayer().sendMessage(ChatColor.YELLOW + "" + ChatColor.UNDERLINE + getTemplate().getFriendlyName() +
                 ChatColor.RESET + ": " + ChatColor.DARK_GREEN + "Aufgabe erledigt!");
-        getHolder().getPlayer().sendMessage(ChatColor.GREEN.toString() + ChatColor.STRIKETHROUGH + ChatColor.ITALIC + objective.getObjective().getFriendlyName());
+        getHolder().getPlayer().sendMessage(ChatColor.GREEN.toString() + ChatColor.STRIKETHROUGH + ChatColor.ITALIC + objective.getObjectiveTemplate().getFriendlyName());
     }
 
     @Override
@@ -191,30 +169,25 @@ public abstract class AbstractQuest implements Quest {
         if (!isActive() || !hasCompletedAllObjectives()) {
             return;
         }
+        // first unregister all listeners to avoid double completion
+        unregisterListeners();
+
         Bukkit.broadcastMessage(ChatColor.DARK_GREEN + getHolder().getPlayer().getName() + " hat die Quest '" +
                 ChatColor.GOLD + getFriendlyName() + ChatColor.DARK_GREEN + "' abgeschlossen!");
-//        getHolder().getPlayer().sendMessage(ChatColor.YELLOW + "Quest abgeschlossen: " + ChatColor.GREEN + getFriendlyName());
         // complete the quest and trigger the complete actions
         setCompletionTime(new Timestamp(System.currentTimeMillis()));
         // give rewards and execute completion actions
-        for (Action<QuestTemplate> action : getTemplate().getCompleteActions()) {
-            try {
-                action.execute(getHolder(), getTemplate());
-            } catch (QuestException e) {
-                getPlayer().sendMessage(ChatColor.RED + e.getMessage());
-            }
-        }
-        // unregister ourselves as trigger listener
-        for (Trigger trigger : getTemplate().getCompletionTrigger()) {
-            trigger.unregisterListener(this);
-        }
+        getTemplate().getCompletionActions()
+                .forEach(action -> action.accept(getPlayer()));
     }
 
     @Override
     public void abort() {
 
-        getHolder().abortQuest(this);
         setStartTime(null);
+        // first unregister all listeners (includes complete listeners)
         unregisterListeners();
+        // and then we reregister our listeners because the player should be able to reaccept the quest
+        registerListeners();
     }
 }
