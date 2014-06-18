@@ -1,5 +1,6 @@
 package de.raidcraft.api.quests.quest;
 
+import com.avaje.ebean.annotation.EnumValue;
 import de.raidcraft.api.action.trigger.TriggerListener;
 import de.raidcraft.api.quests.player.PlayerObjective;
 import de.raidcraft.api.quests.player.QuestHolder;
@@ -7,11 +8,24 @@ import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
  */
-public interface Quest extends TriggerListener<QuestHolder> {
+public interface Quest extends TriggerListener<Player> {
+
+    public enum Phase {
+
+        @EnumValue("NOT_STARTED")
+        NOT_STARTED,
+        @EnumValue("IN_PROGRESS")
+        IN_PROGRESS,
+        @EnumValue("OBJECTIVES_COMPLETED")
+        OJECTIVES_COMPLETED,
+        @EnumValue("COMPLETE")
+        COMPLETE
+    }
 
     public int getId();
 
@@ -40,24 +54,32 @@ public interface Quest extends TriggerListener<QuestHolder> {
         return getTemplate().getDescription();
     }
 
-    public List<PlayerObjective> getPlayerObjectives();
-
-    public List<PlayerObjective> getUncompletedObjectives();
-
-    public QuestTemplate getTemplate();
-
-    public QuestHolder getHolder();
-
     public default Player getPlayer() {
 
         return getHolder().getPlayer();
     }
 
+    public default List<PlayerObjective> getUncompletedObjectives() {
+
+        return getPlayerObjectives().stream()
+                .filter(playerObjective -> !playerObjective.isCompleted())
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public List<PlayerObjective> getPlayerObjectives();
+
+    public QuestTemplate getTemplate();
+
+    public QuestHolder getHolder();
+
+    public Phase getPhase();
+
     public boolean isCompleted();
 
     public boolean hasCompletedAllObjectives();
 
-    public void completeObjective(PlayerObjective objective);
+    public void onObjectCompletion(PlayerObjective objective);
 
     public boolean isActive();
 
@@ -70,6 +92,8 @@ public interface Quest extends TriggerListener<QuestHolder> {
     public void complete();
 
     public void abort();
+
+    public void delete();
 
     public void save();
 }

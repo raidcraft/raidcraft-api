@@ -1,15 +1,16 @@
 package de.raidcraft.api.quests.player;
 
+import de.raidcraft.api.action.trigger.TriggerListener;
 import de.raidcraft.api.quests.quest.Quest;
 import de.raidcraft.api.quests.quest.objective.Objective;
-import de.raidcraft.api.quests.quest.trigger.TriggerListener;
+import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
 
 /**
  * @author Silthus
  */
-public interface PlayerObjective extends TriggerListener, Comparable<PlayerObjective> {
+public interface PlayerObjective extends TriggerListener<Player>, Comparable<PlayerObjective> {
 
     public int getId();
 

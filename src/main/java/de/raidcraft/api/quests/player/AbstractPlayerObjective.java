@@ -1,19 +1,27 @@
 package de.raidcraft.api.quests.player;
 
+import de.raidcraft.api.action.trigger.TriggerFactory;
+import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.quests.quest.Quest;
 import de.raidcraft.api.quests.quest.objective.Objective;
 import de.raidcraft.api.quests.quest.trigger.Trigger;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 
 /**
  * @author Silthus
  */
+@Getter
+@Setter
 public abstract class AbstractPlayerObjective implements PlayerObjective {
 
     private final int id;
     private final Quest quest;
     private final Objective objective;
+    private final Collection<TriggerFactory> triggerFactories;
     private Timestamp completionTime;
 
     public AbstractPlayerObjective(int id, Quest quest, Objective objective) {
@@ -21,6 +29,7 @@ public abstract class AbstractPlayerObjective implements PlayerObjective {
         this.id = id;
         this.quest = quest;
         this.objective = objective;
+        this.triggerFactories = getObjective().gT
         if (!isCompleted()) {
             // lets register ourselves as trigger listener
             for (Trigger trigger : getObjective().getTrigger()) {
@@ -29,34 +38,27 @@ public abstract class AbstractPlayerObjective implements PlayerObjective {
         }
     }
 
-    @Override
-    public int getId() {
+    public void registerListeners() {
 
-        return id;
+        if (!isCompleted()) {
+            // register our start trigger
+            startTrigger.forEach(factory -> factory.registerListener(this));
+        } else if (hasCompletedAllObjectives() && isActive()) {
+            // register the completion trigger
+            completionTrigger.forEach(factory -> factory.registerListener(this));
+        }
     }
 
-    @Override
-    public Quest getQuest() {
+    public void unregisterListeners() {
 
-        return quest;
-    }
-
-    @Override
-    public Objective getObjective() {
-
-        return objective;
+        startTrigger.forEach(factory -> factory.unregisterListener(this));
+        completionTrigger.forEach(factory -> factory.unregisterListener(this));
     }
 
     @Override
     public QuestHolder getQuestHolder() {
 
         return quest.getHolder();
-    }
-
-    @Override
-    public Timestamp getCompletionTime() {
-
-        return completionTime;
     }
 
     @Override
