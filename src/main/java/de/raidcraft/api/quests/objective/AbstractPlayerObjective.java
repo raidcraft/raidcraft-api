@@ -4,6 +4,7 @@ import de.raidcraft.api.quests.holder.QuestHolder;
 import de.raidcraft.api.quests.quest.Quest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
 
@@ -28,11 +29,13 @@ public abstract class AbstractPlayerObjective implements PlayerObjective {
     }
 
     @Override
-    public void processTrigger() {
+    public boolean processTrigger(Player player) {
 
-        if (getObjectiveTemplate().getRequirements().stream().allMatch(requirement -> requirement.test(getQuestHolder().getPlayer()))) {
+        if (getObjectiveTemplate().getRequirements().stream()
+                .allMatch(requirement -> requirement.test(player))) {
             complete();
         }
+        return true;
     }
 
     public void registerListeners() {

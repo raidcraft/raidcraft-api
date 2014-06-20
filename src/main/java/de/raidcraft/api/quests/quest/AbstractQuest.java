@@ -47,15 +47,17 @@ public abstract class AbstractQuest implements Quest {
     protected abstract List<PlayerObjective> loadObjectives();
 
     @Override
-    public void processTrigger() {
+    public boolean processTrigger(Player player) {
 
         if (isActive()) {
             Collection<Requirement<Player>> requirements = getTemplate().getRequirements();
-            if (requirements.stream().allMatch(requirement -> requirement.test(getPlayer()))) {
+            if (requirements.stream().allMatch(requirement -> requirement.test(player))) {
                 unregisterListeners();
                 registerListeners();
             }
+            return true;
         }
+        return false;
     }
 
     public void registerListeners() {
@@ -98,12 +100,6 @@ public abstract class AbstractQuest implements Quest {
                 return;
             }
         }
-    }
-
-    @Override
-    public Player getTriggerEntityType() {
-
-        return getPlayer();
     }
 
     @Override

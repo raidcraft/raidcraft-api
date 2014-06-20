@@ -53,18 +53,13 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     @Override
     public boolean hasActiveQuest(String name) {
 
-        return allQuests.containsKey(name) && allQuests.get(name).isActive() && !allQuests.get(name).isCompleted();
+        return allQuests.containsKey(name) && allQuests.get(name).isActive();
     }
 
     @Override
     public Quest getQuest(QuestTemplate questTemplate) {
 
-        try {
-            return getQuest(questTemplate.getId());
-        } catch (QuestException ignored) {
-            // will never occur
-        }
-        return null;
+        return allQuests.getOrDefault(questTemplate.getId(), createQuest(questTemplate));
     }
 
     @Override
@@ -73,15 +68,9 @@ public abstract class AbstractQuestHolder implements QuestHolder {
         if (allQuests.containsKey(name)) {
             return allQuests.get(name);
         }
-        ArrayList<Quest> foundQuests = new ArrayList<>();
-        for (Quest quest : allQuests.values()) {
-//            if (!quest.isActive() || quest.isCompleted()) {
-//                continue;
-//            }
-            if (quest.getFriendlyName().toLowerCase().contains(name.toLowerCase())) {
-                foundQuests.add(quest);
-            }
-        }
+        List<Quest> foundQuests = allQuests.values().stream()
+                .filter(quest -> quest.getFriendlyName().toLowerCase().contains(name.toLowerCase()))
+                .map(quest -> quest).collect(Collectors.toList());
         if (foundQuests.isEmpty()) {
             throw new QuestException("Du hast keine Quest mit dem Namen: " + name);
         }
@@ -100,13 +89,10 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     @Override
     public List<Quest> getCompletedQuests() {
 
-        ArrayList<Quest> completedQuests = new ArrayList<>();
-        for (Quest quest : getAllQuests()) {
-            if (quest.isCompleted()) {
-                completedQuests.add(quest);
-            }
-        }
-        return completedQuests;
+        return getAllQuests().stream()
+                .filter(Quest::isCompleted)
+                .map(quest -> quest)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -119,11 +105,12 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     }
 
     @Override
-    public void startQuest(QuestTemplate template) throws QuestException {
+    public Quest startQuest(QuestTemplate template) throws QuestException {
 
         if (template.isLocked() && !getPlayer().hasPermission("rcquests.admin")) {
             throw new QuestException("Diese Quest ist aktuell gesperrt und kann nicht angenommen werden.");
         }
+        return null;
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.raidcraft.api.quests.quest;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.TriggerFactory;
+import de.raidcraft.api.action.trigger.TriggerListener;
 import de.raidcraft.api.quests.objective.ObjectiveTemplate;
 import org.bukkit.entity.Player;
 
@@ -11,7 +12,13 @@ import java.util.Collection;
 /**
  * @author Silthus
  */
-public interface QuestTemplate {
+public interface QuestTemplate extends TriggerListener<Player> {
+
+    @Override
+    public default Class<Player> getTriggerEntityType() {
+
+        return Player.class;
+    }
 
     public String getId();
 

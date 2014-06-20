@@ -20,7 +20,17 @@ public interface QuestHolder {
 
     public boolean hasQuest(String quest);
 
+    public default boolean hasQuest(QuestTemplate template) {
+
+        return hasQuest(template.getId());
+    }
+
     public boolean hasActiveQuest(String quest);
+
+    public default boolean hasActiveQuest(QuestTemplate template) {
+
+        return hasActiveQuest(template.getId());
+    }
 
     public Quest getQuest(String quest) throws QuestException;
 
@@ -42,7 +52,9 @@ public interface QuestHolder {
 
     public void abortQuest(Quest quest);
 
-    public void startQuest(QuestTemplate template) throws QuestException;
+    public Quest createQuest(QuestTemplate template);
+
+    public Quest startQuest(QuestTemplate template) throws QuestException;
 
     public void save();
 }

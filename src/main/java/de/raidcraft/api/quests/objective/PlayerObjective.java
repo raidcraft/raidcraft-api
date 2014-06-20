@@ -13,9 +13,9 @@ import java.sql.Timestamp;
 public interface PlayerObjective extends TriggerListener<Player>, Comparable<PlayerObjective> {
 
     @Override
-    public default Player getTriggerEntityType() {
+    public default Class<Player> getTriggerEntityType() {
 
-        return getQuestHolder().getPlayer();
+        return Player.class;
     }
 
     public int getId();

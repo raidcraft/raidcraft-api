@@ -42,7 +42,7 @@ class TriggerListenerConfigWrapper<T> {
         actions = section.getKeys(false).stream()
                 .map(key -> RaidCraft.getComponent(ActionFactory.class)
                         .create(section.getString(key + ".type"), section.getConfigurationSection(key)))
-                .filter(action -> action.matchesType(getTriggerListener().getTriggerEntityType().getClass()))
+                .filter(action -> action.matchesType(getTriggerListener().getTriggerEntityType()))
                 .map(action -> (Action<T>) action)
                 .collect(Collectors.toList());
     }
@@ -59,11 +59,11 @@ class TriggerListenerConfigWrapper<T> {
 
     protected boolean test(T triggeringEntity, Predicate<ConfigurationSection> predicate) {
 
-        if (triggerListener.getTriggerEntityType().equals(triggeringEntity) && predicate.test(config)) {
-            // trigger our actions
-            actions.forEach(action -> action.accept(triggeringEntity));
-            return true;
-        }
-        return false;
+        return triggerListener.getTriggerEntityType().isAssignableFrom(triggeringEntity.getClass()) && predicate.test(config);
+    }
+
+    protected void executeActions(T triggeringEntity) {
+
+        actions.forEach(action -> action.accept(triggeringEntity));
     }
 }
