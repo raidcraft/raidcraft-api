@@ -40,11 +40,6 @@
             <artifactId>PacketWrapper</artifactId>
             <version>${rc.version}</version>
         </dependency>
-        <dependency>
-            <groupId>mkremins</groupId>
-            <artifactId>fanciful</artifactId>
-            <version>${rc.version}</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
