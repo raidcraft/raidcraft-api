@@ -8,10 +8,14 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.SimpleConfiguration;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -27,15 +31,15 @@ import java.util.UUID;
 @Data
 public class ConfigBuilder<T extends BasePlugin> implements Listener {
 
-    private static final Map<String, SectionBuilder> SECTION_BUILDERS = new CaseInsensitiveMap<>();
+    private static final Map<String, ConfigGenerator> SECTION_BUILDERS = new CaseInsensitiveMap<>();
     private static final Map<UUID, ConfigBuilder> CURRENT_BUILDERS = new HashMap<>();
 
-    public static void registerConfigBuilder(SectionBuilder builder) throws ConfigBuilderException {
+    public static void registerConfigBuilder(ConfigGenerator builder) throws ConfigBuilderException {
 
         try {
             Method method = builder.getClass().getMethod("createSection", CommandContext.class, Player.class);
-            if (method.isAnnotationPresent(SectionBuilder.Information.class)) {
-                String name = method.getAnnotation(SectionBuilder.Information.class).value();
+            if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
+                String name = method.getAnnotation(ConfigGenerator.Information.class).value();
                 if (SECTION_BUILDERS.containsKey(name)) {
                     throw new ConfigBuilderException("Config Builder with the same name is already registered: " + name);
                 }
@@ -50,21 +54,21 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
 
     public static void registerConfigBuilder(Object builder) {
 
-        if (builder instanceof SectionBuilder) {
+        if (builder instanceof ConfigGenerator) {
             try {
-                registerConfigBuilder((SectionBuilder) builder);
+                registerConfigBuilder((ConfigGenerator) builder);
             } catch (ConfigBuilderException e) {
                 RaidCraft.LOGGER.warning(e.getMessage());
             }
         }
     }
 
-    public static Map<String, SectionBuilder> getSectionBuilders() {
+    public static Map<String, ConfigGenerator> getSectionBuilders() {
 
         return new HashMap<>(SECTION_BUILDERS);
     }
 
-    public static SectionBuilder getSectionBuilder(String identifier) {
+    public static ConfigGenerator getSectionBuilder(String identifier) {
 
         return SECTION_BUILDERS.get(identifier);
     }
@@ -85,6 +89,38 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
                 new ConfigBuilder<>(RaidCraft.getComponent(RaidCraftPlugin.class), player, "config-builders"));
     }
 
+    public static <T extends BasePlugin> ConfigBuilder<T> createBuilder(T plugin, Player player, String baseFilePath) {
+
+        ConfigBuilder<T> builder = new ConfigBuilder<>(plugin, player, baseFilePath);
+        if (isBuilder(player)) {
+            getBuilder(player).save();
+        }
+        CURRENT_BUILDERS.put(player.getUniqueId(), builder);
+        return builder;
+    }
+
+    public static void checkArguments(CommandSender sender, CommandContext args, ConfigGenerator generator) throws ConfigBuilderException {
+
+        ConfigGenerator.Information information = generator.getInformation();
+        if (args.argsLength() < information.min()) {
+            generator.printHelp(sender);
+            throw new ConfigBuilderException("Not enough arguments!");
+        }
+        if (args.argsLength() > information.max()) {
+            generator.printHelp(sender);
+            throw new ConfigBuilderException("Too many arguments!");
+        }
+        if (!information.anyFlags()) {
+            char[] chars = information.flags().replace(":", "").toCharArray();
+            for (char c : chars) {
+                if (!args.getFlags().contains(c)) {
+                    generator.printHelp(sender);
+                    throw new ConfigBuilderException("Unknown flag: " + c);
+                }
+            }
+        }
+    }
+
     /* Start the actual builder class here */
 
     private final T plugin;
@@ -92,10 +128,10 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     private final String baseFilePath;
     private final File basePath;
     private final List<ConfigurationBase<T>> configs = new ArrayList<>();
+    private final Map<String, Integer> multiSectionCount = new CaseInsensitiveMap<>();
     private ConfigurationBase<T> currentConfig;
-    private String currentPath;
-    private boolean multiSection = false;
-    private int multiSectionCount = 0;
+    private String currentPath = "";
+    private boolean locked = false;
 
     protected ConfigBuilder(T plugin, Player player, String baseFilePath) {
 
@@ -123,9 +159,19 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     public void setCurrentPath(String path) {
 
         this.currentPath = path;
-        setMultiSectionCount(0);
+        getMultiSectionCount().put(path, getMultiSectionCount(path));
     }
 
+    public int getMultiSectionCount(String path) {
+
+        return getMultiSectionCount().getOrDefault(path, 0);
+    }
+
+    /**
+     * Creates a new config file, stores and returns the old one.
+     * @param name to create
+     * @return old config file
+     */
     public ConfigurationBase<T> createConfig(String name) {
 
         ConfigurationBase<T> oldConfig = currentConfig;
@@ -133,23 +179,37 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
             configs.add(currentConfig);
         }
         currentConfig = new SimpleConfiguration<>(getPlugin(), new File(getBasePath(), name));
+        multiSectionCount.clear();
+        locked = false;
         return oldConfig;
     }
 
-    public void appendSection(ConfigurationSection section) {
+    /**
+     * Creates new config file and populates it with the given content.
+     * Stores and returns the old config.
+     * @param name to create
+     * @param content to store
+     * @return old config file
+     */
+    public ConfigurationBase<T> createConfig(String name, ConfigurationSection content) {
 
-        if (isMultiSection()) {
-            multiSectionCount++;
-            getCurrentSection().set(multiSectionCount + "", section);
+        ConfigurationBase<T> oldConfig = createConfig(name);
+        getCurrentConfig().merge(content);
+        return oldConfig;
+    }
+
+    public void append(ConfigGenerator generator, ConfigurationSection section, String path) throws ConfigBuilderException {
+
+        if (isLocked()) {
+            throw new ConfigBuilderException("The current config is finished. Please create a new one first: /rccb create <config_name>.yml");
+        }
+        ConfigGenerator.Information information = generator.getInformation();
+        if (information.multiSection()) {
+            getMultiSectionCount().put(getCurrentPath(), getMultiSectionCount(path) + 1);
+            getCurrentSection().set(getMultiSectionCount(getCurrentPath()) + "", section);
         } else {
             getCurrentConfig().set(getCurrentPath(), section);
         }
-    }
-
-    public void appendSection(String path, ConfigurationSection section) {
-
-        setCurrentPath(path);
-        appendSection(section);
     }
 
     public void save() {
@@ -157,5 +217,13 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
         configs.forEach(ConfigurationBase::save);
         CURRENT_BUILDERS.remove(getPlayer().getUniqueId());
         HandlerList.unregisterAll(this);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+
+        if (isBuilder(event.getPlayer())) {
+            getBuilder(event.getPlayer()).save();
+        }
     }
 }

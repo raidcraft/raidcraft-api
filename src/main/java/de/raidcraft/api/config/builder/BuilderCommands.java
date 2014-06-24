@@ -9,7 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -50,16 +49,19 @@ public class BuilderCommands implements TabCompleter {
     @CommandPermissions("raidcraft.configbuilder")
     public void add(CommandContext args, CommandSender sender) throws CommandException {
 
-        ConfigBuilder builder = ConfigBuilder.getBuilder((Player) sender);
-        SectionBuilder sectionBuilder = ConfigBuilder.getSectionBuilder(args.getString(0));
-        if (sectionBuilder == null) {
+        ConfigBuilder<?> builder = ConfigBuilder.getBuilder((Player) sender);
+        ConfigGenerator configGenerator = ConfigBuilder.getSectionBuilder(args.getString(0));
+        if (configGenerator == null) {
             throw new CommandException("No valid builder with the name " + args.getString(0) + " found!");
         }
-        ConfigurationSection section = sectionBuilder.createSection(
-                new CommandContext(args.getJoinedStrings(1), args.getFlags()),
+        if (args.argsLength() > 1 && args.getString(1).equals("?")) {
+            configGenerator.printHelp(sender);
+            return;
+        }
+        ConfigBuilder.checkArguments(sender, args, configGenerator);
+        configGenerator.build(builder,
+                new CommandContext(args.argsLength() > 1 ? args.getSlice(1) : new String[0], args.getFlags()),
                 (Player) sender);
-        builder.appendSection(section);
-        sender.sendMessage("Added new section: " + section.getName());
     }
 
     @com.sk89q.minecraft.util.commands.Command(

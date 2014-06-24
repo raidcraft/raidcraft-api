@@ -2,8 +2,11 @@ package de.raidcraft.api.action.action.global;
 
 import com.sk89q.minecraft.util.commands.CommandContext;
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.action.ActionAPISectionBuilder;
+import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.action.ActionConfigGenerator;
+import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigBuilderException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +21,7 @@ import org.bukkit.util.BlockIterator;
 /**
  * @author mdoering
  */
-public class DoorAction implements Action<Player>, ActionAPISectionBuilder {
+public class DoorAction implements Action<Player>, ActionConfigGenerator {
 
     @Override
     public void accept(Player player) {
@@ -48,11 +51,14 @@ public class DoorAction implements Action<Player>, ActionAPISectionBuilder {
             desc = "Toggles (-t) the targeted door into an open (-o) or close state.",
             usage = "[-o/-t]",
             flags = "ot",
-            help = "Target the openable block (door, trapdoor, gate, etc.) you want to toggle."
+            help = "Target the openable block (door, trapdoor, gate, etc.) you want to toggle.",
+            multiSection = true
     )
-    public ConfigurationSection createArgsSection(CommandContext args, Player player) throws ConfigBuilderException {
+    public <T extends BasePlugin> void build(ConfigBuilder<T> builder, CommandContext args, Player player) throws ConfigBuilderException {
 
         ConfigurationSection config = new MemoryConfiguration();
+        config.set("type", ActionAPI.getIdentifier(this));
+        config = config.createSection("args");
         BlockIterator blockIterator = new BlockIterator(player, 25);
         boolean foundBlock = false;
         while (blockIterator.hasNext()) {
@@ -73,6 +79,6 @@ public class DoorAction implements Action<Player>, ActionAPISectionBuilder {
         }
         config.set("toggle", args.hasFlag('t'));
         config.set("open", args.hasFlag('o'));
-        return config;
+        builder.append(this, config, getPath());
     }
 }
