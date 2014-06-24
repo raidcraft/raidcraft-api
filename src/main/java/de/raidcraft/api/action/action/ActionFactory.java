@@ -3,6 +3,7 @@ package de.raidcraft.api.action.action;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -38,6 +39,7 @@ public final class ActionFactory implements Component {
     public <T> void registerGlobalAction(@NonNull String identifier, @NonNull Action<T> action) {
 
         actions.put(identifier, action);
+        ConfigBuilder.registerConfigBuilder(action);
         RaidCraft.LOGGER.info("registered global action: " + identifier);
     }
 
@@ -49,6 +51,7 @@ public final class ActionFactory implements Component {
             throw new ActionException("Action '" + identifier + "' is already registered!");
         }
         actions.put(identifier, action);
+        ConfigBuilder.registerConfigBuilder(action);
         RaidCraft.LOGGER.info("registered action: " + identifier);
     }
 
@@ -70,6 +73,16 @@ public final class ActionFactory implements Component {
     public Map<String, Action<?>> getActions() {
 
         return new HashMap<>(actions);
+    }
+
+    public String getActionIdentifier(Action<?> action) {
+
+        for (Map.Entry<String, Action<?>> entry : actions.entrySet()) {
+            if (entry.getValue().equals(action)) {
+                return entry.getKey();
+            }
+        }
+        return "undefined";
     }
 
     @SneakyThrows

@@ -3,6 +3,7 @@ package de.raidcraft.api.action.requirement;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -38,6 +39,7 @@ public final class RequirementFactory implements Component {
     public <T> void registerGlobalRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
 
         requirements.put(identifier, requirement);
+        ConfigBuilder.registerConfigBuilder(requirement);
         RaidCraft.LOGGER.info("registered global requirement: " + identifier);
     }
 
@@ -49,6 +51,7 @@ public final class RequirementFactory implements Component {
             throw new RequirementException("Requirement '" + identifier + "' is already registered!");
         }
         requirements.put(identifier, requirement);
+        ConfigBuilder.registerConfigBuilder(requirement);
         RaidCraft.LOGGER.info("registered requirement: " + identifier);
     }
 
@@ -98,5 +101,15 @@ public final class RequirementFactory implements Component {
                 .filter(action -> action.matchesType(type))
                 .map(action -> (Requirement<T>) action)
                 .collect(Collectors.toList());
+    }
+
+    public String getRequirementIdentifier(Requirement<?> requirement) {
+
+        for (Map.Entry<String, Requirement<?>> entry : requirements.entrySet()) {
+            if (entry.getValue().equals(requirement)) {
+                return entry.getKey();
+            }
+        }
+        return "undefined";
     }
 }

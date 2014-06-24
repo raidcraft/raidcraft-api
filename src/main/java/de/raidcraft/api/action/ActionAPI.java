@@ -7,6 +7,7 @@ import de.raidcraft.api.action.action.global.DoorAction;
 import de.raidcraft.api.action.action.global.SetBlockAction;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.requirement.RequirementFactory;
+import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.action.trigger.global.PlayerTrigger;
 import de.raidcraft.api.items.CustomItemException;
@@ -23,9 +24,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public final class ActionAPI {
 
-    public static void registerGlobalActions(ActionFactory factory) {
+    public enum GlobalActions {
 
-        factory.registerGlobalAction("player.give.item", new Action<Player>() {
+        GIVE_ITEM("player.give.item", new Action<Player>() {
             @Override
             public void accept(Player player) {
 
@@ -36,9 +37,9 @@ public final class ActionAPI {
                     RaidCraft.LOGGER.warning("player.give.item (" + player.getName() + "): " + e.getMessage());
                 }
             }
-        });
-        factory.registerGlobalAction("player.kill", (Player player) -> player.setHealth(0.0));
-        factory.registerGlobalAction("player.message", new Action<Player>() {
+        }),
+        KILL_PLAYER("player.kill", (Player player) -> player.setHealth(0.0)),
+        MESSAGE_PLAYER("player.message", new Action<Player>() {
             @Override
             public void accept(Player player) {
 
@@ -47,10 +48,10 @@ public final class ActionAPI {
                     player.sendMessage(msg);
                 }
             }
-        });
-        factory.registerGlobalAction("door.open", new DoorAction());
-        factory.registerGlobalAction("block.set", new SetBlockAction());
-        factory.registerGlobalAction("teleport.coords", new Action<Player>() {
+        }),
+        TOGGLE_DOOR("door.toggle", new DoorAction()),
+        SET_BLOCK("block.set", new SetBlockAction()),
+        TELEPORT_COORDS("teleport.coords", new Action<Player>() {
             @Override
             public void accept(Player player) {
 
@@ -64,8 +65,8 @@ public final class ActionAPI {
                         (float) getConfig().getDouble("pitch"));
                 player.teleport(location);
             }
-        });
-        factory.registerGlobalAction("teleport.player", new Action<Player>() {
+        }),
+        TELEPORT_PLAYER("teleport.player", new Action<Player>() {
             @Override
             public void accept(Player player) {
 
@@ -73,12 +74,31 @@ public final class ActionAPI {
                 if (targetPlayer != null) player.teleport(targetPlayer);
             }
         });
+
+        private final String id;
+        private final Action<?> action;
+
+        <T> GlobalActions(String id, Action<T> action) {
+
+            this.id = id;
+            this.action = action;
+        }
+
+        public String getId() {
+
+            return id;
+        }
+
+        public Action<?> getAction() {
+
+            return action;
+        }
     }
 
-    public static void registerGlobalRequirements(RequirementFactory factory) {
+    public enum GlobalRequirements {
 
-        factory.registerGlobalRequirement("player.is-sprinting", Player::isSprinting);
-        factory.registerGlobalRequirement("player.location", new Requirement<Player>() {
+        IS_SPRINTING("player.is-sprinting", Player::isSprinting),
+        PLAYER_LOCATION("player.location", new Requirement<Player>() {
             @Override
             public boolean test(Player player) {
 
@@ -104,8 +124,8 @@ public final class ActionAPI {
                 }
                 return false;
             }
-        });
-        factory.registerGlobalRequirement("player.has-item", new Requirement<Player>() {
+        }),
+        HAS_ITEM("player.has-item", new Requirement<Player>() {
             @Override
             public boolean test(Player player) {
 
@@ -117,10 +137,46 @@ public final class ActionAPI {
                 return false;
             }
         });
+
+        private final String id;
+        private final Requirement<?> requirement;
+
+        <T> GlobalRequirements(String id, Requirement<T> requirement) {
+
+            this.id = id;
+            this.requirement = requirement;
+        }
+    }
+
+    public static void registerGlobalActions(ActionFactory factory) {
+
+        for (GlobalActions globalActions : GlobalActions.values()) {
+            factory.registerGlobalAction(globalActions.id, globalActions.action);
+        }
+    }
+
+    public static void registerGlobalRequirements(RequirementFactory factory) {
+
+
+        for (GlobalRequirements globalRequirement : GlobalRequirements.values()) {
+            factory.registerGlobalRequirement(globalRequirement.id, globalRequirement.requirement);
+        }
     }
 
     public static void registerGlobalTrigger(TriggerManager manager) {
 
         manager.registerGlobalTrigger(new PlayerTrigger());
+    }
+
+    public static String getIdentifier(Object object) {
+
+        if (object instanceof Action) {
+            return ActionFactory.getInstance().getActionIdentifier((Action<?>) object);
+        } else if (object instanceof Requirement) {
+            return RequirementFactory.getInstance().getRequirementIdentifier((Requirement<?>) object);
+        } else if (object instanceof Trigger) {
+            return ((Trigger) object).getIdentifier();
+        }
+        return "undefined";
     }
 }

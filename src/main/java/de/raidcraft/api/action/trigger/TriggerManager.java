@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -43,6 +44,7 @@ public final class TriggerManager implements Component {
 
         for (String action : trigger.getActions()) {
             registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
+            ConfigBuilder.registerConfigBuilder(trigger);
         }
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
@@ -61,6 +63,7 @@ public final class TriggerManager implements Component {
                 continue;
             }
             registeredTrigger.put(triggerName, trigger);
+            ConfigBuilder.registerConfigBuilder(trigger);
         }
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
