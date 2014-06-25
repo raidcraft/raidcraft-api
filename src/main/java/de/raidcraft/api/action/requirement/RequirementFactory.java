@@ -2,15 +2,12 @@ package de.raidcraft.api.action.requirement;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
+import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
-import de.raidcraft.util.LocationUtil;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -36,43 +33,13 @@ public final class RequirementFactory implements Component {
     private RequirementFactory() {
 
         RaidCraft.registerComponent(RequirementFactory.class, this);
-        registerGlobalRequirements();
+        ActionAPI.registerGlobalRequirements(this);
     }
 
-    private void registerGlobalRequirements() {
-
-        registerRequirement("player.is-sprinting", Player::isSprinting);
-        registerRequirement("player.location", new Requirement<Player>() {
-            @Override
-            public boolean test(Player player) {
-
-                Location location = player.getLocation();
-                ConfigurationSection config = getConfig();
-                World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
-                if (config.isSet("world") && world == null) return false;
-
-                if (config.isSet("x") && config.isSet("y") && config.isSet("z") && config.isSet("world")) {
-                    if (config.isSet("radius")) {
-                        return LocationUtil.isWithinRadius(location,
-                                new Location(world,
-                                        config.getInt("x"),
-                                        config.getInt("y"),
-                                        config.getInt("z")),
-                                config.getInt("radius"));
-                    }
-                    return config.getInt("x") == location.getBlockX()
-                            && config.getInt("y") == location.getBlockY()
-                            && config.getInt("z") == location.getBlockZ()
-                            && world.equals(location.getWorld());
-                }
-                return false;
-            }
-        });
-    }
-
-    private <T> void registerRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
+    public <T> void registerGlobalRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
 
         requirements.put(identifier, requirement);
+        ConfigBuilder.registerConfigBuilder(requirement);
         RaidCraft.LOGGER.info("registered global requirement: " + identifier);
     }
 
@@ -84,6 +51,7 @@ public final class RequirementFactory implements Component {
             throw new RequirementException("Requirement '" + identifier + "' is already registered!");
         }
         requirements.put(identifier, requirement);
+        ConfigBuilder.registerConfigBuilder(requirement);
         RaidCraft.LOGGER.info("registered requirement: " + identifier);
     }
 
@@ -124,5 +92,24 @@ public final class RequirementFactory implements Component {
         return requirements.getKeys(false).stream()
                 .map(key -> create(requirements.getString(key + ".type"), requirements.getConfigurationSection(key)))
                 .collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Collection<Requirement<T>> createRequirements(ConfigurationSection requirements, Class<T> type) {
+
+        return createRequirements(requirements).stream()
+                .filter(action -> action.matchesType(type))
+                .map(action -> (Requirement<T>) action)
+                .collect(Collectors.toList());
+    }
+
+    public String getRequirementIdentifier(Requirement<?> requirement) {
+
+        for (Map.Entry<String, Requirement<?>> entry : requirements.entrySet()) {
+            if (entry.getValue().equals(requirement)) {
+                return entry.getKey();
+            }
+        }
+        return "undefined";
     }
 }

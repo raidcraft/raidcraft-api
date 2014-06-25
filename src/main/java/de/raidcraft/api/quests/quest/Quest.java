@@ -1,45 +1,91 @@
 package de.raidcraft.api.quests.quest;
 
-import de.raidcraft.api.quests.player.PlayerObjective;
-import de.raidcraft.api.quests.player.QuestHolder;
-import de.raidcraft.api.quests.quest.trigger.TriggerListener;
+import com.avaje.ebean.annotation.EnumValue;
+import de.raidcraft.api.action.trigger.TriggerListener;
+import de.raidcraft.api.quests.objective.PlayerObjective;
+import de.raidcraft.api.quests.holder.QuestHolder;
 import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
  */
-public interface Quest extends TriggerListener {
+public interface Quest extends TriggerListener<Player> {
+
+    public enum Phase {
+
+        @EnumValue("NOT_STARTED")
+        NOT_STARTED,
+        @EnumValue("IN_PROGRESS")
+        IN_PROGRESS,
+        @EnumValue("OBJECTIVES_COMPLETED")
+        OJECTIVES_COMPLETED,
+        @EnumValue("COMPLETE")
+        COMPLETE
+    }
+
+    @Override
+    public default Class<Player> getTriggerEntityType() {
+
+        return Player.class;
+    }
 
     public int getId();
 
-    public String getName();
+    public default String getName() {
 
-    public String getAuthor();
+        return getTemplate().getName();
+    }
 
-    public String getFullName();
+    public default String getFullName() {
 
-    public String getFriendlyName();
+        return getTemplate().getId();
+    }
 
-    public String getDescription();
+    public default String getFriendlyName() {
+
+        return getTemplate().getFriendlyName();
+    }
+
+    public default String getAuthor() {
+
+        return getTemplate().getAuthor();
+    }
+
+    public default String getDescription() {
+
+        return getTemplate().getDescription();
+    }
+
+    public default Player getPlayer() {
+
+        return getHolder().getPlayer();
+    }
+
+    public default List<PlayerObjective> getUncompletedObjectives() {
+
+        return getPlayerObjectives().stream()
+                .filter(playerObjective -> !playerObjective.isCompleted())
+                .sorted()
+                .collect(Collectors.toList());
+    }
 
     public List<PlayerObjective> getPlayerObjectives();
-
-    public List<PlayerObjective> getUncompletedObjectives();
 
     public QuestTemplate getTemplate();
 
     public QuestHolder getHolder();
 
-    public Player getPlayer();
+    public Phase getPhase();
 
     public boolean isCompleted();
 
     public boolean hasCompletedAllObjectives();
 
-    public void completeObjective(PlayerObjective objective);
+    public void onObjectCompletion(PlayerObjective objective);
 
     public boolean isActive();
 
@@ -47,11 +93,15 @@ public interface Quest extends TriggerListener {
 
     public Timestamp getCompletionTime();
 
+    public void updateObjectiveListeners();
+
     public void start();
 
     public void complete();
 
     public void abort();
+
+    public void delete();
 
     public void save();
 }

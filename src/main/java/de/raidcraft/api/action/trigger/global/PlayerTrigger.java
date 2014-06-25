@@ -1,17 +1,21 @@
 package de.raidcraft.api.action.trigger.global;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.trigger.Trigger;
+import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
@@ -28,13 +32,41 @@ public class PlayerTrigger extends Trigger implements Listener {
 
     public PlayerTrigger() {
 
-        super("player", "interact", "block.break", "block.place", "move");
+        super("player", "interact", "block.break", "block.place", "move", "craft");
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        informListeners("interact", event.getPlayer());
+        informListeners("interact", event.getPlayer(), config -> {
+
+            Block block = event.getClickedBlock();
+            if (config.isSet("x") && config.isSet("y") && config.isSet("z")) {
+                Location blockLocation = block.getLocation();
+                if (blockLocation.getBlockX() != config.getInt("x")
+                        || blockLocation.getBlockY() != config.getInt("y")
+                        || blockLocation.getBlockZ() != config.getInt("z")
+                        || !blockLocation.getWorld().equals(Bukkit.getWorld(config.getString("world", blockLocation.getWorld().getName())))) {
+                    return false;
+                }
+            }
+            return !config.isSet("type") || Material.valueOf(config.getString("type", "minecraft:air")) == block.getType();
+        });
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onCraft(CraftItemEvent event) {
+
+        if (!(event.getWhoClicked() instanceof Player)) {
+            return;
+        }
+        informListeners("craft", ((Player) event.getWhoClicked()), config -> {
+            try {
+                return !config.isSet("item") || RaidCraft.getItem(config.getString("item")).isSimilar(event.getRecipe().getResult());
+            } catch (CustomItemException e) {
+                return false;
+            }
+        });
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

@@ -1,17 +1,23 @@
 package de.raidcraft.api.quests.quest;
 
-import de.raidcraft.api.quests.quest.action.Action;
-import de.raidcraft.api.quests.quest.objective.Objective;
-import de.raidcraft.api.quests.quest.requirement.Requirement;
-import de.raidcraft.api.quests.quest.trigger.Trigger;
+import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.api.action.trigger.TriggerFactory;
+import de.raidcraft.api.quests.Quests;
+import de.raidcraft.api.quests.holder.QuestHolder;
+import de.raidcraft.api.quests.objective.ObjectiveTemplate;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author Silthus
  */
+@Data()
+@EqualsAndHashCode(of = "id")
 public abstract class AbstractQuestTemplate implements QuestTemplate {
 
     private final String id;
@@ -23,11 +29,11 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
     private final int requiredObjectiveAmount;
     private final boolean ordered;
     private final boolean locked;
-    private List<Action<QuestTemplate>> actions = new ArrayList<>();
-    protected Requirement[] requirements = new Requirement[0];
-    protected Objective[] objectives = new Objective[0];
-    protected Trigger[] trigger = new Trigger[0];
-    protected Trigger[] completeTrigger = new Trigger[0];
+    private final Collection<Action<Player>> completionActions;
+    private final Collection<Requirement<Player>> requirements;
+    private final Collection<ObjectiveTemplate> objectiveTemplates;
+    private final Collection<TriggerFactory> startTrigger;
+    private final Collection<TriggerFactory> completionTrigger;
 
     public AbstractQuestTemplate(String id, ConfigurationSection data) {
 
@@ -41,132 +47,34 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
         this.requiredObjectiveAmount = data.getInt("required", 0);
         this.ordered = data.getBoolean("ordered", false);
         this.locked = data.getBoolean("locked", true);
-        loadRequirements(data.getConfigurationSection("requirements"));
-        loadObjectives(data.getConfigurationSection("objectives"));
-        loadTrigger(data.getConfigurationSection("trigger"));
-        loadCompleteTrigger(data.getConfigurationSection("complete-trigger"));
-        loadActions(data.getConfigurationSection("complete-actions"));
-    }
-
-    protected abstract void loadRequirements(ConfigurationSection data);
-
-    protected abstract void loadObjectives(ConfigurationSection data);
-
-    protected abstract void loadTrigger(ConfigurationSection data);
-
-    protected abstract void loadCompleteTrigger(ConfigurationSection data);
-
-    protected abstract void loadActions(ConfigurationSection data);
-
-    @Override
-    public String getId() {
-
-        return id;
+        this.requirements = loadRequirements(data.getConfigurationSection("requirements"));
+        this.objectiveTemplates = loadObjectives(data.getConfigurationSection("objectives"));
+        this.startTrigger = loadStartTrigger(data.getConfigurationSection("trigger"));
+        this.completionTrigger = loadCompletionTrigger(data.getConfigurationSection("complete-trigger"));
+        this.completionActions = loadActions(data.getConfigurationSection("complete-actions"));
     }
 
     @Override
-    public String getName() {
+    public boolean processTrigger(Player player) {
 
-        return name;
+        QuestHolder questHolder = Quests.getQuestHolder(player);
+        // lets check if we already have a quest that is started
+        // and do not execute actions if the quest is started
+        return !questHolder.hasActiveQuest(this);
     }
 
-    @Override
-    public String getBasePath() {
+    public void registerListeners() {
 
-        return basePath;
+        startTrigger.forEach(trigger -> trigger.registerListener(this));
     }
 
-    @Override
-    public String getFriendlyName() {
+    protected abstract Collection<Requirement<Player>> loadRequirements(ConfigurationSection data);
 
-        return friendlyName;
-    }
+    protected abstract Collection<ObjectiveTemplate> loadObjectives(ConfigurationSection data);
 
-    @Override
-    public String getAuthor() {
+    protected abstract Collection<TriggerFactory> loadStartTrigger(ConfigurationSection data);
 
-        return author;
-    }
+    protected abstract Collection<TriggerFactory> loadCompletionTrigger(ConfigurationSection data);
 
-    @Override
-    public String getDescription() {
-
-        return description;
-    }
-
-    @Override
-    public int getRequiredObjectiveAmount() {
-
-        return requiredObjectiveAmount;
-    }
-
-    @Override
-    public boolean isOrdered() {
-
-        return ordered;
-    }
-
-    @Override
-    public boolean isLocked() {
-
-        return locked;
-    }
-
-    @Override
-    public Requirement[] getRequirements() {
-
-        return requirements;
-    }
-
-    @Override
-    public Objective[] getObjectives() {
-
-        return objectives;
-    }
-
-    @Override
-    public Trigger[] getTrigger() {
-
-        return trigger;
-    }
-
-    @Override
-    public Trigger[] getCompleteTrigger() {
-
-        return completeTrigger;
-    }
-
-    @Override
-    public List<Action<QuestTemplate>> getCompleteActions() {
-
-        return actions;
-    }
-
-    protected void setActions(List<Action<QuestTemplate>> actions) {
-
-        this.actions = actions;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o) return true;
-        if (!(o instanceof AbstractQuestTemplate)) return false;
-
-        AbstractQuestTemplate that = (AbstractQuestTemplate) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return id.hashCode();
-    }
-
-    @Override
-    public String toString() {
-
-        return id;
-    }
+    protected abstract Collection<Action<Player>> loadActions(ConfigurationSection data);
 }

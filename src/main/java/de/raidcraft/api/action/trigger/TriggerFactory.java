@@ -28,14 +28,14 @@ public class TriggerFactory {
         this.config = config;
     }
 
-    public void registerListener(TriggerListener listener) {
+    public void registerListener(TriggerListener<?> listener) {
 
         if (registeredListeners.contains(listener)) return;
         getManager().registerListener(listener, getIdentifier(), getConfig());
         registeredListeners.add(listener);
     }
 
-    public void unregisterListener(TriggerListener listener) {
+    public void unregisterListener(TriggerListener<?> listener) {
 
         registeredListeners.remove(listener);
         getManager().unregisterListener(listener);

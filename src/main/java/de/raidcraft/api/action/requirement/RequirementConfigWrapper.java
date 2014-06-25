@@ -3,6 +3,7 @@ package de.raidcraft.api.action.requirement;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 /**
  * @author Silthus
@@ -32,10 +33,15 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     public boolean test(T t) {
 
         if (isPersistant() && successfullyChecked) return true;
-        if (isCounting() && getRequiredCount() <= count) return true;
         successfullyChecked = requirement.test(t);
         if (successfullyChecked) count++;
-        return (isCounting() && getRequiredCount() <= count) || successfullyChecked;
+        if (isCounting()) {
+            if (hasCountText() && t instanceof Player) {
+                ((Player) t).sendMessage(getCountText());
+            }
+            return getRequiredCount() <= getCount();
+        }
+        return successfullyChecked;
     }
 
     @Override

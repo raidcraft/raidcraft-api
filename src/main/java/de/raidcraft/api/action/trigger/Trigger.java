@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -63,11 +62,13 @@ public abstract class Trigger {
             } else {
                 stream = registeredListeners.get(identifier).stream();
             }
-            stream/*.filter(wrapper -> wrapper.matchesType(triggeringEntity.getClass()))*/
-                    .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
+            stream.map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
+                    // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
-                    .collect(Collectors.toList())
-                    .forEach(wrapper -> wrapper.getTriggerListener().processTrigger());
+                    // then lets process the trigger
+                    .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity))
+                    // if we get true back we are ready for action processing
+                    .forEach(wrapper -> wrapper.executeActions(triggeringEntity));
         }
     }
 }
