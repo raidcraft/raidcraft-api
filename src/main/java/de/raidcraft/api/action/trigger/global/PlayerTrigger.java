@@ -1,14 +1,19 @@
 package de.raidcraft.api.action.trigger.global;
 
+import com.sk89q.minecraft.util.commands.CommandContext;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.trigger.Trigger;
+import de.raidcraft.api.config.builder.ConfigBuilder;
+import de.raidcraft.api.config.builder.ConfigBuilderException;
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.util.BlockUtil;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -52,6 +57,26 @@ public class PlayerTrigger extends Trigger implements Listener {
             }
             return !config.isSet("type") || Material.valueOf(config.getString("type", "minecraft:air")) == block.getType();
         });
+    }
+
+    @Information(
+            value = "player.interact",
+            desc = "Listens for player interaction (with certain blocks at the defined location).",
+            help = "Target the block you want to listen for or define the -x flag to listen for all interacts",
+            usage = "[-x]",
+            flags = "x",
+            multiSection = true
+    )
+    public void interact(ConfigBuilder builder, CommandContext args, Player player) throws ConfigBuilderException {
+
+        ConfigurationSection config = createConfigSection(getInformation("player.interact"));
+        if (!args.hasFlag('x')) {
+            Block block = BlockUtil.getTargetBlock(player);
+            if (block == null) throw new ConfigBuilderException("No valid target block found in crosshair!");
+            config.set("type", block.getType());
+            config.set("location", createLocationSection(block.getLocation()));
+        }
+        builder.append(this, config, getPath(), "player.interact");
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

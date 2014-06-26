@@ -12,7 +12,7 @@ import java.util.function.Predicate;
  * @author mdoering
  */
 @FunctionalInterface
-public interface Requirement<T> extends Predicate<T> {
+public interface Requirement<T> extends Predicate<T>, RequirementConfigGenerator {
 
     public default ConfigurationSection getConfig() {
 
