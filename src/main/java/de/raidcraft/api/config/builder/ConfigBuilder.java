@@ -232,6 +232,9 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
         if (isLocked()) {
             throw new ConfigBuilderException("The current config is finished. Please create a new one first: /rccb create <config_name>.yml");
         }
+        if (!getCurrentPath().equals(path)) {
+            setCurrentPath(path);
+        }
         ConfigGenerator.Information information = generator.getInformation(name);
         if (information.multiSection()) {
             getMultiSectionCount().put(getCurrentPath(), getMultiSectionCount(path) + 1);

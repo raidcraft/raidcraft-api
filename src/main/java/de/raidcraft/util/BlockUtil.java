@@ -4,10 +4,14 @@ import com.sk89q.worldedit.blocks.BlockType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.BlockIterator;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * @author Silthus
@@ -149,5 +153,24 @@ public final class BlockUtil {
         ItemStack item = new ItemStack(block.getTypeId(), 1, block.getData());
         block.getLocation().getWorld().dropItemNaturally(block.getLocation(), item);
         block.setTypeId(0, true);
+    }
+
+    @Nullable
+    public static Block getTargetBlock(Player player) {
+
+        return getTargetBlock(player, block -> block.getType() != Material.AIR);
+    }
+
+    @Nullable
+    public static Block getTargetBlock(Player player, Predicate<Block> predicate) {
+
+        BlockIterator blockIterator = new BlockIterator(player, 25);
+        while (blockIterator.hasNext()) {
+            Block block = blockIterator.next();
+            if (predicate.test(block)) {
+                return block;
+            }
+        }
+        return null;
     }
 }

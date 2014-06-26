@@ -5,23 +5,21 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.action.action.ActionConfigGenerator;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigBuilderException;
+import de.raidcraft.util.BlockUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Openable;
-import org.bukkit.util.BlockIterator;
 
 /**
  * @author mdoering
  */
-public class DoorAction implements Action<Player>, ActionConfigGenerator {
+public class DoorAction implements Action<Player> {
 
     @Override
     public void accept(Player player) {
@@ -55,27 +53,12 @@ public class DoorAction implements Action<Player>, ActionConfigGenerator {
     )
     public <T extends BasePlugin> void build(ConfigBuilder<T> builder, CommandContext args, Player player) throws ConfigBuilderException {
 
-        ConfigurationSection config = new MemoryConfiguration();
-        config.set("type", ActionAPI.getIdentifier(this));
-        config = config.createSection("args");
-        BlockIterator blockIterator = new BlockIterator(player, 25);
-        boolean foundBlock = false;
-        while (blockIterator.hasNext()) {
-            Block block = blockIterator.next();
-            if (block.getState().getData() instanceof Openable) {
-                // we found our door type thingy
-                ConfigurationSection location = config.createSection("location");
-                location.set("world", player.getWorld().getName());
-                location.set("x", block.getLocation().getBlockX());
-                location.set("y", block.getLocation().getBlockY());
-                location.set("z", block.getLocation().getBlockZ());
-                foundBlock = true;
-                break;
-            }
-        }
-        if (!foundBlock) {
+        ConfigurationSection config = createConfigSection();
+        Block block = BlockUtil.getTargetBlock(player, b -> b.getState().getData() instanceof Openable);
+        if (block == null) {
             throw new ConfigBuilderException("No openable block (door, trapdoor, gate, etc.) found in sight!");
         }
+        config.set("location", createLocationSection(block.getLocation()));
         config.set("toggle", args.hasFlag('t'));
         config.set("open", args.hasFlag('o'));
         builder.append(this, config, getPath(), ActionAPI.getIdentifier(this));

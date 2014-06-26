@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 @ToString(of = {"identifier", "actions"})
 @EqualsAndHashCode(of = {"identifier", "actions"})
 @Data
-public abstract class Trigger {
+public abstract class Trigger implements TriggerConfigGenerator {
 
     private final String identifier;
     private final String[] actions;
