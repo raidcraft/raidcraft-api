@@ -4,9 +4,13 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionFactory;
+import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.requirement.RequirementFactory;
+import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.action.trigger.TriggerManager;
+import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.PastebinPoster;
 import org.bukkit.command.CommandSender;
 
@@ -31,23 +35,38 @@ public class ActionCommand {
 
         StringBuilder sb = new StringBuilder();
         sb.append("########### ACTIONS ###########\n");
-        ActionFactory.getInstance().getActions().keySet().forEach(
-                key -> {
-                    sb.append(key);
+        ActionFactory.getInstance().getActions().entrySet().forEach(
+                entry -> {
+                    Action<?> action = entry.getValue();
+                    sb.append(entry.getKey());
+                    if (action instanceof ConfigGenerator) {
+                        ConfigGenerator.Information information = ((ConfigGenerator) action).getInformation(entry.getKey());
+                        sb.append(": ").append(information.desc());
+                    }
                     sb.append("\n");
                 }
         );
         sb.append("\n\n########### REQUIREMENTS ###########\n");
-        RequirementFactory.getInstance().getRequirements().keySet().forEach(
-                key -> {
-                    sb.append(key);
+        RequirementFactory.getInstance().getRequirements().entrySet().forEach(
+                entry -> {
+                    Requirement<?> requirement = entry.getValue();
+                    sb.append(entry.getKey());
+                    if (requirement instanceof ConfigGenerator) {
+                        ConfigGenerator.Information information = ((ConfigGenerator) requirement).getInformation(entry.getKey());
+                        sb.append(": ").append(information.desc());
+                    }
                     sb.append("\n");
                 }
         );
         sb.append("\n\n########### TRIGGER ###########\n");
-        TriggerManager.getInstance().getTrigger().keySet().forEach(
-                key -> {
-                    sb.append(key);
+        TriggerManager.getInstance().getTrigger().entrySet().forEach(
+                entry -> {
+                    Trigger trigger = entry.getValue();
+                    sb.append(entry);
+                    if (trigger instanceof ConfigGenerator) {
+                        ConfigGenerator.Information information = ((ConfigGenerator) trigger).getInformation(entry.getKey());
+                        sb.append(": ").append(information.desc());
+                    }
                     sb.append("\n");
                 }
         );

@@ -17,6 +17,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -31,51 +32,79 @@ import java.util.UUID;
 @Data
 public class ConfigBuilder<T extends BasePlugin> implements Listener {
 
-    private static final Map<String, ConfigGenerator> SECTION_BUILDERS = new CaseInsensitiveMap<>();
+    private static final Map<String, ConfigGenerator> CONFIG_GENERATORS = new CaseInsensitiveMap<>();
+    private static final Map<String, ConfigGenerator.Information> GENERATOR_INFORMATIONS = new CaseInsensitiveMap<>();
     private static final Map<UUID, ConfigBuilder> CURRENT_BUILDERS = new HashMap<>();
 
-    public static void registerConfigBuilder(ConfigGenerator builder) throws ConfigBuilderException {
+    public static void registerConfigGenerator(ConfigGenerator generator) throws ConfigBuilderException {
 
-        try {
-            Method method = builder.getClass().getMethod("createSection", CommandContext.class, Player.class);
+        for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
-                String name = method.getAnnotation(ConfigGenerator.Information.class).value();
-                if (SECTION_BUILDERS.containsKey(name)) {
-                    throw new ConfigBuilderException("Config Builder with the same name is already registered: " + name);
+                if (method.getParameterTypes().length == 3
+                        && method.getParameterTypes()[0] == ConfigBuilder.class
+                        && method.getParameterTypes()[1] == CommandContext.class
+                        && method.getParameterTypes()[2] == Player.class) {
+                    ConfigGenerator.Information information = method.getAnnotation(ConfigGenerator.Information.class);
+                    String name = information.value();
+                    if (!CONFIG_GENERATORS.containsKey(name)) {
+                        CONFIG_GENERATORS.put(name, generator);
+                        GENERATOR_INFORMATIONS.put(name, information);
+                        RaidCraft.LOGGER.warning("Config Builder with the same name is already registered: " + name);
+                    }
                 }
-                SECTION_BUILDERS.put(name, builder);
-            } else {
-                throw new ConfigBuilderException("Config Builder " + builder.getClass().getCanonicalName() + " has no Information Annotaion!");
             }
-        } catch (NoSuchMethodException e) {
-            throw new ConfigBuilderException(e);
         }
     }
 
-    public static void registerConfigBuilder(Object builder) {
+    public static void registerConfigGenerator(Object builder) {
 
         if (builder instanceof ConfigGenerator) {
             try {
-                registerConfigBuilder((ConfigGenerator) builder);
+                registerConfigGenerator((ConfigGenerator) builder);
             } catch (ConfigBuilderException e) {
                 RaidCraft.LOGGER.warning(e.getMessage());
             }
         }
     }
 
-    public static Map<String, ConfigGenerator> getSectionBuilders() {
+    @Nullable
+    public static Method getConfigGeneratorMethod(ConfigGenerator generator, String name) {
 
-        return new HashMap<>(SECTION_BUILDERS);
+        for (Method method : generator.getClass().getDeclaredMethods()) {
+            if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
+                if (method.getParameterTypes().length == 3
+                        && method.getParameterTypes()[0] == ConfigBuilder.class
+                        && method.getParameterTypes()[1] == CommandContext.class
+                        && method.getParameterTypes()[2] == Player.class) {
+                    ConfigGenerator.Information information = method.getAnnotation(ConfigGenerator.Information.class);
+                    if (information.value().equalsIgnoreCase(name)) {
+                        return method;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
-    public static ConfigGenerator getSectionBuilder(String identifier) {
+    public static Map<String, ConfigGenerator> getConfigGenerators() {
 
-        return SECTION_BUILDERS.get(identifier);
+        return new HashMap<>(CONFIG_GENERATORS);
     }
 
-    public static boolean hasSectionBuilder(String identifier) {
+    public static ConfigGenerator getConfigGenerator(String identifier) {
 
-        return SECTION_BUILDERS.containsKey(identifier);
+        return CONFIG_GENERATORS.get(identifier);
+    }
+
+    public static boolean hasConfigGenerator(String identifier) {
+
+        return CONFIG_GENERATORS.containsKey(identifier);
+    }
+
+    @Nullable
+    public static ConfigGenerator.Information getConfigGeneratorInformation(String identifier) {
+
+        return GENERATOR_INFORMATIONS.get(identifier);
     }
 
     public static boolean isBuilder(Player player) {
@@ -99,22 +128,22 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
         return builder;
     }
 
-    public static void checkArguments(CommandSender sender, CommandContext args, ConfigGenerator generator) throws ConfigBuilderException {
+    public static void checkArguments(CommandSender sender, CommandContext args, ConfigGenerator generator, String name) throws ConfigBuilderException {
 
-        ConfigGenerator.Information information = generator.getInformation();
+        ConfigGenerator.Information information = generator.getInformation(name);
         if (args.argsLength() < information.min()) {
-            generator.printHelp(sender);
+            generator.printHelp(sender, name);
             throw new ConfigBuilderException("Not enough arguments!");
         }
         if (args.argsLength() > information.max()) {
-            generator.printHelp(sender);
+            generator.printHelp(sender, name);
             throw new ConfigBuilderException("Too many arguments!");
         }
         if (!information.anyFlags()) {
             char[] chars = information.flags().replace(":", "").toCharArray();
             for (char c : chars) {
                 if (!args.getFlags().contains(c)) {
-                    generator.printHelp(sender);
+                    generator.printHelp(sender, name);
                     throw new ConfigBuilderException("Unknown flag: " + c);
                 }
             }
@@ -198,12 +227,12 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
         return oldConfig;
     }
 
-    public void append(ConfigGenerator generator, ConfigurationSection section, String path) throws ConfigBuilderException {
+    public void append(ConfigGenerator generator, ConfigurationSection section, String path, String name) throws ConfigBuilderException {
 
         if (isLocked()) {
             throw new ConfigBuilderException("The current config is finished. Please create a new one first: /rccb create <config_name>.yml");
         }
-        ConfigGenerator.Information information = generator.getInformation();
+        ConfigGenerator.Information information = generator.getInformation(name);
         if (information.multiSection()) {
             getMultiSectionCount().put(getCurrentPath(), getMultiSectionCount(path) + 1);
             getCurrentSection().set(getMultiSectionCount(getCurrentPath()) + "", section);

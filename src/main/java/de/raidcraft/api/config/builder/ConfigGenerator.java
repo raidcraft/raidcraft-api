@@ -1,6 +1,7 @@
 package de.raidcraft.api.config.builder;
 
 import com.sk89q.minecraft.util.commands.CommandContext;
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -10,12 +11,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
  * @author mdoering
  */
-@FunctionalInterface
 public interface ConfigGenerator {
 
     @Target(ElementType.METHOD)
@@ -41,23 +42,28 @@ public interface ConfigGenerator {
         boolean multiSection() default false;
     }
 
-    public default Information getInformation() {
+    public default Information getInformation(String name) {
 
-        try {
-            Method method = getClass().getMethod("createSection", CommandContext.class, Player.class);
-            return method.getAnnotation(Information.class);
-        } catch (NoSuchMethodException ignored) {
-        }
-        return null;
+        return ConfigBuilder.getConfigGeneratorInformation(name);
     }
 
-    public default void printHelp(CommandSender sender) {
+    public default void printHelp(CommandSender sender, String name) {
 
-        Information information = getInformation();
+        Information information = getInformation(name);
         sender.sendMessage(ChatColor.YELLOW + information.value() + " - " + ChatColor.GRAY + ChatColor.ITALIC + information.desc());
         sender.sendMessage(ChatColor.AQUA + "Usage: " + information.usage());
         sender.sendMessage(ChatColor.GRAY + "Help: " + ChatColor.ITALIC + information.help());
     }
 
-    public <T extends BasePlugin> void build(ConfigBuilder<T> builder, CommandContext args, Player player) throws ConfigBuilderException;
+    public default <T extends BasePlugin> void build(ConfigBuilder<T> builder, CommandContext args, Player player, String name) throws ConfigBuilderException {
+
+        try {
+            Method method = ConfigBuilder.getConfigGeneratorMethod(this, name);
+            if (method == null) return;
+            method.invoke(this, builder, args, player);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            RaidCraft.LOGGER.warning(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

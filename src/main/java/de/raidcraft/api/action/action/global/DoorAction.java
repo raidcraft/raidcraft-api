@@ -45,9 +45,8 @@ public class DoorAction implements Action<Player>, ActionConfigGenerator {
         }
     }
 
-    @Override
     @Information(
-            value = "action.toggledoor",
+            value = "door.toggle",
             desc = "Toggles (-t) the targeted door into an open (-o) or close state.",
             usage = "[-o/-t]",
             flags = "ot",
@@ -79,6 +78,6 @@ public class DoorAction implements Action<Player>, ActionConfigGenerator {
         }
         config.set("toggle", args.hasFlag('t'));
         config.set("open", args.hasFlag('o'));
-        builder.append(this, config, getPath());
+        builder.append(this, config, getPath(), ActionAPI.getIdentifier(this));
     }
 }

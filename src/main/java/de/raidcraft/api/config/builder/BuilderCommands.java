@@ -35,7 +35,7 @@ public class BuilderCommands implements TabCompleter {
             return null;
         }
         if (args.length == 2) {
-            return ConfigBuilder.getSectionBuilders().keySet().stream()
+            return ConfigBuilder.getConfigGenerators().keySet().stream()
                     .filter(cmd -> cmd.startsWith(args[1])).collect(Collectors.toList());
         }
         return null;
@@ -50,18 +50,20 @@ public class BuilderCommands implements TabCompleter {
     public void add(CommandContext args, CommandSender sender) throws CommandException {
 
         ConfigBuilder<?> builder = ConfigBuilder.getBuilder((Player) sender);
-        ConfigGenerator configGenerator = ConfigBuilder.getSectionBuilder(args.getString(0));
+        String name = args.getString(0);
+        ConfigGenerator configGenerator = ConfigBuilder.getConfigGenerator(name);
         if (configGenerator == null) {
-            throw new CommandException("No valid builder with the name " + args.getString(0) + " found!");
+            throw new CommandException("No valid builder with the name " + name + " found!");
         }
         if (args.argsLength() > 1 && args.getString(1).equals("?")) {
-            configGenerator.printHelp(sender);
+            configGenerator.printHelp(sender, name);
             return;
         }
-        ConfigBuilder.checkArguments(sender, args, configGenerator);
+        ConfigBuilder.checkArguments(sender, args, configGenerator, name);
         configGenerator.build(builder,
                 new CommandContext(args.argsLength() > 1 ? args.getSlice(1) : new String[0], args.getFlags()),
-                (Player) sender);
+                (Player) sender,
+                name);
     }
 
     @com.sk89q.minecraft.util.commands.Command(
