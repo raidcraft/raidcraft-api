@@ -13,12 +13,6 @@ import java.sql.Timestamp;
  */
 public interface Achievement<T> extends TriggerListener<T> {
 
-    @Override
-    public default T getTriggerEntityType() {
-
-        return getHolder().getType();
-    }
-
     /**
      * @see AchievementTemplate#getIdentifier()
      */

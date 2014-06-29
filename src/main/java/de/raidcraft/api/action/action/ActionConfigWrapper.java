@@ -23,7 +23,9 @@ class ActionConfigWrapper<T> implements Action<T> {
     @Override
     public ConfigurationSection getConfig() {
 
-        return this.config;
+        ConfigurationSection args = this.config.getConfigurationSection("args");
+        if (args == null) args = this.config.createSection("args");
+        return args;
     }
 
     @Override
