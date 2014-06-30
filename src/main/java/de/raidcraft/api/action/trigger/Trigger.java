@@ -64,6 +64,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
                 stream = registeredListeners.get(identifier).stream();
             }
             stream.map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
+                    .filter(wrapper -> wrapper.getTriggerListener() != null)
                     // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
                     // then lets process the trigger
