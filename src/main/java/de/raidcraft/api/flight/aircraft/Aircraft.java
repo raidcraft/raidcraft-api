@@ -70,9 +70,14 @@ public interface Aircraft<T> {
     public void move(Flight flight, Waypoint waypoint);
 
     /**
+     * Starts the navigation and sets up all important variables.
+     */
+    public void startNavigation(Flight flight);
+
+    /**
      * Stops the movement of the aircraft.
      */
-    public void stopMoving();
+    public void stopNavigation(Flight flight);
 
     /**
      * Spawns the aircraft allowing it to take off and to accept passengers.
@@ -116,8 +121,9 @@ public interface Aircraft<T> {
 
         if (!isFlying()) {
             setFlying(true);
-            if (!isSpawned()) spawn(flight.getFirstWaypoint());
+            if (!isSpawned()) spawn(flight.getStartLocation());
             mountPassenger(flight);
+            startNavigation(flight);
             move(flight, flight.getPath().getFirstWaypoint());
             if (flight.getMoveInterval() > 0) {
                 // lets start the task that moves the aircraft around from waypoint to waypoint
@@ -132,7 +138,7 @@ public interface Aircraft<T> {
 
     /**
      * Will abort the flight if {@link #isFlying()}
-     * and teleport all passengers to the {@link de.raidcraft.api.flight.flight.Flight#getFirstWaypoint()}
+     * and teleport all passengers to the {@link de.raidcraft.api.flight.flight.Flight#getStartLocation()}
      *
      * @param flight that triggered the abort
      */
@@ -140,7 +146,7 @@ public interface Aircraft<T> {
 
         if (isFlying()) {
             setFlying(false);
-            stopMoving();
+            stopNavigation(flight);
             unmountPassenger(flight);
             if (getAircraftMoverTask() != null) getAircraftMoverTask().cancel();
             if (isSpawned()) despawn();
@@ -157,7 +163,7 @@ public interface Aircraft<T> {
 
         if (isFlying()) {
             setFlying(false);
-            stopMoving();
+            stopNavigation(flight);
             unmountPassenger(flight);
             getAircraftMoverTask().cancel();
             if (isSpawned()) despawn();
