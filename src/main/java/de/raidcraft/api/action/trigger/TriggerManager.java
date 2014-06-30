@@ -5,7 +5,6 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.config.builder.ConfigBuilder;
-import de.raidcraft.api.config.builder.ConfigBuilderException;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -44,13 +43,8 @@ public final class TriggerManager implements Component {
     public void registerGlobalTrigger(@NonNull Trigger trigger) {
 
         for (String action : trigger.getActions()) {
-            try {
-                registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
-                ConfigBuilder.registerConfigGenerator(trigger);
-            } catch (ConfigBuilderException e) {
-                RaidCraft.LOGGER.warning(e.getMessage());
-                e.printStackTrace();
-            }
+            registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
+            ConfigBuilder.registerConfigGenerator(trigger);
         }
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
@@ -69,12 +63,7 @@ public final class TriggerManager implements Component {
                 continue;
             }
             registeredTrigger.put(triggerName, trigger);
-	        try {
-		        ConfigBuilder.registerConfigGenerator(trigger);
-	        } catch (ConfigBuilderException e) {
-		        RaidCraft.LOGGER.warning(e.getMessage());
-		        e.printStackTrace();
-	        }
+            ConfigBuilder.registerConfigGenerator(trigger);
         }
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
