@@ -19,7 +19,7 @@ public class AircraftMoverTask implements Runnable {
 
         this.aircraft = aircraft;
         this.flight = flight;
-        this.lastWaypoint = new Waypoint(flight.getLastWaypoint());
+        this.lastWaypoint = new Waypoint(flight.getEndLocation());
     }
 
     @Override

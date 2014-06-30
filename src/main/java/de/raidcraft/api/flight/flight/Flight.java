@@ -44,14 +44,14 @@ public interface Flight {
      *
      * @return starting location of the flight
      */
-    public Location getFirstWaypoint();
+    public Location getStartLocation();
 
     /**
      * Gets the last waypoint of the path and therefor the flight.
      *
      * @return end location of the flight
      */
-    public Location getLastWaypoint();
+    public Location getEndLocation();
 
     /**
      * Checks if the passenger list contains a passenger that matches the given entity.
