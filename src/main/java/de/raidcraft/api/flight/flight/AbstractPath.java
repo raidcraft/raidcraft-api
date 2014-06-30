@@ -88,7 +88,7 @@ public abstract class AbstractPath implements Path {
         if (!waypoints.isEmpty()) {
             return waypoints.get(0);
         }
-        return null;
+        return new Waypoint(getStartLocation());
     }
 
     @Override
@@ -97,7 +97,7 @@ public abstract class AbstractPath implements Path {
         if (!waypoints.isEmpty()) {
             return waypoints.get(waypoints.size() - 1);
         }
-        return null;
+        return new Waypoint(getEndLocation());
     }
 
     protected List<Waypoint> clearWaypoints() {

@@ -97,7 +97,10 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     @Override
     public Waypoint getCurrentWaypoint() {
 
-        return getPath().getWaypoints().get(currentIndex);
+        if (currentIndex < getPath().getWaypoints().size()) {
+            return getPath().getWaypoints().get(currentIndex);
+        }
+        return getPath().getLastWaypoint();
     }
 
     @Override
