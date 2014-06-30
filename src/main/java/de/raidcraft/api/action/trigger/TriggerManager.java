@@ -69,7 +69,12 @@ public final class TriggerManager implements Component {
                 continue;
             }
             registeredTrigger.put(triggerName, trigger);
-            ConfigBuilder.registerConfigGenerator(trigger);
+	        try {
+		        ConfigBuilder.registerConfigGenerator(trigger);
+	        } catch (ConfigBuilderException e) {
+		        RaidCraft.LOGGER.warning(e.getMessage());
+		        e.printStackTrace();
+	        }
         }
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
