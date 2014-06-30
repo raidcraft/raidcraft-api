@@ -2,6 +2,7 @@ package de.raidcraft.api.action.trigger;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -28,14 +29,14 @@ public class TriggerFactory {
         this.config = config;
     }
 
-    public void registerListener(TriggerListener<?> listener) {
+    public void registerListener(@NonNull TriggerListener<?> listener) {
 
         if (registeredListeners.contains(listener)) return;
         getManager().registerListener(listener, getIdentifier(), getConfig());
         registeredListeners.add(listener);
     }
 
-    public void unregisterListener(TriggerListener<?> listener) {
+    public void unregisterListener(@NonNull TriggerListener<?> listener) {
 
         registeredListeners.remove(listener);
         getManager().unregisterListener(listener);

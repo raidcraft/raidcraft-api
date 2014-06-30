@@ -5,6 +5,7 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.config.builder.ConfigBuilder;
+import de.raidcraft.api.config.builder.ConfigBuilderException;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -43,8 +44,13 @@ public final class TriggerManager implements Component {
     public void registerGlobalTrigger(@NonNull Trigger trigger) {
 
         for (String action : trigger.getActions()) {
-            registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
-            ConfigBuilder.registerConfigGenerator(trigger);
+            try {
+                registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
+                ConfigBuilder.registerConfigGenerator(trigger);
+            } catch (ConfigBuilderException e) {
+                RaidCraft.LOGGER.warning(e.getMessage());
+                e.printStackTrace();
+            }
         }
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
@@ -101,7 +107,7 @@ public final class TriggerManager implements Component {
         RaidCraft.LOGGER.info("removed all trigger of: " + plugin.getName());
     }
 
-    public <T> void registerListener(TriggerListener<T> listener, String triggerIdentifier, ConfigurationSection config) {
+    public <T> void registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier, @NonNull ConfigurationSection config) {
 
         String id = triggerIdentifier.toLowerCase();
         // we need to check partial names because actions are not listed in the map
@@ -111,12 +117,12 @@ public final class TriggerManager implements Component {
         }
     }
 
-    public <T> void unregisterListener(TriggerListener<T> listener) {
+    public <T> void unregisterListener(@NonNull TriggerListener<T> listener) {
 
         registeredTrigger.values().forEach(trigger -> trigger.unregisterListener(listener));
     }
 
-    public TriggerFactory getTrigger(String identifier, ConfigurationSection config) {
+    public TriggerFactory getTrigger(@NonNull String identifier, @NonNull ConfigurationSection config) {
 
         return new TriggerFactory(this, identifier, config);
     }
@@ -126,7 +132,7 @@ public final class TriggerManager implements Component {
         return new HashMap<>(registeredTrigger);
     }
 
-    public Collection<TriggerFactory> createTriggerFactories(ConfigurationSection trigger) {
+    public Collection<TriggerFactory> createTriggerFactories(@NonNull ConfigurationSection trigger) {
 
         List<TriggerFactory> list = new ArrayList<>();
         if (trigger != null) {
