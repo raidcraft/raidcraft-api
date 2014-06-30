@@ -4,7 +4,6 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.config.builder.ConfigBuilder;
-import de.raidcraft.api.config.builder.ConfigBuilderException;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -40,13 +39,8 @@ public final class ActionFactory implements Component {
     public <T> void registerGlobalAction(@NonNull String identifier, @NonNull Action<T> action) {
 
         actions.put(identifier, action);
-	    try {
-		    ConfigBuilder.registerConfigGenerator(action);
-	    } catch (ConfigBuilderException e) {
-		    RaidCraft.LOGGER.warning(e.getMessage());
-		    e.printStackTrace();
-	    }
-	    RaidCraft.LOGGER.info("registered global action: " + identifier);
+        ConfigBuilder.registerConfigGenerator(action);
+        RaidCraft.LOGGER.info("registered global action: " + identifier);
     }
 
     @SneakyThrows
@@ -57,13 +51,8 @@ public final class ActionFactory implements Component {
             throw new ActionException("Action '" + identifier + "' is already registered!");
         }
         actions.put(identifier, action);
-	    try {
-		    ConfigBuilder.registerConfigGenerator(action);
-	    } catch (ConfigBuilderException e) {
-		    RaidCraft.LOGGER.warning(e.getMessage());
-		    e.printStackTrace();
-	    }
-	    RaidCraft.LOGGER.info("registered action: " + identifier);
+        ConfigBuilder.registerConfigGenerator(action);
+        RaidCraft.LOGGER.info("registered action: " + identifier);
     }
 
     public void unregisterAction(@NonNull JavaPlugin plugin, @NonNull String identifier) {

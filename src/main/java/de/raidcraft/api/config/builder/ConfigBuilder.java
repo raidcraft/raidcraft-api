@@ -8,6 +8,7 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.SimpleConfiguration;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
+import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -36,7 +37,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     private static final Map<String, ConfigGenerator.Information> GENERATOR_INFORMATIONS = new CaseInsensitiveMap<>();
     private static final Map<UUID, ConfigBuilder> CURRENT_BUILDERS = new HashMap<>();
 
-    public static void registerConfigGenerator(ConfigGenerator generator) throws ConfigBuilderException {
+    public static void registerConfigGenerator(@NonNull ConfigGenerator generator) {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -56,19 +57,15 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
         }
     }
 
-    public static void registerConfigGenerator(Object builder) {
+    public static void registerConfigGenerator(@NonNull Object builder) {
 
         if (builder instanceof ConfigGenerator) {
-            try {
-                registerConfigGenerator((ConfigGenerator) builder);
-            } catch (ConfigBuilderException e) {
-                RaidCraft.LOGGER.warning(e.getMessage());
-            }
+            registerConfigGenerator((ConfigGenerator) builder);
         }
     }
 
     @Nullable
-    public static Method getConfigGeneratorMethod(ConfigGenerator generator, String name) {
+    public static Method getConfigGeneratorMethod(@NonNull ConfigGenerator generator, @NonNull String name) {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {

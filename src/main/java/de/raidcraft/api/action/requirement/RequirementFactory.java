@@ -4,7 +4,6 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.config.builder.ConfigBuilder;
-import de.raidcraft.api.config.builder.ConfigBuilderException;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -40,13 +39,8 @@ public final class RequirementFactory implements Component {
     public <T> void registerGlobalRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
 
         requirements.put(identifier, requirement);
-	    try {
-		    ConfigBuilder.registerConfigGenerator(requirement);
-	    } catch (ConfigBuilderException e) {
-		    RaidCraft.LOGGER.warning(e.getMessage());
-		    e.printStackTrace();
-	    }
-	    RaidCraft.LOGGER.info("registered global requirement: " + identifier);
+        ConfigBuilder.registerConfigGenerator(requirement);
+        RaidCraft.LOGGER.info("registered global requirement: " + identifier);
     }
 
     @SneakyThrows
