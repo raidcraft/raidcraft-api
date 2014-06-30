@@ -59,9 +59,9 @@ public abstract class Trigger implements TriggerConfigGenerator {
         if (registeredListeners.containsKey(identifier)) {
             Stream<TriggerListenerConfigWrapper<?>> stream;
             if (RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().parallelActionAPI) {
-                stream = registeredListeners.get(identifier).parallelStream();
+                stream = new ArrayList<>(registeredListeners.get(identifier)).parallelStream();
             } else {
-                stream = registeredListeners.get(identifier).stream();
+                stream = new ArrayList<>(registeredListeners.get(identifier)).stream();
             }
             stream.map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
