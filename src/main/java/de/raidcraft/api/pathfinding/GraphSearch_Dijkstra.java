@@ -52,7 +52,7 @@ public class GraphSearch_Dijkstra  implements IGraphSearch {
 	/**
 	 * Indicates the predecessor node for a given node.
 	 * This is used to store the shortest path.
-	 * <node of interest, node where the edge originated>
+	 * node of interest, node where the edge originated
 	 */
 	protected HashMap<GraphNode, GraphNode> parent;
 
