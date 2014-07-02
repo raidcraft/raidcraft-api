@@ -49,6 +49,9 @@ public abstract class AbstractQuest implements Quest {
     @Override
     public boolean processTrigger(Player player) {
 
+        if (!getPlayer().equals(player)) {
+            return false;
+        }
         if (isActive()) {
             Collection<Requirement<Player>> requirements = getTemplate().getRequirements();
             if (requirements.stream().allMatch(requirement -> requirement.test(player))) {
