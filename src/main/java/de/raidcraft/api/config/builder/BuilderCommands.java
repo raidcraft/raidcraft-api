@@ -6,39 +6,19 @@ import com.sk89q.minecraft.util.commands.CommandPermissions;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author mdoering
  */
-public class BuilderCommands implements TabCompleter {
+public class BuilderCommands {
 
     private final RaidCraftPlugin plugin;
 
     public BuilderCommands(RaidCraftPlugin plugin) {
 
         this.plugin = plugin;
-        plugin.getCommand("rccb").setTabCompleter(this);
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String cmdLabel, String[] args) {
-
-        if (args.length < 1 || !Arrays.asList("add").contains(args[0].toLowerCase())) {
-            return null;
-        }
-        if (args.length == 2) {
-            return ConfigBuilder.getConfigGenerators().keySet().stream()
-                    .filter(cmd -> cmd.startsWith(args[1])).collect(Collectors.toList());
-        }
-        return null;
     }
 
     @com.sk89q.minecraft.util.commands.Command(
