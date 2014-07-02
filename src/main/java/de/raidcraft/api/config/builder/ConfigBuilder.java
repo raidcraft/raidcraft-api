@@ -36,7 +36,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     private static final Map<String, ConfigGenerator.Information> GENERATOR_INFORMATIONS = new CaseInsensitiveMap<>();
     private static final Map<UUID, ConfigBuilder> CURRENT_BUILDERS = new HashMap<>();
 
-    public static void registerConfigGenerator(ConfigGenerator generator) throws ConfigBuilderException {
+    public static void registerConfigGenerator(ConfigGenerator generator) {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -59,11 +59,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     public static void registerConfigGenerator(Object builder) {
 
         if (builder instanceof ConfigGenerator) {
-            try {
-                registerConfigGenerator((ConfigGenerator) builder);
-            } catch (ConfigBuilderException e) {
-                RaidCraft.LOGGER.warning(e.getMessage());
-            }
+            registerConfigGenerator((ConfigGenerator) builder);
         }
     }
 

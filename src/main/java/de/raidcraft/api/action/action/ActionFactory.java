@@ -89,7 +89,7 @@ public final class ActionFactory implements Component {
     public Action<?> create(@NonNull String identifier, @NonNull ConfigurationSection config) {
 
         if (!actions.containsKey(identifier)) {
-            throw new ActionException("unknown action: " + identifier);
+            throw new ActionException("unknown action: " + identifier + " in " + config.getRoot().getName());
         }
         return new ActionConfigWrapper<>(actions.get(identifier), config);
     }
