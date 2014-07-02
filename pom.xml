@@ -35,11 +35,6 @@
             <version>1.2.26</version>
         </dependency>
         <dependency>
-            <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizensapi</artifactId>
-            <version>2.0.12-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>${rc.version}</version>
@@ -48,11 +43,6 @@
             <groupId>com.comphenix.packetwrapper</groupId>
             <artifactId>PacketWrapper</artifactId>
             <version>${rc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>mkremins</groupId>
-            <artifactId>fanciful</artifactId>
-            <version>0.1.5</version>
         </dependency>
     </dependencies>
     <build>
