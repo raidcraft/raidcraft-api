@@ -22,10 +22,6 @@
             <id>raidcraft</id>
             <url>http://nexus.raid-craft.de/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>Citizens</id>
-            <url>http://repo.citizensnpcs.co</url>
-        </repository>
     </repositories>
     
     <dependencies>
