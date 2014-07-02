@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 /**
  * @author Silthus
  */
-public interface Action<T> extends Consumer<T> {
+public interface Action<T> extends Consumer<T>, ActionConfigGenerator {
 
     public default ConfigurationSection getConfig() {
 

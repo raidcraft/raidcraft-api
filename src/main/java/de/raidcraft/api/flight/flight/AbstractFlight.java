@@ -39,13 +39,13 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     }
 
     @Override
-    public Location getFirstWaypoint() {
+    public Location getStartLocation() {
 
         return startLocation;
     }
 
     @Override
-    public Location getLastWaypoint() {
+    public Location getEndLocation() {
 
         return endLocation;
     }
@@ -97,7 +97,10 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     @Override
     public Waypoint getCurrentWaypoint() {
 
-        return getPath().getWaypoints().get(currentIndex);
+        if (currentIndex < getPath().getWaypoints().size()) {
+            return getPath().getWaypoints().get(currentIndex);
+        }
+        return getPath().getLastWaypoint();
     }
 
     @Override
@@ -123,7 +126,7 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
         try {
             onAbortFlight();
             getAircraft().abortFlight(this);
-            getPassenger().getEntity().teleport(getFirstWaypoint());
+            getPassenger().getEntity().teleport(getStartLocation());
         } catch (FlightException e) {
             getPassenger().sendMessage(ChatColor.RED + e.getMessage());
             e.printStackTrace();
