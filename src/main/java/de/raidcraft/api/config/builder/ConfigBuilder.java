@@ -56,7 +56,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
         }
     }
 
-    public static void registerConfigGenerator(@NonNull Object builder) {
+    public static void registerConfigGenerator(Object builder) {
 
         if (builder instanceof ConfigGenerator) {
             registerConfigGenerator((ConfigGenerator) builder);
@@ -64,7 +64,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     }
 
     @Nullable
-    public static Method getConfigGeneratorMethod(@NonNull ConfigGenerator generator, @NonNull String name) {
+    public static Method getConfigGeneratorMethod(ConfigGenerator generator, String name) {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
