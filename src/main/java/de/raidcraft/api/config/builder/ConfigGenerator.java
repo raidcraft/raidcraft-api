@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -60,6 +61,7 @@ public interface ConfigGenerator {
         return section;
     }
 
+    @Nullable
     public default Information getInformation(String name) {
 
         return ConfigBuilder.getConfigGeneratorInformation(name);
@@ -68,6 +70,7 @@ public interface ConfigGenerator {
     public default void printHelp(CommandSender sender, String name) {
 
         Information information = getInformation(name);
+        if (information == null) return;
         sender.sendMessage(ChatColor.YELLOW + information.value() + ": " + ChatColor.GRAY + ChatColor.ITALIC + information.desc());
         sender.sendMessage(ChatColor.AQUA + "Usage: " + information.usage());
         sender.sendMessage(ChatColor.GRAY + "Help: " + ChatColor.ITALIC + information.help());
