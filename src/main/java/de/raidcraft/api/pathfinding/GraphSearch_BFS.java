@@ -192,7 +192,7 @@ public class GraphSearch_BFS  implements IGraphSearch{
 	}
 	
 	/**
-	 * Get the path found as an array of GraphNode(s) in start->end
+	 * Get the path found as an array of GraphNode(s) in start to end
 	 * order <br>
 	 * @return path found or array size 0 if none found
 	 */
@@ -201,7 +201,7 @@ public class GraphSearch_BFS  implements IGraphSearch{
 	}
 	
 	/**
-	 * Get the path found as an array of T(s) in start->end
+	 * Get the path found as an array of T(s) in start to end
 	 * order. <br>
 	 * The type of each element in the array will be of type Object
 	 * if the parameter is null otherwise it is T (where T is GraphNode

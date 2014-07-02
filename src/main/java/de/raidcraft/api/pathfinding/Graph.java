@@ -222,7 +222,7 @@ public class Graph  {
 	 * 
 	 * @param fromID the ID number of the from node
 	 * @param toID the ID number of the to node
-	 * @param cost cost from > to
+	 * @param cost cost from to
 	 * @return true if the edge was added else false
 	 */
 	public boolean addEdge(int fromID, int toID, double cost){
@@ -247,8 +247,8 @@ public class Graph  {
 	 * 
 	 * @param fromID the ID number of the from node
 	 * @param toID the ID number of the to node
-	 * @param costOutward cost from > to
-	 * @param costInward cost to > from
+	 * @param costOutward cost from to
+	 * @param costInward cost to from
 	 * @return true if the edge was added else false
 	 */
 	public boolean addEdge(int fromID, int toID, double costOutward, double costInward){
@@ -338,7 +338,7 @@ public class Graph  {
 	/**
 	 * Get the cost of traversing an edge between 2 nodes. <br>
 	 * If either node does not exist or there is no edge
-	 * exists between them then the method returns a value <0.
+	 * exists between them then the method returns a value 0.
 	 * @param fromID ID for the from node
 	 * @param toID ID for the to node
 	 * @return the edge or null if it doesn't exist
