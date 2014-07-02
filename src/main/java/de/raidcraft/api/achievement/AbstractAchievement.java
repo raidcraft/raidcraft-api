@@ -95,6 +95,9 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
     @Override
     public boolean processTrigger(T entity) {
 
+        if (!entity.equals(getHolder().getType())) {
+            return false;
+        }
         if (!getTemplate().isEnabled() && !getHolder().hasPermission("rcachievement.ignore-disabled")) {
             return false;
         }

@@ -31,6 +31,9 @@ public abstract class AbstractPlayerObjective implements PlayerObjective {
     @Override
     public boolean processTrigger(Player player) {
 
+        if (!player.equals(getQuest().getHolder().getPlayer())) {
+            return false;
+        }
         if (getObjectiveTemplate().getRequirements().stream()
                 .allMatch(requirement -> requirement.test(player))) {
             complete();
