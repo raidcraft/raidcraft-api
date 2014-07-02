@@ -53,7 +53,7 @@ public class ActionCommand {
                     sb.append(entry.getKey());
                     if (action != null) {
                         ConfigGenerator.Information information = action.getInformation(entry.getKey());
-                        sb.append(": ").append(information.desc());
+                        if (information != null) sb.append(": ").append(information.desc());
                     }
                     sb.append("\n");
                 }
@@ -65,7 +65,7 @@ public class ActionCommand {
                     sb.append(entry.getKey());
                     if (requirement != null) {
                         ConfigGenerator.Information information = requirement.getInformation(entry.getKey());
-                        sb.append(": ").append(information.desc());
+                        if (information != null) sb.append(": ").append(information.desc());
                     }
                     sb.append("\n");
                 }
@@ -77,7 +77,7 @@ public class ActionCommand {
                     sb.append(entry);
                     if (trigger != null) {
                         ConfigGenerator.Information information = trigger.getInformation(entry.getKey());
-                        sb.append(": ").append(information.desc());
+                        if (information != null) sb.append(": ").append(information.desc());
                     }
                     sb.append("\n");
                 }
