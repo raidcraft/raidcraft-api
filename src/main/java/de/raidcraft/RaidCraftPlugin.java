@@ -9,6 +9,7 @@ import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.api.config.builder.BaseBuilderCommand;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.TPersistentInventory;
 import de.raidcraft.api.inventory.TPersistentInventorySlot;
@@ -55,6 +56,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerEvents(new BarAPI(this));
         registerCommands(ConfirmCommand.class);
         registerCommands(ActionCommand.class);
+        registerCommands(BaseBuilderCommand.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
