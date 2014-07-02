@@ -8,6 +8,7 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.SimpleConfiguration;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
+import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
