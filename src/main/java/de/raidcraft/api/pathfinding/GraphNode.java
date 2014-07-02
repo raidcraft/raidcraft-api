@@ -29,7 +29,7 @@ package de.raidcraft.api.pathfinding;
  * The node has a position in 3D space for 2D applications the z value should 
  * be zero. <br>
  * 
- * Each node should be given a unique ID number >= 0. Node ID numbers do
+ * Each node should be given a unique ID number greaterEquals 0. Node ID numbers do
  * not need to start at 0 (zero) or be sequential but they must be unique. <br>
  * 
  * It is the responsibility of the user to ensure that each node ID is unique 
