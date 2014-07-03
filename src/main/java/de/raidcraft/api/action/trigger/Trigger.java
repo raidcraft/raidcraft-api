@@ -1,7 +1,5 @@
 package de.raidcraft.api.action.trigger;
 
-import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /**
  * @author Silthus
@@ -57,13 +54,8 @@ public abstract class Trigger implements TriggerConfigGenerator {
 
         String identifier = getIdentifier() + "." + action;
         if (registeredListeners.containsKey(identifier)) {
-            Stream<TriggerListenerConfigWrapper<?>> stream;
-            if (RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().parallelActionAPI) {
-                stream = new ArrayList<>(registeredListeners.get(identifier)).parallelStream();
-            } else {
-                stream = new ArrayList<>(registeredListeners.get(identifier)).stream();
-            }
-            stream.map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
+            new ArrayList<>(registeredListeners.get(identifier)).stream()
+                    .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
                     // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
