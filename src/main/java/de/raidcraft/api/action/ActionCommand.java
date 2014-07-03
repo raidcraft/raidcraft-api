@@ -74,7 +74,7 @@ public class ActionCommand {
         TriggerManager.getInstance().getTrigger().entrySet().forEach(
                 entry -> {
                     Trigger trigger = entry.getValue();
-                    sb.append(entry);
+                    sb.append(entry.getKey());
                     if (trigger != null) {
                         ConfigGenerator.Information information = trigger.getInformation(entry.getKey());
                         if (information != null) sb.append(": ").append(information.desc());
