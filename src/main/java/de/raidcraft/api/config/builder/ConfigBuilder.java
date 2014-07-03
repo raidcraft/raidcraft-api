@@ -128,11 +128,13 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     public static void checkArguments(CommandSender sender, CommandContext args, ConfigGenerator generator, String name) throws ConfigBuilderException {
 
         ConfigGenerator.Information information = generator.getInformation(name);
-        if (args.argsLength() < information.min()) {
+        if (information == null)
+            throw new ConfigBuilderException("Generator " + generator.getClass().getCanonicalName() + " has no information!");
+        if (information.min() > 0 && args.argsLength() < information.min()) {
             generator.printHelp(sender, name);
             throw new ConfigBuilderException("Not enough arguments!");
         }
-        if (args.argsLength() > information.max()) {
+        if (information.max() > 0 && args.argsLength() > information.max()) {
             generator.printHelp(sender, name);
             throw new ConfigBuilderException("Too many arguments!");
         }
