@@ -6,7 +6,6 @@ import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,8 +42,7 @@ public final class ActionFactory implements Component {
         RaidCraft.LOGGER.info("registered global action: " + identifier);
     }
 
-    @SneakyThrows
-    public <T> void registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Action<T> action) {
+    public <T> void registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Action<T> action) throws ActionException {
 
         identifier = plugin.getName() + "." + identifier;
         if (actions.containsKey(identifier)) {
@@ -85,8 +83,7 @@ public final class ActionFactory implements Component {
         return "undefined";
     }
 
-    @SneakyThrows
-    public Action<?> create(@NonNull String identifier, @NonNull ConfigurationSection config) {
+    public Action<?> create(@NonNull String identifier, @NonNull ConfigurationSection config) throws ActionException {
 
         if (!actions.containsKey(identifier)) {
             throw new ActionException("unknown action: " + identifier);
@@ -94,16 +91,20 @@ public final class ActionFactory implements Component {
         return new ActionConfigWrapper<>(actions.get(identifier), config);
     }
 
-    public Collection<Action<?>> createActions(ConfigurationSection actions) {
+    public Collection<Action<?>> createActions(ConfigurationSection actions) throws ActionException {
 
-        if (actions == null) return new ArrayList<>();
-        return actions.getKeys(false).stream()
-                .map(key -> create(actions.getString(key + ".type"), actions.getConfigurationSection(key)))
-                .collect(Collectors.toList());
+        ArrayList<Action<?>> list = new ArrayList<>();
+        if (actions == null) {
+            return list;
+        }
+        for (String key : actions.getKeys(false)) {
+            list.add(create(actions.getString(key + ".type"), actions.getConfigurationSection(key)));
+        }
+        return list;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
+    public <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) throws ActionException {
 
         return createActions(actions).stream()
                 .filter(action -> action.matchesType(type))
