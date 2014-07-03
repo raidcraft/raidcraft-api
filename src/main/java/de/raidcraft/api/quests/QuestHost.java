@@ -18,4 +18,6 @@ public interface QuestHost {
     public String getFriendlyName();
 
     public void interact(Player player);
+
+    public void despawn();
 }
