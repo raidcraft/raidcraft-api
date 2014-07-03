@@ -1,7 +1,6 @@
 package de.raidcraft.api.action.trigger;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.action.ReflectionUtil;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionException;
 import de.raidcraft.api.action.action.ActionFactory;
@@ -10,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -56,19 +54,9 @@ class TriggerListenerConfigWrapper<T> {
                 .collect(Collectors.toList());
     }
 
-    public boolean matchesType(Class<?> type) {
-
-        for (Method method : getClass().getDeclaredMethods()) {
-            if (method.getName().equals("test")) {
-                return ReflectionUtil.isMatchingGenericMethodType(method, type);
-            }
-        }
-        return false;
-    }
-
     protected boolean test(T triggeringEntity, Predicate<ConfigurationSection> predicate) {
 
-        return triggerListener.getTriggerEntityType().isAssignableFrom(triggeringEntity.getClass()) && predicate.test(config);
+        return triggerListener.getTriggerEntityType().isInstance(triggeringEntity) && predicate.test(config);
     }
 
     protected void executeActions(T triggeringEntity) {
