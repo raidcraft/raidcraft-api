@@ -104,7 +104,7 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     }
 
     @Override
-    public final void startFlight() {
+    public void startFlight() {
 
         if (isActive()) return;
         try {
@@ -120,7 +120,7 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     public abstract void onStartFlight() throws FlightException;
 
     @Override
-    public final void abortFlight() {
+    public void abortFlight() {
 
         if (!isActive()) return;
         try {
@@ -136,7 +136,7 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     public abstract void onAbortFlight() throws FlightException;
 
     @Override
-    public final void endFlight() {
+    public void endFlight() {
 
         if (!isActive()) return;
         try {
