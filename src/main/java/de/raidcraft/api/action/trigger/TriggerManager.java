@@ -124,7 +124,7 @@ public final class TriggerManager implements Component {
         return new HashMap<>(registeredTrigger);
     }
 
-    public Collection<TriggerFactory> createTriggerFactories(@NonNull ConfigurationSection trigger) {
+    public Collection<TriggerFactory> createTriggerFactories(ConfigurationSection trigger) {
 
         List<TriggerFactory> list = new ArrayList<>();
         if (trigger != null) {
