@@ -24,6 +24,9 @@ public class BuilderCommands {
     @com.sk89q.minecraft.util.commands.Command(
             aliases = {"add"},
             desc = "Adds another config step to the builder",
+            min = 1,
+            usage = "<name>",
+            help = "See /actionapi for valid names",
             anyFlags = true
     )
     @CommandPermissions("raidcraft.configbuilder")
@@ -49,7 +52,8 @@ public class BuilderCommands {
     @com.sk89q.minecraft.util.commands.Command(
             aliases = {"create"},
             desc = "Creates a new named config file in the builder base path.",
-            anyFlags = true
+            anyFlags = true,
+            min = 1
     )
     @CommandPermissions("raidcraft.configbuilder")
     public void create(CommandContext args, CommandSender sender) {
