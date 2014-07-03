@@ -57,7 +57,7 @@ public interface Requirement<T> extends Predicate<T>, RequirementConfigGenerator
     public default String getCountText(T entity) {
 
         String string = getConfig().getString("count-text", "%current%/%count%");
-        string = QuestUtil.replaceCount(string, getCount(entity), getRequiredCount());
+        string = QuestUtil.replaceCount(getPath(), string, getCount(entity), getRequiredCount());
         return string;
     }
 
