@@ -33,9 +33,11 @@ public class QuestUtil {
         return section;
     }
 
-    public static String replaceCount(String value, int count, int maxCount) {
+    public static String replaceCount(String path, String value, int count, int maxCount) {
 
-        return value.replace("%current%", String.valueOf(count)).replace("%count%", String.valueOf(maxCount));
+        value = replaceRefrences(path, value);
+        value = value.replace("%current%", String.valueOf(count)).replace("%count%", String.valueOf(maxCount));
+        return value;
     }
 
     public static String replaceRefrences(String basePath, String value) {
