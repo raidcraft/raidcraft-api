@@ -7,7 +7,6 @@ import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -51,7 +50,6 @@ public final class TriggerManager implements Component {
         }
     }
 
-    @SneakyThrows
     public void registerTrigger(@NonNull JavaPlugin plugin, @NonNull Trigger trigger) {
 
         String triggerName;

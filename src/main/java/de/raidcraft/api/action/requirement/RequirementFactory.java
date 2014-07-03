@@ -77,8 +77,7 @@ public final class RequirementFactory implements Component {
         return new HashMap<>(requirements);
     }
 
-    @SneakyThrows
-    public Requirement<?> create(@NonNull String identifier, @NonNull ConfigurationSection config) {
+    public Requirement<?> create(@NonNull String identifier, @NonNull ConfigurationSection config) throws RequirementException {
 
         if (!requirements.containsKey(identifier)) {
             throw new RequirementException("unknown requirement: " + identifier);
@@ -86,16 +85,20 @@ public final class RequirementFactory implements Component {
         return new RequirementConfigWrapper<>(requirements.get(identifier), config);
     }
 
-    public Collection<Requirement<?>> createRequirements(ConfigurationSection requirements) {
+    public Collection<Requirement<?>> createRequirements(ConfigurationSection requirements) throws RequirementException {
 
-        if (requirements == null) return new ArrayList<>();
-        return requirements.getKeys(false).stream()
-                .map(key -> create(requirements.getString(key + ".type"), requirements.getConfigurationSection(key)))
-                .collect(Collectors.toList());
+        ArrayList<Requirement<?>> list = new ArrayList<>();
+        if (requirements == null) {
+            return list;
+        }
+        for (String key : requirements.getKeys(false)) {
+            list.add(create(requirements.getString(key + ".type"), requirements.getConfigurationSection(key)));
+        }
+        return list;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Collection<Requirement<T>> createRequirements(ConfigurationSection requirements, Class<T> type) {
+    public <T> Collection<Requirement<T>> createRequirements(ConfigurationSection requirements, Class<T> type) throws RequirementException {
 
         return createRequirements(requirements).stream()
                 .filter(action -> action.matchesType(type))
