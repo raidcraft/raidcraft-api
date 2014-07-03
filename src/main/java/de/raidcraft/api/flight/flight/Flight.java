@@ -5,6 +5,8 @@ import de.raidcraft.api.flight.passenger.Passenger;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 
+import javax.annotation.Nullable;
+
 /**
  * @author Silthus
  */
@@ -16,6 +18,7 @@ public interface Flight {
      *
      * @return aircraft mountable by a passenger
      */
+    @Nullable
     public Aircraft getAircraft();
 
     /**
