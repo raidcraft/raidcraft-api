@@ -70,6 +70,11 @@ public abstract class AbstractQuest implements Quest {
             startTrigger.forEach(factory -> factory.registerListener(this));
         } else if (isActive()) {
             if (hasCompletedAllObjectives()) {
+                if (completionTrigger.isEmpty()) {
+                    // complete the quest
+                    complete();
+                    return;
+                }
                 // register the completion trigger
                 completionTrigger.forEach(factory -> factory.registerListener(this));
             } else {

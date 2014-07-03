@@ -10,6 +10,7 @@ import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.action.trigger.global.PlayerTrigger;
+import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
@@ -36,6 +37,15 @@ public final class ActionAPI {
                 } catch (CustomItemException e) {
                     RaidCraft.LOGGER.warning("player.give.item (" + player.getName() + "): " + e.getMessage());
                 }
+            }
+        }),
+        GIVE_MONEY("player.give.money", new Action<Player>() {
+            @Override
+            public void accept(Player player) {
+
+                if (!getConfig().isSet("amount")) return;
+                Economy economy = RaidCraft.getEconomy();
+                economy.add(player.getName(), economy.parseCurrencyInput(getConfig().getString("amount")));
             }
         }),
         KILL_PLAYER("player.kill", (Player player) -> player.setHealth(0.0)),
