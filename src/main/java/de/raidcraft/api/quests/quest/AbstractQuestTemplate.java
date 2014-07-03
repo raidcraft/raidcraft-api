@@ -8,6 +8,7 @@ import de.raidcraft.api.quests.holder.QuestHolder;
 import de.raidcraft.api.quests.objective.ObjectiveTemplate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -18,6 +19,7 @@ import java.util.Collection;
  */
 @Data()
 @EqualsAndHashCode(of = "id")
+@ToString(exclude = {"completionActions", "requirements", "objectiveTemplates", "startTrigger", "completionTrigger"})
 public abstract class AbstractQuestTemplate implements QuestTemplate {
 
     private final String id;
