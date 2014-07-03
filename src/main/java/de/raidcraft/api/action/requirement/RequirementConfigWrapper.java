@@ -18,7 +18,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     private final Requirement<T> requirement;
     private final ConfigurationSection config;
     private final Map<T, Boolean> successfulChecks = new HashMap<>();
-    private int count;
+    private final Map<T, Integer> counters = new HashMap<>();
 
     protected RequirementConfigWrapper(Requirement<T> requirement, ConfigurationSection config) {
 
@@ -33,23 +33,29 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     }
 
     @Override
-    public boolean test(T t) {
+    public int getCount(T entity) {
 
-        boolean successfullyChecked = successfulChecks.getOrDefault(t, false);
+        return counters.getOrDefault(entity, 0);
+    }
+
+    @Override
+    public boolean test(T entity) {
+
+        boolean successfullyChecked = successfulChecks.getOrDefault(entity, false);
 
         if (isPersistant() && successfullyChecked) return true;
 
-        successfullyChecked = requirement.test(t);
+        successfullyChecked = requirement.test(entity);
 
-        if (successfullyChecked) count++;
+        if (successfullyChecked) counters.put(entity, counters.getOrDefault(entity, 0) + 1);
 
-        successfulChecks.put(t, successfullyChecked);
+        successfulChecks.put(entity, successfullyChecked);
 
         if (isCounting()) {
-            if (hasCountText() && t instanceof Player) {
-                ((Player) t).sendMessage(getCountText());
+            if (hasCountText() && entity instanceof Player) {
+                ((Player) entity).sendMessage(getCountText(entity));
             }
-            return getRequiredCount() <= getCount();
+            return getRequiredCount() <= getCount(entity);
         }
         return successfullyChecked;
     }

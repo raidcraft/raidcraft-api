@@ -44,7 +44,7 @@ public interface Requirement<T> extends Predicate<T>, RequirementConfigGenerator
         return getConfig().getInt("count", 0);
     }
 
-    public default int getCount() {
+    public default int getCount(T entity) {
 
         return 0;
     }
@@ -54,10 +54,10 @@ public interface Requirement<T> extends Predicate<T>, RequirementConfigGenerator
         return getConfig().isSet("count-text");
     }
 
-    public default String getCountText() {
+    public default String getCountText(T entity) {
 
         String string = getConfig().getString("count-text", "%current%/%count%");
-        string = QuestUtil.replaceCount(string, getCount(), getRequiredCount());
+        string = QuestUtil.replaceCount(string, getCount(entity), getRequiredCount());
         return string;
     }
 
