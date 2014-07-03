@@ -3,6 +3,7 @@ package de.raidcraft.api.action.trigger;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.ReflectionUtil;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.action.ActionException;
 import de.raidcraft.api.action.action.ActionFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,8 +41,16 @@ class TriggerListenerConfigWrapper<T> {
         ConfigurationSection section = config.getConfigurationSection("actions");
         if (section == null) return;
         actions = section.getKeys(false).stream()
-                .map(key -> RaidCraft.getComponent(ActionFactory.class)
-                        .create(section.getString(key + ".type"), section.getConfigurationSection(key)))
+                .map(key -> {
+                    try {
+                        return RaidCraft.getComponent(ActionFactory.class)
+                                .create(section.getString(key + ".type"), section.getConfigurationSection(key));
+                    } catch (ActionException e) {
+                        RaidCraft.LOGGER.warning(e.getMessage() + " in " + getTriggerListener());
+                    }
+                    return null;
+                })
+                .filter(key -> key != null)
                 .filter(action -> action.matchesType(getTriggerListener().getTriggerEntityType()))
                 .map(action -> (Action<T>) action)
                 .collect(Collectors.toList());
