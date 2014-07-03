@@ -63,6 +63,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.projectlombok:lombok</include>
+                                    <include>mkremins:fanciful</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
