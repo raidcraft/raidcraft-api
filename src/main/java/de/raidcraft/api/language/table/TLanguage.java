@@ -23,7 +23,7 @@ import javax.persistence.Table;
 public class TLanguage extends Model {
 
     /**
-     * A lowercase ISO 639-2 language code.
+     * A lowercase ISO 639-2/B language code.
      *
      * @see <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-2 Language Code List</a>
      */
