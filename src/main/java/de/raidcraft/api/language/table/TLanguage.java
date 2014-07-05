@@ -36,7 +36,7 @@ public class TLanguage extends Model {
      * A name for the language that is appropriate for display to the user.
      */
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "DESC", nullable = false, length = 32)
+    @Column(nullable = false, length = 32)
     private String name;
 
     public static Finder<String, TLanguage> find = new TLanguage.Finder<>(String.class, TLanguage.class, RaidCraftPlugin.class);
