@@ -117,6 +117,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TPersistentInventory.class);
         classes.add(TPersistentInventorySlot.class);
         classes.add(TPersistantRequirement.class);
+        classes.add(TPersistantRequirementMapping.class);
         return classes;
     }
 
