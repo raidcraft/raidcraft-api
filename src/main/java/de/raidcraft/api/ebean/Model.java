@@ -30,11 +30,12 @@ import java.util.Set;
  * Base-class for Ebean-mapped models.
  */
 @MappedSuperclass
-public class Model {
+public class Model implements IMaintainable {
 
     /**
      * Will either insert or update this entity depending on its state.
      */
+    @Override
     public void save() {
 
         Ebean.save(this);
@@ -45,6 +46,7 @@ public class Model {
      *
      * @param clazz class, extends, registered - TODO: Add useful description
      */
+    @Override
     public void save(final Class<? extends BasePlugin> clazz) {
 
         RaidCraft.getDatabase(clazz).save(this);
@@ -53,6 +55,7 @@ public class Model {
     /**
      * Updates this entity.
      */
+    @Override
     public void update() {
 
         Ebean.update(this);
@@ -63,6 +66,7 @@ public class Model {
      *
      * @param clazz class, extends, registered - TODO: Add useful description
      */
+    @Override
     public void update(final Class<? extends BasePlugin> clazz) {
 
         RaidCraft.getDatabase(clazz).update(this);
@@ -71,6 +75,7 @@ public class Model {
     /**
      * Deletes this entity.
      */
+    @Override
     public void delete() {
 
         Ebean.delete(this);
@@ -81,6 +86,7 @@ public class Model {
      *
      * @param clazz class, extends, registered - TODO: Add useful description
      */
+    @Override
     public void delete(final Class<? extends BasePlugin> clazz) {
 
         RaidCraft.getDatabase(clazz).delete(this);
@@ -89,6 +95,7 @@ public class Model {
     /**
      * Refreshes this entity from the database.
      */
+    @Override
     public void refresh() {
 
         Ebean.refresh(this);
@@ -99,6 +106,7 @@ public class Model {
      *
      * @param clazz class, extends, registered - TODO: Add useful description
      */
+    @Override
     public void refresh(final Class<? extends BasePlugin> clazz) {
 
         RaidCraft.getDatabase(clazz).refresh(this);
