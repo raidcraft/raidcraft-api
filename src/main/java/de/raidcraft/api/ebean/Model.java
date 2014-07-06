@@ -45,7 +45,7 @@ public class Model {
      *
      * @param clazz class, extends, registered - TODO: Add useful description
      */
-    public void save(Class<? extends BasePlugin> clazz) {
+    public void save(final Class<? extends BasePlugin> clazz) {
 
         RaidCraft.getDatabase(clazz).save(this);
     }
@@ -63,7 +63,7 @@ public class Model {
      *
      * @param clazz class, extends, registered - TODO: Add useful description
      */
-    public void update(Class<? extends BasePlugin> clazz) {
+    public void update(final Class<? extends BasePlugin> clazz) {
 
         RaidCraft.getDatabase(clazz).update(this);
     }
@@ -81,7 +81,7 @@ public class Model {
      *
      * @param clazz class, extends, registered - TODO: Add useful description
      */
-    public void delete(Class<? extends BasePlugin> clazz) {
+    public void delete(final Class<? extends BasePlugin> clazz) {
 
         RaidCraft.getDatabase(clazz).delete(this);
     }
@@ -99,7 +99,7 @@ public class Model {
      *
      * @param clazz class, extends, registered - TODO: Add useful description
      */
-    public void refresh(Class<? extends BasePlugin> clazz) {
+    public void refresh(final Class<? extends BasePlugin> clazz) {
 
         RaidCraft.getDatabase(clazz).refresh(this);
     }
@@ -122,7 +122,7 @@ public class Model {
          * @param type   Entity type.
          * @param sClazz class, extends, registered - TODO: Add useful description
          */
-        public Finder(Class<I> idType, Class<T> type, Class<? extends BasePlugin> sClazz) {
+        public Finder(final Class<I> idType, final Class<T> type, final Class<? extends BasePlugin> sClazz) {
 
             this.idType = idType;
             this.type = type;
@@ -131,7 +131,7 @@ public class Model {
 
         private EbeanServer getServer() {
 
-            return RaidCraft.getDatabase(sClazz);
+            return RaidCraft.getDatabase(this.sClazz);
         }
 
         /**
@@ -140,33 +140,33 @@ public class Model {
          * @param clazz class, extends, registered - TODO: Add useful description
          */
         @SuppressWarnings("unchecked")
-        public Finder<I, T> on(Class<? extends BasePlugin> clazz) {
+        public Finder<I, T> onServer(final Class<? extends BasePlugin> clazz) {
 
-            return new Finder(idType, type, clazz);
+            return new Finder(this.idType, this.type, clazz);
         }
 
         /**
          * Retrivies all entities of the given type.
          */
-        public List<T> all() {
+        public List<T> allEntities() {
 
-            return getServer().find(type).findList();
+            return this.getServer().find(this.type).findList();
         }
 
         /**
          * Retrieves an entity by ID.
          */
-        public T byId(I id) {
+        public T byId(final I id) {
 
-            return getServer().find(type, id);
+            return this.getServer().find(this.type, id);
         }
 
         /**
          * Retrieves an entity reference by ID.
          */
-        public T ref(I id) {
+        public T reference(final I id) {
 
-            return getServer().getReference(type, id);
+            return this.getServer().getReference(this.type, id);
         }
 
         /**
@@ -175,7 +175,7 @@ public class Model {
         @SuppressWarnings("unchecked")
         public I nextId() {
 
-            return (I) getServer().nextId(type);
+            return (I) this.getServer().nextId(this.type);
         }
 
         /**
@@ -183,7 +183,7 @@ public class Model {
          */
         public Filter<T> filter() {
 
-            return getServer().filter(type);
+            return this.getServer().filter(this.type);
         }
 
         /**
@@ -191,55 +191,61 @@ public class Model {
          */
         public Query<T> query() {
 
-            return getServer().find(type);
+            return this.getServer().find(this.type);
         }
 
         /**
          * Cancels query execution, if supported by the underlying database and driver.
          */
+        @Override
         public void cancel() {
 
-            query().cancel();
+            this.query().cancel();
         }
 
         /**
          * Copies this query.
          */
+        @Override
         public Query<T> copy() {
 
-            return query().copy();
+            return this.query().copy();
         }
 
         /**
          * Specifies a path to load including all its properties.
          */
-        public Query<T> fetch(String path) {
+        @Override
+        public Query<T> fetch(final String path) {
 
-            return query().fetch(path);
+            return this.query().fetch(path);
         }
 
         /**
          * Specifies a path to fetch with a specific list properties to include, to load a partial object.
          */
-        public Query<T> fetch(String path, String fetchProperties) {
+        @Override
+        public Query<T> fetch(final String path, final String fetchProperties) {
 
-            return query().fetch(path, fetchProperties);
+            return this.query().fetch(path, fetchProperties);
         }
 
         /**
          * Additionally specifies a <code>FetchConfig</code> to specify a 'query join' and/or define the lazy loading query.
          */
-        public Query<T> fetch(String path, FetchConfig fetchConfig) {
+        @Override
+        public Query<T> fetch(final String path, final FetchConfig fetchConfig) {
 
-            return query().fetch(path, fetchConfig);
+            return this.query().fetch(path, fetchConfig);
         }
 
         /**
          * Additionally specifies a <code>FetchConfig</code> to use a separate query or lazy loading to load this path.
          */
-        public Query<T> fetch(String assocProperty, String fetchProperties, FetchConfig fetchConfig) {
+        @Override
+        public Query<T> fetch(final String assocProperty, final String fetchProperties, final FetchConfig fetchConfig) {
 
-            return query().fetch(assocProperty, fetchProperties, fetchConfig);
+            return this.query().fetch(assocProperty, fetchProperties, fetchConfig);
         }
 
         /**
@@ -247,7 +253,9 @@ public class Model {
          *
          * @deprecated
          */
-        public Query<T> join(String path) {
+        @Override
+        @Deprecated
+        public Query<T> join(final String path) {
 
             throw new UnsupportedOperationException();
         }
@@ -257,7 +265,9 @@ public class Model {
          *
          * @deprecated
          */
-        public Query<T> join(String path, String joinProperties) {
+        @Override
+        @Deprecated
+        public Query<T> join(final String path, final String joinProperties) {
 
             throw new UnsupportedOperationException();
         }
@@ -267,7 +277,9 @@ public class Model {
          *
          * @deprecated
          */
-        public Query<T> join(String path, JoinConfig joinConfig) {
+        @Override
+        @Deprecated
+        public Query<T> join(final String path, final JoinConfig joinConfig) {
 
             throw new UnsupportedOperationException();
         }
@@ -277,7 +289,9 @@ public class Model {
          *
          * @deprecated
          */
-        public Query<T> join(String assocProperty, String joinProperties, JoinConfig joinConfig) {
+        @Override
+        @Deprecated
+        public Query<T> join(final String assocProperty, final String joinProperties, final JoinConfig joinConfig) {
 
             throw new UnsupportedOperationException();
         }
@@ -285,201 +299,226 @@ public class Model {
         /**
          * Executes a find IDs query in a background thread.
          */
+        @Override
         public FutureIds<T> findFutureIds() {
 
-            return query().findFutureIds();
+            return this.query().findFutureIds();
         }
 
         /**
          * Executes a find list query in a background thread.
          */
+        @Override
         public FutureList<T> findFutureList() {
 
-            return query().findFutureList();
+            return this.query().findFutureList();
         }
 
         /**
          * Executes a find row count query in a background thread.
          */
+        @Override
         public FutureRowCount<T> findFutureRowCount() {
 
-            return query().findFutureRowCount();
+            return this.query().findFutureRowCount();
         }
 
         /**
-         * Executes a query and return the resuls as a list of IDs.
+         * Executes a query and returns the result as a list of IDs.
          */
+        @Override
         public List<Object> findIds() {
 
-            return query().findIds();
+            return this.query().findIds();
         }
 
         /**
          * Executes the query and returns the results as a list of objects.
          */
+        @Override
         public List<T> findList() {
 
-            return query().findList();
+            return this.query().findList();
         }
 
         /**
          * Executes the query and returns the results as a map of objects.
          */
+        @Override
         public Map<?, T> findMap() {
 
-            return query().findMap();
+            return this.query().findMap();
         }
 
         /**
          * Executes the query and returns the results as a map of the objects.
          */
-        public <K> Map<K, T> findMap(String a, Class<K> b) {
+        @Override
+        public <K> Map<K, T> findMap(final String a, final Class<K> kClass) {
 
-            return query().findMap(a, b);
+            return this.query().findMap(a, kClass);
         }
 
         /**
          * Returns a <code>PagingList</code> for this query.
          */
-        public PagingList<T> findPagingList(int pageSize) {
+        @Override
+        public PagingList<T> findPagingList(final int pageSize) {
 
-            return query().findPagingList(pageSize);
+            return this.query().findPagingList(pageSize);
         }
 
         /**
          * Returns the number of entities this query should return.
          */
+        @Override
         public int findRowCount() {
 
-            return query().findRowCount();
+            return this.query().findRowCount();
         }
 
         /**
          * Executes the query and returns the results as a set of objects.
          */
+        @Override
         public Set<T> findSet() {
 
-            return query().findSet();
+            return this.query().findSet();
         }
 
         /**
          * Executes the query and returns the results as either a single bean or <code>null</code>, if no matching bean is found.
          */
+        @Override
         public T findUnique() {
 
-            return query().findUnique();
+            return this.query().findUnique();
         }
 
         /**
-         * Returns a <code>QueryResultVisitor</code> for this query.
+         * Executes a <code>QueryResultVisitor</code> for this query.
          */
-        public void findVisit(QueryResultVisitor<T> visitor) {
+        @Override
+        public void findVisit(final QueryResultVisitor<T> visitor) {
 
-            query().findVisit(visitor);
+            this.query().findVisit(visitor);
         }
 
         /**
          * Returns the <code>QueryIterator</code> for this query.
          */
+        @Override
         public QueryIterator<T> findIterate() {
 
-            return query().findIterate();
+            return this.query().findIterate();
         }
 
         /**
          * Returns the <code>ExpressionFactory</code> used by this query.
          */
+        @Override
         public ExpressionFactory getExpressionFactory() {
 
-            return query().getExpressionFactory();
+            return this.query().getExpressionFactory();
         }
 
         /**
          * Returns the first row value.
          */
+        @Override
         public int getFirstRow() {
 
-            return query().getFirstRow();
+            return this.query().getFirstRow();
         }
 
         /**
          * Returns the SQL that was generated for executing this query.
          */
+        @Override
         public String getGeneratedSql() {
 
-            return query().getGeneratedSql();
+            return this.query().getGeneratedSql();
         }
 
         /**
          * Returns the maximum of rows for this query.
          */
+        @Override
         public int getMaxRows() {
 
-            return query().getMaxRows();
+            return this.query().getMaxRows();
         }
 
         /**
          * Sets the index value to query.
          */
-        public Query<T> setUseIndex(UseIndex useIndex) {
+        @Override
+        public Query<T> setUseIndex(final UseIndex useIndex) {
 
-            return query().setUseIndex(useIndex);
+            return this.query().setUseIndex(useIndex);
         }
 
         /**
          * Gets the index value for this query.
          */
+        @Override
         public UseIndex getUseIndex() {
 
-            return query().getUseIndex();
+            return this.query().getUseIndex();
         }
 
         /**
          * Returns the type of query.
          */
+        @Override
         public Type getType() {
 
-            return query().getType();
+            return this.query().getType();
         }
 
         /**
          * Returns the <code>RawSql</code> that was set to use for this query.
          */
+        @Override
         public RawSql getRawSql() {
 
-            return query().getRawSql();
+            return this.query().getRawSql();
         }
 
         /**
          * Returns the query's <code>having</code> clause.
          */
+        @Override
         public ExpressionList<T> having() {
 
-            return query().having();
+            return this.query().having();
         }
 
         /**
          * Adds an expression to the <code>having</code> clause and returns the query.
          */
-        public Query<T> having(Expression addExpressionToHaving) {
+        @Override
+        public Query<T> having(final Expression expressionToAdd) {
 
-            return query().having(addExpressionToHaving);
+            return this.query().having(expressionToAdd);
         }
 
         /**
          * Adds clauses to the <code>having</code> clause and returns the query.
          */
-        public Query<T> having(String addToHavingClause) {
+        @Override
+        public Query<T> having(final String addToHavingClause) {
 
-            return query().having(addToHavingClause);
+            return this.query().having(addToHavingClause);
         }
 
         /**
          * Returns <code>true</code> if this query was tuned by <code>autoFetch</code>.
          */
+        @Override
         public boolean isAutofetchTuned() {
 
-            return query().isAutofetchTuned();
+            return this.query().isAutofetchTuned();
         }
 
         /**
@@ -487,9 +526,10 @@ public class Model {
          * <p/>
          * This is exactly the same as {@link #orderBy}.
          */
+        @Override
         public OrderBy<T> order() {
 
-            return query().order();
+            return this.query().order();
         }
 
         /**
@@ -497,9 +537,10 @@ public class Model {
          * <p/>
          * This is exactly the same as {@link #orderBy(String)}.
          */
-        public Query<T> order(String orderByClause) {
+        @Override
+        public Query<T> order(final String orderByClause) {
 
-            return query().order(orderByClause);
+            return this.query().order(orderByClause);
         }
 
         /**
@@ -507,9 +548,10 @@ public class Model {
          * <p/>
          * This is exactly the same as {@link #order}.
          */
+        @Override
         public OrderBy<T> orderBy() {
 
-            return query().orderBy();
+            return this.query().orderBy();
         }
 
         /**
@@ -517,105 +559,118 @@ public class Model {
          * <p/>
          * This is exactly the same as {@link #order(String)}.
          */
-        public Query<T> orderBy(String orderByClause) {
+        @Override
+        public Query<T> orderBy(final String orderByClause) {
 
-            return query().orderBy(orderByClause);
+            return this.query().orderBy(orderByClause);
         }
 
         /**
          * Explicitly sets a comma delimited list of the properties to fetch on the 'main' entity bean, to load a partial object.
          */
-        public Query<T> select(String fetchProperties) {
+        @Override
+        public Query<T> select(final String fetchProperties) {
 
-            return query().select(fetchProperties);
+            return this.query().select(fetchProperties);
         }
 
         /**
          * Explicitly specifies whether to use 'Autofetch' for this query.
          */
-        public Query<T> setAutofetch(boolean autofetch) {
+        @Override
+        public Query<T> setAutofetch(final boolean autofetch) {
 
-            return query().setAutofetch(autofetch);
+            return this.query().setAutofetch(autofetch);
         }
 
         /**
          * Sets the rows after which fetching should continue in a background thread.
          */
-        public Query<T> setBackgroundFetchAfter(int backgroundFetchAfter) {
+        @Override
+        public Query<T> setBackgroundFetchAfter(final int backgroundFetchAfter) {
 
-            return query().setBackgroundFetchAfter(backgroundFetchAfter);
+            return this.query().setBackgroundFetchAfter(backgroundFetchAfter);
         }
 
         /**
          * Sets a hint, which for JDBC translates to <code>Statement.fetchSize()</code>.
          */
-        public Query<T> setBufferFetchSizeHint(int fetchSize) {
+        @Override
+        public Query<T> setBufferFetchSizeHint(final int fetchSize) {
 
-            return query().setBufferFetchSizeHint(fetchSize);
+            return this.query().setBufferFetchSizeHint(fetchSize);
         }
 
         /**
          * Sets whether this query uses <code>DISTINCT</code>.
          */
-        public Query<T> setDistinct(boolean isDistinct) {
+        @Override
+        public Query<T> setDistinct(final boolean isDistinct) {
 
-            return query().setDistinct(isDistinct);
+            return this.query().setDistinct(isDistinct);
         }
 
         /**
          * Set this to true and the beans and collections returned will be plain classes rather than Ebean generated dynamic subclasses etc.
          */
-        public Query<T> setVanillaMode(boolean isVanillaMode) {
+        @Override
+        public Query<T> setVanillaMode(final boolean isVanillaMode) {
 
-            return query().setVanillaMode(isVanillaMode);
+            return this.query().setVanillaMode(isVanillaMode);
         }
 
         /**
          * Sets the first row to return for this query.
          */
-        public Query<T> setFirstRow(int firstRow) {
+        @Override
+        public Query<T> setFirstRow(final int firstRow) {
 
-            return query().setFirstRow(firstRow);
+            return this.query().setFirstRow(firstRow);
         }
 
         /**
          * Sets the ID value to query.
          */
-        public Query<T> setId(Object id) {
+        @Override
+        public Query<T> setId(final Object id) {
 
-            return query().setId(id);
+            return this.query().setId(id);
         }
 
         /**
          * Sets a listener to process the query on a row-by-row basis.
          */
-        public Query<T> setListener(QueryListener<T> queryListener) {
+        @Override
+        public Query<T> setListener(final QueryListener<T> queryListener) {
 
-            return query().setListener(queryListener);
+            return this.query().setListener(queryListener);
         }
 
         /**
          * When set to <code>true</code>, all the beans from this query are loaded into the bean cache.
          */
-        public Query<T> setLoadBeanCache(boolean loadBeanCache) {
+        @Override
+        public Query<T> setLoadBeanCache(final boolean loadBeanCache) {
 
-            return query().setLoadBeanCache(loadBeanCache);
+            return this.query().setLoadBeanCache(loadBeanCache);
         }
 
         /**
          * Sets the property to use as keys for a map.
          */
-        public Query<T> setMapKey(String mapKey) {
+        @Override
+        public Query<T> setMapKey(final String mapKey) {
 
-            return query().setMapKey(mapKey);
+            return this.query().setMapKey(mapKey);
         }
 
         /**
          * Sets the maximum number of rows to return in the query.
          */
-        public Query<T> setMaxRows(int maxRows) {
+        @Override
+        public Query<T> setMaxRows(final int maxRows) {
 
-            return query().setMaxRows(maxRows);
+            return this.query().setMaxRows(maxRows);
         }
 
         /**
@@ -623,9 +678,10 @@ public class Model {
          * <p/>
          * This is exactly the same as {@link #setOrderBy(com.avaje.ebean.OrderBy)}.
          */
-        public Query<T> setOrder(OrderBy<T> orderBy) {
+        @Override
+        public Query<T> setOrder(final OrderBy<T> orderBy) {
 
-            return query().setOrder(orderBy);
+            return this.query().setOrder(orderBy);
         }
 
         /**
@@ -633,49 +689,55 @@ public class Model {
          * <p/>
          * This is exactly the same as {@link #setOrder(com.avaje.ebean.OrderBy)}.
          */
-        public Query<T> setOrderBy(OrderBy<T> orderBy) {
+        @Override
+        public Query<T> setOrderBy(final OrderBy<T> orderBy) {
 
-            return query().setOrderBy(orderBy);
+            return this.query().setOrderBy(orderBy);
         }
 
         /**
          * Sets an ordered bind parameter according to its position.
          */
-        public Query<T> setParameter(int position, Object value) {
+        @Override
+        public Query<T> setParameter(final int position, final Object value) {
 
-            return query().setParameter(position, value);
+            return this.query().setParameter(position, value);
         }
 
         /**
          * Sets a named bind parameter.
          */
-        public Query<T> setParameter(String name, Object value) {
+        @Override
+        public Query<T> setParameter(final String name, final Object value) {
 
-            return query().setParameter(name, value);
+            return this.query().setParameter(name, value);
         }
 
         /**
          * Sets the OQL query to run
          */
-        public Query<T> setQuery(String oql) {
+        @Override
+        public Query<T> setQuery(final String oql) {
 
-            return getServer().createQuery(type, oql);
+            return this.getServer().createQuery(type, oql);
         }
 
         /**
          * Sets <code>RawSql</code> to use for this query.
          */
-        public Query<T> setRawSql(RawSql rawSql) {
+        @Override
+        public Query<T> setRawSql(final RawSql rawSql) {
 
-            return query().setRawSql(rawSql);
+            return this.query().setRawSql(rawSql);
         }
 
         /**
          * Sets whether the returned beans will be read-only.
          */
-        public Query<T> setReadOnly(boolean readOnly) {
+        @Override
+        public Query<T> setReadOnly(final boolean readOnly) {
 
-            return query().setReadOnly(readOnly);
+            return this.query().setReadOnly(readOnly);
         }
 
         /**
@@ -683,55 +745,81 @@ public class Model {
          */
         public Query<T> setTimeout(int secs) {
 
-            return query().setTimeout(secs);
+            return this.query().setTimeout(secs);
         }
 
         /**
          * Sets whether to use the bean cache.
          */
-        public Query<T> setUseCache(boolean useBeanCache) {
+        @Override
+        public Query<T> setUseCache(final boolean useBeanCache) {
 
-            return query().setUseCache(useBeanCache);
+            return this.query().setUseCache(useBeanCache);
         }
 
         /**
          * Sets whether to use the query cache.
          */
-        public Query<T> setUseQueryCache(boolean useQueryCache) {
+        @Override
+        public Query<T> setUseQueryCache(final boolean useQueryCache) {
 
-            return query().setUseQueryCache(useQueryCache);
+            return this.query().setUseQueryCache(useQueryCache);
         }
 
         /**
          * Adds expressions to the <code>where</code> clause with the ability to chain on the <code>ExpressionList</code>.
          */
+        @Override
         public ExpressionList<T> where() {
 
-            return query().where();
+            return this.query().where();
         }
 
         /**
          * Applies a filter on the 'many' property list rather than the root level objects.
          */
-        public ExpressionList<T> filterMany(String propertyName) {
+        @Override
+        public ExpressionList<T> filterMany(final String propertyName) {
 
-            return query().filterMany(propertyName);
+            return this.query().filterMany(propertyName);
         }
 
         /**
          * Adds a single <code>Expression</code> to the <code>where</code> clause and returns the query.
          */
-        public Query<T> where(Expression expression) {
+        @Override
+        public Query<T> where(final Expression expression) {
 
-            return query().where(expression);
+            return this.query().where(expression);
         }
 
         /**
          * Adds additional clauses to the <code>where</code> clause.
          */
-        public Query<T> where(String addToWhereClause) {
+        @Override
+        public Query<T> where(final String addToWhereClause) {
 
-            return query().where(addToWhereClause);
+            return this.query().where(addToWhereClause);
+        }
+
+        /**
+         * A string representation of this object.
+         * </p>
+         * Only for debugging.
+         */
+        @Override
+        public String toString() {
+
+            final StringBuilder result = new StringBuilder();
+            final String newLine = System.getProperty("line.separator");
+
+            result.append(this.getClass().getName()).append(" Object {").append(newLine);
+            result.append(" idType: ").append(idType).append(newLine);
+            result.append(" type: ").append(type).append(newLine);
+            result.append(" sClazz: ").append(sClazz).append(newLine);
+            result.append("}");
+
+            return result.toString();
         }
     }
 }
