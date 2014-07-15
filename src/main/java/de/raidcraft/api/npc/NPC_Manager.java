@@ -13,6 +13,9 @@ import net.citizensnpcs.api.util.YamlStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -23,10 +26,12 @@ import java.util.Map;
  * Handle all NPC's
  * User: IDragonfire
  */
-public class NPC_Manager {
+public class NPC_Manager implements Listener {
     private static NPC_Manager INSTANCE;
     private Citizens citizens;
     private Map<String, NPCRegistry> register = new HashMap<>();
+    private Map<String, NPCDataStore> stores = new HashMap<>();
+    private Map<String, Storage> saves = new HashMap<>();
 
     // Singleton
     private NPC_Manager() {
@@ -36,6 +41,8 @@ public class NPC_Manager {
             return;
         }
         citizens = (Citizens) plugin;
+        // save all NPC's if server shut down
+        Bukkit.getPluginManager().registerEvents(this, Bukkit.getPluginManager().getPlugin("RaidCraft-API"));
     }
 
     public static NPC_Manager getInstance() {
@@ -52,28 +59,36 @@ public class NPC_Manager {
     private NPCRegistry createNPCRegistry(String host) {
         File f = new File(citizens.getDataFolder() + File.separator
                 + host + ".yml");
-        Storage saves = new YamlStorage(f);
+        Storage save = new YamlStorage(f);
+        this.saves.put(host, save);
+
         // load old npcs
         if (f.exists()) {
-            saves.load();
+            save.load();
         }
-        NPCDataStore store = SimpleNPCDataStore.create(saves);
+        NPCDataStore store = SimpleNPCDataStore.create(save);
+        stores.put(host, store);
         NPCRegistry registry = citizens.createNamedNPCRegistry(host, store);
         // transfer into registry
         store.loadInto(registry);
         return registry;
     }
 
+    // TODO: optimize save
     public NPC createPersistNpc(String name, String host) {
         if(!register.containsKey(host)) {
             register.put(host, createNPCRegistry(host));
         }
-        return register.get(host).createNPC(EntityType.PLAYER, name);
+        NPC npc =  register.get(host).createNPC(EntityType.PLAYER, name);
+        store(host);
+        return npc;
     }
 
+    // TODO: optimize save
     public NPC spawnPersistNpc(Location loc, String name, String host) {
         NPC npc = this.createPersistNpc(name, host);
         npc.spawn(loc);
+        store(host);
         return npc;
     }
 
@@ -93,5 +108,36 @@ public class NPC_Manager {
      */
     public void loadNPCs(String host) {
         register.put(host, createNPCRegistry(host));
+    }
+
+    public void store(String host) {
+        for(NPC npc : this.register.get(host)) {
+            this.stores.get(host).store(npc);
+        }
+        this.stores.get(host).saveToDisk();
+    }
+
+    public void storeAll() {
+        for(String host : this.stores.keySet()) {
+           store(host);
+        }
+    }
+
+    private void storeImmediate(String host) {
+        for(NPC npc : this.register.get(host)) {
+            this.stores.get(host).store(npc);
+        }
+        this.stores.get(host).saveToDiskImmediate();
+    }
+
+    private void saveToDiskImmediate() {
+        for(String host : this.stores.keySet()) {
+            storeImmediate(host);
+        }
+    }
+
+    @EventHandler
+    private void pluginDisable(PluginDisableEvent event) {
+        this.saveToDiskImmediate();
     }
 }
