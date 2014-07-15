@@ -38,7 +38,7 @@ public class NPC_Manager {
         citizens = (Citizens) plugin;
     }
 
-    public NPC_Manager getInstance() {
+    public static NPC_Manager getInstance() {
         if(INSTANCE == null) {
             INSTANCE = new NPC_Manager();
         }
