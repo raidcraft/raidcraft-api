@@ -3,5 +3,5 @@ main: de.raidcraft.RaidCraftPlugin
 version: ${project.version}#${build.number}
 author: Silthus
 website: www.raid-craft.de
-softdepend: [WorldGuard, WorldEdit]
+softdepend: [WorldGuard, WorldEdit, Citizens]
 database: true
