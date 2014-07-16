@@ -2,6 +2,7 @@ package de.raidcraft.api.npc;
 
 import de.raidcraft.RaidCraft;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.npc.SimpleNPCDataStore;
@@ -47,6 +48,18 @@ public class NPC_Manager implements Listener {
             INSTANCE = new NPC_Manager();
         }
         return INSTANCE;
+    }
+
+    /**
+     * Remove a NPC from the server and data structure
+     */
+    public void removeNPC(NPC npc, String host) {
+        npc.despawn(DespawnReason.REMOVAL);
+        for(Trait trait : npc.getTraits()) {
+            trait.onRemove();
+        }
+        npc.getOwningRegistry().deregister(npc);
+        store(host);
     }
 
     /**
