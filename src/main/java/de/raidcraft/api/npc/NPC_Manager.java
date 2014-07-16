@@ -1,7 +1,7 @@
 package de.raidcraft.api.npc;
 
 import de.raidcraft.RaidCraft;
-import net.citizensnpcs.Citizens;
+import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.npc.SimpleNPCDataStore;
@@ -28,19 +28,16 @@ import java.util.Map;
  */
 public class NPC_Manager implements Listener {
     private static NPC_Manager INSTANCE;
-    private Citizens citizens;
     private Map<String, NPCRegistry> register = new HashMap<>();
     private Map<String, NPCDataStore> stores = new HashMap<>();
     private Map<String, Storage> saves = new HashMap<>();
 
     // Singleton
     private NPC_Manager() {
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("Citizens");
-        if(plugin == null) {
+        if(CitizensAPI.hasImplementation()) {
             RaidCraft.LOGGER.warning("Citiziens not loaded! NPC_Manager not available");
             return;
         }
-        citizens = (Citizens) plugin;
         // save all NPC's if server shut down
         Bukkit.getPluginManager().registerEvents(this, Bukkit.getPluginManager().getPlugin("RaidCraft-API"));
     }
@@ -57,7 +54,7 @@ public class NPC_Manager implements Listener {
      * @return
      */
     private NPCRegistry createNPCRegistry(String host) {
-        File f = new File(citizens.getDataFolder() + File.separator
+        File f = new File(CitizensAPI.getDataFolder() + File.separator
                 + host + ".yml");
         Storage save = new YamlStorage(f);
         this.saves.put(host, save);
@@ -68,7 +65,7 @@ public class NPC_Manager implements Listener {
         }
         NPCDataStore store = SimpleNPCDataStore.create(save);
         stores.put(host, store);
-        NPCRegistry registry = citizens.createNamedNPCRegistry(host, store);
+        NPCRegistry registry = CitizensAPI.createNamedNPCRegistry(host, store);
         // transfer into registry
         store.loadInto(registry);
         return registry;
@@ -98,7 +95,7 @@ public class NPC_Manager implements Listener {
      * @param traitname name to identify and store trait
      */
     public void registerTrait(Class<? extends Trait> trait, String traitname) {
-        citizens.getTraitFactory().registerTrait(TraitInfo.create(trait).withName(traitname));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(trait).withName(traitname));
     }
 
     /**
