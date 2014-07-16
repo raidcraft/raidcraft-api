@@ -22,6 +22,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Handle all NPC's
@@ -60,6 +61,14 @@ public class NPC_Manager implements Listener {
         }
         npc.getOwningRegistry().deregister(npc);
         store(host);
+    }
+
+    public void removeNPC(UUID npcID, String host) {
+        this.removeNPC(getNPC(npcID, host), host);
+    }
+
+    public NPC getNPC(UUID npcID, String host) {
+        return this.register.get(host).getByUniqueId(npcID);
     }
 
     /**
