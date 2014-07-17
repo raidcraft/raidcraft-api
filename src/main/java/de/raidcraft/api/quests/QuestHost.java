@@ -19,7 +19,5 @@ public interface QuestHost {
 
     public void interact(Player player);
 
-    public void spawn();
-
     public void despawn();
 }
