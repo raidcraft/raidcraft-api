@@ -6,6 +6,7 @@ import de.raidcraft.api.action.ActionCommand;
 import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
+import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
@@ -116,6 +117,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TPersistentInventory.class);
         classes.add(TPersistentInventorySlot.class);
         classes.add(TPersistantRequirement.class);
+        classes.add(TPersistantRequirementMapping.class);
         return classes;
     }
 
