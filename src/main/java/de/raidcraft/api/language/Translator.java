@@ -6,6 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
+ * for params in String:
+ * http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
+ * alternativ myplugin.getTranslationProvider().tr(...)
  * @author Silthus
  */
 public class Translator {
