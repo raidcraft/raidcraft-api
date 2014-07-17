@@ -1,5 +1,6 @@
 package de.raidcraft.api.action.requirement;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.ReflectionUtil;
 import de.raidcraft.api.quests.util.QuestUtil;
 import org.bukkit.configuration.ConfigurationSection;
@@ -74,5 +75,20 @@ public interface Requirement<T> extends Predicate<T>, RequirementConfigGenerator
             }
         }
         return false;
+    }
+
+    public default void save() {
+
+        RaidCraft.LOGGER.warning("Save method is not implemented by: " + getConfig().getRoot().getName());
+    }
+
+    public default void load() {
+
+        RaidCraft.LOGGER.warning("Load method is not implemented by: " + getConfig().getRoot().getName());
+    }
+
+    public default void delete(T entity) {
+
+        RaidCraft.LOGGER.warning("Delete method is not implemented by: " + getConfig().getRoot().getName());
     }
 }
