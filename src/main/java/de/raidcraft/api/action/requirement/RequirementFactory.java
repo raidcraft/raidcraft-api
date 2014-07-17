@@ -82,7 +82,9 @@ public final class RequirementFactory implements Component {
         if (!requirements.containsKey(identifier)) {
             throw new RequirementException("unknown requirement: " + identifier);
         }
-        return new RequirementConfigWrapper<>(requirements.get(identifier), config);
+        RequirementConfigWrapper<?> wrapper = new RequirementConfigWrapper<>(requirements.get(identifier), config);
+        wrapper.load();
+        return wrapper;
     }
 
     public Collection<Requirement<?>> createRequirements(ConfigurationSection requirements) throws RequirementException {
