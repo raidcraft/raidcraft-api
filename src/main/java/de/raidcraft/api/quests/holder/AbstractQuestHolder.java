@@ -35,13 +35,13 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     @Override
     public String getName() {
 
-        return getPlayer().getName();
+        return getPlayer() == null ? player : getPlayer().getName();
     }
 
     @Override
     public Player getPlayer() {
 
-        return Bukkit.getPlayer(getName());
+        return Bukkit.getPlayer(player);
     }
 
     @Override
