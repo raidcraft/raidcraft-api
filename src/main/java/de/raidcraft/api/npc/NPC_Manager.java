@@ -13,7 +13,9 @@ import net.citizensnpcs.api.util.Storage;
 import net.citizensnpcs.api.util.YamlStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
@@ -158,5 +160,9 @@ public class NPC_Manager implements Listener {
     @EventHandler
     private void pluginDisable(PluginDisableEvent event) {
         this.saveToDiskImmediate();
+    }
+
+    public boolean isNPC(Entity entity) {
+        return entity.hasMetadata("NPC");
     }
 }
