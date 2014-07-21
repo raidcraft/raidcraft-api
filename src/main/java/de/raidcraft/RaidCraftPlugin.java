@@ -16,7 +16,6 @@ import de.raidcraft.api.inventory.TPersistentInventory;
 import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
-import de.raidcraft.api.language.table.TLanguage;
 import de.raidcraft.api.storage.TObjectStorage;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
@@ -129,7 +128,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TObjectStorage.class);
         classes.add(TPersistentInventory.class);
         classes.add(TPersistentInventorySlot.class);
-        classes.add(TLanguage.class);
         // TODO: fix compiler errors
 //        classes.add(TLanguage.class);
 //        classes.add(TPersistantRequirement.class);
