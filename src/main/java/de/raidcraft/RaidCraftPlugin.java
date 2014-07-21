@@ -6,9 +6,11 @@ import de.raidcraft.api.action.ActionCommand;
 import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.trigger.TriggerManager;
+import de.raidcraft.api.chestui.ChestUI;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.api.events.PlayerSignInteractEvent;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.TPersistentInventory;
 import de.raidcraft.api.inventory.TPersistentInventorySlot;
@@ -21,9 +23,11 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -47,11 +51,12 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
     @Override
     public void enable() {
-
+        ChestUI.getInstance();
         this.config = configure(new LocalConfiguration(this));
         registerEvents(this);
         registerEvents(new RaidCraft());
         registerEvents(new BarAPI(this));
+        registeerChildListener();
         registerCommands(ConfirmCommand.class);
         registerCommands(ActionCommand.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
@@ -87,6 +92,17 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         RaidCraft.unregisterComponent(CustomItemManager.class);
     }
 
+    public void registeerChildListener() {
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            public void onPlayerInteract(PlayerInteractEvent event) {
+                if (event.getClickedBlock() == null || !(event.getClickedBlock() instanceof Sign)) {
+                    return;
+                }
+                RaidCraft.callEvent(new PlayerSignInteractEvent(event));
+            }
+        }, this);
+    }
+
     public static class LocalConfiguration extends ConfigurationBase<RaidCraftPlugin> {
 
         public LocalConfiguration(RaidCraftPlugin plugin) {
@@ -112,10 +128,11 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TObjectStorage.class);
         classes.add(TPersistentInventory.class);
         classes.add(TPersistentInventorySlot.class);
-        classes.add(TLanguage.class);
-        classes.add(TPersistantRequirement.class);
-        classes.add(TPersistantRequirementMapping.class);
-        classes.add(TLanguage.class);
+        // TODO: fix compiler errors
+//        classes.add(TLanguage.class);
+//        classes.add(TPersistantRequirement.class);
+//        classes.add(TPersistantRequirementMapping.class);
+//        classes.add(TLanguage.class);
         return classes;
     }
 
