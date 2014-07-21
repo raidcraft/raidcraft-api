@@ -1,6 +1,7 @@
 package de.raidcraft.api.chestui;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -18,5 +19,10 @@ public class MenuItem implements MenuItemAPI {
     @Override
     public  ItemStack getItem() {
         return item;
+    }
+
+    @Override
+    public void trigger(Player player) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

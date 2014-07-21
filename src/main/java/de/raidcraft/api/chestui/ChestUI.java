@@ -36,9 +36,11 @@ public class ChestUI {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void cmd(PlayerCommandPreprocessEvent event) {
-                if(event.getMessage().contains("menu")) {
+                if (event.getMessage().contains("menu")) {
                     Menu m = new Menu("test menu from me");
                     m.addMenuItem(new MenuItem());
+                    Menu m2 = new Menu("blalba");
+                    m.addMenuItem(new OpenMenu(m2));
                     ChestUI.getInstance().openMenu(event.getPlayer(), m);
                 }
             }
@@ -74,12 +76,13 @@ public class ChestUI {
                 return;
             }
             event.setCancelled(true);
-            if (event.getCurrentItem().getType() == Material.AIR) {
+            // test if clicked outside the inventory and empty slot
+            if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
             ((Player) holder).closeInventory();
             // call custom event
-            cache.get(event.getInventory()).triggerMenuItem(event.getSlot());
+            cache.get(event.getInventory()).triggerMenuItem(event.getSlot(), (Player) holder);
         }
 
         @EventHandler
@@ -89,6 +92,7 @@ public class ChestUI {
                 return;
             }
             HandlerList.unregisterAll(this);
+            ((Player) holder).sendMessage("close inventory");
         }
     }
 }

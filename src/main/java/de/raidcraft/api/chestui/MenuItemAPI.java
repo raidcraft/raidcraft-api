@@ -1,5 +1,6 @@
 package de.raidcraft.api.chestui;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -7,4 +8,6 @@ import org.bukkit.inventory.ItemStack;
  */
 interface MenuItemAPI {
     public ItemStack getItem();
+
+    public void trigger(Player player);
 }
