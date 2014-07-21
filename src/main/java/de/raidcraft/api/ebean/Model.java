@@ -30,7 +30,7 @@ import java.util.Set;
  * Base-class for Ebean-mapped models.
  */
 @MappedSuperclass
-public class Model implements IMaintainable {
+public class Model implements Maintainable {
 
     /**
      * Will either insert or update this entity depending on its state.

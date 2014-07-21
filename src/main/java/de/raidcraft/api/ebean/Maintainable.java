@@ -5,7 +5,7 @@ import de.raidcraft.api.BasePlugin;
 /**
  * Basic CRUD functionality.
  */
-public interface IMaintainable {
+public interface Maintainable {
 
     void save();
 
