@@ -33,18 +33,18 @@ public class ChestUI {
 
     private ChestUI() {
         plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-        Bukkit.getPluginManager().registerEvents(new Listener() {
-            @EventHandler
-            public void cmd(PlayerCommandPreprocessEvent event) {
-                if (event.getMessage().contains("menu")) {
-                    Menu m = new Menu("test menu from me");
-                    m.addMenuItem(new MenuItem());
-                    Menu m2 = new Menu("blalba");
-                    m.addMenuItem(new OpenMenu(m2));
-                    ChestUI.getInstance().openMenu(event.getPlayer(), m);
-                }
-            }
-        }, plugin);
+//        Bukkit.getPluginManager().registerEvents(new Listener() {
+//            @EventHandler
+//            public void cmd(PlayerCommandPreprocessEvent event) {
+//                if (event.getMessage().contains("menu")) {
+//                    Menu m = new Menu("test menu from me");
+//                    m.addMenuItem(new MenuItem());
+//                    Menu m2 = new Menu("blalba");
+//                    m.addMenuItem(new OpenMenu(m2));
+//                    ChestUI.getInstance().openMenu(event.getPlayer(), m);
+//                }
+//            }
+//        }, plugin);
     }
 
     public static ChestUI getInstance() {

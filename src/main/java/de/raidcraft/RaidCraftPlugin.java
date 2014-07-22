@@ -51,7 +51,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
     @Override
     public void enable() {
-        ChestUI.getInstance();
         this.config = configure(new LocalConfiguration(this));
         registerEvents(this);
         registerEvents(new RaidCraft());
