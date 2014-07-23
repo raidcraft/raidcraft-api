@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public class BookSerialization extends SimpleSerialization {
 
     public BookSerialization(ItemStack item) {
+
         super(item);
     }
 

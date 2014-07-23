@@ -18,8 +18,8 @@ public class AStar {
 
     private PathingResult result;
 
-    private HashMap<String, Tile> open = new HashMap<String, Tile>();
-    private HashMap<String, Tile> closed = new HashMap<String, Tile>();
+    private HashMap<String, Tile> open = new HashMap<>();
+    private HashMap<String, Tile> closed = new HashMap<>();
 
     private void addToOpenList(Tile t, boolean modify) {
 
@@ -114,7 +114,7 @@ public class AStar {
             return null;
         } else {
             // path found
-            LinkedList<Tile> routeTrace = new LinkedList<Tile>();
+            LinkedList<Tile> routeTrace = new LinkedList<>();
             Tile parent;
 
             routeTrace.add(current);
@@ -126,7 +126,7 @@ public class AStar {
 
             Collections.reverse(routeTrace);
 
-            return new ArrayList<Tile>(routeTrace);
+            return new ArrayList<>(routeTrace);
         }
     }
 
@@ -183,7 +183,7 @@ public class AStar {
     private void processAdjacentTiles(Tile current) {
 
         // set of possible walk to locations adjacent to current tile
-        HashSet<Tile> possible = new HashSet<Tile>(26);
+        HashSet<Tile> possible = new HashSet<>(26);
 
         for (byte x = -1; x <= 1; x++) {
             for (byte y = -1; y <= 1; y++) {
@@ -249,7 +249,7 @@ public class AStar {
 
         return (open.containsKey(t.getUID()) ? open.get(t.getUID()) : null);
         /*
-		 * for (Tile o : open) { if (o.equals(t)) { return o; } } return null;
+         * for (Tile o : open) { if (o.equals(t)) { return o; } } return null;
 		 */
     }
 

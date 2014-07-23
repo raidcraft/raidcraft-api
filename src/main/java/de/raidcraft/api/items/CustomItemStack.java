@@ -194,7 +194,7 @@ public class CustomItemStack extends ItemStack {
         DPSTooltip tooltip = (DPSTooltip) getTooltip(TooltipSlot.DPS);
         CustomItemStack customItem = RaidCraft.getCustomItem(itemStack);
         if (customItem != null && customItem.hasTooltip(TooltipSlot.DPS)) {
-            tooltip.setEquipedDps(((DPSTooltip)customItem.getTooltip(TooltipSlot.DPS)).getDps());
+            tooltip.setEquipedDps(((DPSTooltip) customItem.getTooltip(TooltipSlot.DPS)).getDps());
         }
     }
 

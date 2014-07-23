@@ -13,10 +13,10 @@ import org.bukkit.scheduler.BukkitTask;
  * @author Silthus
  */
 public interface Aircraft<T> {
-    
+
     /**
      * Gets the Bukkit Entity associated with the aircraft.
-     * 
+     *
      * @return bukkit entity or null if non bukkit entity
      */
     public Entity getBukkitEntity();
@@ -41,7 +41,7 @@ public interface Aircraft<T> {
      * Checks if the aircraft reached the given waypoint.
      *
      * @param waypoint to reach
-     * @param radius to check around the waypoint
+     * @param radius   to check around the waypoint
      *
      * @return true if aircraft is near the waypoint
      */
@@ -64,7 +64,7 @@ public interface Aircraft<T> {
     /**
      * Moves the aircraft to the given waypoint
      *
-     * @param flight that is moving the aircraft
+     * @param flight   that is moving the aircraft
      * @param waypoint to move to
      */
     public void move(Flight flight, Waypoint waypoint);
@@ -101,6 +101,7 @@ public interface Aircraft<T> {
 
     /**
      * Sets the aircraft as flying.
+     *
      * @param flying mode
      */
     public void setFlying(boolean flying);

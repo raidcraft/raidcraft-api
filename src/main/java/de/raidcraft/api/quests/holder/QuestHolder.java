@@ -1,8 +1,8 @@
 package de.raidcraft.api.quests.holder;
 
 import de.raidcraft.api.quests.QuestException;
-import de.raidcraft.api.quests.quest.QuestTemplate;
 import de.raidcraft.api.quests.quest.Quest;
+import de.raidcraft.api.quests.quest.QuestTemplate;
 import org.bukkit.entity.Player;
 
 import java.util.List;

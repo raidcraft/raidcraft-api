@@ -47,10 +47,11 @@ public class VariableMultilineTooltip extends Tooltip {
                 currentColour = ChatColor.COLOR_CHAR + "" + dMsg.charAt(i);
                 continue;
             }
-            if (c == ' ')
+            if (c == ' ') {
                 tWidth += 4;
-            else
+            } else {
                 tWidth += Font.WIDTHS[c] + 1;
+            }
             if (c == ' ' || i == dMsg.length() - 1) {
                 if (cWidth + tWidth > getWidth()) {
                     cWidth = 0;

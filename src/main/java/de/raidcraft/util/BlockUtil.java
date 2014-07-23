@@ -66,11 +66,11 @@ public final class BlockUtil {
     /**
      * Replaces all blocks around the given block that are non solid or air.
      *
-     * @param source block
+     * @param source   block
      * @param material to replace
-     * @param width the x-axis radius
-     * @param length the z-axis radius
-     * @param height the y-axis radius
+     * @param width    the x-axis radius
+     * @param length   the z-axis radius
+     * @param height   the y-axis radius
      */
     public static Set<Block> replaceNonSolidSurfaceBlocks(Block source, Material material, int width, int length, int height) {
 

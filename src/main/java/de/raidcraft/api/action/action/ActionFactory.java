@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public final class ActionFactory implements Component {
 
     private static final ActionFactory INSTANCE = new ActionFactory();
+
     @NonNull
     public static ActionFactory getInstance() {
 
@@ -86,7 +87,7 @@ public final class ActionFactory implements Component {
     public Action<?> create(@NonNull String identifier, @NonNull ConfigurationSection config) throws ActionException {
 
         if (!actions.containsKey(identifier)) {
-            throw new ActionException("unknown action: " + identifier);
+            throw new ActionException("unknown action: " + identifier + " in " + config.getRoot().getName());
         }
         return new ActionConfigWrapper<>(actions.get(identifier), config);
     }

@@ -13,6 +13,7 @@ public interface TriggerListener<T> {
      * be executed and the processing failed.
      *
      * @param entity to process
+     *
      * @return true if actions should execute
      */
     public boolean processTrigger(T entity);

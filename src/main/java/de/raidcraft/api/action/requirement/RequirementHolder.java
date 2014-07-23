@@ -16,6 +16,7 @@ public interface RequirementHolder<T> {
      * Gets all requirements and filters them to be applicable by the provided entity type.
      *
      * @param entityClazz to filter for
+     *
      * @return filtered list
      */
     @SuppressWarnings("unchecked")
@@ -31,6 +32,7 @@ public interface RequirementHolder<T> {
      * Gets all requirements and applies the given filter to them before returning.
      *
      * @param filter to apply
+     *
      * @return filtered list
      */
     public default Collection<Requirement<T>> getRequirements(Class<?> entityClazz, Predicate<? super Requirement<T>> filter) {

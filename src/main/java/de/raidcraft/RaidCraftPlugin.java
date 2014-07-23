@@ -5,12 +5,11 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionCommand;
 import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.requirement.RequirementFactory;
-import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
-import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.api.events.PlayerSignInteractEvent;
 import de.raidcraft.api.config.builder.BaseBuilderCommand;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.TPersistentInventory;
@@ -57,7 +56,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerEvents(new BarAPI(this));
         registerCommands(ConfirmCommand.class);
         registerCommands(ActionCommand.class);
-        registerCommands(BaseBuilderCommand.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
@@ -116,8 +114,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TObjectStorage.class);
         classes.add(TPersistentInventory.class);
         classes.add(TPersistentInventorySlot.class);
-        classes.add(TPersistantRequirement.class);
-        classes.add(TPersistantRequirementMapping.class);
         return classes;
     }
 

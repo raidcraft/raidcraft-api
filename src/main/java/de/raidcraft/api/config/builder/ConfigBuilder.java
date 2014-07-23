@@ -8,7 +8,6 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.SimpleConfiguration;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
-import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -37,7 +36,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     private static final Map<String, ConfigGenerator.Information> GENERATOR_INFORMATIONS = new CaseInsensitiveMap<>();
     private static final Map<UUID, ConfigBuilder> CURRENT_BUILDERS = new HashMap<>();
 
-    public static void registerConfigGenerator(@NonNull ConfigGenerator generator) {
+    public static void registerConfigGenerator(ConfigGenerator generator) throws ConfigBuilderException {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -57,15 +56,19 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
         }
     }
 
-    public static void registerConfigGenerator(@NonNull Object builder) {
+    public static void registerConfigGenerator(Object builder) {
 
         if (builder instanceof ConfigGenerator) {
-            registerConfigGenerator((ConfigGenerator) builder);
+            try {
+                registerConfigGenerator((ConfigGenerator) builder);
+            } catch (ConfigBuilderException e) {
+                RaidCraft.LOGGER.warning(e.getMessage());
+            }
         }
     }
 
     @Nullable
-    public static Method getConfigGeneratorMethod(@NonNull ConfigGenerator generator, @NonNull String name) {
+    public static Method getConfigGeneratorMethod(ConfigGenerator generator, String name) {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -128,8 +131,9 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     public static void checkArguments(CommandSender sender, CommandContext args, ConfigGenerator generator, String name) throws ConfigBuilderException {
 
         ConfigGenerator.Information information = generator.getInformation(name);
-        if (information == null)
+        if (information == null) {
             throw new ConfigBuilderException("Generator " + generator.getClass().getCanonicalName() + " has no information!");
+        }
         if (information.min() > 0 && args.argsLength() < information.min()) {
             generator.printHelp(sender, name);
             throw new ConfigBuilderException("Not enough arguments!");
@@ -230,9 +234,6 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
 
         if (isLocked()) {
             throw new ConfigBuilderException("The current config is finished. Please create a new one first: /rccb create <config_name>.yml");
-        }
-        if (!getCurrentPath().equals(path)) {
-            setCurrentPath(path);
         }
         ConfigGenerator.Information information = generator.getInformation(name);
         if (information.multiSection()) {

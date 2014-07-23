@@ -47,7 +47,7 @@ public enum ArmorType {
         }
     },
     @EnumValue("MAIL")
-    MAIL("Kette"){
+    MAIL("Kette") {
         @Override
         public double getArmorModifier(ItemQuality quality, int itemLevel) {
 
@@ -64,7 +64,7 @@ public enum ArmorType {
         }
     },
     @EnumValue("PLATE")
-    PLATE("Platte"){
+    PLATE("Platte") {
         @Override
         public double getArmorModifier(ItemQuality quality, int itemLevel) {
 
@@ -81,17 +81,17 @@ public enum ArmorType {
         }
     },
     @EnumValue("SHIELD")
-    SHIELD("Schild"){
+    SHIELD("Schild") {
         @Override
         public double getArmorModifier(ItemQuality quality, int itemLevel) {
 
             switch (quality) {
                 case UNCOMMON:
-                    return (itemLevel * 85)/3 + 133.0;
+                    return (itemLevel * 85) / 3 + 133.0;
                 case RARE:
-                    return ((itemLevel * 85)/3 + 133.0) * 1.22;
+                    return ((itemLevel * 85) / 3 + 133.0) * 1.22;
                 case EPIC:
-                    return (((itemLevel * 85)/3 + 133.0) * 1.22) * 1.28;
+                    return (((itemLevel * 85) / 3 + 133.0) * 1.22) * 1.28;
                 default:
                     return itemLevel;
             }

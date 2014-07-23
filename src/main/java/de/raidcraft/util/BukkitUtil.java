@@ -66,8 +66,9 @@ public final class BukkitUtil {
 
     public static LivingEntity getTargetEntity(final LivingEntity entity, final Class<? extends LivingEntity> type) {
 
-        if (entity instanceof Creature)
+        if (entity instanceof Creature) {
             return ((Creature) entity).getTarget();
+        }
         return getTarget(entity, entity.getWorld().getEntitiesByClass(type));
     }
 
@@ -79,8 +80,9 @@ public final class BukkitUtil {
         final Vector l = source.getEyeLocation().toVector(), n = source.getLocation().getDirection().normalize();
         final double cos45 = Math.cos(Math.PI / 4);
         for (final T other : entities) {
-            if (other == source)
+            if (other == source) {
                 continue;
+            }
             if (target == null || targetDistanceSquared > other.getLocation().distanceSquared(source.getLocation())) {
                 final Vector t = other.getLocation().add(0, 1, 0).toVector().subtract(l);
                 if (n.clone().crossProduct(t).lengthSquared() < radiusSquared && t.normalize().dot(n) >= cos45) {
@@ -125,17 +127,15 @@ public final class BukkitUtil {
     }
 
 
-    /** @param entities
-     *            List of nearby entities
-     * @param startPos
-     *            starting position
-     * @param radius
-     *            distance cone travels
-     * @param degrees
-     *            angle of cone
-     * @param direction
-     *            direction of the cone
-     * @return All entities inside the cone */
+    /**
+     * @param entities  List of nearby entities
+     * @param startPos  starting position
+     * @param radius    distance cone travels
+     * @param degrees   angle of cone
+     * @param direction direction of the cone
+     *
+     * @return All entities inside the cone
+     */
     public static List<LivingEntity> getEntitiesInCone(List<LivingEntity> entities, Vector startPos, float radius, float degrees, Vector direction) {
 
         // Returned list
@@ -158,15 +158,14 @@ public final class BukkitUtil {
         return newEntities;
     }
 
-    /** @param startPos
-     *            starting position
-     * @param radius
-     *            distance cone travels
-     * @param degrees
-     *            angle of cone
-     * @param direction
-     *            direction of the cone
-     * @return All block positions inside the cone */
+    /**
+     * @param startPos  starting position
+     * @param radius    distance cone travels
+     * @param degrees   angle of cone
+     * @param direction direction of the cone
+     *
+     * @return All block positions inside the cone
+     */
     public static List<Vector> getPositionsInCone(Vector startPos, float radius, float degrees, Vector direction) {
 
         // Returned list
@@ -174,23 +173,26 @@ public final class BukkitUtil {
         // We don't want to use square root
         float squaredRadius = radius * radius;
 
-        for (float x=startPos.getBlockX()-radius; x<startPos.getBlockX()+radius; x++)
-            for (float y=startPos.getBlockY()-radius; y<startPos.getBlockY()+radius; y++)
-                for (float z=startPos.getBlockZ()-radius; z<startPos.getBlockZ()+radius; z++) {
-                    Vector relative = new Vector(x,y,z);
+        for (float x = startPos.getBlockX() - radius; x < startPos.getBlockX() + radius; x++) {
+            for (float y = startPos.getBlockY() - radius; y < startPos.getBlockY() + radius; y++) {
+                for (float z = startPos.getBlockZ() - radius; z < startPos.getBlockZ() + radius; z++) {
+                    Vector relative = new Vector(x, y, z);
                     relative.subtract(startPos);
                     // First check : distance
                     if (relative.lengthSquared() > squaredRadius) continue;
                     // Second check : angle
                     if (getAngleBetweenVectors(direction, relative) > degrees) continue;
                     // The position v is in the cone
-                    positions.add(new Vector(x,y,z));
+                    positions.add(new Vector(x, y, z));
                 }
+            }
+        }
         return positions;
     }
 
 
     public static float getAngleBetweenVectors(Vector v1, Vector v2) {
-        return Math.abs((float)Math.toDegrees(v1.angle(v2)));
+
+        return Math.abs((float) Math.toDegrees(v1.angle(v2)));
     }
 }

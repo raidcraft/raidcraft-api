@@ -44,6 +44,7 @@ public interface AchievementHolder<T> {
      * Checks if the holder has the given permission.
      *
      * @param permission to check
+     *
      * @return true if holder has the permission
      */
     public boolean hasPermission(String permission);
@@ -53,6 +54,7 @@ public interface AchievementHolder<T> {
      * This does not mean the achievement is complete or active.
      *
      * @param identifier to check for
+     *
      * @return true if achievement exists for the holder
      */
     public default boolean hasAchievement(@NonNull String identifier) {
@@ -67,6 +69,7 @@ public interface AchievementHolder<T> {
      * Will check finished and active achievements.
      *
      * @param template to check
+     *
      * @return true if holder has achievement
      */
     public default boolean hasAchievement(@NonNull AchievementTemplate template) {
@@ -102,6 +105,7 @@ public interface AchievementHolder<T> {
      * Will not return true if the achievement is already finished and archived.
      *
      * @param template to check
+     *
      * @return true if {@link #getActiveAchievements()} contains template
      */
     public default boolean hasActiveAchievement(@NonNull AchievementTemplate template) {
@@ -152,6 +156,7 @@ public interface AchievementHolder<T> {
      * Can return null if no achievement is found.
      *
      * @param identifier to check for
+     *
      * @return null if no achievement is found
      */
     public default Achievement<T> getAchievement(@NonNull String identifier) {
@@ -166,6 +171,7 @@ public interface AchievementHolder<T> {
      * Can return null if no achievement is found.
      *
      * @param template to check for
+     *
      * @return null if no achievement is found
      */
     public default Achievement<T> getAchievement(@NonNull AchievementTemplate template) {
@@ -199,16 +205,19 @@ public interface AchievementHolder<T> {
      * Can return null if the holder has no achievement of this template.
      *
      * @param template achievement to remove
+     *
      * @return null if achievement did not exists
      */
     public Achievement<T> removeAchievement(@NonNull AchievementTemplate template);
 
     /**
      * Removes the given achievement from the holder.
-     * @see #removeAchievement(AchievementTemplate)
      *
      * @param achievement to remove
+     *
      * @return null if achievement did not exists
+     *
+     * @see #removeAchievement(AchievementTemplate)
      */
     public default Achievement<T> removeAchievement(@NonNull Achievement<T> achievement) {
 

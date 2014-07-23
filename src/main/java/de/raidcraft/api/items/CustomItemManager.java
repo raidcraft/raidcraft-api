@@ -111,7 +111,7 @@ public final class CustomItemManager implements Component {
         }
         customItems.put(item.getId(), item);
         if (!mappedMinecraftItems.containsKey(item.getMinecraftId())) {
-            mappedMinecraftItems.put(item.getMinecraftId(), new ArrayList<CustomItem>());
+            mappedMinecraftItems.put(item.getMinecraftId(), new ArrayList<>());
         }
         mappedMinecraftItems.get(item.getMinecraftId()).add(item);
     }

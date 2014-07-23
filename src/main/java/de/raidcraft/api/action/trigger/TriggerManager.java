@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public final class TriggerManager implements Component {
 
     private static final TriggerManager INSTANCE = new TriggerManager();
+
     @NonNull
     public static TriggerManager getInstance() {
 

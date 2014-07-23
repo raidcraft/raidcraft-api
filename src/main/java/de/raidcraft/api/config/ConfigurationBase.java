@@ -72,7 +72,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
             set(key, def);
             save();
         }
-        if (def instanceof Integer) return (V)(Integer)getOverrideInt(key, (Integer) def);
+        if (def instanceof Integer) return (V) (Integer) getOverrideInt(key, (Integer) def);
         if (def instanceof Double) return (V) (Double) getOverrideDouble(key, (Double) def);
         return (V) getOverrideConfig().get(key, def);
     }

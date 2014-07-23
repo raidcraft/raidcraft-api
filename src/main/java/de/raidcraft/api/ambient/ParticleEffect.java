@@ -143,8 +143,9 @@ public enum ParticleEffect {
 
     public static Object createPacket(ParticleEffect effect, Location location, float offsetX, float offsetY, float offsetZ, float speed, int count) throws Exception {
 
-        if (count <= 0)
+        if (count <= 0) {
             count = 1;
+        }
         Object packet = getPacket63WorldParticles();
         setValue(packet, "a", effect.name);
         setValue(packet, "b", (float) location.getX());
@@ -160,8 +161,9 @@ public enum ParticleEffect {
 
     public static Object createCrackPacket(boolean icon, int id, byte data, Location location, float offsetX, float offsetY, float offsetZ, int count) throws Exception {
 
-        if (count <= 0)
+        if (count <= 0) {
             count = 1;
+        }
         Object packet = getPacket63WorldParticles();
         String modifier = "iconcrack_" + id;
         if (!icon) {
