@@ -119,7 +119,7 @@ public class AStar {
 
             routeTrace.add(current);
 
-            while ((parent = current.getParent()) != null) {
+            while ((parent = current != null ? current.getParent() : null) != null) {
                 routeTrace.add(parent);
                 current = parent;
             }
@@ -168,7 +168,7 @@ public class AStar {
 
         // drop from open list and add to closed
 
-        this.open.remove(drop.getUID());
+        this.open.remove(drop != null ? drop.getUID() : null);
         this.addToClosedList(drop);
 
         return drop;

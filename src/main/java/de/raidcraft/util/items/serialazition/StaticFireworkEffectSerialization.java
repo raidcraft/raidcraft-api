@@ -58,8 +58,8 @@ public class StaticFireworkEffectSerialization {
                 String[] effectParameter = effect.split(":");
                 if (effectParameter.length < 4) continue;
 
-                boolean flicker = (effectParameter[1] == "1") ? true : false;
-                boolean trail = (effectParameter[2] == "1") ? true : false;
+                boolean flicker = (effectParameter[1].equals("1"));
+                boolean trail = (effectParameter[2].equals("1"));
 
                 String[] colorString = effectParameter[3].split(",");
                 List<Color> colors = new ArrayList<>();

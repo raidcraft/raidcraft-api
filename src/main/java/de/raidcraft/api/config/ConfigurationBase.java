@@ -301,7 +301,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
     @Override
     public String getString(String path, String def) {
 
-        if (def == null) return super.getString(path, def);
+        if (def == null) return super.getString(path, null);
         if (!isSet(path)) {
             set(path, def);
             save();

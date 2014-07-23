@@ -9,8 +9,6 @@ import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
-import de.raidcraft.api.events.PlayerSignInteractEvent;
-import de.raidcraft.api.config.builder.BaseBuilderCommand;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.TPersistentInventory;
 import de.raidcraft.api.inventory.TPersistentInventorySlot;
@@ -124,7 +122,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }
         PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
         if (!playerPlacedBlocks.containsKey(block.getChunk())) {
-            playerPlacedBlocks.put(block.getChunk(), new HashSet<PlayerPlacedBlock>());
+            playerPlacedBlocks.put(block.getChunk(), new HashSet<>());
         }
         playerPlacedBlocks.get(block.getChunk()).add(playerPlacedBlock);
     }

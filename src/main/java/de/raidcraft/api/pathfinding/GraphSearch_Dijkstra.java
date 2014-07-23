@@ -285,7 +285,7 @@ public class GraphSearch_Dijkstra implements IGraphSearch {
         public int compareTo(Object o) {
 
             GraphNodeCost gnc = (GraphNodeCost) o;
-            if (cost == gnc.cost) {
+            if (cost.equals(gnc.cost)) {
                 return node.compareTo(gnc.node);
             } else {
                 return cost.compareTo(gnc.cost);

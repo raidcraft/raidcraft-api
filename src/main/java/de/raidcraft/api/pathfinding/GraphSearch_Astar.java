@@ -348,7 +348,7 @@ public class GraphSearch_Astar implements IGraphSearch {
         public int compareTo(Object o) {
 
             GraphNodeCost gnc = (GraphNodeCost) o;
-            if (fCost == gnc.fCost) {
+            if (fCost.equals(gnc.fCost)) {
                 return node.compareTo(gnc.node);
             } else {
                 return fCost.compareTo(gnc.fCost);

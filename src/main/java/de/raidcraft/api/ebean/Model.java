@@ -531,7 +531,7 @@ public class Model implements Maintainable {
 
         /**
          * Returns the <code>order by</code> clause so that you can append an ascending or descending property to the <code>order by</code> clause.
-         * <p/>
+         * <p>
          * This is exactly the same as {@link #orderBy}.
          */
         @Override
@@ -542,7 +542,7 @@ public class Model implements Maintainable {
 
         /**
          * Sets the <code>order by</code> clause, replacing the existing <code>order by</code> clause if there is one.
-         * <p/>
+         * <p>
          * This is exactly the same as {@link #orderBy(String)}.
          */
         @Override
@@ -553,7 +553,7 @@ public class Model implements Maintainable {
 
         /**
          * Returns the <code>order by</code> clause so that you can append an ascending or descending property to the <code>order by</code> clause.
-         * <p/>
+         * <p>
          * This is exactly the same as {@link #order}.
          */
         @Override
@@ -564,7 +564,7 @@ public class Model implements Maintainable {
 
         /**
          * Set the <code>order by</code> clause replacing the existing <code>order by</code> clause if there is one.
-         * <p/>
+         * <p>
          * This is exactly the same as {@link #order(String)}.
          */
         @Override
@@ -683,7 +683,7 @@ public class Model implements Maintainable {
 
         /**
          * Replaces any existing <code>order by</code> clause using an <code>OrderBy</code> object.
-         * <p/>
+         * <p>
          * This is exactly the same as {@link #setOrderBy(com.avaje.ebean.OrderBy)}.
          */
         @Override
@@ -694,7 +694,7 @@ public class Model implements Maintainable {
 
         /**
          * Set an OrderBy object to replace any existing <code>order by</code> clause.
-         * <p/>
+         * <p>
          * This is exactly the same as {@link #setOrder(com.avaje.ebean.OrderBy)}.
          */
         @Override

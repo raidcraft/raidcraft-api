@@ -36,7 +36,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     private static final Map<String, ConfigGenerator.Information> GENERATOR_INFORMATIONS = new CaseInsensitiveMap<>();
     private static final Map<UUID, ConfigBuilder> CURRENT_BUILDERS = new HashMap<>();
 
-    public static void registerConfigGenerator(ConfigGenerator generator) throws ConfigBuilderException {
+    public static void registerConfigGenerator(ConfigGenerator generator) {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -59,11 +59,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     public static void registerConfigGenerator(Object builder) {
 
         if (builder instanceof ConfigGenerator) {
-            try {
-                registerConfigGenerator((ConfigGenerator) builder);
-            } catch (ConfigBuilderException e) {
-                RaidCraft.LOGGER.warning(e.getMessage());
-            }
+            registerConfigGenerator((ConfigGenerator) builder);
         }
     }
 
@@ -201,7 +197,9 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
 
     /**
      * Creates a new config file, stores and returns the old one.
+     *
      * @param name to create
+     *
      * @return old config file
      */
     public ConfigurationBase<T> createConfig(String name) {
@@ -219,8 +217,10 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     /**
      * Creates new config file and populates it with the given content.
      * Stores and returns the old config.
-     * @param name to create
+     *
+     * @param name    to create
      * @param content to store
+     *
      * @return old config file
      */
     public ConfigurationBase<T> createConfig(String name, ConfigurationSection content) {
@@ -236,7 +236,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
             throw new ConfigBuilderException("The current config is finished. Please create a new one first: /rccb create <config_name>.yml");
         }
         ConfigGenerator.Information information = generator.getInformation(name);
-        if (information.multiSection()) {
+        if (information != null && information.multiSection()) {
             getMultiSectionCount().put(getCurrentPath(), getMultiSectionCount(path) + 1);
             getCurrentSection().set(getMultiSectionCount(getCurrentPath()) + "", section);
         } else {
