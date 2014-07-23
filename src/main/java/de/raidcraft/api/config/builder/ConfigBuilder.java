@@ -128,8 +128,9 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     public static void checkArguments(CommandSender sender, CommandContext args, ConfigGenerator generator, String name) throws ConfigBuilderException {
 
         ConfigGenerator.Information information = generator.getInformation(name);
-        if (information == null)
+        if (information == null) {
             throw new ConfigBuilderException("Generator " + generator.getClass().getCanonicalName() + " has no information!");
+        }
         if (information.min() > 0 && args.argsLength() < information.min()) {
             generator.printHelp(sender, name);
             throw new ConfigBuilderException("Not enough arguments!");
@@ -197,7 +198,9 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
 
     /**
      * Creates a new config file, stores and returns the old one.
+     *
      * @param name to create
+     *
      * @return old config file
      */
     public ConfigurationBase<T> createConfig(String name) {
@@ -215,8 +218,10 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     /**
      * Creates new config file and populates it with the given content.
      * Stores and returns the old config.
-     * @param name to create
+     *
+     * @param name    to create
      * @param content to store
+     *
      * @return old config file
      */
     public ConfigurationBase<T> createConfig(String name, ConfigurationSection content) {

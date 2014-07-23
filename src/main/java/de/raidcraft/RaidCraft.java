@@ -129,7 +129,7 @@ public class RaidCraft implements Listener {
             return safeGetPlayer(name);
         } catch (UnknownPlayerException e) {
             LOGGER.severe(e.getMessage());
-//            e.printStackTrace();
+            //            e.printStackTrace();
         }
         return null;
     }
@@ -162,7 +162,8 @@ public class RaidCraft implements Listener {
      * Gets the registered table of the given table class.
      *
      * @param tClass of the table
-     * @param <T> table object
+     * @param <T>    table object
+     *
      * @return table
      */
     public static <T extends Table> T getTable(Class<T> tClass) {
@@ -345,7 +346,9 @@ public class RaidCraft implements Listener {
      * Even minecraft Items are possible.
      *
      * @param id of the item
+     *
      * @return created itemstack out of the id
+     *
      * @throws CustomItemException is thrown if nothing matched
      */
     public static ItemStack getItem(String id) throws CustomItemException {

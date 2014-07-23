@@ -44,11 +44,13 @@ public class FakeWither {
     private ProtocolManager manager;
 
     public FakeWither(Location location, ProtocolManager manager) {
+
         this.location = location;
         this.manager = manager;
     }
 
     public int getHealth() {
+
         return health;
     }
 
@@ -68,13 +70,14 @@ public class FakeWither {
         if (created) {
             WrappedDataWatcher watcher = new WrappedDataWatcher();
 
-            watcher.setObject(METADATA_FLAGS, visible ? (byte)0 : INVISIBLE);
+            watcher.setObject(METADATA_FLAGS, visible ? (byte) 0 : INVISIBLE);
             sendMetadata(watcher);
         }
         this.visible = visible;
     }
 
     public void setCustomName(String name) {
+
         if (created) {
             WrappedDataWatcher watcher = new WrappedDataWatcher();
 
@@ -93,6 +96,7 @@ public class FakeWither {
     }
 
     private void sendMetadata(WrappedDataWatcher watcher) {
+
         WrapperPlayServerEntityMetadata update = new WrapperPlayServerEntityMetadata();
 
         update.setEntityId(id);
@@ -101,14 +105,16 @@ public class FakeWither {
     }
 
     public int getId() {
+
         return id;
     }
 
     public void create() {
+
         WrapperPlayServerSpawnEntityLiving spawnMob = new WrapperPlayServerSpawnEntityLiving();
         WrappedDataWatcher watcher = new WrappedDataWatcher();
 
-        watcher.setObject(METADATA_FLAGS, visible ? (byte)0 : INVISIBLE);
+        watcher.setObject(METADATA_FLAGS, visible ? (byte) 0 : INVISIBLE);
         watcher.setObject(METADATA_WITHER_HEALTH, (float) health); // 1.5.2 -> Change to (int)
 
         if (customName != null) {
@@ -128,17 +134,20 @@ public class FakeWither {
     }
 
     public void destroy() {
-        if (!created)
+
+        if (!created) {
             throw new IllegalStateException("Cannot kill a killed entity.");
+        }
 
         WrapperPlayServerEntityDestroy destroyMe = new WrapperPlayServerEntityDestroy();
-        destroyMe.setEntities(new int[] { id });
+        destroyMe.setEntities(new int[]{id});
 
         broadcastPacket(destroyMe.getHandle(), false);
         created = false;
     }
 
     private void broadcastPacket(PacketContainer packet, boolean onlyNearby) {
+
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             // Must be within the range
             if (!onlyNearby || player.getLocation().distanceSquared(location) < HEALTH_RANGE) {

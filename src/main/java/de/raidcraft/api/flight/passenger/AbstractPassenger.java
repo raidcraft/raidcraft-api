@@ -64,8 +64,8 @@ public abstract class AbstractPassenger<T extends LivingEntity> implements de.ra
 
         AbstractPassenger that = (AbstractPassenger) o;
 
-        if(entity == null) return false;
-        if(flight == null) return false;
+        if (entity == null) return false;
+        if (flight == null) return false;
 
         if (!entity.equals(that.entity)) return false;
         if (!flight.equals(that.flight)) return false;

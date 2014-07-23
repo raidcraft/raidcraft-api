@@ -73,15 +73,17 @@ public class EffectUtil {
         int cx = loc.getBlockX();
         int cy = loc.getBlockY();
         int cz = loc.getBlockZ();
-        for (int x = cx - radius; x <= cx +radius; x++)
-            for (int z = cz - radius; z <= cz +radius; z++)
+        for (int x = cx - radius; x <= cx + radius; x++) {
+            for (int z = cz - radius; z <= cz + radius; z++) {
                 for (int y = (sphere ? cy - radius : cy); y < (sphere ? cy + radius : cy + height); y++) {
                     double dist = (cx - x) * (cx - x) + (cz - z) * (cz - z) + (sphere ? (cy - y) * (cy - y) : 0);
-                    if (dist < radius*radius && !(hollow && dist < (radius-1)*(radius-1))) {
+                    if (dist < radius * radius && !(hollow && dist < (radius - 1) * (radius - 1))) {
                         Location l = new Location(loc.getWorld(), x, y + plus_y, z);
                         circleblocks.add(l);
                     }
                 }
+            }
+        }
 
         return circleblocks;
     }
@@ -112,7 +114,7 @@ public class EffectUtil {
     }
 
     /*
-	 * Example use:
+     * Example use:
 	 *
 	 * public class FireWorkPlugin implements Listener {
 	 *
@@ -133,9 +135,11 @@ public class EffectUtil {
 
     /**
      * Play a pretty firework at the location with the FireworkEffect when called
+     *
      * @param world
      * @param loc
      * @param fe
+     *
      * @throws Exception
      */
     public void playFireworks(World world, Location loc, FireworkEffect fe) throws Exception {
@@ -144,10 +148,10 @@ public class EffectUtil {
         // the net.minecraft.server.World
         Object nms_world;
         Object nms_firework;
-		/*
+        /*
 		 * The reflection part, this gives us access to funky ways of messing around with things
 		 */
-        if(world_getHandle == null) {
+        if (world_getHandle == null) {
             // get the methods of the craftbukkit objects
             world_getHandle = getMethod(world.getClass(), "getHandle");
             firework_getHandle = getMethod(fw.getClass(), "getHandle");
@@ -156,7 +160,7 @@ public class EffectUtil {
         nms_world = world_getHandle.invoke(world, (Object[]) null);
         nms_firework = firework_getHandle.invoke(fw, (Object[]) null);
         // null checks are fast, so having this seperate is ok
-        if(nms_world_broadcastEntityEffect == null) {
+        if (nms_world_broadcastEntityEffect == null) {
             // get the method of the nms_world
             nms_world_broadcastEntityEffect = getMethod(nms_world.getClass(), "broadcastEntityEffect");
         }
@@ -184,13 +188,16 @@ public class EffectUtil {
 
     /**
      * Internal method, used as shorthand to grab our method in a nice friendly manner
+     *
      * @param cl
      * @param method
+     *
      * @return Method (or null)
      */
     private static Method getMethod(Class<?> cl, String method) {
-        for(Method m : cl.getMethods()) {
-            if(m.getName().equals(method)) {
+
+        for (Method m : cl.getMethods()) {
+            if (m.getName().equals(method)) {
                 return m;
             }
         }

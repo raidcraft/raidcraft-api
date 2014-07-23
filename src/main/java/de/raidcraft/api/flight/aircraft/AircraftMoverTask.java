@@ -37,10 +37,9 @@ public class AircraftMoverTask implements Runnable {
                 landing = true;
                 aircraft.move(flight, lastWaypoint);
             } else if (aircraft.hasReachedWaypoint(lastWaypoint, 1)) {
-                try{
+                try {
                     flight.endFlight();
-                }
-                catch (FlightException e) {
+                } catch (FlightException e) {
                     RaidCraft.LOGGER.warning(e.getMessage());
                     e.printStackTrace();
                 }

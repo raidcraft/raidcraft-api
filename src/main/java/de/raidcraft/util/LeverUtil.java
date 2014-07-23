@@ -18,8 +18,9 @@ public class LeverUtil {
         // return if the lever is not attached to our IC block
         Lever lever = (Lever) block.getState().getData();
 
-        if (!block.getRelative(lever.getAttachedFace()).equals(source))
+        if (!block.getRelative(lever.getAttachedFace()).equals(source)) {
             return false;
+        }
 
         // check if the lever was toggled on
         boolean wasOn = (block.getData() & 0x8) > 0;

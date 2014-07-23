@@ -22,7 +22,7 @@ public class SetBlockAction implements Action<Player> {
 
         Location location = new Location(player.getWorld(), getConfig().getInt("x"), getConfig().getInt("y"), getConfig().getInt("z"));
         Material material = Material.getMaterial(getConfig().getString("block", "minecraft:air"));
-        if(material == null) {
+        if (material == null) {
             return;
         }
         location.getBlock().setType(material);

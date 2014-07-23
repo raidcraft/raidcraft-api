@@ -13,11 +13,13 @@ import java.util.Map;
 public class EnchantmentSerialization extends SimpleSerialization {
 
     public EnchantmentSerialization(ItemStack item) {
+
         super(item);
     }
 
     @Override
     public String serialize() {
+
         String enchantmentString = "";
         for (Map.Entry<Enchantment, Integer> enchantment : getItem().getEnchantments().entrySet()) {
             enchantmentString += enchantment.getKey().getName() + ":" + enchantment.getValue() + "|";
@@ -27,6 +29,7 @@ public class EnchantmentSerialization extends SimpleSerialization {
 
     @Override
     public ItemStack deserialize(String serializedData) {
+
         Map<Enchantment, Integer> enchantments = new HashMap<>();
         String[] enchantmentPairs = serializedData.split("\\|");
         for (String enchantmentPair : enchantmentPairs) {

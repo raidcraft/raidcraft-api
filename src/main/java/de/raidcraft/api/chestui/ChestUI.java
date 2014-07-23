@@ -3,8 +3,6 @@ package de.raidcraft.api.chestui;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,14 +10,10 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,27 +21,30 @@ import java.util.Map;
  * @author Dragonfire
  */
 public class ChestUI {
+
     private static ChestUI INSTANCE;
     private Plugin plugin;
     private Map<Inventory, Menu> cache = new HashMap<>();
 
     private ChestUI() {
+
         plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-//        Bukkit.getPluginManager().registerEvents(new Listener() {
-//            @EventHandler
-//            public void cmd(PlayerCommandPreprocessEvent event) {
-//                if (event.getMessage().contains("menu")) {
-//                    Menu m = new Menu("test menu from me");
-//                    m.addMenuItem(new MenuItem());
-//                    Menu m2 = new Menu("blalba");
-//                    m.addMenuItem(new OpenMenu(m2));
-//                    ChestUI.getInstance().openMenu(event.getPlayer(), m);
-//                }
-//            }
-//        }, plugin);
+        //        Bukkit.getPluginManager().registerEvents(new Listener() {
+        //            @EventHandler
+        //            public void cmd(PlayerCommandPreprocessEvent event) {
+        //                if (event.getMessage().contains("menu")) {
+        //                    Menu m = new Menu("test menu from me");
+        //                    m.addMenuItem(new MenuItem());
+        //                    Menu m2 = new Menu("blalba");
+        //                    m.addMenuItem(new OpenMenu(m2));
+        //                    ChestUI.getInstance().openMenu(event.getPlayer(), m);
+        //                }
+        //            }
+        //        }, plugin);
     }
 
     public static ChestUI getInstance() {
+
         if (INSTANCE == null) {
             INSTANCE = new ChestUI();
         }
@@ -55,6 +52,7 @@ public class ChestUI {
     }
 
     public void openMenu(Player player, Menu menu) {
+
         Inventory inv = menu.generateInvenntory(player);
         cache.put(inv, menu);
         Bukkit.getPluginManager().registerEvents(new RestrictInventory(player),
@@ -63,14 +61,17 @@ public class ChestUI {
     }
 
     public class RestrictInventory implements Listener {
+
         private Player player;
 
         public RestrictInventory(Player player) {
+
             this.player = player;
         }
 
         @EventHandler
         public void interact(InventoryClickEvent event) {
+
             InventoryHolder holder = event.getInventory().getHolder();
             if (!(holder instanceof Player) || ((Player) holder) != player) {
                 return;
@@ -87,6 +88,7 @@ public class ChestUI {
 
         @EventHandler
         public void close(InventoryCloseEvent event) {
+
             InventoryHolder holder = event.getInventory().getHolder();
             if (!(holder instanceof Player) || ((Player) holder) != player) {
                 return;

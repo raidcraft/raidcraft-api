@@ -18,6 +18,7 @@ public interface ObjectStorage<T> {
      * Will return an unique id by which the object can be retrieved from the store.
      *
      * @param object to store
+     *
      * @return unique id to retrieve stored object
      */
     public int storeObject(T object);
@@ -26,7 +27,9 @@ public interface ObjectStorage<T> {
      * Gets the stored object with the given unique id from the store.
      *
      * @param id of the stored object
+     *
      * @return stored object
+     *
      * @throws StorageException is thrown when the id is not found in the store
      */
     public T getObject(int id) throws StorageException;
@@ -35,7 +38,9 @@ public interface ObjectStorage<T> {
      * Removes the given object from the store. Returning the stored object.
      *
      * @param id of the stored object
+     *
      * @return removed object
+     *
      * @throws StorageException is thrown when the id is not found in the store
      */
     public T removeObject(int id) throws StorageException;
@@ -45,6 +50,7 @@ public interface ObjectStorage<T> {
      * the removeObject and getObject methods.
      *
      * @param id of the stored object.
+     *
      * @return true if object is available in the store
      */
     public boolean isStored(int id);

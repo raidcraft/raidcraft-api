@@ -5,6 +5,8 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionCommand;
 import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.requirement.RequirementFactory;
+import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
+import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.chestui.ChestUI;
 import de.raidcraft.api.commands.ConfirmCommand;
@@ -16,7 +18,6 @@ import de.raidcraft.api.inventory.TPersistentInventory;
 import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
-import de.raidcraft.api.language.table.TLanguage;
 import de.raidcraft.api.storage.TObjectStorage;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
@@ -52,6 +53,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
     @Override
     public void enable() {
+
         ChestUI.getInstance();
         this.config = configure(new LocalConfiguration(this));
         registerEvents(this);
@@ -94,8 +96,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     }
 
     public void registeerChildListener() {
+
         Bukkit.getPluginManager().registerEvents(new Listener() {
             public void onPlayerInteract(PlayerInteractEvent event) {
+
                 if (event.getClickedBlock() == null || !(event.getClickedBlock() instanceof Sign)) {
                     return;
                 }
@@ -141,7 +145,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }
         PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
         if (!playerPlacedBlocks.containsKey(block.getChunk())) {
-            playerPlacedBlocks.put(block.getChunk(), new HashSet<PlayerPlacedBlock>());
+            playerPlacedBlocks.put(block.getChunk(), new HashSet<>());
         }
         playerPlacedBlocks.get(block.getChunk()).add(playerPlacedBlock);
     }

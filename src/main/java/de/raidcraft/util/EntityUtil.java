@@ -3,8 +3,11 @@ package de.raidcraft.util;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
-import java.util.*;
-import java.lang.reflect.*;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Silthus
@@ -53,7 +56,7 @@ public class EntityUtil {
         sb.append(color).append(name);
         if (elite || rare) sb.append(" ");
 
-        if (rare)  sb.append(ChatColor.BLUE).append(RARE_SYMBOL);
+        if (rare) sb.append(ChatColor.BLUE).append(RARE_SYMBOL);
         if (elite) sb.append(ChatColor.DARK_RED).append(ELITE_SYMBOL);
 
         return sb.toString();
@@ -113,7 +116,7 @@ public class EntityUtil {
         healthBar.append(mobColor).append(HEALTH_BAR_OUTTER_RIGHT);
 
         if (elite || rare) healthBar.append(" ");
-        if (rare)  healthBar.append(ChatColor.BLUE).append(RARE_SYMBOL);
+        if (rare) healthBar.append(ChatColor.BLUE).append(RARE_SYMBOL);
         if (elite) healthBar.append(ChatColor.DARK_RED).append(ELITE_SYMBOL);
 
         return healthBar.toString();
@@ -124,8 +127,10 @@ public class EntityUtil {
      * Colors will be numbers:
      * {grey = 0, green = 1, yellow = 2, orange = 3, red = 4, skull = 5}
      * NOTE: skull = red when working with anything OTHER than mobs!
+     *
      * @param playerlvl the level of the player
-     * @param moblvl the level of the mob
+     * @param moblvl    the level of the mob
+     *
      * @return difficulty color
      */
     public static ChatColor getConColor(int playerlvl, int moblvl) {
@@ -171,24 +176,25 @@ public class EntityUtil {
             }
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     public static void registerEntity(String name, int id, Class<?> customClass) {
+
         try {
-         
+
             // we need to check if the class is a valid transistent entity
             // and because we dont want to break every version we are using reflection
             if (!ReflectionUtil.getNmsClass("net.minecraft.server", "EntityInsentient").isAssignableFrom(customClass)) {
                 return;
             }
-            List<Map<?, ?>> dataMaps = new ArrayList<Map<?, ?>>();
+            List<Map<?, ?>> dataMaps = new ArrayList<>();
             for (Field f : ReflectionUtil.getNmsClass("net.minecraft.server", "EntityTypes").getDeclaredFields()) {
                 if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
                     f.setAccessible(true);
                     dataMaps.add((Map<?, ?>) f.get(null));
                 }
             }
-            
+
             ((Map<Class<?>, String>) dataMaps.get(1)).put(customClass, name);
             ((Map<Class<?>, Integer>) dataMaps.get(3)).put(customClass, id);
         } catch (Exception e) {

@@ -15,7 +15,9 @@ import java.util.Set;
  */
 public class Quests {
 
-    private Quests() {}
+    private Quests() {
+
+    }
 
     private static QuestProvider provider;
     private static Map<String, Class<? extends QuestHost>> queuedHosts = new CaseInsensitiveMap<>();

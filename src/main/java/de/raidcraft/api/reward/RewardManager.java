@@ -28,7 +28,7 @@ public class RewardManager {
             return rewards;
         }
 
-        for(String rewardKey : config.getKeys(false)) {
+        for (String rewardKey : config.getKeys(false)) {
             ConfigurationSection rewardSection = config.getConfigurationSection(rewardKey);
 
             String type = rewardSection.getString("type");
@@ -36,7 +36,7 @@ public class RewardManager {
             args.set("name", type);
 
             Class<? extends Reward<?>> rClass = rewardClasses.get(type);
-            if(rClass == null) {
+            if (rClass == null) {
                 RaidCraft.LOGGER.warning("There are no reward types defined for the type " + type);
                 RaidCraft.LOGGER.warning("Available Reward Types are: " + Strings.join(new ArrayList<>(rewardClasses.keySet()), ", "));
                 return rewards;

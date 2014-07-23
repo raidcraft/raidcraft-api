@@ -100,8 +100,9 @@ public class BarAPIUtil {
 
         boolean equal = true;
 
-        if (l1.length != l2.length)
+        if (l1.length != l2.length) {
             return false;
+        }
         for (int i = 0; i < l1.length; i++) {
             if (l1[i] != l2[i]) {
                 equal = false;

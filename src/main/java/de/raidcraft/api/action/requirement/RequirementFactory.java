@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public final class RequirementFactory implements Component {
 
     private static final RequirementFactory INSTANCE = new RequirementFactory();
+
     @NonNull
     public static RequirementFactory getInstance() {
 

@@ -19,10 +19,12 @@ import java.util.Set;
 public class Skull {
 
     public static boolean addHead(Player player, String skullOwner) {
+
         return addHead(player, skullOwner, 1);
     }
 
     public static boolean addHead(Player player, String skullOwner, int quantity) {
+
         PlayerInventory inv = player.getInventory();
         int firstEmpty = inv.firstEmpty();
         if (firstEmpty == -1) {
@@ -34,6 +36,7 @@ public class Skull {
     }
 
     public static String implode(Set<String> input, String glue) {
+
         int i = 0;
         StringBuilder output = new StringBuilder();
         for (String key : input) {
@@ -46,6 +49,7 @@ public class Skull {
     }
 
     public static String fixcase(String inputName) {
+
         String inputNameLC = inputName.toLowerCase();
         Player player = Bukkit.getServer().getPlayerExact(inputNameLC);
 
@@ -71,6 +75,7 @@ public class Skull {
     }
 
     public static ItemStack getSkull(String skullOwner, int quantity) {
+
         String skullOwnerLC = skullOwner.toLowerCase();
 
         for (CustomSkullType skullType : CustomSkullType.values()) {
@@ -94,10 +99,12 @@ public class Skull {
     }
 
     public static ItemStack getSkull(String skullOwner, String displayName) {
+
         return getSkull(skullOwner, displayName, 1);
     }
 
     public static ItemStack getSkull(String skullOwner, String displayName, int quantity) {
+
         ItemStack skull = new ItemStack(Material.SKULL_ITEM, quantity, (short) SkullType.PLAYER.ordinal());
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(skullOwner);
@@ -109,22 +116,27 @@ public class Skull {
     }
 
     public static ItemStack getSkull(CustomSkullType type) {
+
         return getSkull(type, 1);
     }
 
     public static ItemStack getSkull(CustomSkullType type, int quantity) {
+
         return getSkull(type.getOwner(), type.getDisplayName(), quantity);
     }
 
     public static ItemStack getSkull(SkullType type) {
+
         return getSkull(type, 1);
     }
 
     public static ItemStack getSkull(SkullType type, int quantity) {
+
         return new ItemStack(Material.SKULL_ITEM, quantity, (short) type.ordinal());
     }
 
     public static String format(String text, String... replacement) {
+
         String output = text;
         for (int i = 0; i < replacement.length; i++) {
             output = output.replace("%" + (i + 1) + "%", replacement[i]);
@@ -133,10 +145,12 @@ public class Skull {
     }
 
     public static void formatMsg(CommandSender player, String text, String... replacement) {
+
         player.sendMessage(format(text, replacement));
     }
 
     public static String formatStrip(String text, String... replacement) {
+
         return ChatColor.stripColor(format(text, replacement));
     }
 }

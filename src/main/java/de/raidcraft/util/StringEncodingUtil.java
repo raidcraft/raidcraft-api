@@ -10,7 +10,7 @@ public class StringEncodingUtil {
         message = SignUtil.encodeColor(message);
 
         // encode special chars
-        for(SPECIAL_CHARACTER specialCharacter : SPECIAL_CHARACTER.values()) {
+        for (SPECIAL_CHARACTER specialCharacter : SPECIAL_CHARACTER.values()) {
             message = specialCharacter.encode(message);
         }
 
@@ -22,7 +22,7 @@ public class StringEncodingUtil {
         message = SignUtil.parseColor(message);
 
         // decode special chars
-        for(SPECIAL_CHARACTER specialCharacter : SPECIAL_CHARACTER.values()) {
+        for (SPECIAL_CHARACTER specialCharacter : SPECIAL_CHARACTER.values()) {
             message = specialCharacter.decode(message);
         }
 

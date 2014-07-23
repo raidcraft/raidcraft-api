@@ -9,5 +9,6 @@ import org.bukkit.inventory.ItemStack;
 public interface Serializable {
 
     public String serialize();
+
     public ItemStack deserialize(String serializedData);
 }

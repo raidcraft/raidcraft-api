@@ -8,7 +8,11 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +27,7 @@ public class SerializationUtil {
      * Serializes a list of {@link ConfigurationSerializable}. This could be ItemMeta or ItemStacks, etc.
      *
      * @param list of {@link ConfigurationSerializable}
+     *
      * @return list of serialized maps
      */
     public static List<Map<String, Object>> serializeItemList(List<ConfigurationSerializable> list) {
@@ -38,6 +43,7 @@ public class SerializationUtil {
      * Serializes one {@link ConfigurationSerializable} which could be an ItemMeta or ItemStack, etc.
      *
      * @param serializable that should be serialzed
+     *
      * @return map containing all serialized objects
      */
     public static Map<String, Object> serialize(ConfigurationSerializable serializable) {
@@ -56,11 +62,12 @@ public class SerializationUtil {
      * Deserialzes an map into a list of {@link ConfigurationSerializable} objects.
      *
      * @param itemList to deserialze
+     *
      * @return list of {@link ConfigurationSerializable}
      */
     public static List<ConfigurationSerializable> deserializeItemList(List<Map<String, Object>> itemList) {
 
-        List<ConfigurationSerializable> returnVal = new ArrayList<ConfigurationSerializable>();
+        List<ConfigurationSerializable> returnVal = new ArrayList<>();
         for (Map<String, Object> map : itemList) {
             returnVal.add(deserialize(map));
         }
@@ -69,7 +76,9 @@ public class SerializationUtil {
 
     /**
      * Clones an existing serialized map. This is needed because of the immutable return types.
+     *
      * @param original map to clone
+     *
      * @return cloned map
      */
     public static Map<String, Object> recreateMap(Map<String, Object> original) {
@@ -85,6 +94,7 @@ public class SerializationUtil {
      * Deserializes a serialized map into a {@link ConfigurationSerializable} object.
      *
      * @param map to deserialize
+     *
      * @return deserialized {@link ConfigurationSerializable}
      */
     @SuppressWarnings("unchecked")
@@ -101,7 +111,9 @@ public class SerializationUtil {
 
     /**
      * Serializes a {@link ConfigurationSerializable} into a savable byte stream for usage in databases and so on.
+     *
      * @param serializable object that should be serialized
+     *
      * @return string of bytes containing the serialized map of the input
      */
     public static String toByteStream(ConfigurationSerializable serializable) {
@@ -126,17 +138,18 @@ public class SerializationUtil {
     public static String toByteStream(ItemMeta meta) {
 
         // workaround for not serializable meta
-        if(meta instanceof FireworkMeta) {
-            return StaticFireworkEffectSerialization.serialize((FireworkMeta)meta);
+        if (meta instanceof FireworkMeta) {
+            return StaticFireworkEffectSerialization.serialize((FireworkMeta) meta);
         }
 
-        return toByteStream((ConfigurationSerializable)meta);
+        return toByteStream((ConfigurationSerializable) meta);
     }
 
     /**
      * Deserializes an previously serialized byte string into its original {@link ConfigurationSerializable} object.
      *
      * @param hex string serialized with {@link SerializationUtil#toByteStream(org.bukkit.configuration.serialization.ConfigurationSerializable)}
+     *
      * @return deserialized object
      */
     @SuppressWarnings("unchecked")
@@ -157,7 +170,7 @@ public class SerializationUtil {
 
     public static ConfigurationSerializable fromByteStream(String hex, Material type) {
 
-        if(type == Material.FIREWORK) {
+        if (type == Material.FIREWORK) {
             return StaticFireworkEffectSerialization.deserialize(hex);
         }
 

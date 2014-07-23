@@ -35,15 +35,18 @@ public enum CustomSkullType {
     private final String owner;
 
     private static class Holder {
+
         static HashMap<String, CustomSkullType> map = new HashMap<>();
     }
 
     CustomSkullType(String owner) {
+
         this.owner = owner;
         Holder.map.put(owner, this);
     }
 
     CustomSkullType(String owner, String... toConvert) {
+
         this(owner);
         for (String key : toConvert) {
             Holder.map.put(key, this);
@@ -51,18 +54,22 @@ public enum CustomSkullType {
     }
 
     public String getOwner() {
+
         return owner;
     }
 
     public String getDisplayName() {
+
         return Skull.format(name());
     }
 
     public String getSpawnName() {
+
         return "HEAD_SPAWN_" + name();
     }
 
     public static CustomSkullType get(String owner) {
+
         return Holder.map.get(owner);
     }
 }

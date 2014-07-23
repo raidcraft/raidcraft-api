@@ -28,12 +28,18 @@ public class ChunkLocation {
     public ChunkLocation(Location location) {
 
         double cxd = location.getX() / 16D;
-        if(cxd < 0) x = (int)Math.ceil(cxd);
-        else x = (int)cxd;
+        if (cxd < 0) {
+            x = (int) Math.ceil(cxd);
+        } else {
+            x = (int) cxd;
+        }
 
         double czd = location.getZ() / 16D;
-        if(czd < 0) z = (int)Math.ceil(czd);
-        else z = (int)czd;
+        if (czd < 0) {
+            z = (int) Math.ceil(czd);
+        } else {
+            z = (int) czd;
+        }
     }
 
     public int getX() {
@@ -60,8 +66,8 @@ public class ChunkLocation {
     @Override
     public boolean equals(Object obj) {
 
-        if(obj instanceof ChunkLocation) {
-            ChunkLocation cl = (ChunkLocation)obj;
+        if (obj instanceof ChunkLocation) {
+            ChunkLocation cl = (ChunkLocation) obj;
             return (cl.getX() == x && cl.getZ() == z);
         }
         return false;

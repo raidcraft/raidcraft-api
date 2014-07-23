@@ -43,9 +43,11 @@ public class Language {
     }
 
     private static Method getMethod(String name, Class<?> clazz) {
+
         for (Method m : clazz.getDeclaredMethods()) {
-            if (m.getName().equals(name))
+            if (m.getName().equals(name)) {
                 return m;
+            }
         }
         return null;
     }

@@ -23,17 +23,14 @@ package de.raidcraft.api.pathfinding;
 
 /**
  * Interface for all A* heuristic classes
- * 
- * @see		AshCrowFlight
- * @see		AshManhattan
- * 
+ *
  * @author Peter Lager
  */
 public interface AstarHeuristic {
 
-	/**
-	 * Estimate the cost between the node and the target.
-	 */
-	public double getCost(GraphNode node, GraphNode target);
-	
+    /**
+     * Estimate the cost between the node and the target.
+     */
+    public double getCost(GraphNode node, GraphNode target);
+
 }

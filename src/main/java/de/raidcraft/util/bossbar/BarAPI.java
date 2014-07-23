@@ -112,8 +112,9 @@ public class BarAPI implements Listener {
 
     public static void removeBar(Player player) {
 
-        if (!hasBar(player))
+        if (!hasBar(player)) {
             return;
+        }
 
         getBossBar(player, "").destroy();
         players.remove(player.getName());
@@ -123,8 +124,9 @@ public class BarAPI implements Listener {
 
     public static void setHealth(Player player, float percent) {
 
-        if (!hasBar(player))
+        if (!hasBar(player)) {
             return;
+        }
 
         FakeWither bossBar = getBossBar(player, "");
         bossBar.setHealth((int) ((percent / 100f) * FakeWither.DEFAULT_HEALTH));
@@ -134,8 +136,9 @@ public class BarAPI implements Listener {
 
     private static String cleanMessage(String message) {
 
-        if (message.length() > 64)
+        if (message.length() > 64) {
             return message.substring(0, 63);
+        }
 
         return message;
     }

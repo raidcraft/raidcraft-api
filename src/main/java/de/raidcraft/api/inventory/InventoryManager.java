@@ -27,7 +27,7 @@ public class InventoryManager implements Component {
     public PersistentInventory getInventory(int id) throws InvalidInventoryException {
 
         if (!loadedInventories.containsKey(id)) {
-            if(RaidCraft.getDatabase(RaidCraftPlugin.class).find(TPersistentInventory.class, id) == null) {
+            if (RaidCraft.getDatabase(RaidCraftPlugin.class).find(TPersistentInventory.class, id) == null) {
                 throw new InvalidInventoryException("Inventory with id " + id + " doesn't exists!");
             }
             SQLPersistentInventory inventory = new SQLPersistentInventory(id);

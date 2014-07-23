@@ -65,13 +65,18 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
         if (plugin != null) {
             if (chat == null) {
-                if (setupChat()) getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Chat API.");
-                else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Chat API.");
+                if (setupChat()) {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Chat API.");
+                } else {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Chat API.");
+                }
             }
             if (permission == null) {
-                if (setupPermissions())
+                if (setupPermissions()) {
                     getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Permissions API.");
-                else getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Permissions API.");
+                } else {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Permissions API.");
+                }
             }
         }
 

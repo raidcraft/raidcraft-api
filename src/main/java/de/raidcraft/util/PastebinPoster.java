@@ -16,6 +16,7 @@ package de.raidcraft.util;// $Id$
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,30 +27,37 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 public class PastebinPoster {
+
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int READ_TIMEOUT = 5000;
 
     public static void paste(String code, PasteCallback callback) {
+
         PasteProcessor processor = new PasteProcessor(code, callback);
         Thread thread = new Thread(processor);
         thread.start();
     }
 
     public static interface PasteCallback {
+
         public void handleSuccess(String url);
+
         public void handleError(String err);
     }
 
     private static class PasteProcessor implements Runnable {
+
         private String code;
         private PasteCallback callback;
 
         public PasteProcessor(String code, PasteCallback callback) {
+
             this.code = code;
             this.callback = callback;
         }
 
         public void run() {
+
             HttpURLConnection conn = null;
             OutputStream out = null;
             InputStream in = null;
@@ -93,7 +101,7 @@ public class PastebinPoster {
                     if (result.matches("^https?://.*")) {
                         callback.handleSuccess(result.trim());
                     } else {
-                        String err =result.trim();
+                        String err = result.trim();
                         if (err.length() > 100) {
                             err = err.substring(0, 100);
                         }

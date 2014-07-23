@@ -11,6 +11,7 @@ import java.util.List;
  * @author Dragonfire
  */
 public class Menu {
+
     private String name;
     private List<MenuItemAPI> items = new ArrayList<>();
     private List<Integer> startGroups = new ArrayList<>();
@@ -18,18 +19,22 @@ public class Menu {
     private MenuItemAPI[] inv;
 
     public Menu(String name) {
+
         this.name = name;
     }
 
     private void startGroup() {
+
         this.startGroups.add(items.size());
     }
 
     private void endGroup() {
+
         this.endGroups.add(items.size());
     }
 
     public Inventory generateInvenntory(Player player) {
+
         int size = 9 * 6;
         this.inv = new MenuItemAPI[size];
         final Inventory inventory = Bukkit.createInventory(player, size,
@@ -42,13 +47,15 @@ public class Menu {
     }
 
     public void triggerMenuItem(int slot, Player player) {
-        if(inv[slot] == null) {
+
+        if (inv[slot] == null) {
             return;
         }
         inv[slot].trigger(player);
     }
 
     public void addMenuItem(MenuItemAPI item) {
+
         items.add(item);
     }
 
