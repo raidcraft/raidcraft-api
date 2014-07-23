@@ -37,7 +37,7 @@
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizensapi</artifactId>
-            <version>${rc.citizens-api-version}</version>
+            <version>${rc.version}</version>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
