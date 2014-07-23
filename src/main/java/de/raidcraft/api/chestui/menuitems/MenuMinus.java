@@ -1,34 +1,15 @@
 package de.raidcraft.api.chestui.menuitems;
 
-import de.raidcraft.api.chestui.MenuItemAPI;
-import lombok.Getter;
-import lombok.Setter;
+import de.raidcraft.api.items.RcItems;
 import org.bukkit.DyeColor;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.Dye;
 
 /**
  * @author Sebastian
  */
-public abstract class MenuMinus implements MenuItemAPI {
-    @Getter
-    @Setter
-    private ItemStack item;
+public abstract class MenuMinus extends MenuItemAPI {
 
     public MenuMinus(String name) {
-        Dye data = new Dye();
-        data.setColor(DyeColor.MAGENTA);
 
-        item = data.toItemStack();
-
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(name);
-        item.setItemMeta(meta);
-    }
-
-    @Override
-    public ItemStack getItem() {
-        return item;
+        setItem(RcItems.setDisplayName(RcItems.createDye(DyeColor.MAGENTA), name));
     }
 }

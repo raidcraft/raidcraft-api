@@ -2,9 +2,13 @@ package de.raidcraft.api.chestui;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.api.chestui.menuitems.MenuItem;
+import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
 import de.raidcraft.api.chestui.menuitems.MenuMinus;
 import de.raidcraft.api.chestui.menuitems.MenuPlus;
+import de.raidcraft.api.items.RcItems;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +18,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
@@ -67,28 +72,40 @@ public class ChestUI {
 
         final MenuItemAPI k10 = new MenuItem(Material.NETHER_BRICK_ITEM, "");
         final MenuItemAPI k1 = new MenuItem(Material.NETHER_BRICK_ITEM, "");
+
+        // TODO: move into menuitem
         final int[] values = new int[]{1, 1, 1, 1, 1, 1, 1};
+        final MenuItemAPI[] menu_items = new MenuItemAPI[]{
+                g100, g10, g1, s10, s1, k10, k1};
+        final ItemStack[] stacks = new ItemStack[]{g100.getItem(), g10.getItem(),
+                g1.getItem(), s10.getItem(), s1.getItem(), k10.getItem(), k1.getItem()};
+        final ItemStack[] empty = new ItemStack[]{
+                RcItems.getGlassPane(DyeColor.YELLOW), RcItems.getGlassPane(DyeColor.YELLOW),
+                RcItems.getGlassPane(DyeColor.YELLOW),
+                RcItems.getGlassPane(DyeColor.WHITE), RcItems.getGlassPane(DyeColor.WHITE),
+                RcItems.getGlassPane(DyeColor.BROWN), RcItems.getGlassPane(DyeColor.BROWN)};
+
 
         // +++ ++ ++
         menu.addMenuItem(new MenuPlus("+100 Gold") {
             @Override
             public void trigger(Player player) {
 
-                g100.getItem().setAmount(delta(1, 0, values));
+                delta(1, 0, values, stacks, menu_items, empty);
             }
         });
         menu.addMenuItem(new MenuPlus("+10 Gold") {
             @Override
             public void trigger(Player player) {
 
-                g10.getItem().setAmount(delta(1, 1, values));
+                delta(1, 1, values, stacks, menu_items, empty);
             }
         });
         menu.addMenuItem(new MenuPlus("+1 Gold") {
             @Override
             public void trigger(Player player) {
 
-                g1.getItem().setAmount(delta(1, 2, values));
+                delta(1, 2, values, stacks, menu_items, empty);
             }
         });
         menu.empty();
@@ -96,14 +113,14 @@ public class ChestUI {
             @Override
             public void trigger(Player player) {
 
-                s10.getItem().setAmount(delta(1, 3, values));
+                delta(1, 3, values, stacks, menu_items, empty);
             }
         });
         menu.addMenuItem(new MenuPlus("+1 Silber") {
             @Override
             public void trigger(Player player) {
 
-                s1.getItem().setAmount(delta(1, 4, values));
+                delta(1, 4, values, stacks, menu_items, empty);
             }
         });
         menu.empty();
@@ -111,14 +128,14 @@ public class ChestUI {
             @Override
             public void trigger(Player player) {
 
-                k10.getItem().setAmount(delta(1, 5, values));
+                delta(1, 5, values, stacks, menu_items, empty);
             }
         });
         menu.addMenuItem(new MenuPlus("+1 Kuper") {
             @Override
             public void trigger(Player player) {
 
-                k1.getItem().setAmount(delta(1, 6, values));
+                delta(1, 6, values, stacks, menu_items, empty);
             }
         });
 
@@ -138,21 +155,21 @@ public class ChestUI {
             @Override
             public void trigger(Player player) {
 
-                g100.getItem().setAmount(delta(-1, 0, values));
+                delta(-1, 0, values, stacks, menu_items, empty);
             }
         });
         menu.addMenuItem(new MenuMinus("-10 Gold") {
             @Override
             public void trigger(Player player) {
 
-                g10.getItem().setAmount(delta(-1, 1, values));
+                delta(-1, 1, values, stacks, menu_items, empty);
             }
         });
         menu.addMenuItem(new MenuMinus("-1 Gold") {
             @Override
             public void trigger(Player player) {
 
-                g1.getItem().setAmount(delta(-1, 2, values));
+                delta(-1, 2, values, stacks, menu_items, empty);
             }
         });
         menu.empty();
@@ -160,14 +177,14 @@ public class ChestUI {
             @Override
             public void trigger(Player player) {
 
-                s10.getItem().setAmount(delta(-1, 3, values));
+                delta(-1, 3, values, stacks, menu_items, empty);
             }
         });
         menu.addMenuItem(new MenuMinus("-1 Silber") {
             @Override
             public void trigger(Player player) {
 
-                s1.getItem().setAmount(delta(-1, 4, values));
+                delta(-1, 4, values, stacks, menu_items, empty);
             }
         });
         menu.empty();
@@ -175,31 +192,39 @@ public class ChestUI {
             @Override
             public void trigger(Player player) {
 
-                k10.getItem().setAmount(delta(-1, 5, values));
+                delta(-1, 5, values, stacks, menu_items, empty);
             }
         });
         menu.addMenuItem(new MenuMinus("-1 Kuper") {
             @Override
             public void trigger(Player player) {
 
-                k1.getItem().setAmount(delta(-1, 6, values));
+                delta(-1, 6, values, stacks, menu_items, empty);
             }
         });
 
         this.openMenu(player, menu);
     }
 
-    public static int delta(int delta, int index, int[] values) {
+    public static void delta(int delta, int index, int[] values, ItemStack[] stacks, MenuItemAPI[] items, ItemStack[] empty) {
 
         int newValue = values[index] + delta;
+        // if first item
+        if (newValue == 1 && values[index] == 0) {
+            values[index] = 1;
+            items[index].setItem(stacks[index]);
+            return;
+        }
         if (newValue > 9) {
-            return 9;
+            return;
         }
         if (newValue < 1) {
-            return 1;
+            values[index] = 0;
+            items[index].setItem(empty[index]);
+            return;
         }
         values[index] += delta;
-        return values[index];
+        items[index].getItem().setAmount(values[index]);
     }
 
     public void openMenu(Player player, Menu menu) {
