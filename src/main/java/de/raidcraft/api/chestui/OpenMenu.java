@@ -20,6 +20,11 @@ public class OpenMenu implements MenuItemAPI {
     }
 
     @Override
+    public void setItem(ItemStack item) {
+        //TODO: implement
+    }
+
+    @Override
     public void trigger(Player player) {
         ChestUI.getInstance().openMenu(player, this.menu);
     }

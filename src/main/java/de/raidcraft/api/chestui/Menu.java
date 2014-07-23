@@ -1,7 +1,6 @@
 package de.raidcraft.api.chestui;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -31,7 +30,7 @@ public class Menu {
     }
 
     public void empty() {
-        addMenuItem(new MenuItem(Material.AIR));
+        addMenuItem(new MenuItem());
     }
 
     public Inventory generateInvenntory(Player player) {
@@ -42,6 +41,7 @@ public class Menu {
         for (int i = 0; i < items.size(); i++) {
             inv[i] = items.get(i);
             inventory.setItem(i, inv[i].getItem());
+            inv[i].setItem(inventory.getItem(i));
         }
         return inventory;
     }
