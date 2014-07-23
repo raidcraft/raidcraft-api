@@ -137,7 +137,7 @@ public class NPC_Manager implements Listener {
      *
      * @param host name of the holder of the npcs, typically the plugin name
      *
-     * @see this.registerTrait
+     * @see #registerTrait(Class, String)
      */
     public void loadNPCs(String host) {
 
