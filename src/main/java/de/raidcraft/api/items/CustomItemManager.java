@@ -2,7 +2,9 @@ package de.raidcraft.api.items;
 
 import com.sk89q.util.StringUtil;
 import de.raidcraft.api.Component;
+import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.CustomItemUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ public final class CustomItemManager implements Component {
 
     // custom item id | custom item
     private final Map<Integer, CustomItem> customItems = new HashMap<>();
+    private final Map<String, CustomItem> namedCustomItems = new CaseInsensitiveMap<>();
     // minecraft item id | possible list of custom items
     private final Map<Integer, List<CustomItem>> mappedMinecraftItems = new HashMap<>();
 
@@ -35,7 +38,12 @@ public final class CustomItemManager implements Component {
             try {
                 int id = CustomItemUtil.decodeItemId(itemStack.getItemMeta());
                 try {
-                    CustomItem item = getCustomItem(id);
+                    CustomItem item;
+                    if (id == CustomItem.NAMED_CUSTOM_ITEM_ID) {
+                        item = getCustomItem(itemStack.getItemMeta().getDisplayName());
+                    } else {
+                        item = getCustomItem(id);
+                    }
                     return new CustomItemStack(item, itemStack);
                 } catch (CustomItemException e) {
                     // if we have a valid id it is a valid "custom item" but
@@ -78,6 +86,13 @@ public final class CustomItemManager implements Component {
         try {
             return getCustomItem(Integer.parseInt(name));
         } catch (NumberFormatException e) {
+            // first we need to strip the name of any special chars
+            name = ChatColor.stripColor(name);
+            // lets check our named custom items first
+            if (namedCustomItems.containsKey(name)) {
+                return namedCustomItems.get(name);
+            }
+            // okay nothing there, so lets search for a matching name
             name = name.toLowerCase();
             List<CustomItem> matching = new ArrayList<>();
             for (CustomItem item : customItems.values()) {
@@ -114,6 +129,14 @@ public final class CustomItemManager implements Component {
             mappedMinecraftItems.put(item.getMinecraftId(), new ArrayList<>());
         }
         mappedMinecraftItems.get(item.getMinecraftId()).add(item);
+    }
+
+    public void registerNamedCustomItem(String name, CustomItem item) throws DuplicateCustomItemException {
+
+        if (namedCustomItems.containsKey(name)) {
+            throw new DuplicateCustomItemException("The custom item with the name" + name + " is already registered.");
+        }
+        namedCustomItems.put(name, item);
     }
 
     public CustomItem unregisterCustomItem(int id) {
