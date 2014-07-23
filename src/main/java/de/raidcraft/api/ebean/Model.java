@@ -257,7 +257,7 @@ public class Model implements Maintainable {
         }
 
         /**
-         * USE: <code>Query<T> fetch(String path)</code>
+         * USE: {@link com.avaje.ebean.Query#fetch(String)}
          *
          * @deprecated
          */
@@ -269,7 +269,7 @@ public class Model implements Maintainable {
         }
 
         /**
-         * USE: <code>Query<T> fetch(String path, String fetchProperties</code>
+         * USE: {@link com.avaje.ebean.Query#fetch(String, String)})}
          *
          * @deprecated
          */
@@ -281,7 +281,7 @@ public class Model implements Maintainable {
         }
 
         /**
-         * USE: <code>Query<T> fetch(String path, FetchConfig fetchConfig)</code>
+         * USE: {@link com.avaje.ebean.Query#fetch(String, com.avaje.ebean.FetchConfig)})}
          *
          * @deprecated
          */
@@ -293,7 +293,7 @@ public class Model implements Maintainable {
         }
 
         /**
-         * USE: <code>Query<T> fetch(String assocProperty, String fetchProperties, FetchConfig fetchConfig)</code>
+         * USE: {@link com.avaje.ebean.Query#fetch(String, String, com.avaje.ebean.FetchConfig)})}
          *
          * @deprecated
          */
@@ -812,7 +812,7 @@ public class Model implements Maintainable {
 
         /**
          * A string representation of this object.
-         * </p>
+         *
          * Only for debugging.
          */
         @Override
