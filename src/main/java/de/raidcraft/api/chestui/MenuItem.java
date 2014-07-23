@@ -15,6 +15,13 @@ public class MenuItem implements MenuItemAPI {
         item.setAmount(99);
     }
 
+    public MenuItem(Material type, int amount) {
+        item = new ItemStack(type, amount);
+    }
+
+    public MenuItem(Material type) {
+        this(type, 0);
+    }
 
     @Override
     public  ItemStack getItem() {
