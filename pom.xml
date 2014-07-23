@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizensapi</artifactId>
+            <artifactId>citizens</artifactId>
             <version>${rc.version}</version>
         </dependency>
         <dependency>
