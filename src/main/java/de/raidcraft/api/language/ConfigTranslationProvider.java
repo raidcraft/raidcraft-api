@@ -3,10 +3,12 @@ package de.raidcraft.api.language;
 import de.raidcraft.api.BasePlugin;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -43,11 +45,15 @@ public class ConfigTranslationProvider implements TranslationProvider {
     @Override
     public String tr(Language lang, String key, Object... args) {
 
-        return tr(lang, key, "No translation for language " + lang + " and key: \"" + key + "\"", args);
+        return tr(lang, key, null, args);
     }
 
     @Override
     public String tr(Language lang, String key, String def, Object... args) {
+
+        if (def == null) {
+            def = "No translation for language " + lang + " and key: \"" + key + "\"";
+        }
 
         if (!loadedConfigs.containsKey(lang)) {
             createConfig(lang);
@@ -156,5 +162,51 @@ public class ConfigTranslationProvider implements TranslationProvider {
     public void msg(Player player, String key, String def, Object... args) {
 
         player.sendRawMessage(tr(player, key, def, args));
+    }
+
+    /**
+     * Broadcast a message to all player in their language.
+     *
+     * @param key  The key to the string in the config
+     * @param args The Arguments referenced by the specifiers in the String.
+     *
+     * @return The number of player
+     */
+    @Override
+    public int broadcastMessage(final String key, final Object... args) {
+
+        return broadcast(key, null, args);
+    }
+
+    /**
+     * Broadcast a message to all player in their language.
+     *
+     * @param key  The key to the string in the config
+     * @param def  The default value for the message if the key is not found or is not a String.
+     * @param args The Arguments referenced by the specifiers in the String.
+     *
+     * @return The number of player
+     */
+    @Override
+    public int broadcastMessage(final String key, final String def, final Object... args) {
+
+        return broadcast(key, def, args);
+    }
+
+    private int broadcast(final String key, final String def, final Object... args) {
+
+        int count = 0;
+        final String permission = "bukkit.broadcast.user";
+        final Set<Permissible> permissibles = this.plugin.getServer().getPluginManager().getPermissionSubscriptions(permission);
+
+        for (final Permissible permissible : permissibles) {
+            if ((permissible instanceof Player) && permissible.hasPermission(permission)) {
+                final Player player = (Player) permissible;
+                this.msg(player, key, def, args);
+                count++;
+            }
+        }
+
+        return count;
     }
 }
