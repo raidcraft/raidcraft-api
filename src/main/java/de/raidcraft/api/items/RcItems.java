@@ -1,6 +1,7 @@
 package de.raidcraft.api.items;
 
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Dye;
@@ -24,6 +25,12 @@ public class RcItems {
 
         return new ItemStack(160, 1, color.getWoolData());
     }
+
+    public static ItemStack createItem(Material mat, String name) {
+
+        return setDisplayName(new ItemStack(mat), name);
+    }
+
 
     public static ItemStack setLore(ItemStack item, String... lore){
         ItemMeta itemMeta = item.getItemMeta();
