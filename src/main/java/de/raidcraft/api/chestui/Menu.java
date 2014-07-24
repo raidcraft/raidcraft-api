@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +23,11 @@ public class Menu {
 
     private String name;
     private List<MenuItemAPI> items = new ArrayList<>();
-    private List<Integer> startGroups = new ArrayList<>();
-    private List<Integer> endGroups = new ArrayList<>();
-    private Inventory[] invs;
+    private InventoryContainer[] invs;
+    private Inventory inventory;
     private MenuItemAPI[][] menus_api;
     private int page;
+
     @Getter
     @Setter
     private boolean toolbarActive = false;
@@ -69,16 +70,6 @@ public class Menu {
         this(name, false);
     }
 
-    private void startGroup() {
-
-        this.startGroups.add(items.size());
-    }
-
-    private void endGroup() {
-
-        this.endGroups.add(items.size());
-    }
-
     public void empty() {
 
         addMenuItem(new MenuItem());
@@ -105,22 +96,29 @@ public class Menu {
         allRows = availableRows + extraRows; // included toolbar
         allSlots = allRows * RcInventory.COLUMN_COUNT;
 
+        // create inventory
+        inventory = Bukkit.createInventory(player, allSlots, name);
+
         int menus = (int) Math.ceil(items.size() / (double) availableSlots);
-        invs = new Inventory[menus];
+        invs = new InventoryContainer[menus];
         menus_api = new MenuItemAPI[menus][allSlots];
 
         for (int page = 0; page < getPageCount(); page++) {
             invs[page] = generateInventory(page);
         }
 
+        if (this.isToolbarActive()) {
+            this.generateToolbar();
+        }
+
         page = 0;
-        return invs[page];
+        showPage(0);
+        return inventory;
     }
 
-    protected Inventory generateInventory(int render_page) {
+    protected InventoryContainer generateInventory(int render_page) {
 
-        Inventory inventory = Bukkit.createInventory(player,
-                allSlots, name + ": Seite " + (render_page + 1) + " von " + getPageCount());
+        InventoryContainer container = new InventoryContainer(availableSlots);
         int slot = 0;
         int n = render_page * allSlots + availableSlots;
         for (int item_index = render_page * allSlots; item_index < n; item_index++) {
@@ -128,38 +126,43 @@ public class Menu {
             if (items.size() <= item_index) {
                 break;
             }
-            inventory.setItem(slot, items.get(item_index).getItem());
+            container.setItem(slot, items.get(item_index).getItem());
             items.get(item_index).setSlot(slot);
             items.get(item_index).setInventory(inventory);
             menus_api[render_page][slot] = items.get(item_index);
             slot++;
         }
-        if (this.isToolbarActive()) {
-            this.generateToolbar(availableRows, inventory, render_page);
-        }
-        return inventory;
+        return container;
     }
 
-    protected void generateToolbar(int row, Inventory inventory, int page) {
+    protected void generateToolbar() {
 
-        int start = row * RcInventory.COLUMN_COUNT;
+        int start = availableRows * RcInventory.COLUMN_COUNT;
         if (toolbar_cancel != null) {
             inventory.setItem(start, toolbar_cancel.getItem());
-            menus_api[page][start] = toolbar_cancel;
+            menus_api[0][start] = toolbar_cancel;
         }
         if (toolbar_ok != null) {
             inventory.setItem(start + RcInventory.COLUMN_COUNT - 1, toolbar_ok.getItem());
-            menus_api[page][start + RcInventory.COLUMN_COUNT - 1] = toolbar_ok;
+            menus_api[0][start + RcInventory.COLUMN_COUNT - 1] = toolbar_ok;
         }
 
         if (toolbar_back != null) {
             inventory.setItem(start + 1, toolbar_back.getItem());
-            menus_api[page][start + 1] = toolbar_back;
+            menus_api[0][start + 1] = toolbar_back;
         }
         if (toolbar_forward != null) {
             inventory.setItem(start + RcInventory.COLUMN_COUNT - 2, toolbar_forward.getItem());
-            menus_api[page][start + RcInventory.COLUMN_COUNT - 2] = toolbar_forward;
+            menus_api[0][start + RcInventory.COLUMN_COUNT - 2] = toolbar_forward;
         }
+    }
+
+    public MenuItemAPI getMenuItem(int menuPage, int slot) {
+        // if toolbar
+        if(slot > availableSlots) {
+            return menus_api[0][slot];
+        }
+        return menus_api[menuPage][slot];
     }
 
     public int getCurrentPageIndex() {
@@ -175,7 +178,13 @@ public class Menu {
             return;
         }
         page = newpage;
-        ChestUI.getInstance().switchMenu(player, invs[page]);
+        ItemStack[] newItems = invs[page].getContent();
+        for (int slot = 0; slot < newItems.length; slot++) {
+            if(newItems[slot] == null) {
+                continue;
+            }
+            inventory.setItem(slot, newItems[slot]);
+        }
     }
 
     public void nextPage() {
@@ -190,10 +199,10 @@ public class Menu {
 
     public void triggerMenuItem(int slot, Player player) {
 
-        if (menus_api[page][slot] == null) {
+        if (getMenuItem(page, slot) == null) {
             return;
         }
-        menus_api[page][slot].trigger(player);
+        getMenuItem(page, slot).trigger(player);
     }
 
     public void addMenuItem(MenuItemAPI item) {
@@ -204,6 +213,22 @@ public class Menu {
     public int getPageCount() {
 
         return invs.length;
+    }
+
+    public class InventoryContainer {
+
+        @Getter
+        private ItemStack[] content;
+
+        public InventoryContainer(int slots) {
+
+            content = new ItemStack[slots];
+        }
+
+        public void setItem(int slot, ItemStack item) {
+
+            this.content[slot] = item;
+        }
     }
 
 }
