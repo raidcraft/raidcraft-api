@@ -31,7 +31,7 @@ public class ChestUI {
 
     private static ChestUI INSTANCE;
     private Plugin plugin;
-    private Map<Inventory, Menu> cache = new HashMap<>();
+    private Map<Player, Menu> cache = new HashMap<>();
 
     private ChestUI() {
 
@@ -202,9 +202,9 @@ public class ChestUI {
                 delta(-1, 6, values, stacks, menu_items, empty);
             }
         });
-
         this.openMenu(player, menu);
     }
+
 
     public static void delta(int delta, int index, int[] values, ItemStack[] stacks, MenuItemAPI[] items, ItemStack[] empty) {
 
@@ -230,10 +230,18 @@ public class ChestUI {
     public void openMenu(Player player, Menu menu) {
 
         Inventory inv = menu.generateInvenntory(player);
-        cache.put(inv, menu);
+        cache.put(player, menu);
         Bukkit.getPluginManager().registerEvents(new RestrictInventory(player),
                 plugin);
         player.openInventory(inv);
+    }
+
+    public void switchMenu(Player player, Inventory newInventory) {
+        player.closeInventory();
+        // TODO: not unregister listern
+        Bukkit.getPluginManager().registerEvents(new RestrictInventory(player),
+                plugin);
+        player.openInventory(newInventory);
     }
 
     public class RestrictInventory implements Listener {
@@ -258,7 +266,7 @@ public class ChestUI {
                 return;
             }
             // call custom event
-            cache.get(event.getInventory()).triggerMenuItem(event.getSlot(), (Player) holder);
+            cache.get(((Player) holder)).triggerMenuItem(event.getSlot(), (Player) holder);
         }
 
         @EventHandler
