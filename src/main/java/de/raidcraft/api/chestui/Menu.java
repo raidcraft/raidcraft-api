@@ -117,13 +117,13 @@ public class Menu {
         return invs[page];
     }
 
-    protected Inventory generateInventory(int pag) {
+    protected Inventory generateInventory(int render_page) {
 
         Inventory inventory = Bukkit.createInventory(player,
-                allSlots, name + ": Seite " + (page + 1) + " von " + getPageCount());
+                allSlots, name + ": Seite " + (render_page + 1) + " von " + getPageCount());
         int slot = 0;
-        int n = (page + 1) * availableSlots;
-        for (int item_index = page * allSlots; item_index < n; item_index++) {
+        int n = render_page * allSlots + availableSlots;
+        for (int item_index = render_page * allSlots; item_index < n; item_index++) {
             // if no item, let empty
             if (items.size() <= item_index) {
                 break;
@@ -131,11 +131,11 @@ public class Menu {
             inventory.setItem(slot, items.get(item_index).getItem());
             items.get(item_index).setSlot(slot);
             items.get(item_index).setInventory(inventory);
-            menus_api[page][slot] = items.get(item_index);
+            menus_api[render_page][slot] = items.get(item_index);
             slot++;
         }
         if (this.isToolbarActive()) {
-            this.generateToolbar(availableRows, inventory, page);
+            this.generateToolbar(availableRows, inventory, render_page);
         }
         return inventory;
     }
@@ -162,9 +162,9 @@ public class Menu {
         }
     }
 
-    public int getCurrentPage() {
+    public int getCurrentPageIndex() {
 
-        return page + 1;
+        return page;
     }
 
     public void showPage(int newpage) {
@@ -180,12 +180,12 @@ public class Menu {
 
     public void nextPage() {
 
-        showPage(getCurrentPage() + 1);
+        showPage(getCurrentPageIndex() + 1);
     }
 
     public void lastPage() {
 
-        showPage(getCurrentPage() - 1);
+        showPage(getCurrentPageIndex() - 1);
     }
 
     public void triggerMenuItem(int slot, Player player) {
