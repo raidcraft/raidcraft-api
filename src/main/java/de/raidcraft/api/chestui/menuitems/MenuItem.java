@@ -10,14 +10,23 @@ import org.bukkit.inventory.ItemStack;
  */
 public class MenuItem extends MenuItemAPI {
 
+    public MenuItem(ItemStack item) {
+
+        setItem(item);
+    }
+
+    public MenuItem(ItemStack item, String name) {
+        this(RC_Items.setDisplayName(item, name));
+    }
+
     public MenuItem() {
 
-        setItem(new ItemStack(Material.AIR));
+        this(new ItemStack(Material.AIR));
     }
 
     public MenuItem(Material type, String name, int amount) {
 
-        setItem(RC_Items.setDisplayName(new ItemStack(type, amount), name));
+        this(RC_Items.setDisplayName(new ItemStack(type, amount), name));
     }
 
     public MenuItem(Material type, String name) {
