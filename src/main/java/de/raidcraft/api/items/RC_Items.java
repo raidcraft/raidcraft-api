@@ -21,10 +21,17 @@ public class RC_Items {
     }
 
     // TODO: use STAINED_GLASS_PANE
+    public static ItemStack getGlassPane(DyeColor color, int amount) {
+
+        return new ItemStack(160, amount, color.getWoolData());
+    }
+
     public static ItemStack getGlassPane(DyeColor color) {
 
-        return new ItemStack(160, 1, color.getWoolData());
+        return getGlassPane(color, 1);
     }
+
+
 
     public static ItemStack createItem(Material mat, String name) {
 
