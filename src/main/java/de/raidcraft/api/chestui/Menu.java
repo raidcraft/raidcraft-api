@@ -4,10 +4,13 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.chestui.menuitems.MenuItem;
 import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
+import de.raidcraft.api.chestui.menuitems.MenuItemHide;
 import de.raidcraft.api.inventory.RcInventory;
+import de.raidcraft.api.items.RcItems;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -43,20 +46,23 @@ public class Menu {
     // toolbar
     private MenuItemAPI toolbar_ok;
     private MenuItemAPI toolbar_cancel;
-    private MenuItemAPI toolbar_back = new MenuItem(Material.ARROW, "Back") {
+    private MenuItemHide toolbar_back = new MenuItemHide(
+            RcItems.createDye(DyeColor.MAGENTA), "Vorherige Seite") {
         @Override
         public void trigger(Player player) {
 
             lastPage();
         }
     };
-    private MenuItemAPI toolbar_forward = new MenuItem(Material.ARROW, "Forward") {
+    private MenuItemHide toolbar_forward = new MenuItemHide(
+            RcItems.createDye(DyeColor.LIME), "Nächste Seite") {
         @Override
         public void trigger(Player player) {
 
             nextPage();
         }
     };
+    private MenuItemAPI toolbar_site = new MenuItem(Material.BOOK, "Seite");
 
 
     public Menu(String name, boolean toolbar) {
@@ -127,39 +133,59 @@ public class Menu {
                 break;
             }
             container.setItem(slot, items.get(item_index).getItem());
-            items.get(item_index).setSlot(slot);
-            items.get(item_index).setInventory(inventory);
+            setItemData(slot, items.get(item_index));
             menus_api[render_page][slot] = items.get(item_index);
             slot++;
         }
         return container;
     }
 
+    private void setItemData(int slot, MenuItemAPI menu_item) {
+
+        menu_item.setSlot(slot);
+        menu_item.setInventory(inventory);
+    }
+
     protected void generateToolbar() {
 
         int start = availableRows * RcInventory.COLUMN_COUNT;
         if (toolbar_cancel != null) {
-            inventory.setItem(start, toolbar_cancel.getItem());
-            menus_api[0][start] = toolbar_cancel;
+            int slot = start;
+            inventory.setItem(slot, toolbar_cancel.getItem());
+            setItemData(slot, toolbar_cancel);
+            menus_api[0][slot] = toolbar_cancel;
         }
         if (toolbar_ok != null) {
-            inventory.setItem(start + RcInventory.COLUMN_COUNT - 1, toolbar_ok.getItem());
-            menus_api[0][start + RcInventory.COLUMN_COUNT - 1] = toolbar_ok;
+            int slot = start + RcInventory.COLUMN_COUNT - 1;
+            inventory.setItem(slot, toolbar_ok.getItem());
+            setItemData(slot, toolbar_ok);
+            menus_api[0][slot] = toolbar_ok;
+        }
+
+        if(toolbar_site != null) {
+            int slot = start + 4;
+            inventory.setItem(slot, toolbar_site.getItem());
+            setItemData(slot, toolbar_site);
+            menus_api[0][slot] = toolbar_site;
         }
 
         if (toolbar_back != null) {
-            inventory.setItem(start + 1, toolbar_back.getItem());
-            menus_api[0][start + 1] = toolbar_back;
+            int slot = start + 1;
+            inventory.setItem(slot, toolbar_back.getItem());
+            setItemData(slot, toolbar_back);
+            menus_api[0][slot] = toolbar_back;
         }
         if (toolbar_forward != null) {
-            inventory.setItem(start + RcInventory.COLUMN_COUNT - 2, toolbar_forward.getItem());
-            menus_api[0][start + RcInventory.COLUMN_COUNT - 2] = toolbar_forward;
+            int slot = start + RcInventory.COLUMN_COUNT - 2;
+            inventory.setItem(slot, toolbar_forward.getItem());
+            setItemData(slot, toolbar_forward);
+            menus_api[0][slot] = toolbar_forward;
         }
     }
 
     public MenuItemAPI getMenuItem(int menuPage, int slot) {
         // if toolbar
-        if(slot > availableSlots) {
+        if (slot > availableSlots) {
             return menus_api[0][slot];
         }
         return menus_api[menuPage][slot];
@@ -174,14 +200,20 @@ public class Menu {
         // convert to indexs
         if (newpage < 0 || newpage >= invs.length) {
             RaidCraft.getComponent(RaidCraftPlugin.class).getLogger().warning(
-                    name + " not a valdi page: " + (newpage + 1));
+                    name + " not a valid page: " + (newpage + 1));
             return;
         }
         page = newpage;
+        // set back/forward
+        this.toolbar_back.toggle(page <= 0);
+        this.toolbar_forward.toggle(page >= getPageCount() - 1);
+        this.toolbar_site.getItem().setAmount(page + 1);
+
         ItemStack[] newItems = invs[page].getContent();
         for (int slot = 0; slot < newItems.length; slot++) {
-            if(newItems[slot] == null) {
-                continue;
+            // clear old items
+            if (newItems[slot] == null) {
+                inventory.clear(slot);
             }
             inventory.setItem(slot, newItems[slot]);
         }

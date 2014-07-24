@@ -262,7 +262,6 @@ public class ChestUI {
                 return;
             }
             HandlerList.unregisterAll(this);
-            ((Player) holder).sendMessage("close inventory");
         }
     }
 }
