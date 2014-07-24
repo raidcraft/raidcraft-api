@@ -5,8 +5,8 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.chestui.menuitems.MenuItem;
 import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
 import de.raidcraft.api.chestui.menuitems.MenuItemHide;
-import de.raidcraft.api.inventory.RcInventory;
-import de.raidcraft.api.items.RcItems;
+import de.raidcraft.api.inventory.RC_Inventory;
+import de.raidcraft.api.items.RC_Items;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -47,7 +47,7 @@ public class Menu {
     private MenuItemAPI toolbar_ok;
     private MenuItemAPI toolbar_cancel;
     private MenuItemHide toolbar_back = new MenuItemHide(
-            RcItems.createDye(DyeColor.MAGENTA), "Vorherige Seite") {
+            RC_Items.createDye(DyeColor.MAGENTA), "Vorherige Seite") {
         @Override
         public void trigger(Player player) {
 
@@ -55,7 +55,7 @@ public class Menu {
         }
     };
     private MenuItemHide toolbar_forward = new MenuItemHide(
-            RcItems.createDye(DyeColor.LIME), "Nächste Seite") {
+            RC_Items.createDye(DyeColor.LIME), "Nächste Seite") {
         @Override
         public void trigger(Player player) {
 
@@ -87,20 +87,20 @@ public class Menu {
 
 
         extraRows = (isToolbarActive() ? 1 : 0);
-        availableRows = (int) Math.ceil(items.size() / (double) RcInventory.COLUMN_COUNT);
+        availableRows = (int) Math.ceil(items.size() / (double) RC_Inventory.COLUMN_COUNT);
         // if to big, shrink
-        if (availableRows + extraRows > RcInventory.MAX_ROWS) {
+        if (availableRows + extraRows > RC_Inventory.MAX_ROWS) {
             // activate toolbar
             setToolbarActive(true);
             extraRows = 1;
 
-            availableRows = RcInventory.MAX_ROWS - extraRows;
+            availableRows = RC_Inventory.MAX_ROWS - extraRows;
         }
 
-        availableSlots = availableRows * RcInventory.COLUMN_COUNT;
+        availableSlots = availableRows * RC_Inventory.COLUMN_COUNT;
 
         allRows = availableRows + extraRows; // included toolbar
-        allSlots = allRows * RcInventory.COLUMN_COUNT;
+        allSlots = allRows * RC_Inventory.COLUMN_COUNT;
 
         // create inventory
         inventory = Bukkit.createInventory(player, allSlots, name);
@@ -148,7 +148,7 @@ public class Menu {
 
     protected void generateToolbar() {
 
-        int start = availableRows * RcInventory.COLUMN_COUNT;
+        int start = availableRows * RC_Inventory.COLUMN_COUNT;
         if (toolbar_cancel != null) {
             int slot = start;
             inventory.setItem(slot, toolbar_cancel.getItem());
@@ -156,7 +156,7 @@ public class Menu {
             menus_api[0][slot] = toolbar_cancel;
         }
         if (toolbar_ok != null) {
-            int slot = start + RcInventory.COLUMN_COUNT - 1;
+            int slot = start + RC_Inventory.COLUMN_COUNT - 1;
             inventory.setItem(slot, toolbar_ok.getItem());
             setItemData(slot, toolbar_ok);
             menus_api[0][slot] = toolbar_ok;
@@ -176,7 +176,7 @@ public class Menu {
             menus_api[0][slot] = toolbar_back;
         }
         if (toolbar_forward != null) {
-            int slot = start + RcInventory.COLUMN_COUNT - 2;
+            int slot = start + RC_Inventory.COLUMN_COUNT - 2;
             inventory.setItem(slot, toolbar_forward.getItem());
             setItemData(slot, toolbar_forward);
             menus_api[0][slot] = toolbar_forward;

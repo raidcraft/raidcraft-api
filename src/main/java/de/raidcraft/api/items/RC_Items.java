@@ -11,7 +11,7 @@ import java.util.Arrays;
 /**
  * @author Sebastian
  */
-public class RcItems {
+public class RC_Items {
 
     public static ItemStack createDye(DyeColor color) {
 

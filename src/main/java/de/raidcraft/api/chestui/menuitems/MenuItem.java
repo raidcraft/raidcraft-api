@@ -1,6 +1,6 @@
 package de.raidcraft.api.chestui.menuitems;
 
-import de.raidcraft.api.items.RcItems;
+import de.raidcraft.api.items.RC_Items;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +17,7 @@ public class MenuItem extends MenuItemAPI {
 
     public MenuItem(Material type, String name, int amount) {
 
-        setItem(RcItems.setDisplayName(new ItemStack(type, amount), name));
+        setItem(RC_Items.setDisplayName(new ItemStack(type, amount), name));
     }
 
     public MenuItem(Material type, String name) {

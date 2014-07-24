@@ -1,6 +1,6 @@
 package de.raidcraft.api.chestui.menuitems;
 
-import de.raidcraft.api.items.RcItems;
+import de.raidcraft.api.items.RC_Items;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +19,7 @@ public class MenuItemHide extends MenuItem {
     }
 
     public MenuItemHide(ItemStack item, String name) {
-        store = RcItems.setDisplayName(item, name);
+        store = RC_Items.setDisplayName(item, name);
         setItem(store);
     }
 
