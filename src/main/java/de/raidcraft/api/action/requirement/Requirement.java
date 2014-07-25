@@ -29,6 +29,16 @@ public interface Requirement<T> extends RequirementConfigGenerator {
         return false;
     }
 
+    public default boolean isOrdered() {
+
+        return false;
+    }
+
+    public default boolean isOptional() {
+
+        return false;
+    }
+
     public default void save() {
 
         throw new UnsupportedOperationException();
