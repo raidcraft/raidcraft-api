@@ -19,6 +19,4 @@ public interface ConversationHost {
     public void setConversation(Player player, String conversation);
 
     public String getConversation(Player player);
-
-    public void interact(Player player);
 }
