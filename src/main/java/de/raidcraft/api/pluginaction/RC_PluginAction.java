@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * SINGLETON
+ * Global Class for Plugin Actions.
+ * Register Listeners here and fire Actions across all plugins.
  * @author Dragonfire
  */
 // TODO: clear on reload
