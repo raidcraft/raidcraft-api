@@ -58,7 +58,9 @@ class TriggerListenerConfigWrapper<T> {
 
         RaidCraft.LOGGER.info("Triggering Entity (" + triggeringEntity + ") is instance of " + triggerListener.getTriggerEntityType() + ": " + triggerListener.getTriggerEntityType().isInstance(triggeringEntity));
         RaidCraft.LOGGER.info("Predicate " + predicate + " is " + predicate.test(config));
-        return triggerListener.getTriggerEntityType().isInstance(triggeringEntity) && predicate.test(config);
+        ConfigurationSection args = config.getConfigurationSection("args");
+        if (args == null) args = config.createSection("args");
+        return triggerListener.getTriggerEntityType().isInstance(triggeringEntity) && predicate.test(args);
     }
 
     protected void executeActions(T triggeringEntity) {
