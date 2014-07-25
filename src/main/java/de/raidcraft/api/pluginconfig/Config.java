@@ -25,11 +25,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Extend this class and call setFile(File|Plugin|...)
+ *
  * Inspired by md_5
  * <p/>
  * An awesome super-duper-lazy Config lib! Just extend it, set some (non-static) variables
  *
  * @author codename_B
+ * @author Dragonfire
  * @version 2.1
  */
 public abstract class Config {
