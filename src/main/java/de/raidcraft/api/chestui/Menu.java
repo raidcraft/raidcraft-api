@@ -6,12 +6,9 @@ import de.raidcraft.api.chestui.menuitems.MenuItem;
 import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
 import de.raidcraft.api.chestui.menuitems.MenuItemHide;
 import de.raidcraft.api.inventory.RC_Inventory;
-import de.raidcraft.api.items.RC_Items;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A Menu for the ChestUI.
+ * Add MenuItems to the Menu.
+ * A Menu has pages and a toolbar.
+ * You cann add infinity items to a menu, it seperate it
+ * automaticlly into pages.
+ * MenuItem filled in Minecraft order, left top to right bottom line by line.
+ *
  * @author Dragonfire
  */
 public class Menu {
@@ -46,23 +50,21 @@ public class Menu {
     // toolbar
     private MenuItemAPI toolbar_ok;
     private MenuItemAPI toolbar_cancel;
-    private MenuItemHide toolbar_back = new MenuItemHide(
-            RC_Items.createDye(DyeColor.MAGENTA), "Vorherige Seite") {
+    private MenuItemHide toolbar_back = (MenuItemHide) new MenuItemHide() {
         @Override
         public void trigger(Player player) {
 
             lastPage();
         }
-    };
-    private MenuItemHide toolbar_forward = new MenuItemHide(
-            RC_Items.createDye(DyeColor.LIME), "Nächste Seite") {
+    }.setVisibleItem(MenuItemAPI.getItemPlus());
+    private MenuItemHide toolbar_forward = (MenuItemHide) new MenuItemHide() {
         @Override
         public void trigger(Player player) {
 
             nextPage();
         }
-    };
-    private MenuItemAPI toolbar_site = new MenuItem(Material.BOOK, "Seite");
+    }.setVisibleItem(MenuItemAPI.getItemMinus());
+    private MenuItemAPI toolbar_site = new MenuItem().setItem(MenuItemAPI.getItemPage());
 
 
     public Menu(String name, boolean toolbar) {
@@ -162,7 +164,7 @@ public class Menu {
             menus_api[0][slot] = toolbar_ok;
         }
 
-        if(toolbar_site != null) {
+        if (toolbar_site != null) {
             int slot = start + 4;
             inventory.setItem(slot, toolbar_site.getItem());
             setItemData(slot, toolbar_site);

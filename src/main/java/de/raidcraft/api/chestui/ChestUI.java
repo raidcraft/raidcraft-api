@@ -2,9 +2,8 @@ package de.raidcraft.api.chestui;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
 import de.raidcraft.api.chestui.menuitems.MenuItemInteractive;
-import de.raidcraft.api.chestui.menuitems.MenuMinus;
-import de.raidcraft.api.chestui.menuitems.MenuPlus;
 import de.raidcraft.api.items.RC_Items;
 import de.raidcraft.util.MathUtil;
 import org.bukkit.Bukkit;
@@ -24,6 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * SINGLETON
+ * Global Class for creating Chest UI's.
+ * Create a Menu and use this class to open it.
+ *
  * @author Dragonfire
  */
 public class ChestUI {
@@ -35,18 +38,6 @@ public class ChestUI {
     private ChestUI() {
 
         plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-        //        Bukkit.getPluginManager().registerEvents(new Listener() {
-        //            @EventHandler
-        //            public void cmd(PlayerCommandPreprocessEvent event) {
-        //                if (event.getMessage().contains("menu")) {
-        //                    Menu m = new Menu("test menu from me");
-        //                    m.addMenuItem(new MenuItem());
-        //                    Menu m2 = new Menu("blalba");
-        //                    m.addMenuItem(new OpenMenu(m2));
-        //                    ChestUI.getInstance().openMenu(event.getPlayer(), m);
-        //                }
-        //            }
-        //        }, plugin);
     }
 
     public static ChestUI getInstance() {
@@ -57,13 +48,24 @@ public class ChestUI {
         return INSTANCE;
     }
 
+    public void openMenu(Player player, Menu menu) {
+
+        Inventory inv = menu.generateInvenntory(player);
+        cache.put(player, menu);
+        Bukkit.getPluginManager().registerEvents(new RestrictInventory(player),
+                plugin);
+        player.openInventory(inv);
+    }
+
+
     // max support 999 99 99
     public void openMoneySelection(Player player, String menu_name, double currentMoneyValue) {
-        if(currentMoneyValue < 0) {
+
+        if (currentMoneyValue < 0) {
             // TODO: warning
             return;
         }
-        final int[] values =  MathUtil.getDigits(currentMoneyValue, 2);
+        final int[] values = MathUtil.getDigits(currentMoneyValue, 2);
 
         Menu menu = new Menu(menu_name);
         // TODO: parse values
@@ -102,57 +104,57 @@ public class ChestUI {
                 1, 9);
 
         // +++ ++ ++
-        menu.addMenuItem(new MenuPlus("+100 Gold") {
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g100.increase();
             }
-        });
-        menu.addMenuItem(new MenuPlus("+10 Gold") {
+        }).setItem(MenuItemAPI.getItemPlus("+100 Gold")));
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g10.increase();
             }
-        });
-        menu.addMenuItem(new MenuPlus("+1 Gold") {
+        }).setItem(MenuItemAPI.getItemPlus("+10 Gold")));
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g1.increase();
             }
-        });
+        }).setItem(MenuItemAPI.getItemPlus("+1 Gold")));
         menu.empty();
-        menu.addMenuItem(new MenuPlus("+10 Silber") {
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 s10.increase();
             }
-        });
-        menu.addMenuItem(new MenuPlus("+1 Silber") {
+        }).setItem(MenuItemAPI.getItemPlus("+10 Silber")));
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 s1.increase();
             }
-        });
+        }).setItem(MenuItemAPI.getItemPlus("+1 Silber")));
         menu.empty();
-        menu.addMenuItem(new MenuPlus("+10 Kuper") {
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k10.increase();
             }
-        });
-        menu.addMenuItem(new MenuPlus("+1 Kuper") {
+        }).setItem(MenuItemAPI.getItemPlus("+10 Bronze")));
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k1.increase();
             }
-        });
+        }).setItem(MenuItemAPI.getItemPlus("+1 Bronze")));
 
         // GGG SSS KK
         menu.addMenuItem(g100);
@@ -166,67 +168,58 @@ public class ChestUI {
         menu.addMenuItem(k1);
 
         // --- -- --
-        menu.addMenuItem(new MenuMinus("-100 Gold") {
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g100.decrease();
             }
-        });
-        menu.addMenuItem(new MenuMinus("-10 Gold") {
+        }).setItem(MenuItemAPI.getItemPlus("-100 Gold")));
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g10.decrease();
             }
-        });
-        menu.addMenuItem(new MenuMinus("-1 Gold") {
+        }).setItem(MenuItemAPI.getItemPlus("-10 Gold")));
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g1.decrease();
             }
-        });
+        }).setItem(MenuItemAPI.getItemPlus("-1 Gold")));
         menu.empty();
-        menu.addMenuItem(new MenuMinus("-10 Silber") {
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 s10.decrease();
             }
-        });
-        menu.addMenuItem(new MenuMinus("-1 Silber") {
+        }).setItem(MenuItemAPI.getItemPlus("-10 Silber")));
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 s1.decrease();
             }
-        });
+        }).setItem(MenuItemAPI.getItemPlus("-1 Silber")));
         menu.empty();
-        menu.addMenuItem(new MenuMinus("-10 Kuper") {
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k10.decrease();
             }
-        });
-        menu.addMenuItem(new MenuMinus("-1 Kuper") {
+        }).setItem(MenuItemAPI.getItemPlus("-10 Kuper")));
+        menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k1.decrease();
             }
-        });
+        }).setItem(MenuItemAPI.getItemPlus("-1 Kuper")));
         this.openMenu(player, menu);
-    }
-
-    public void openMenu(Player player, Menu menu) {
-
-        Inventory inv = menu.generateInvenntory(player);
-        cache.put(player, menu);
-        Bukkit.getPluginManager().registerEvents(new RestrictInventory(player),
-                plugin);
-        player.openInventory(inv);
     }
 
     public class RestrictInventory implements Listener {

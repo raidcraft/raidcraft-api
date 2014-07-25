@@ -5,6 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
+ * Item with a max amount (-1 = no max).
+ * Can switch to a special item if anount is 0.
+ *
  * @author Dragonfire
  */
 public class MenuItemInteractive extends MenuItemAPI {
@@ -16,11 +19,10 @@ public class MenuItemInteractive extends MenuItemAPI {
     private boolean empty = true;
 
     /**
-     *
-     * @param item_empty null = nothing, displayed if amound == 0
-     * @param item_full item stack displayed if amound > 0
+     * @param item_empty  null = nothing, displayed if amound == 0
+     * @param item_full   item stack displayed if amound > 0
      * @param startAmount start amount
-     * @param maxAmount -1 = no max
+     * @param maxAmount   -1 = no max
      */
     public MenuItemInteractive(ItemStack item_empty, ItemStack item_full,
                                int startAmount, int maxAmount) {
