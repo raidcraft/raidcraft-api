@@ -1,11 +1,12 @@
 package de.raidcraft.api.quests;
 
+import de.raidcraft.api.conversations.ConversationHost;
 import org.bukkit.entity.Player;
 
 /**
  * @author Silthus
  */
-public interface QuestHost {
+public interface QuestHost extends ConversationHost {
 
     public String getId();
 
