@@ -104,20 +104,20 @@ public class ChestUI {
                 1, 9);
 
         // +++ ++ ++
-        menu.addMenuItem((new MenuItemAPI() {
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g100.increase();
             }
-        }).setItem(MenuItemAPI.getItemPlus("+100 Gold")));
-        menu.addMenuItem((new MenuItemAPI() {
+        }.setItem(MenuItemAPI.getItemPlus("+100 Gold")));
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g10.increase();
             }
-        }).setItem(MenuItemAPI.getItemPlus("+10 Gold")));
+        }.setItem(MenuItemAPI.getItemPlus("+10 Gold")));
         menu.addMenuItem((new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
@@ -126,35 +126,35 @@ public class ChestUI {
             }
         }).setItem(MenuItemAPI.getItemPlus("+1 Gold")));
         menu.empty();
-        menu.addMenuItem((new MenuItemAPI() {
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 s10.increase();
             }
-        }).setItem(MenuItemAPI.getItemPlus("+10 Silber")));
-        menu.addMenuItem((new MenuItemAPI() {
+        }.setItem(MenuItemAPI.getItemPlus("+10 Silber")));
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 s1.increase();
             }
-        }).setItem(MenuItemAPI.getItemPlus("+1 Silber")));
+        }.setItem(MenuItemAPI.getItemPlus("+1 Silber")));
         menu.empty();
-        menu.addMenuItem((new MenuItemAPI() {
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k10.increase();
             }
-        }).setItem(MenuItemAPI.getItemPlus("+10 Bronze")));
-        menu.addMenuItem((new MenuItemAPI() {
+        }.setItem(MenuItemAPI.getItemPlus("+10 Bronze")));
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k1.increase();
             }
-        }).setItem(MenuItemAPI.getItemPlus("+1 Bronze")));
+        }.setItem(MenuItemAPI.getItemPlus("+1 Bronze")));
 
         // GGG SSS KK
         menu.addMenuItem(g100);
@@ -168,57 +168,57 @@ public class ChestUI {
         menu.addMenuItem(k1);
 
         // --- -- --
-        menu.addMenuItem((new MenuItemAPI() {
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g100.decrease();
             }
-        }).setItem(MenuItemAPI.getItemPlus("-100 Gold")));
-        menu.addMenuItem((new MenuItemAPI() {
+        }.setItem(MenuItemAPI.getItemPlus("-100 Gold")));
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g10.decrease();
             }
-        }).setItem(MenuItemAPI.getItemPlus("-10 Gold")));
-        menu.addMenuItem((new MenuItemAPI() {
+        }.setItem(MenuItemAPI.getItemPlus("-10 Gold")));
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 g1.decrease();
             }
-        }).setItem(MenuItemAPI.getItemPlus("-1 Gold")));
+        }.setItem(MenuItemAPI.getItemPlus("-1 Gold")));
         menu.empty();
-        menu.addMenuItem((new MenuItemAPI() {
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 s10.decrease();
             }
-        }).setItem(MenuItemAPI.getItemPlus("-10 Silber")));
-        menu.addMenuItem((new MenuItemAPI() {
+        }.setItem(MenuItemAPI.getItemPlus("-10 Silber")));
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 s1.decrease();
             }
-        }).setItem(MenuItemAPI.getItemPlus("-1 Silber")));
+        }.setItem(MenuItemAPI.getItemPlus("-1 Silber")));
         menu.empty();
-        menu.addMenuItem((new MenuItemAPI() {
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k10.decrease();
             }
-        }).setItem(MenuItemAPI.getItemPlus("-10 Kuper")));
-        menu.addMenuItem((new MenuItemAPI() {
+        }.setItem(MenuItemAPI.getItemPlus("-10 Kuper")));
+        menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k1.decrease();
             }
-        }).setItem(MenuItemAPI.getItemPlus("-1 Kuper")));
+        }.setItem(MenuItemAPI.getItemPlus("-1 Kuper")));
         this.openMenu(player, menu);
     }
 
