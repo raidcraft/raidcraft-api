@@ -99,13 +99,12 @@ public final class ActionAPI {
 
     public enum GlobalRequirements {
 
-        IS_SPRINTING("player.is-sprinting", Player::isSprinting),
+        IS_SPRINTING("player.is-sprinting", (Player player, ConfigurationSection config) -> player.isSprinting()),
         PLAYER_LOCATION("player.location", new Requirement<Player>() {
             @Override
-            public boolean test(Player player) {
+            public boolean test(Player player, ConfigurationSection config) {
 
                 Location location = player.getLocation();
-                ConfigurationSection config = getConfig();
                 World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
                 if (config.isSet("world") && world == null) return false;
 
@@ -127,17 +126,14 @@ public final class ActionAPI {
                 return false;
             }
         }),
-        HAS_ITEM("player.has-item", new Requirement<Player>() {
-            @Override
-            public boolean test(Player player) {
+        HAS_ITEM("player.has-item", (Player player, ConfigurationSection config) -> {
 
-                try {
-                    ItemStack item = RaidCraft.getItem(getConfig().getString("item"));
-                    return player.getInventory().contains(item);
-                } catch (CustomItemException ignored) {
-                }
-                return false;
+            try {
+                ItemStack item = RaidCraft.getItem(config.getString("item"));
+                return player.getInventory().contains(item);
+            } catch (CustomItemException ignored) {
             }
+            return false;
         });
 
         private final String id;
