@@ -1,6 +1,5 @@
 package de.raidcraft.api.quests.quest;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.TriggerFactory;
@@ -63,7 +62,6 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
         QuestHolder questHolder = Quests.getQuestHolder(player);
         // lets check if we already have a quest that is started
         // and do not execute actions if the quest is started
-        RaidCraft.LOGGER.info("Executing quest template (" + getId() + ") actions: " + !questHolder.hasActiveQuest(this));
         return !questHolder.hasActiveQuest(this);
     }
 
