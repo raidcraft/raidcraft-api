@@ -54,6 +54,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
     protected final <T> void informListeners(@NonNull String action, @NonNull T triggeringEntity, @NonNull Predicate<ConfigurationSection> predicate) {
 
         String identifier = getIdentifier() + "." + action;
+        RaidCraft.LOGGER.info("Trigger called: " + identifier);
         if (registeredListeners.containsKey(identifier)) {
             RaidCraft.LOGGER.info("Informing listeners of " + identifier);
             new ArrayList<>(registeredListeners.get(identifier)).stream()
