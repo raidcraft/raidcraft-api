@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 /**
  * @author Dragonfire
  */
-public class PlayerSignInteractEvent extends Event {
+public class PlayerSignInteractEvent extends RCEvent {
 
     private PlayerInteractEvent parentEvent;
 
@@ -19,18 +19,5 @@ public class PlayerSignInteractEvent extends Event {
     public PlayerInteractEvent getParentEvent() {
 
         return parentEvent;
-    }
-
-    // Bukkit stuff
-    private static final HandlerList handlers = new HandlerList();
-
-    public HandlerList getHandlers() {
-
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-
-        return handlers;
     }
 }

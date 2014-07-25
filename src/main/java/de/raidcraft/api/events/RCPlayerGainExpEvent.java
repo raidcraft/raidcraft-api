@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 /**
  * @author Silthus
  */
-public class RCPlayerGainExpEvent extends Event {
+public class RCPlayerGainExpEvent extends RCEvent {
 
     private final Player player;
     private final int exp;
@@ -26,21 +26,5 @@ public class RCPlayerGainExpEvent extends Event {
     public int getGainedExp() {
 
         return exp;
-    }
-
-    /*///////////////////////////////////////////////////
-    //              Needed Bukkit Stuff
-    ///////////////////////////////////////////////////*/
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public HandlerList getHandlers() {
-
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-
-        return handlers;
     }
 }

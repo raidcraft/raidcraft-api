@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 /**
  * @author Silthus
  */
-public class PlayerChangeProfessionEvent extends Event {
+public class PlayerChangeProfessionEvent extends RCEvent {
 
     private final Player player;
     private final String newProfession;
@@ -33,19 +33,5 @@ public class PlayerChangeProfessionEvent extends Event {
     public int getProfessionLevel() {
 
         return professionLevel;
-    }
-
-    //<-- Handler -->//
-
-    private static final HandlerList handlers = new HandlerList();
-
-    public HandlerList getHandlers() {
-
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-
-        return handlers;
     }
 }
