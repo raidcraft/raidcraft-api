@@ -55,6 +55,7 @@ public final class TriggerManager implements Component {
 
         String triggerName;
         String identifier = plugin.getName() + "." + trigger.getIdentifier();
+        trigger.setIdentifier(identifier);
         for (String action : trigger.getActions()) {
             triggerName = identifier + "." + action;
             if (registeredTrigger.containsKey(triggerName)) {

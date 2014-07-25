@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 @Data
 public abstract class Trigger implements TriggerConfigGenerator {
 
-    private final String identifier;
+    private String identifier;
     private final String[] actions;
     private final Map<String, List<TriggerListenerConfigWrapper<?>>> registeredListeners = new CaseInsensitiveMap<>();
 
