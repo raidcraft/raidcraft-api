@@ -22,14 +22,14 @@ import org.bukkit.material.Openable;
 public class DoorAction implements Action<Player> {
 
     @Override
-    public void accept(Player player) {
+    public void accept(Player player, ConfigurationSection config) {
 
-        ConfigurationSection locationSection = getConfig().getConfigurationSection("location");
+        ConfigurationSection locationSection = config.getConfigurationSection("location");
         World world = Bukkit.getWorld(locationSection.getString("world"));
         if (world == null && !locationSection.isSet("world")) {
             world = player.getWorld();
         } else {
-            RaidCraft.LOGGER.warning("Unknown world defined in door action config: " + getConfig().getName());
+            RaidCraft.LOGGER.warning("Unknown world defined in door action config: " + config.getName());
             return;
         }
         Location location = new Location(world, locationSection.getInt("x"), locationSection.getInt("y"), locationSection.getInt("z"));
@@ -37,7 +37,7 @@ public class DoorAction implements Action<Player> {
         Block block = location.getBlock();
         if (block.getState() instanceof Openable) {
             Openable state = (Openable) block.getState();
-            boolean open = (getConfig().getBoolean("toggle", false) ? !state.isOpen() : getConfig().getBoolean("open", true));
+            boolean open = (config.getBoolean("toggle", false) ? !state.isOpen() : config.getBoolean("open", true));
             state.setOpen(open);
             block.getState().update();
         }

@@ -121,7 +121,7 @@ public class PlayerTrigger extends Trigger implements Listener {
         // otherwise check the coordinates and the radius
         informListeners("move", event.getPlayer(), config -> {
 
-            World world = Bukkit.getWorld(config.getString("world"));
+            World world = Bukkit.getWorld(config.getString("world", event.getPlayer().getWorld().getName()));
             if (config.isSet("world") && (world == null || !event.getPlayer().getWorld().equals(world))) return false;
             if (world == null) world = event.getPlayer().getWorld();
             return ((!config.isSet("x") || !config.isSet("y") || !config.isSet("z"))
