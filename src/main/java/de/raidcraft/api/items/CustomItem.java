@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public interface CustomItem extends RequirementResolver<Player> {
 
-    public static final int NAMED_CUSTOM_ITEM_ID = 0;
+    public static final int NAMED_CUSTOM_ITEM_ID = 999999999;
 
     public int getId();
 
