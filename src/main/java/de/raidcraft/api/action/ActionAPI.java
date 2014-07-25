@@ -29,10 +29,10 @@ public final class ActionAPI {
 
         GIVE_ITEM("player.give.item", new Action<Player>() {
             @Override
-            public void accept(Player player) {
+            public void accept(Player player, ConfigurationSection config) {
 
                 try {
-                    ItemStack item = RaidCraft.getItem(getConfig().getString("item"), getConfig().getInt("amount", 1));
+                    ItemStack item = RaidCraft.getItem(config.getString("item"), config.getInt("amount", 1));
                     player.getInventory().addItem(item);
                 } catch (CustomItemException e) {
                     RaidCraft.LOGGER.warning("player.give.item (" + player.getName() + "): " + e.getMessage());
@@ -41,19 +41,19 @@ public final class ActionAPI {
         }),
         GIVE_MONEY("player.give.money", new Action<Player>() {
             @Override
-            public void accept(Player player) {
+            public void accept(Player player, ConfigurationSection config) {
 
-                if (!getConfig().isSet("amount")) return;
+                if (!config.isSet("amount")) return;
                 Economy economy = RaidCraft.getEconomy();
-                economy.add(player.getName(), economy.parseCurrencyInput(getConfig().getString("amount")));
+                economy.add(player.getName(), economy.parseCurrencyInput(config.getString("amount")));
             }
         }),
-        KILL_PLAYER("player.kill", (Player player) -> player.setHealth(0.0)),
+        KILL_PLAYER("player.kill", (Player player, ConfigurationSection config) -> player.setHealth(0.0)),
         MESSAGE_PLAYER("player.message", new Action<Player>() {
             @Override
-            public void accept(Player player) {
+            public void accept(Player player, ConfigurationSection config) {
 
-                String[] text = getConfig().getString("text").split("|");
+                String[] text = config.getString("text").split("|");
                 for (String msg : text) {
                     player.sendMessage(msg);
                 }
@@ -61,27 +61,19 @@ public final class ActionAPI {
         }),
         TOGGLE_DOOR("door.toggle", new DoorAction()),
         SET_BLOCK("block.set", new SetBlockAction()),
-        TELEPORT_COORDS("teleport.coords", new Action<Player>() {
+        TELEPORT_COORDS("teleport.location", new Action<Player>() {
             @Override
-            public void accept(Player player) {
+            public void accept(Player player, ConfigurationSection config) {
 
-                World world = Bukkit.getWorld(getConfig().getString("world", player.getWorld().getName()));
+                World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
                 if (world == null) return;
                 Location location = new Location(world,
-                        getConfig().getInt("x"),
-                        getConfig().getInt("y"),
-                        getConfig().getInt("z"),
-                        (float) getConfig().getDouble("yaw"),
-                        (float) getConfig().getDouble("pitch"));
+                        config.getInt("x"),
+                        config.getInt("y"),
+                        config.getInt("z"),
+                        (float) config.getDouble("yaw"),
+                        (float) config.getDouble("pitch"));
                 player.teleport(location);
-            }
-        }),
-        TELEPORT_PLAYER("teleport.player", new Action<Player>() {
-            @Override
-            public void accept(Player player) {
-
-                Player targetPlayer = Bukkit.getPlayer(getConfig().getString("player"));
-                if (targetPlayer != null) player.teleport(targetPlayer);
             }
         });
 
