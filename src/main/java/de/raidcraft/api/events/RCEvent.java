@@ -11,6 +11,16 @@ public class RCEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
+    public RCEvent() {
+
+        super(false);
+    }
+
+    public RCEvent(final boolean isAsync) {
+
+        super(isAsync);
+    }
+
     public void callEvent() {
 
         Bukkit.getServer().getPluginManager().callEvent(this);

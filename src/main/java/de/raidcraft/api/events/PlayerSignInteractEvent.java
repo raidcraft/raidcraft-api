@@ -1,7 +1,5 @@
 package de.raidcraft.api.events;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
