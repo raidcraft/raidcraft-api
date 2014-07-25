@@ -15,6 +15,13 @@ public class MenuItemInteractive extends MenuItemAPI {
     private int maxAmount;
     private boolean empty = true;
 
+    /**
+     *
+     * @param item_empty null = nothing, displayed if amound == 0
+     * @param item_full item stack displayed if amound > 0
+     * @param startAmount start amount
+     * @param maxAmount -1 = no max
+     */
     public MenuItemInteractive(ItemStack item_empty, ItemStack item_full,
                                int startAmount, int maxAmount) {
 
@@ -58,7 +65,7 @@ public class MenuItemInteractive extends MenuItemAPI {
         }
 
         // check if max amount reached
-        if (new_amount > maxAmount) {
+        if (maxAmount > 0 && new_amount > maxAmount) {
             new_amount = maxAmount;
         }
 

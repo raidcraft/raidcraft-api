@@ -89,7 +89,8 @@ public class RC_PluginAction {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                // skip InvocationTargetException print
+                e.getCause().printStackTrace();
             }
         }
     }
