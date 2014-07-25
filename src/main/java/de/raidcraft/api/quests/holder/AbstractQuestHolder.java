@@ -65,7 +65,7 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     @Override
     public Quest getQuest(String name) throws QuestException {
 
-        if (hasQuest(name)) {
+        if (allQuests.containsKey(name)) {
             return allQuests.get(name);
         }
         List<Quest> foundQuests = allQuests.values().stream()
