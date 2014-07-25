@@ -365,7 +365,7 @@ public class RaidCraft implements Listener {
             } else {
                 try {
                     // maybe it is a named custom item
-                    RaidCraft.getComponent(CustomItemManager.class).getCustomItem(lowercaseId);
+                    return RaidCraft.getComponent(CustomItemManager.class).getCustomItem(lowercaseId).createNewItem();
                 } catch (CustomItemException e) {
                     // its a minecraft item
                     Material item = ItemUtils.getItem(lowercaseId);
