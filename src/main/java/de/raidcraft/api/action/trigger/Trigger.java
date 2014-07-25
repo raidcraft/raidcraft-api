@@ -1,5 +1,7 @@
 package de.raidcraft.api.action.trigger;
 
+import com.sk89q.util.StringUtil;
+import de.raidcraft.RaidCraft;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,6 +55,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
     protected final <T> void informListeners(@NonNull String action, @NonNull T triggeringEntity, @NonNull Predicate<ConfigurationSection> predicate) {
 
         String identifier = getIdentifier() + "." + action;
+        RaidCraft.LOGGER.info("Informing listeners of " + identifier + ": " + StringUtil.joinString(registeredListeners.get(identifier), ",", 0));
         if (registeredListeners.containsKey(identifier)) {
             new ArrayList<>(registeredListeners.get(identifier)).stream()
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
