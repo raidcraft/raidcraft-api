@@ -1,11 +1,15 @@
 package de.raidcraft.api.events;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerEvent;
 
 /**
  * @author Silthus
  */
-public class PlayerChangeProfessionEvent extends RCPlayerEvent {
+public class PlayerChangeProfessionEvent extends PlayerEvent {
+
+    private static final HandlerList HANDLER = new HandlerList();
 
     private final String newProfession;
     private final int professionLevel;
@@ -17,6 +21,11 @@ public class PlayerChangeProfessionEvent extends RCPlayerEvent {
         this.professionLevel = professionLevel;
     }
 
+    public static HandlerList getHandlerList() {
+
+        return HANDLER;
+    }
+
     public String getNewProfession() {
 
         return newProfession;
@@ -25,5 +34,11 @@ public class PlayerChangeProfessionEvent extends RCPlayerEvent {
     public int getProfessionLevel() {
 
         return professionLevel;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+
+        return HANDLER;
     }
 }
