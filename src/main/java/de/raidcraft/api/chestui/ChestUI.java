@@ -57,6 +57,10 @@ public class ChestUI {
         player.openInventory(inv);
     }
 
+    public void selectItem(Player player, String name, MenuListener listener) {
+        ItemSelector.getInstance().open(player, name, listener);
+    }
+
 
     // max support 999 99 99
     public void openMoneySelection(Player player, String menu_name, double currentMoneyValue) {

@@ -83,6 +83,10 @@ public class Menu {
         addMenuItem(new MenuItem());
     }
 
+    public void close() {
+        this.player.closeInventory();
+    }
+
     public Inventory generateInvenntory(Player player) {
 
         this.player = player;
