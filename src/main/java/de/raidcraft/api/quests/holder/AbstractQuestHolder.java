@@ -59,7 +59,7 @@ public abstract class AbstractQuestHolder implements QuestHolder {
     @Override
     public Quest getQuest(QuestTemplate questTemplate) {
 
-        return allQuests.getOrDefault(questTemplate.getId(), createQuest(questTemplate));
+        return allQuests.get(questTemplate.getId());
     }
 
     @Override
