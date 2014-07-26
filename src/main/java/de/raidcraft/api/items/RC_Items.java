@@ -13,7 +13,7 @@ import java.util.Arrays;
  */
 public class RC_Items {
 
-    public static ItemStack createDye(DyeColor color) {
+    public static ItemStack getDye(DyeColor color) {
 
         Dye dye = new Dye();
         dye.setColor(color);
@@ -32,21 +32,27 @@ public class RC_Items {
     }
 
 
-
     public static ItemStack createItem(Material mat, String name) {
 
         return setDisplayName(new ItemStack(mat), name);
     }
 
 
-    public static ItemStack setLore(ItemStack item, String... lore){
+    public static ItemStack setLore(ItemStack item, String... lore) {
+
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setLore(Arrays.asList(lore));
         item.setItemMeta(itemMeta);
         return item;
     }
 
-    public static ItemStack setDisplayName(ItemStack item, String name){
+    public static ItemStack clearLore(ItemStack item) {
+        //TODO: use nms to remove build in lore (e.g. weapon value)
+        return item;
+    }
+
+    public static ItemStack setDisplayName(ItemStack item, String name) {
+
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName(name);
         item.setItemMeta(itemMeta);

@@ -70,7 +70,7 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemPlus(String name) {
 
-        return RC_Items.setDisplayName(RC_Items.createDye(DyeColor.MAGENTA), name);
+        return RC_Items.setDisplayName(RC_Items.getDye(DyeColor.MAGENTA), name);
     }
 
 
@@ -81,7 +81,7 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemMinus(String name) {
 
-        return RC_Items.setDisplayName(RC_Items.createDye(DyeColor.LIME), name);
+        return RC_Items.setDisplayName(RC_Items.getDye(DyeColor.LIME), name);
     }
 
     public static ItemStack getItemPage() {
@@ -102,7 +102,7 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemOk(String name) {
 
-        return RC_Items.createItem(Material.GREEN_RECORD, name);
+        return RC_Items.clearLore(RC_Items.createItem(Material.GREEN_RECORD, name));
     }
 
     public static ItemStack getItemCancel() {
@@ -112,6 +112,6 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemCancel(String name) {
 
-        return RC_Items.createItem(Material.RECORD_4, name);
+        return RC_Items.clearLore(RC_Items.createItem(Material.RECORD_4, name));
     }
 }
