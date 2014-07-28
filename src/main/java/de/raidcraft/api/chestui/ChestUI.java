@@ -57,7 +57,7 @@ public class ChestUI {
         player.openInventory(inv);
     }
 
-    public void selectItem(Player player, String name, MenuListener listener) {
+    public void selectItem(Player player, String name, PickupListener listener) {
         ItemSelector.getInstance().open(player, name, listener);
     }
 
@@ -151,14 +151,14 @@ public class ChestUI {
 
                 k10.increase();
             }
-        }.setItem(MenuItemAPI.getItemPlus("+10 Bronze")));
+        }.setItem(MenuItemAPI.getItemPlus("+10 Kupfer")));
         menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k1.increase();
             }
-        }.setItem(MenuItemAPI.getItemPlus("+1 Bronze")));
+        }.setItem(MenuItemAPI.getItemPlus("+1 Kupfer")));
 
         // GGG SSS KK
         menu.addMenuItem(g100);
@@ -215,14 +215,14 @@ public class ChestUI {
 
                 k10.decrease();
             }
-        }.setItem(MenuItemAPI.getItemPlus("-10 Kuper")));
+        }.setItem(MenuItemAPI.getItemPlus("-10 Kupfer")));
         menu.addMenuItem(new MenuItemAPI() {
             @Override
             public void trigger(Player player) {
 
                 k1.decrease();
             }
-        }.setItem(MenuItemAPI.getItemPlus("-1 Kuper")));
+        }.setItem(MenuItemAPI.getItemPlus("-1 Kupfer")));
         this.openMenu(player, menu);
     }
 

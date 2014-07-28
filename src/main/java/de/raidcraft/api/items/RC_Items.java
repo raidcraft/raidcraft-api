@@ -26,6 +26,11 @@ public class RC_Items {
         return new ItemStack(160, amount, color.getWoolData());
     }
 
+    public static ItemStack getGlassPane(DyeColor color, String name) {
+
+        return RC_Items.setDisplayName(getGlassPane(color, 1), name);
+    }
+
     public static ItemStack getGlassPane(DyeColor color) {
 
         return getGlassPane(color, 1);

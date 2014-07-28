@@ -27,6 +27,7 @@ public class ItemSelector {
     private Plugin plugin;
 
     private ItemSelector() {
+
         this.plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
     }
 
@@ -38,7 +39,7 @@ public class ItemSelector {
         return INSTANCE;
     }
 
-    public void open(Player player, String name, MenuListener listener) {
+    public void open(Player player, String name, PickupListener listener) {
 
         Inventory inventory = Bukkit.createInventory(player, 9 * 3, name);
         for (int i = 0; i < RC_Inventory.COLUMN_COUNT * 3; i++) {
@@ -57,11 +58,12 @@ public class ItemSelector {
     public class ItemSelectorListsener implements Listener {
 
         private Player player;
-        private MenuListener listener;
+        private PickupListener listener;
         private Inventory inventory;
         private boolean accept = false;
+        int selectedSlot = -1;
 
-        public ItemSelectorListsener(Player player, Inventory inventory, MenuListener listener) {
+        public ItemSelectorListsener(Player player, Inventory inventory, PickupListener listener) {
 
             this.player = player;
             this.inventory = inventory;
@@ -89,10 +91,11 @@ public class ItemSelector {
             }
             // if accept
             if (slot == inventory.getSize() - 1) {
-                if (listener != null) {
-                    listener.accept();
-                }
+                accept = true;
                 player.closeInventory();
+                if (listener != null) {
+                    listener.accept(player, slot);
+                }
                 return;
             }
             // if cancel
@@ -110,7 +113,7 @@ public class ItemSelector {
                 return;
             }
             if (!accept && listener != null) {
-                listener.cancel();
+                listener.cancel(player);
             }
             HandlerList.unregisterAll(this);
         }
