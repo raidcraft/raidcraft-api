@@ -1,6 +1,7 @@
 package de.raidcraft.api.language;
 
 import de.raidcraft.api.BasePlugin;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -43,157 +44,246 @@ public class ConfigTranslationProvider implements TranslationProvider {
     }
 
     @Override
-    public String tr(Language lang, String key, Object... args) {
+    public String tr(Language lang, String path, Object... args) {
 
-        return tr(lang, key, null, args);
+        return tr(lang, path, null, args);
     }
 
     @Override
-    public String tr(Language lang, String key, String def, Object... args) {
+    public String tr(Language lang, String path, String def, Object... args) {
 
         if (def == null) {
-            def = "No translation for language " + lang + " and key: \"" + key + "\"";
+            def = "No translation for language " + lang + " and path: \"" + path + "\"";
         }
 
         if (!loadedConfigs.containsKey(lang)) {
             createConfig(lang);
         }
         TranslationConfig<?> config = loadedConfigs.get(lang);
-        if (!config.isSet(key)) {
-            config.set(key, def);
+        if (!config.isSet(path)) {
+            config.set(path, def);
             config.save();
         }
-        return String.format(config.getString(key), args);
+        return String.format(config.getString(path), args);
     }
 
     @Override
-    public String tr(CommandSender sender, String key, Object... args) {
+    public String tr(CommandSender sender, String path, Object... args) {
 
         if (sender instanceof Player) {
-            return tr((Player) sender, key, args);
+            return tr((Player) sender, path, args);
         }
-        return tr(Language.DEFAULT_LANGUAGE, key, args);
+        return tr(Language.DEFAULT_LANGUAGE, path, args);
     }
 
     @Override
-    public String tr(CommandSender sender, String key, String def, Object... args) {
+    public String tr(CommandSender sender, String path, String def, Object... args) {
 
         if (sender instanceof Player) {
-            return tr((Player) sender, key, def, args);
+            return tr((Player) sender, path, def, args);
         }
-        return tr(Language.DEFAULT_LANGUAGE, key, def, args);
+        return tr(Language.DEFAULT_LANGUAGE, path, def, args);
     }
 
     @Override
-    public String tr(Player player, String key, Object... args) {
+    public String tr(Player player, String path, Object... args) {
 
-        return tr(Language.getLanguage(player), key, args);
+        return tr(Language.getLanguage(player), path, args);
     }
 
     @Override
-    public String tr(Player player, String key, String def, Object... args) {
+    public String tr(Player player, String path, String def, Object... args) {
 
-        return tr(Language.getLanguage(player), key, def, args);
+        return tr(Language.getLanguage(player), path, def, args);
     }
 
     @Override
-    public String var(Language language, String key) {
+    public String var(Language language, String path) {
 
-        return tr(language, key);
+        return tr(language, path);
     }
 
     @Override
-    public String var(Language language, String key, String def) {
+    public String var(Language language, String path, String def) {
 
-        return tr(language, key, def);
+        return tr(language, path, def);
     }
 
     @Override
-    public String var(CommandSender sender, String key) {
+    public String var(CommandSender sender, String path) {
 
-        return tr(sender, key);
+        return tr(sender, path);
     }
 
     @Override
-    public String var(CommandSender sender, String key, String def) {
+    public String var(CommandSender sender, String path, String def) {
 
-        return tr(sender, key, def);
+        return tr(sender, path, def);
     }
 
     @Override
-    public String var(Player player, String key) {
+    public String var(Player player, String path) {
 
-        return tr(player, key);
+        return tr(player, path);
     }
 
     @Override
-    public String var(Player player, String key, String def) {
+    public String var(Player player, String path, String def) {
 
-        return tr(player, key, def);
+        return tr(player, path, def);
     }
 
     @Override
-    public void msg(CommandSender sender, String key, Object... args) {
+    public void msg(CommandSender sender, String path, Object... args) {
 
         if (sender instanceof Player) {
-            msg((Player) sender, key, args);
+            msg((Player) sender, path, args);
             return;
         }
-        sender.sendMessage(tr(sender, key, args));
+        sender.sendMessage(tr(sender, path, args));
     }
 
     @Override
-    public void msg(CommandSender sender, String key, String def, Object... args) {
+    public void msg(CommandSender sender, String path, String def, Object... args) {
 
         if (sender instanceof Player) {
-            msg((Player) sender, key, def, args);
+            msg((Player) sender, path, def, args);
             return;
         }
-        sender.sendMessage(tr(sender, key, def, args));
+        sender.sendMessage(tr(sender, path, def, args));
     }
 
     @Override
-    public void msg(Player player, String key, Object... args) {
+    public void msg(Player player, String path, Object... args) {
 
-        player.sendRawMessage(tr(player, key, args));
+        player.sendRawMessage(tr(player, path, args));
     }
 
     @Override
-    public void msg(Player player, String key, String def, Object... args) {
+    public void msg(Player player, String path, String def, Object... args) {
 
-        player.sendRawMessage(tr(player, key, def, args));
+        player.sendRawMessage(tr(player, path, def, args));
     }
 
     /**
-     * Broadcast a message to all player in their language.
+     * Send a message with the requested String by path in the specified language of the Command Sender.
      *
-     * @param key  The key to the string in the config
+     * @param sender The Command Sender
+     * @param path   The path to the string in the config
+     * @param color  The color to use for this message.
+     * @param args   The Arguments referenced by the specifiers in the String.
+     */
+    @Override
+    public void msg(final CommandSender sender, final String path, final ChatColor color, final Object... args) {
+
+        sender.sendMessage(color + this.tr(sender, path, args));
+    }
+
+    /**
+     * Send a message with the requested String by path in the specified language of the Command Sender.
+     *
+     * @param sender The Command Sender
+     * @param path   The path to the string in the config
+     * @param color  The color to use for this message.
+     * @param def    The default value for the message if the path is not found or is not a String.
+     * @param args   The Arguments referenced by the specifiers in the String.
+     */
+    @Override
+    public void msg(final CommandSender sender, final String path, final ChatColor color, final String def, final Object... args) {
+
+        sender.sendMessage(color + this.tr(sender, path, def, args));
+    }
+
+    /**
+     * Send a message with the requested String by path in the specified language of the Player.
+     *
+     * @param player The Player
+     * @param path   The path to the string in the config
+     * @param color  The color to use for this message.
+     * @param args   The Arguments referenced by the specifiers in the String.
+     */
+    @Override
+    public void msg(final Player player, final String path, final ChatColor color, final Object... args) {
+
+        player.sendRawMessage(color + tr(player, path, args));
+    }
+
+    /**
+     * Send a message with the requested String by path in the specified language of the Player.
+     *
+     * @param player The Player
+     * @param path   The path to the string in the config
+     * @param color  The color to use for this message.
+     * @param def    The default value for the message if the path is not found or is not a String.
+     * @param args   The Arguments referenced by the specifiers in the String.
+     */
+    @Override
+    public void msg(final Player player, final String path, final ChatColor color, final String def, final Object... args) {
+
+        player.sendRawMessage(color + tr(player, path, def, args));
+    }
+
+    /**
+     * Broadcast a message to all players in their specified language.
+     *
+     * @param path The path to the string in the config
      * @param args The Arguments referenced by the specifiers in the String.
      *
      * @return The number of player
      */
     @Override
-    public int broadcastMessage(final String key, final Object... args) {
+    public int broadcastMessage(final String path, final Object... args) {
 
-        return broadcast(key, null, args);
+        return broadcast(path, null, null, args);
     }
 
     /**
-     * Broadcast a message to all player in their language.
+     * Broadcast a message to all players in their specified language.
      *
-     * @param key  The key to the string in the config
-     * @param def  The default value for the message if the key is not found or is not a String.
+     * @param path The path to the string in the config
+     * @param def  The default value for the message if the path is not found or is not a String.
      * @param args The Arguments referenced by the specifiers in the String.
      *
      * @return The number of player
      */
     @Override
-    public int broadcastMessage(final String key, final String def, final Object... args) {
+    public int broadcastMessage(final String path, final String def, final Object... args) {
 
-        return broadcast(key, def, args);
+        return broadcast(path, null, def, args);
     }
 
-    private int broadcast(final String key, final String def, final Object... args) {
+    /**
+     * Broadcast a message to all players in their specified language.
+     *
+     * @param path  The path to the string in the config
+     * @param color The color to use for this message.
+     * @param def   The default value for the message if the path is not found or is not a String.
+     * @param args  The Arguments referenced by the specifiers in the String.
+     *
+     * @return The number of player
+     */
+    @Override
+    public int broadcastMessage(final String path, final ChatColor color, final String def, final Object... args) {
+
+        return broadcastMessage(path, color, def, args);
+    }
+
+    /**
+     * Broadcast a message to all players in their specified language.
+     *
+     * @param path  The path to the string in the config
+     * @param color The color to use for this message.
+     * @param args  The Arguments referenced by the specifiers in the String.
+     *
+     * @return The number of player
+     */
+    @Override
+    public int broadcastMessage(final String path, final ChatColor color, final Object... args) {
+
+        return broadcastMessage(path, color, null, args);
+    }
+
+    private int broadcast(final String path, final ChatColor color, final String def, final Object... args) {
 
         int count = 0;
         final String permission = "bukkit.broadcast.user";
@@ -202,7 +292,11 @@ public class ConfigTranslationProvider implements TranslationProvider {
         for (final Permissible permissible : permissibles) {
             if ((permissible instanceof Player) && permissible.hasPermission(permission)) {
                 final Player player = (Player) permissible;
-                this.msg(player, key, def, args);
+                if (color == null) {
+                    this.msg(player, path, def, args);
+                } else {
+                    this.msg(player, path, color, def, args);
+                }
                 count++;
             }
         }
