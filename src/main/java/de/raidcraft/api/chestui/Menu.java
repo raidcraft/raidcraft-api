@@ -34,9 +34,10 @@ public class Menu {
     private Inventory inventory;
     private MenuItemAPI[][] menus_api;
     private int page;
-
     @Getter
     @Setter
+    private MenuListener listener;
+    @Getter
     private boolean toolbarActive = false;
     private Player player;
 
@@ -50,21 +51,9 @@ public class Menu {
     // toolbar
     private MenuItemAPI toolbar_ok;
     private MenuItemAPI toolbar_cancel;
-    private MenuItemHide toolbar_back = (MenuItemHide) new MenuItemHide() {
-        @Override
-        public void trigger(Player player) {
-
-            lastPage();
-        }
-    }.setVisibleItem(MenuItemAPI.getItemPlus());
-    private MenuItemHide toolbar_forward = (MenuItemHide) new MenuItemHide() {
-        @Override
-        public void trigger(Player player) {
-
-            nextPage();
-        }
-    }.setVisibleItem(MenuItemAPI.getItemMinus());
-    private MenuItemAPI toolbar_site = new MenuItem().setItem(MenuItemAPI.getItemPage());
+    private MenuItemHide toolbar_back;
+    private MenuItemHide toolbar_forward;
+    private MenuItemAPI toolbar_site;
 
 
     public Menu(String name, boolean toolbar) {
@@ -84,6 +73,7 @@ public class Menu {
     }
 
     public void close() {
+
         this.player.closeInventory();
     }
 
@@ -97,7 +87,7 @@ public class Menu {
         // if to big, shrink
         if (availableRows + extraRows > RC_Inventory.MAX_ROWS) {
             // activate toolbar
-            setToolbarActive(true);
+            activateSubMenus();
             extraRows = 1;
 
             availableRows = RC_Inventory.MAX_ROWS - extraRows;
@@ -126,6 +116,46 @@ public class Menu {
         page = 0;
         showPage(0);
         return inventory;
+    }
+
+    public void activateSubMenus() {
+
+        toolbarActive = true;
+        toolbar_back = (MenuItemHide) new MenuItemHide() {
+            @Override
+            public void trigger(Player player) {
+
+                lastPage();
+            }
+        }.setVisibleItem(MenuItemAPI.getItemPlus());
+        toolbar_forward = (MenuItemHide) new MenuItemHide() {
+            @Override
+            public void trigger(Player player) {
+
+                nextPage();
+            }
+        }.setVisibleItem(MenuItemAPI.getItemMinus());
+        toolbar_site = new MenuItem().setItem(MenuItemAPI.getItemPage());
+    }
+
+    public void activeOkCancelButton() {
+        toolbarActive = true;
+        toolbar_ok = new MenuItemAPI() {
+            @Override
+            public void trigger(Player player) {
+                if(listener != null) {
+                    listener.accept();
+                }
+            }
+        }.setItem( MenuItemAPI.getItemOk());
+        toolbar_cancel = new MenuItemAPI() {
+            @Override
+            public void trigger(Player player) {
+                if(listener != null) {
+                    player.closeInventory();
+                }
+            }
+        }.setItem(MenuItemAPI.getItemCancel());
     }
 
     protected InventoryContainer generateInventory(int render_page) {
@@ -211,9 +241,15 @@ public class Menu {
         }
         page = newpage;
         // set back/forward
-        this.toolbar_back.toggle(page <= 0);
-        this.toolbar_forward.toggle(page >= getPageCount() - 1);
-        this.toolbar_site.getItem().setAmount(page + 1);
+        if (this.toolbar_back != null) {
+            this.toolbar_back.toggle(page <= 0);
+        }
+        if (this.toolbar_forward != null) {
+            this.toolbar_forward.toggle(page >= getPageCount() - 1);
+        }
+        if (this.toolbar_site != null) {
+            this.toolbar_site.getItem().setAmount(page + 1);
+        }
 
         ItemStack[] newItems = invs[page].getContent();
         for (int slot = 0; slot < newItems.length; slot++) {

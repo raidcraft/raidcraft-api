@@ -24,7 +24,7 @@ public class MenuItemInteractive extends MenuItemAPI {
      * @param startAmount start amount
      * @param maxAmount   -1 = no max
      */
-    public MenuItemInteractive(ItemStack item_empty, ItemStack item_full,
+    public MenuItemInteractive(ItemStack item_full,ItemStack item_empty,
                                int startAmount, int maxAmount) {
 
         this.item_empty = item_empty;
@@ -73,6 +73,7 @@ public class MenuItemInteractive extends MenuItemAPI {
 
         // if was empty set diret full item
         if (empty) {
+            empty = false;
             item_full.setAmount(new_amount);
             setItem(item_full);
         } else {

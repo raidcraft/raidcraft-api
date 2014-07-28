@@ -2,16 +2,10 @@ package de.raidcraft.api.chestui;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
-import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
-import de.raidcraft.api.chestui.menuitems.MenuItemInteractive;
-import de.raidcraft.api.items.RC_Items;
-import de.raidcraft.util.MathUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -38,6 +32,7 @@ public class ChestUI {
     private ChestUI() {
 
         plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
+        Bukkit.getPluginManager().registerEvents(new RestrictInventoryListener(), plugin);
     }
 
     public static ChestUI getInstance() {
@@ -50,196 +45,40 @@ public class ChestUI {
 
     public void openMenu(Player player, Menu menu) {
 
+        openMenu(player, menu, null);
+    }
+
+    public void openMenu(final Player player, final Menu menu, final MenuListener listener) {
+
+        menu.setListener(listener);
         Inventory inv = menu.generateInvenntory(player);
         cache.put(player, menu);
-        Bukkit.getPluginManager().registerEvents(new RestrictInventory(player),
-                plugin);
         player.openInventory(inv);
     }
 
-    public void selectItem(Player player, String name, PickupListener listener) {
+    public void selectItem(Player player, String name, ItemSelectorListener listener) {
+
         ItemSelector.getInstance().open(player, name, listener);
     }
 
 
     // max support 999 99 99
-    public void openMoneySelection(Player player, String menu_name, double currentMoneyValue) {
+    public void openMoneySelection(Player player, String menu_name, double currentMoneyValue,
+                                   MoneySelectorListener listener) {
 
-        if (currentMoneyValue < 0) {
-            // TODO: warning
-            return;
-        }
-        final int[] values = MathUtil.getDigits(currentMoneyValue, 2);
-
-        Menu menu = new Menu(menu_name);
-        // TODO: parse values
-
-
-        // GGG SS KK
-        final MenuItemInteractive g100 = new MenuItemInteractive(RC_Items.createItem(
-                Material.GOLD_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.YELLOW),
-                1, 9);
-        final MenuItemInteractive g10 = new MenuItemInteractive(RC_Items.createItem(
-                Material.GOLD_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.YELLOW),
-                1, 9);
-        final MenuItemInteractive g1 = new MenuItemInteractive(RC_Items.createItem(
-                Material.GOLD_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.YELLOW),
-                1, 9);
-
-        final MenuItemInteractive s10 = new MenuItemInteractive(RC_Items.createItem(
-                Material.IRON_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.WHITE),
-                1, 9);
-        final MenuItemInteractive s1 = new MenuItemInteractive(RC_Items.createItem(
-                Material.IRON_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.WHITE),
-                1, 9);
-
-        final MenuItemInteractive k10 = new MenuItemInteractive(RC_Items.createItem(
-                Material.NETHER_BRICK_ITEM, ""),
-                RC_Items.getGlassPane(DyeColor.BROWN),
-                1, 9);
-        final MenuItemInteractive k1 = new MenuItemInteractive(RC_Items.createItem(
-                Material.NETHER_BRICK_ITEM, ""),
-                RC_Items.getGlassPane(DyeColor.BROWN),
-                1, 9);
-
-        // +++ ++ ++
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                g100.increase();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("+100 Gold")));
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                g10.increase();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("+10 Gold")));
-        menu.addMenuItem((new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                g1.increase();
-            }
-        }).setItem(MenuItemAPI.getItemPlus("+1 Gold")));
-        menu.empty();
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                s10.increase();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("+10 Silber")));
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                s1.increase();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("+1 Silber")));
-        menu.empty();
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                k10.increase();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("+10 Kupfer")));
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                k1.increase();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("+1 Kupfer")));
-
-        // GGG SSS KK
-        menu.addMenuItem(g100);
-        menu.addMenuItem(g10);
-        menu.addMenuItem(g1);
-        menu.empty();
-        menu.addMenuItem(s10);
-        menu.addMenuItem(s1);
-        menu.empty();
-        menu.addMenuItem(k10);
-        menu.addMenuItem(k1);
-
-        // --- -- --
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                g100.decrease();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("-100 Gold")));
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                g10.decrease();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("-10 Gold")));
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                g1.decrease();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("-1 Gold")));
-        menu.empty();
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                s10.decrease();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("-10 Silber")));
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                s1.decrease();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("-1 Silber")));
-        menu.empty();
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                k10.decrease();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("-10 Kupfer")));
-        menu.addMenuItem(new MenuItemAPI() {
-            @Override
-            public void trigger(Player player) {
-
-                k1.decrease();
-            }
-        }.setItem(MenuItemAPI.getItemPlus("-1 Kupfer")));
-        this.openMenu(player, menu);
+        MoneySelector.getInstance().openMoneySelection(player, menu_name, currentMoneyValue, listener);
     }
 
-    public class RestrictInventory implements Listener {
-
-        private Player player;
-
-        public RestrictInventory(Player player) {
-
-            this.player = player;
-        }
+    public class RestrictInventoryListener implements Listener {
 
         @EventHandler
         public void interact(InventoryClickEvent event) {
 
-            InventoryHolder holder = event.getInventory().getHolder();
-            if (!(holder instanceof Player) || ((Player) holder) != player) {
+            if (!(event.getInventory().getHolder() instanceof Player)) {
+                return;
+            }
+            Player player = (Player) event.getInventory().getHolder();
+            if (cache.get(player) == null) {
                 return;
             }
             event.setCancelled(true);
@@ -248,17 +87,20 @@ public class ChestUI {
                 return;
             }
             // call custom event
-            cache.get(((Player) holder)).triggerMenuItem(event.getSlot(), (Player) holder);
+            cache.get(player).triggerMenuItem(event.getSlot(), player);
         }
 
         @EventHandler
         public void close(InventoryCloseEvent event) {
 
             InventoryHolder holder = event.getInventory().getHolder();
-            if (!(holder instanceof Player) || ((Player) holder) != player) {
+            if (!(holder instanceof Player) || (cache.get((Player) holder)) == null) {
                 return;
             }
-            HandlerList.unregisterAll(this);
+//            Menu menu = cache.remove(event.getInventory().getHolder());
+//            if (menu != null) {
+//                menu.getListener().cancel();
+//            }
         }
     }
 }

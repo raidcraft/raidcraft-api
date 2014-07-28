@@ -39,7 +39,7 @@ public class ItemSelector {
         return INSTANCE;
     }
 
-    public void open(Player player, String name, PickupListener listener) {
+    public void open(Player player, String name, ItemSelectorListener listener) {
 
         Inventory inventory = Bukkit.createInventory(player, 9 * 3, name);
         for (int i = 0; i < RC_Inventory.COLUMN_COUNT * 3; i++) {
@@ -58,12 +58,12 @@ public class ItemSelector {
     public class ItemSelectorListsener implements Listener {
 
         private Player player;
-        private PickupListener listener;
+        private ItemSelectorListener listener;
         private Inventory inventory;
         private boolean accept = false;
         int selectedSlot = -1;
 
-        public ItemSelectorListsener(Player player, Inventory inventory, PickupListener listener) {
+        public ItemSelectorListsener(Player player, Inventory inventory, ItemSelectorListener listener) {
 
             this.player = player;
             this.inventory = inventory;
@@ -112,10 +112,10 @@ public class ItemSelector {
             if (!(holder instanceof Player) || ((Player) holder) != player) {
                 return;
             }
+            HandlerList.unregisterAll(this);
             if (!accept && listener != null) {
                 listener.cancel(player);
             }
-            HandlerList.unregisterAll(this);
         }
     }
 }
