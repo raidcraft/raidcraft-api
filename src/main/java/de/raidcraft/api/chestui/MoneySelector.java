@@ -220,15 +220,16 @@ public class MoneySelector {
 
             @Override
             public void accept() {
-
+                super.accept();
+                player.closeInventory();
                 if (listener == null) {
                     return;
                 }
                 double money = 0;
-                int multiply = 1000000;
+                int multiply = 1;
                 for (int i = 0; i < item_values.length; i++) {
                     money += item_values[i].getAmount() * multiply;
-                    multiply /= 10;
+                    multiply *= 10;
                 }
                 money = money / 100;
                 listener.accept(player, money);

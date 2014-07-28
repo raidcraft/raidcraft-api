@@ -85,7 +85,8 @@ public class ItemSelector {
             int slot = event.getSlot();
             // if player inventory select, rawslot coutns from left top to right bottom of all
             // top and bottom inventory
-            if (event.getRawSlot() > inventory.getSize()) {
+            if (event.getRawSlot() >= inventory.getSize()) {
+                selectedSlot = slot;
                 inventory.setItem(RC_Inventory.COLUMN_COUNT + 4, player.getInventory().getItem(slot));
                 return;
             }
@@ -94,7 +95,7 @@ public class ItemSelector {
                 accept = true;
                 player.closeInventory();
                 if (listener != null) {
-                    listener.accept(player, slot);
+                    listener.accept(player, selectedSlot);
                 }
                 return;
             }

@@ -49,7 +49,8 @@ public class ChestUI {
     }
 
     public void openMenu(final Player player, final Menu menu, final MenuListener listener) {
-
+        // close inventory to prevent cache clear
+        player.closeInventory();
         menu.setListener(listener);
         Inventory inv = menu.generateInvenntory(player);
         cache.put(player, menu);
@@ -97,10 +98,10 @@ public class ChestUI {
             if (!(holder instanceof Player) || (cache.get((Player) holder)) == null) {
                 return;
             }
-//            Menu menu = cache.remove(event.getInventory().getHolder());
-//            if (menu != null) {
-//                menu.getListener().cancel();
-//            }
+            Menu menu = cache.remove(event.getInventory().getHolder());
+            if (menu != null && menu.getListener() != null && !menu.getListener().isAccepted()) {
+                menu.getListener().cancel();
+            }
         }
     }
 }
