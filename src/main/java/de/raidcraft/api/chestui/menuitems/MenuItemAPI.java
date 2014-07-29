@@ -1,6 +1,6 @@
 package de.raidcraft.api.chestui.menuitems;
 
-import de.raidcraft.api.items.RC_Items;
+import de.raidcraft.util.ItemUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.DyeColor;
@@ -29,13 +29,13 @@ public abstract class MenuItemAPI {
 
     public MenuItemAPI setItem(ItemStack item, String name) {
 
-        return setItem(RC_Items.setDisplayName(item, name));
+        return setItem(ItemUtils.setDisplayName(item, name));
 
     }
 
     public MenuItemAPI setItem(Material type, String name, int amount) {
 
-        return setItem(RC_Items.setDisplayName(new ItemStack(type, amount), name));
+        return setItem(ItemUtils.setDisplayName(new ItemStack(type, amount), name));
     }
 
     public MenuItemAPI setItem(Material type, String name) {
@@ -70,7 +70,7 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemPlus(String name) {
 
-        return RC_Items.setDisplayName(RC_Items.getDye(DyeColor.MAGENTA), name);
+        return ItemUtils.setDisplayName(ItemUtils.getDye(DyeColor.MAGENTA), name);
     }
 
 
@@ -81,7 +81,7 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemMinus(String name) {
 
-        return RC_Items.setDisplayName(RC_Items.getDye(DyeColor.LIME), name);
+        return ItemUtils.setDisplayName(ItemUtils.getDye(DyeColor.LIME), name);
     }
 
     public static ItemStack getItemPage() {
@@ -91,7 +91,7 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemPage(String name) {
 
-        return RC_Items.createItem(Material.BOOK, name);
+        return ItemUtils.createItem(Material.BOOK, name);
     }
 
 
@@ -102,7 +102,7 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemOk(String name) {
 
-        return RC_Items.clearLore(RC_Items.createItem(Material.GREEN_RECORD, name));
+        return ItemUtils.clearLore(ItemUtils.createItem(Material.GREEN_RECORD, name));
     }
 
     public static ItemStack getItemCancel() {
@@ -112,6 +112,6 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemCancel(String name) {
 
-        return RC_Items.clearLore(RC_Items.createItem(Material.RECORD_4, name));
+        return ItemUtils.clearLore(ItemUtils.createItem(Material.RECORD_4, name));
     }
 }

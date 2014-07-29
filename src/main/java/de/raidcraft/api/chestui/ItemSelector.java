@@ -4,7 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
 import de.raidcraft.api.inventory.RC_Inventory;
-import de.raidcraft.api.items.RC_Items;
+import de.raidcraft.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Player;
@@ -46,7 +46,7 @@ public class ItemSelector {
             if (i == RC_Inventory.COLUMN_COUNT + 4) {
                 continue;
             }
-            inventory.setItem(i, RC_Items.getGlassPane(DyeColor.RED));
+            inventory.setItem(i, ItemUtils.getGlassPane(DyeColor.RED));
             inventory.setItem(inventory.getSize() - 1, MenuItemAPI.getItemOk());
             inventory.setItem(inventory.getSize() - RC_Inventory.COLUMN_COUNT, MenuItemAPI.getItemCancel());
         }

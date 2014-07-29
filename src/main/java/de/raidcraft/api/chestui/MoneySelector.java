@@ -4,7 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
 import de.raidcraft.api.chestui.menuitems.MenuItemInteractive;
-import de.raidcraft.api.items.RC_Items;
+import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MathUtil;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -49,35 +49,35 @@ public class MoneySelector {
 
 
         // GGG SS KK
-        final MenuItemInteractive g100 = new MenuItemInteractive(RC_Items.createItem(
+        final MenuItemInteractive g100 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.GOLD_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.YELLOW),
+                ItemUtils.getGlassPane(DyeColor.YELLOW),
                 1, 9);
-        final MenuItemInteractive g10 = new MenuItemInteractive(RC_Items.createItem(
+        final MenuItemInteractive g10 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.GOLD_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.YELLOW),
+                ItemUtils.getGlassPane(DyeColor.YELLOW),
                 1, 9);
-        final MenuItemInteractive g1 = new MenuItemInteractive(RC_Items.createItem(
+        final MenuItemInteractive g1 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.GOLD_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.YELLOW),
+                ItemUtils.getGlassPane(DyeColor.YELLOW),
                 1, 9);
 
-        final MenuItemInteractive s10 = new MenuItemInteractive(RC_Items.createItem(
+        final MenuItemInteractive s10 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.IRON_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.WHITE),
+                ItemUtils.getGlassPane(DyeColor.WHITE),
                 1, 9);
-        final MenuItemInteractive s1 = new MenuItemInteractive(RC_Items.createItem(
+        final MenuItemInteractive s1 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.IRON_INGOT, ""),
-                RC_Items.getGlassPane(DyeColor.WHITE),
+                ItemUtils.getGlassPane(DyeColor.WHITE),
                 1, 9);
 
-        final MenuItemInteractive k10 = new MenuItemInteractive(RC_Items.createItem(
+        final MenuItemInteractive k10 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.NETHER_BRICK_ITEM, ""),
-                RC_Items.getGlassPane(DyeColor.BROWN),
+                ItemUtils.getGlassPane(DyeColor.BROWN),
                 1, 9);
-        final MenuItemInteractive k1 = new MenuItemInteractive(RC_Items.createItem(
+        final MenuItemInteractive k1 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.NETHER_BRICK_ITEM, ""),
-                RC_Items.getGlassPane(DyeColor.BROWN),
+                ItemUtils.getGlassPane(DyeColor.BROWN),
                 1, 9);
 
         final MenuItemInteractive[] item_values = new MenuItemInteractive[]{k1, k10, s1, s10, g1, g10, g100};
