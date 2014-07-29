@@ -20,6 +20,13 @@ public class UUIDUtil {
     }
 
     public static UUID convertPlayer(String name) {
+        if(name == null) {
+            try {
+                throw new Exception("null name for uuid convert");
+            } catch (Exception e) {
+               e.printStackTrace();
+            }
+        }
         return Bukkit.getOfflinePlayer(name).getUniqueId();
     }
 }
