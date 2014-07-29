@@ -19,10 +19,10 @@ public class MenuItemInteractive extends MenuItemAPI {
     private boolean empty = true;
 
     /**
-     * @param item_empty  null = nothing, displayed if <pre>amount == 0</pre>
-     * @param item_full   item stack displayed if <pre>amount > 0</pre>
+     * @param item_empty  null = nothing, displayed if amount == 0
+     * @param item_full   item stack displayed if amount &gt; 0
      * @param startAmount start amount
-     * @param maxAmount   <pre>-1 = no max</pre>
+     * @param maxAmount   -1 = no max
      */
     public MenuItemInteractive(ItemStack item_full,ItemStack item_empty,
                                int startAmount, int maxAmount) {
