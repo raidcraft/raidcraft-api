@@ -1,26 +1,27 @@
 package de.raidcraft.api.events;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerEvent;
 
 /**
  * @author Silthus
  */
-public class RCPlayerGainExpEvent extends Event {
+public class RCPlayerGainExpEvent extends PlayerEvent {
 
-    private final Player player;
+    private static final HandlerList HANDLER = new HandlerList();
+
     private final int exp;
 
     public RCPlayerGainExpEvent(Player player, int exp) {
 
-        this.player = player;
+        super(player);
         this.exp = exp;
     }
 
-    public Player getPlayer() {
+    public static HandlerList getHandlerList() {
 
-        return player;
+        return HANDLER;
     }
 
     public int getGainedExp() {
@@ -28,19 +29,9 @@ public class RCPlayerGainExpEvent extends Event {
         return exp;
     }
 
-    /*///////////////////////////////////////////////////
-    //              Needed Bukkit Stuff
-    ///////////////////////////////////////////////////*/
-
-    private static final HandlerList handlers = new HandlerList();
-
+    @Override
     public HandlerList getHandlers() {
 
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-
-        return handlers;
+        return HANDLER;
     }
 }

@@ -9,6 +9,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
  */
 public class PlayerSignInteractEvent extends Event {
 
+    private static final HandlerList HANDLER = new HandlerList();
+
     private PlayerInteractEvent parentEvent;
 
     public PlayerSignInteractEvent(PlayerInteractEvent parentEvent) {
@@ -16,21 +18,19 @@ public class PlayerSignInteractEvent extends Event {
         this.parentEvent = parentEvent;
     }
 
+    public static HandlerList getHandlerList() {
+
+        return HANDLER;
+    }
+
     public PlayerInteractEvent getParentEvent() {
 
         return parentEvent;
     }
 
-    // Bukkit stuff
-    private static final HandlerList handlers = new HandlerList();
-
+    @Override
     public HandlerList getHandlers() {
 
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-
-        return handlers;
+        return HANDLER;
     }
 }

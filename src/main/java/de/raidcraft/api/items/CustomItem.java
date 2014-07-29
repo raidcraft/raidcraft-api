@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public interface CustomItem extends RequirementResolver<Player> {
 
+    public static final int NAMED_CUSTOM_ITEM_ID = 0;
+
     public int getId();
 
     public String getEncodedId();

@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -18,29 +17,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * SINGLETON
+ * Global Class for creating Chest UI's.
+ * Create a Menu and use this class to open it.
+ *
  * @author Dragonfire
  */
 public class ChestUI {
 
     private static ChestUI INSTANCE;
     private Plugin plugin;
-    private Map<Inventory, Menu> cache = new HashMap<>();
+    private Map<Player, Menu> cache = new HashMap<>();
 
     private ChestUI() {
 
         plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-        //        Bukkit.getPluginManager().registerEvents(new Listener() {
-        //            @EventHandler
-        //            public void cmd(PlayerCommandPreprocessEvent event) {
-        //                if (event.getMessage().contains("menu")) {
-        //                    Menu m = new Menu("test menu from me");
-        //                    m.addMenuItem(new MenuItem());
-        //                    Menu m2 = new Menu("blalba");
-        //                    m.addMenuItem(new OpenMenu(m2));
-        //                    ChestUI.getInstance().openMenu(event.getPlayer(), m);
-        //                }
-        //            }
-        //        }, plugin);
+        Bukkit.getPluginManager().registerEvents(new RestrictInventoryListener(), plugin);
     }
 
     public static ChestUI getInstance() {
@@ -53,27 +45,41 @@ public class ChestUI {
 
     public void openMenu(Player player, Menu menu) {
 
+        openMenu(player, menu, null);
+    }
+
+    public void openMenu(final Player player, final Menu menu, final MenuListener listener) {
+        // close inventory to prevent cache clear
+        player.closeInventory();
+        menu.setListener(listener);
         Inventory inv = menu.generateInvenntory(player);
-        cache.put(inv, menu);
-        Bukkit.getPluginManager().registerEvents(new RestrictInventory(player),
-                plugin);
+        cache.put(player, menu);
         player.openInventory(inv);
     }
 
-    public class RestrictInventory implements Listener {
+    public void selectItem(Player player, String name, ItemSelectorListener listener) {
 
-        private Player player;
+        ItemSelector.getInstance().open(player, name, listener);
+    }
 
-        public RestrictInventory(Player player) {
 
-            this.player = player;
-        }
+    // max support 999 99 99
+    public void openMoneySelection(Player player, String menu_name, double currentMoneyValue,
+                                   MoneySelectorListener listener) {
+
+        MoneySelector.getInstance().openMoneySelection(player, menu_name, currentMoneyValue, listener);
+    }
+
+    public class RestrictInventoryListener implements Listener {
 
         @EventHandler
         public void interact(InventoryClickEvent event) {
 
-            InventoryHolder holder = event.getInventory().getHolder();
-            if (!(holder instanceof Player) || ((Player) holder) != player) {
+            if (!(event.getInventory().getHolder() instanceof Player)) {
+                return;
+            }
+            Player player = (Player) event.getInventory().getHolder();
+            if (cache.get(player) == null) {
                 return;
             }
             event.setCancelled(true);
@@ -81,20 +87,21 @@ public class ChestUI {
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
-            ((Player) holder).closeInventory();
             // call custom event
-            cache.get(event.getInventory()).triggerMenuItem(event.getSlot(), (Player) holder);
+            cache.get(player).triggerMenuItem(event.getSlot(), player);
         }
 
         @EventHandler
         public void close(InventoryCloseEvent event) {
 
             InventoryHolder holder = event.getInventory().getHolder();
-            if (!(holder instanceof Player) || ((Player) holder) != player) {
+            if (!(holder instanceof Player) || (cache.get((Player) holder)) == null) {
                 return;
             }
-            HandlerList.unregisterAll(this);
-            ((Player) holder).sendMessage("close inventory");
+            Menu menu = cache.remove(event.getInventory().getHolder());
+            if (menu != null && menu.getListener() != null && !menu.getListener().isAccepted()) {
+                menu.getListener().cancel();
+            }
         }
     }
 }

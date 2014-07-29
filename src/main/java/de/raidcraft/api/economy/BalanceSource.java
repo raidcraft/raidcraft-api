@@ -17,7 +17,8 @@ public enum BalanceSource {
     GUILD("Gilde"),
     TRADE("Handel"),
     REPAIR_ITEM("Reparatur"),
-    TRAVEL("Reise");
+    TRAVEL("Reise"),
+    AUCTION("Auction");
 
     private String friendlyName;
 

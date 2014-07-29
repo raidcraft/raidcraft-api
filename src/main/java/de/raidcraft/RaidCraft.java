@@ -363,12 +363,17 @@ public class RaidCraft implements Listener {
                 // its a stored item object
                 return new ItemStorage("API").getObject(Integer.parseInt(lowercaseId.replace(STORED_OBJECT_IDENTIFIER, "")));
             } else {
-                // its a minecraft item
-                Material item = ItemUtils.getItem(lowercaseId);
-                if (item != null && (item == Material.SKULL_ITEM || item == Material.SKULL)) {
-                    return Skull.getSkull(id);
-                } else if (item != null) {
-                    return new ItemStack(item, 1, ItemUtils.getItemData(lowercaseId));
+                try {
+                    // maybe it is a named custom item
+                    return RaidCraft.getComponent(CustomItemManager.class).getCustomItem(lowercaseId).createNewItem();
+                } catch (CustomItemException e) {
+                    // its a minecraft item
+                    Material item = ItemUtils.getItem(lowercaseId);
+                    if (item != null && (item == Material.SKULL_ITEM || item == Material.SKULL)) {
+                        return Skull.getSkull(id);
+                    } else if (item != null) {
+                        return new ItemStack(item, 1, ItemUtils.getItemData(lowercaseId));
+                    }
                 }
             }
         } catch (StorageException | IndexOutOfBoundsException | NumberFormatException e) {

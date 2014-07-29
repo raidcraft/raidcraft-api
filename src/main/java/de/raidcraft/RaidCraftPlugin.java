@@ -9,6 +9,7 @@ import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
+import de.raidcraft.api.events.PlayerSignInteractEvent;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.TPersistentInventory;
 import de.raidcraft.api.inventory.TPersistentInventorySlot;
@@ -21,9 +22,11 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -52,6 +55,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerEvents(this);
         registerEvents(new RaidCraft());
         registerEvents(new BarAPI(this));
+        registeerChildListener();
         registerCommands(ConfirmCommand.class);
         registerCommands(ActionCommand.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
@@ -65,13 +69,18 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-            @Override
-            public void run() {
+        if (config.preLoginKicker) {
+            Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+                @Override
+                public void run() {
 
-                started = true;
-            }
-        }, TimeUtil.secondsToTicks(config.startDelay));
+                    started = true;
+                    RaidCraft.LOGGER.info("Player login now allowed");
+                }
+            }, TimeUtil.secondsToTicks(config.startDelay));
+        } else {
+            started = true;
+        }
 
         // lets run this last if any mc errors occur
         // TODO: reimplement and find fix
@@ -87,6 +96,19 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         RaidCraft.unregisterComponent(CustomItemManager.class);
     }
 
+    public void registeerChildListener() {
+
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            public void onPlayerInteract(PlayerInteractEvent event) {
+
+                if (event.getClickedBlock() == null || !(event.getClickedBlock() instanceof Sign)) {
+                    return;
+                }
+                RaidCraft.callEvent(new PlayerSignInteractEvent(event));
+            }
+        }, this);
+    }
+
     public static class LocalConfiguration extends ConfigurationBase<RaidCraftPlugin> {
 
         public LocalConfiguration(RaidCraftPlugin plugin) {
@@ -98,6 +120,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public List<String> player_placed_block_worlds = new ArrayList<>();
         @Setting("server-start-delay")
         public double startDelay = 10.0;
+        @Setting("pre-login-kicker")
+        public boolean preLoginKicker = true;
         @Setting("hide-attributes")
         public boolean hideAttributes = true;
         @Setting("action-api.parallel")
@@ -122,7 +146,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }
         PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
         if (!playerPlacedBlocks.containsKey(block.getChunk())) {
-            playerPlacedBlocks.put(block.getChunk(), new HashSet<>());
+            playerPlacedBlocks.put(block.getChunk(), new HashSet<PlayerPlacedBlock>());
         }
         playerPlacedBlocks.get(block.getChunk()).add(playerPlacedBlock);
     }
