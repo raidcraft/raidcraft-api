@@ -8,6 +8,7 @@ package de.raidcraft.api.npc;
  * To change this template use File | Settings | File Templates.
  */
 public class RC_Traits {
+
     public static String CONSERVATION = "rcconversations";
     public static String QUEST = "quest";
     public static String STATION = "station";
