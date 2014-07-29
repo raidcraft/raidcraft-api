@@ -1,5 +1,6 @@
 package de.raidcraft.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 
 import java.util.UUID;
@@ -16,5 +17,9 @@ public class UUIDUtil {
         } else {
             return UUID.randomUUID();
         }
+    }
+
+    public static UUID convertPlayer(String name) {
+        return Bukkit.getOfflinePlayer(name).getUniqueId();
     }
 }
