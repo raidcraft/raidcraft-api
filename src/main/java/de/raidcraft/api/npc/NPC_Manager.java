@@ -114,8 +114,6 @@ public class NPC_Manager implements Listener {
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
-     *
-     * @see this.createNonPersistNpc
      */
     // TODO: optimize save
     public NPC createPersistNpc(String name, String host) {
@@ -138,8 +136,6 @@ public class NPC_Manager implements Listener {
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
-     *
-     * @see this.spawnNonPersistNpc
      */
     // TODO: optimize save
     public NPC spawnPersistNpc(Location loc, String name, String host) {
@@ -157,8 +153,6 @@ public class NPC_Manager implements Listener {
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
-     *
-     * @see this.createPersistNpc
      */
     public NPC createNonPersistNpc(String name, String host) {
 
@@ -174,8 +168,6 @@ public class NPC_Manager implements Listener {
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
-     *
-     * @see this.spawnPersistNpc
      */
     public NPC spawnNonPersistNpc(Location loc, String name, String host) {
 
@@ -201,8 +193,6 @@ public class NPC_Manager implements Listener {
      * ATTENTION: load NPCs after you register all customs traits
      *
      * @param host name of the holder of the npcs, typically the plugin name
-     *
-     * @see this.registerTrait
      */
     public void loadNPCs(String host) {
 
