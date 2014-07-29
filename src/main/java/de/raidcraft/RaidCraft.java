@@ -1,11 +1,19 @@
 package de.raidcraft;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.SqlUpdate;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
+import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.action.ActionFactory;
+import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.api.action.requirement.RequirementFactory;
+import de.raidcraft.api.action.trigger.Trigger;
+import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.bukkit.BukkitPlayer;
+import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.api.conversations.ConversationProvider;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
@@ -26,6 +34,7 @@ import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
 import de.raidcraft.api.trades.TradeProvider;
+import de.raidcraft.model.TActionApi;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MetaDataKey;
@@ -444,4 +453,76 @@ public class RaidCraft implements Listener {
 
         return RaidCraft.getComponent(InventoryManager.class).createInventory(title, size);
     }
+
+    public static void trackActionApi() {
+        // delete all actionapi entries
+        SqlUpdate deleteCommands = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class)
+                .getDatabase().createSqlUpdate("DELETE FROM rc_actionapi");
+        deleteCommands.execute();
+
+        trackActions();
+        trackRequrements();
+        trackTriggers();
+    }
+
+    public static void trackActions() {
+
+        Map<String, Action<?>> actions = ActionFactory.getInstance().getActions();
+        Action<?> action = null;
+        for (String actionKey : actions.keySet()) {
+            action = actions.get(actionKey);
+            if (action == null) {
+                continue;
+            }
+            TActionApi actionApi = new TActionApi();
+            actionApi.setAction_type("action");
+            actionApi.setName(actionKey);
+            ConfigGenerator.Information information = action.getInformation(actionKey);
+            if (information != null) {
+                actionApi.setDescription(information.desc());
+            }
+            RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase().save(actionApi);
+        }
+    }
+
+    public static void trackRequrements() {
+
+        Map<String, Requirement<?>> requires = RequirementFactory.getInstance().getRequirements();
+        Requirement<?> require = null;
+        for (String actionKey : requires.keySet()) {
+            require = requires.get(actionKey);
+            if (require == null) {
+                continue;
+            }
+            TActionApi actionApi = new TActionApi();
+            actionApi.setAction_type("requirement");
+            actionApi.setName(actionKey);
+            ConfigGenerator.Information information = require.getInformation(actionKey);
+            if (information != null) {
+                actionApi.setDescription(information.desc());
+            }
+            RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase().save(actionApi);
+        }
+    }
+
+    public static void trackTriggers() {
+
+        Map<String, Trigger> triggers = TriggerManager.getInstance().getTrigger();
+        Trigger trigger = null;
+        for (String triggerKey : triggers.keySet()) {
+            trigger = triggers.get(triggerKey);
+            if (trigger == null) {
+                continue;
+            }
+            TActionApi actionApi = new TActionApi();
+            actionApi.setAction_type("trigger");
+            actionApi.setName(triggerKey);
+            ConfigGenerator.Information information = trigger.getInformation(triggerKey);
+            if (information != null) {
+                actionApi.setDescription(information.desc());
+            }
+            RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase().save(actionApi);
+        }
+    }
+
 }
