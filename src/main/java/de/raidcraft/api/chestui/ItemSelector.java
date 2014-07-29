@@ -3,7 +3,7 @@ package de.raidcraft.api.chestui;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
-import de.raidcraft.api.inventory.RC_Inventory;
+import de.raidcraft.util.InventoryUtils;
 import de.raidcraft.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -42,13 +42,13 @@ public class ItemSelector {
     public void open(Player player, String name, ItemSelectorListener listener) {
 
         Inventory inventory = Bukkit.createInventory(player, 9 * 3, name);
-        for (int i = 0; i < RC_Inventory.COLUMN_COUNT * 3; i++) {
-            if (i == RC_Inventory.COLUMN_COUNT + 4) {
+        for (int i = 0; i < InventoryUtils.COLUMN_COUNT * 3; i++) {
+            if (i == InventoryUtils.COLUMN_COUNT + 4) {
                 continue;
             }
             inventory.setItem(i, ItemUtils.getGlassPane(DyeColor.RED));
             inventory.setItem(inventory.getSize() - 1, MenuItemAPI.getItemOk());
-            inventory.setItem(inventory.getSize() - RC_Inventory.COLUMN_COUNT, MenuItemAPI.getItemCancel());
+            inventory.setItem(inventory.getSize() - InventoryUtils.COLUMN_COUNT, MenuItemAPI.getItemCancel());
         }
         player.openInventory(inventory);
         Bukkit.getPluginManager().registerEvents(new ItemSelectorListsener(player, inventory, listener), plugin);
@@ -87,7 +87,7 @@ public class ItemSelector {
             // top and bottom inventory
             if (event.getRawSlot() >= inventory.getSize()) {
                 selectedSlot = slot;
-                inventory.setItem(RC_Inventory.COLUMN_COUNT + 4, player.getInventory().getItem(slot));
+                inventory.setItem(InventoryUtils.COLUMN_COUNT + 4, player.getInventory().getItem(slot));
                 return;
             }
             // if accept
@@ -100,7 +100,7 @@ public class ItemSelector {
                 return;
             }
             // if cancel
-            if (slot == inventory.getSize() - RC_Inventory.COLUMN_COUNT) {
+            if (slot == inventory.getSize() - InventoryUtils.COLUMN_COUNT) {
                 player.closeInventory();
                 return;
             }
