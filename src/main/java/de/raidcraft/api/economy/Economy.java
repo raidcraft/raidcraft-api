@@ -21,7 +21,7 @@ public interface Economy {
 
     public double parseCurrencyInput(String input);
 
-    public boolean hasEnough(String accountName, AccountType type, double amount);
+    public boolean hasEnough(AccountType type, String accountName, double amount);
 
     public void substract(AccountType type, String accountName, double amount);
 
