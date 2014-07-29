@@ -34,6 +34,7 @@ public class NPC_Manager implements Listener {
     private Map<String, NPCRegistry> register = new HashMap<>();
     private Map<String, NPCDataStore> stores = new HashMap<>();
     private Map<String, Storage> saves = new HashMap<>();
+    private NPCRegistry nonPersistentRegistry = CitizensAPI.createAnonymousNPCRegistry(null);
 
     // Singleton
     private NPC_Manager() {
@@ -101,6 +102,18 @@ public class NPC_Manager implements Listener {
         return registry;
     }
 
+    /**
+     * Initialize the data structure of the NPC. This method must be called ONE time,
+     * e.g. if a admin create a new DragonStation.
+     * WARNING: Do not call this command on each server start/reload
+     *
+     * @param name npc name
+     * @param host sttore file, e.g. a pluginname, componentname
+     *
+     * @return
+     *
+     * @see this.createNonPersistNpc
+     */
     // TODO: optimize save
     public NPC createPersistNpc(String name, String host) {
 
@@ -112,6 +125,19 @@ public class NPC_Manager implements Listener {
         return npc;
     }
 
+
+    /**
+     * Initialize the data structure of the NPC and spawn it. This method must be called ONE time,
+     * e.g. if a admin create a new DragonStation.
+     * WARNING: Do not call this command on each server start/reload
+     *
+     * @param name npc name
+     * @param host sttore file, e.g. a pluginname, componentname
+     *
+     * @return
+     *
+     * @see this.spawnNonPersistNpc
+     */
     // TODO: optimize save
     public NPC spawnPersistNpc(Location loc, String name, String host) {
 
@@ -120,6 +146,42 @@ public class NPC_Manager implements Listener {
         store(host);
         return npc;
     }
+
+    /**
+     * Warning: NPC will not be saved on disk and is lost on reload/restart
+     *
+     * @param name npc name
+     * @param host sttore file, e.g. a pluginname, componentname
+     *
+     * @return
+     *
+     * @see this.createPersistNpc
+     */
+    public NPC createNonPersistNpc(String name, String host) {
+
+        NPC npc = nonPersistentRegistry.createNPC(EntityType.PLAYER, name);
+        store(host);
+        return npc;
+    }
+
+    /**
+     * Warning: NPC will not be saved on disk and is lost on reload/restart
+     *
+     * @param name name of the npc
+     * @param host sttore file, e.g. a pluginname, componentname
+     *
+     * @return
+     *
+     * @see this.spawnPersistNpc
+     */
+    public NPC spawnNonPersistNpc(Location loc, String name, String host) {
+
+        NPC npc = this.createPersistNpc(name, host);
+        npc.spawn(loc);
+        store(host);
+        return npc;
+    }
+
 
     /**
      * You must register custom Traits over this method BEFORE you load the custom npc's
