@@ -19,6 +19,7 @@ import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
+import de.raidcraft.model.TActionApi;
 import de.raidcraft.model.TCommand;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
@@ -89,6 +90,15 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             started = true;
         }
 
+        // sync all ActionAPI stuff into Database
+        Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+            @Override
+            public void run() {
+
+                RaidCraft.trackActionApi();
+            }
+        }, TimeUtil.secondsToTicks(config.actoionapiSyncDelay));
+
         // lets run this last if any mc errors occur
         // TODO: reimplement and find fix
         // if (config.hideAttributes) attributeHider = new AttributeHider(this);
@@ -142,6 +152,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public double startDelay = 10.0;
         @Setting("pre-login-kicker")
         public boolean preLoginKicker = true;
+        @Setting("actionapi-to-db-delay")
+        public int actoionapiSyncDelay = 10;
         @Setting("hide-attributes")
         public boolean hideAttributes = true;
         @Setting("action-api.parallel")
@@ -157,6 +169,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TPersistentInventory.class);
         classes.add(TPersistentInventorySlot.class);
         classes.add(TCommand.class);
+        classes.add(TActionApi.class);
         return classes;
     }
 
