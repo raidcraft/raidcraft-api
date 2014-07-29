@@ -26,7 +26,7 @@ import java.util.UUID;
 
 /**
  * Handle all NPC's
- * User: IDragonfire
+ * @author Dragonfire
  */
 public class NPC_Manager implements Listener {
 

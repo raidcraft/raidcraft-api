@@ -10,6 +10,7 @@ import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
 import com.sk89q.minecraft.util.commands.SimpleInjector;
 import com.sk89q.minecraft.util.commands.WrappedCommandException;
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
 import de.raidcraft.api.database.Database;
@@ -201,8 +202,19 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         database.registerTable(clazz, table);
     }
 
+    @Deprecated
     public final void registerCommands(Class<?> clazz) {
 
+        registerCommands(clazz, null);
+    }
+
+    public final void registerCommands(Class<?> clazz, String host) {
+
+        if (host == null) {
+            RaidCraft.LOGGER.warning("Please use newregisterCommands method for " + clazz.getName());
+            host = clazz.getName();
+        }
+        RaidCraft.getComponent(RaidCraftPlugin.class).trackCommand(clazz, host, null);
         commandRegistration.register(clazz);
     }
 
