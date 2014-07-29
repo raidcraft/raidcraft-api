@@ -10,6 +10,7 @@ import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.action.trigger.global.PlayerTrigger;
+import de.raidcraft.api.economy.AccountType;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.util.LocationUtil;
@@ -45,7 +46,7 @@ public final class ActionAPI {
 
                 if (!config.isSet("amount")) return;
                 Economy economy = RaidCraft.getEconomy();
-                economy.add(player.getName(), economy.parseCurrencyInput(config.getString("amount")));
+                economy.add(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(config.getString("amount")));
             }
         }),
         KILL_PLAYER("player.kill", (Player player, ConfigurationSection config) -> player.setHealth(0.0)),
