@@ -1,6 +1,11 @@
 package de.raidcraft.api.inventory;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Set;
 

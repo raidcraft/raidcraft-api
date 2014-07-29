@@ -7,6 +7,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.config.ConfigurationBase;
+import de.raidcraft.api.quests.util.QuestUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,7 +38,6 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         this.config = config;
     }
 
-    @Override
     public ConfigurationSection getConfig() {
 
         return this.config;
@@ -62,7 +62,37 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         }
     }
 
-    @Override
+    public boolean isChecked(T entity) {
+
+        Object checked = getMapping(entity, CHECKED_KEY);
+        return checked != null && (boolean) checked;
+    }
+
+    public boolean isPersistant() {
+
+        return getConfig().getBoolean("persistant", false);
+    }
+
+    public boolean isOrdered() {
+
+        return getOrder() > 0;
+    }
+
+    public int getOrder() {
+
+        return getConfig().getInt("order", 0);
+    }
+
+    public boolean isCounting() {
+
+        return getRequiredCount() > 1;
+    }
+
+    public int getRequiredCount() {
+
+        return getConfig().getInt("count", 0);
+    }
+
     public int getCount(T entity) {
 
         Object count = getMapping(entity, COUNT_KEY);
@@ -70,20 +100,39 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         return (int) count;
     }
 
-    public boolean isChecked(T entity) {
+    public boolean hasCountText() {
 
-        Object checked = getMapping(entity, CHECKED_KEY);
-        return checked != null && (boolean) checked;
+        return getConfig().isSet("count-text");
+    }
+
+    public String getCountText(T entity) {
+
+        String string = getConfig().getString("count-text", "%current%/%count%");
+        string = QuestUtil.replaceCount(getPath(), string, getCount(entity), getRequiredCount());
+        return string;
+    }
+
+    public boolean isOptional() {
+
+        return getConfig().getBoolean("optional", false);
     }
 
     @Override
-    public boolean test(T entity) {
+    public boolean test(T type) {
+
+        ConfigurationSection args = getConfig().getConfigurationSection("args");
+        if (args == null) args = getConfig().createSection("args");
+        return test(type, args);
+    }
+
+    @Override
+    public boolean test(T entity, ConfigurationSection config) {
 
         boolean successfullyChecked = isChecked(entity);
 
         if (isPersistant() && successfullyChecked) return true;
 
-        successfullyChecked = requirement.test(entity);
+        successfullyChecked = requirement.test(entity, config);
 
         if (successfullyChecked) setMapping(entity, COUNT_KEY, getCount(entity) + 1);
 
@@ -101,7 +150,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     @Override
     public int compareTo(Requirement<T> other) {
 
-        return Integer.compare(getOrder(), other.getOrder());
+        return Integer.compare(getOrder(), (other instanceof RequirementConfigWrapper ? ((RequirementConfigWrapper) other).getOrder() : 0));
     }
 
     @Override

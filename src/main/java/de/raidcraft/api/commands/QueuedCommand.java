@@ -10,8 +10,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
-* @author Silthus
-*/
+ * @author Silthus
+ */
 public class QueuedCommand {
 
     private final CommandSender sender;
@@ -28,7 +28,7 @@ public class QueuedCommand {
             argsClasses[i] = args[i].getClass();
         }
         for (Method method : object.getClass().getDeclaredMethods()) {
-            if(method.getName().equalsIgnoreCase(methodName)) {
+            if (method.getName().equalsIgnoreCase(methodName)) {
                 boolean match = true;
                 for (int i = 0; i < argsClasses.length; i++) {
                     if (method.getParameterTypes()[i].isPrimitive()) {
@@ -51,8 +51,10 @@ public class QueuedCommand {
                 }
             }
         }
-        if (this.method == null) throw new NoSuchMethodException(
-                "No method signature found for " + methodName + " in " + object.getClass().getCanonicalName());
+        if (this.method == null) {
+            throw new NoSuchMethodException(
+                    "No method signature found for " + methodName + " in " + object.getClass().getCanonicalName());
+        }
         this.args = args;
         RaidCraft.getComponent(RaidCraftPlugin.class).queueCommand(this);
         if (!(this instanceof QueuedCaptchaCommand)) {
@@ -72,7 +74,7 @@ public class QueuedCommand {
             method.invoke(object, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
             sender.sendMessage(ChatColor.RED + e.getCause().getMessage());
-//            e.printStackTrace();
+            //            e.printStackTrace();
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + e.getMessage());
         }

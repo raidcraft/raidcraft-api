@@ -9,8 +9,8 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 
 /**
-* @author Silthus
-*/
+ * @author Silthus
+ */
 @Entity
 @Table(name = "rc_player_placed_blocks")
 public class PlayerPlacedBlock implements Bean {

@@ -30,7 +30,7 @@ public class CaseInsensitiveHashSet extends HashSet<String> {
     }
 
     @Override
-    public boolean add(String  e) {
+    public boolean add(String e) {
 
         return super.add(e.toLowerCase());
     }

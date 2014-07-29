@@ -129,7 +129,7 @@ public class RaidCraft implements Listener {
             return safeGetPlayer(name);
         } catch (UnknownPlayerException e) {
             LOGGER.severe(e.getMessage());
-//            e.printStackTrace();
+            //            e.printStackTrace();
         }
         return null;
     }
@@ -162,7 +162,8 @@ public class RaidCraft implements Listener {
      * Gets the registered table of the given table class.
      *
      * @param tClass of the table
-     * @param <T> table object
+     * @param <T>    table object
+     *
      * @return table
      */
     public static <T extends Table> T getTable(Class<T> tClass) {
@@ -345,7 +346,9 @@ public class RaidCraft implements Listener {
      * Even minecraft Items are possible.
      *
      * @param id of the item
+     *
      * @return created itemstack out of the id
+     *
      * @throws CustomItemException is thrown if nothing matched
      */
     public static ItemStack getItem(String id) throws CustomItemException {
@@ -360,12 +363,17 @@ public class RaidCraft implements Listener {
                 // its a stored item object
                 return new ItemStorage("API").getObject(Integer.parseInt(lowercaseId.replace(STORED_OBJECT_IDENTIFIER, "")));
             } else {
-                // its a minecraft item
-                Material item = ItemUtils.getItem(lowercaseId);
-                if (item != null && (item == Material.SKULL_ITEM || item == Material.SKULL)) {
-                    return Skull.getSkull(id);
-                } else if (item != null) {
-                    return new ItemStack(item, 1, ItemUtils.getItemData(lowercaseId));
+                try {
+                    // maybe it is a named custom item
+                    return RaidCraft.getComponent(CustomItemManager.class).getCustomItem(lowercaseId).createNewItem();
+                } catch (CustomItemException e) {
+                    // its a minecraft item
+                    Material item = ItemUtils.getItem(lowercaseId);
+                    if (item != null && (item == Material.SKULL_ITEM || item == Material.SKULL)) {
+                        return Skull.getSkull(id);
+                    } else if (item != null) {
+                        return new ItemStack(item, 1, ItemUtils.getItemData(lowercaseId));
+                    }
                 }
             }
         } catch (StorageException | IndexOutOfBoundsException | NumberFormatException e) {

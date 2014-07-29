@@ -18,11 +18,11 @@ import org.bukkit.entity.Player;
 public class SetBlockAction implements Action<Player> {
 
     @Override
-    public void accept(Player player) {
+    public void accept(Player player, ConfigurationSection config) {
 
-        Location location = new Location(player.getWorld(), getConfig().getInt("x"), getConfig().getInt("y"), getConfig().getInt("z"));
-        Material material = Material.getMaterial(getConfig().getString("block", "minecraft:air"));
-        if(material == null) {
+        Location location = new Location(player.getWorld(), config.getInt("x"), config.getInt("y"), config.getInt("z"));
+        Material material = Material.getMaterial(config.getString("block", "minecraft:air"));
+        if (material == null) {
             return;
         }
         location.getBlock().setType(material);

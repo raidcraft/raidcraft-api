@@ -30,10 +30,10 @@ public class ConfirmCommand {
         }
         QueuedCommand command = plugin.getQueuedCommands().get(sender.getName());
         if (command instanceof QueuedCaptchaCommand) {
-            if(args.argsLength() < 1) {
+            if (args.argsLength() < 1) {
                 throw new CommandException("Captcha vergessen! /rcconfirm <Captcha>");
             }
-            if(!((QueuedCaptchaCommand) command).getCaptcha().equals(args.getString(0))) {
+            if (!((QueuedCaptchaCommand) command).getCaptcha().equals(args.getString(0))) {
                 throw new CommandException("Falscher Captcha Code! Bitte versuche es erneut.");
             }
         }

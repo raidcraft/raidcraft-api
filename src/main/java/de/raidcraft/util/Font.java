@@ -26,7 +26,7 @@ public class Font {
 
     public final static int[] WIDTHS;
 
-    static  {
+    static {
         WIDTHS = new int[0xFFFF];
 
         try {

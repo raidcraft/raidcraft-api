@@ -8,7 +8,6 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.SimpleConfiguration;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
-import lombok.NonNull;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -37,7 +36,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     private static final Map<String, ConfigGenerator.Information> GENERATOR_INFORMATIONS = new CaseInsensitiveMap<>();
     private static final Map<UUID, ConfigBuilder> CURRENT_BUILDERS = new HashMap<>();
 
-    public static void registerConfigGenerator(@NonNull ConfigGenerator generator) {
+    public static void registerConfigGenerator(ConfigGenerator generator) {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -57,7 +56,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
         }
     }
 
-    public static void registerConfigGenerator(@NonNull Object builder) {
+    public static void registerConfigGenerator(Object builder) {
 
         if (builder instanceof ConfigGenerator) {
             registerConfigGenerator((ConfigGenerator) builder);
@@ -65,7 +64,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     }
 
     @Nullable
-    public static Method getConfigGeneratorMethod(@NonNull ConfigGenerator generator, @NonNull String name) {
+    public static Method getConfigGeneratorMethod(ConfigGenerator generator, String name) {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -128,8 +127,9 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     public static void checkArguments(CommandSender sender, CommandContext args, ConfigGenerator generator, String name) throws ConfigBuilderException {
 
         ConfigGenerator.Information information = generator.getInformation(name);
-        if (information == null)
+        if (information == null) {
             throw new ConfigBuilderException("Generator " + generator.getClass().getCanonicalName() + " has no information!");
+        }
         if (information.min() > 0 && args.argsLength() < information.min()) {
             generator.printHelp(sender, name);
             throw new ConfigBuilderException("Not enough arguments!");
@@ -197,7 +197,9 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
 
     /**
      * Creates a new config file, stores and returns the old one.
+     *
      * @param name to create
+     *
      * @return old config file
      */
     public ConfigurationBase<T> createConfig(String name) {
@@ -215,8 +217,10 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     /**
      * Creates new config file and populates it with the given content.
      * Stores and returns the old config.
-     * @param name to create
+     *
+     * @param name    to create
      * @param content to store
+     *
      * @return old config file
      */
     public ConfigurationBase<T> createConfig(String name, ConfigurationSection content) {
@@ -231,11 +235,8 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
         if (isLocked()) {
             throw new ConfigBuilderException("The current config is finished. Please create a new one first: /rccb create <config_name>.yml");
         }
-        if (!getCurrentPath().equals(path)) {
-            setCurrentPath(path);
-        }
         ConfigGenerator.Information information = generator.getInformation(name);
-        if (information.multiSection()) {
+        if (information != null && information.multiSection()) {
             getMultiSectionCount().put(getCurrentPath(), getMultiSectionCount(path) + 1);
             getCurrentSection().set(getMultiSectionCount(getCurrentPath()) + "", section);
         } else {

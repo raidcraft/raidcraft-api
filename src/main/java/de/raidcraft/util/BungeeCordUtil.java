@@ -4,7 +4,11 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import org.bukkit.entity.Player;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * @author Philip
@@ -22,10 +26,10 @@ public class BungeeCordUtil {
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
             DataOutputStream msgData = new DataOutputStream(bao);
             msgData.writeUTF("Forward");
-            msgData.writeUTF(targetServer);	// Server
-            msgData.writeUTF(channel);			// Channel
-            msgData.writeShort(message.length()); 	// Data Length
-            msgData.writeBytes(message); 			// Data
+            msgData.writeUTF(targetServer);    // Server
+            msgData.writeUTF(channel);            // Channel
+            msgData.writeShort(message.length());    // Data Length
+            msgData.writeBytes(message);            // Data
             player.sendPluginMessage(RaidCraft.getComponent(RaidCraftPlugin.class), "BungeeCord", bao.toByteArray());
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -42,7 +46,7 @@ public class BungeeCordUtil {
             msgData.writeUTF(targetServer);
             player.sendPluginMessage(RaidCraft.getComponent(RaidCraftPlugin.class), "BungeeCord", bao.toByteArray());
             bao.reset();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
             return;
         }
@@ -57,7 +61,7 @@ public class BungeeCordUtil {
             msgData.writeUTF("ALL");
             player.sendPluginMessage(RaidCraft.getComponent(RaidCraftPlugin.class), "BungeeCord", bao.toByteArray());
             bao.reset();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
             return;
         }
@@ -78,7 +82,7 @@ public class BungeeCordUtil {
             return null;
         }
 
-        if(!isChannel.equalsIgnoreCase(channel)) {
+        if (!isChannel.equalsIgnoreCase(channel)) {
             return null;
         }
 

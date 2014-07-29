@@ -293,10 +293,10 @@ public class RaidCraftDatabase {
             BufferedReader scriptReader = new BufferedReader(new StringReader(oldScript));
 
             //Create an array to store all the lines
-            List<String> scriptLines = new ArrayList<String>();
+            List<String> scriptLines = new ArrayList<>();
 
             //Create some additional variables for keeping track of tables
-            HashMap<String, Integer> foundTables = new HashMap<String, Integer>();
+            HashMap<String, Integer> foundTables = new HashMap<>();
             String currentTable = null;
             int tableOffset = 0;
 

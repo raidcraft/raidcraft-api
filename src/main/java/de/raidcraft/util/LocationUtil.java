@@ -45,11 +45,12 @@ public final class LocationUtil {
         for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
             for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
                 int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
-                for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities())
+                for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
                     if (e.getLocation().getWorld().equals(l.getWorld())
                             && e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l.getBlock()) {
                         radiusEntities.add(e);
                     }
+                }
             }
         }
         return radiusEntities.toArray(new Entity[radiusEntities.size()]);
@@ -87,13 +88,15 @@ public final class LocationUtil {
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
         int y = Math.abs(l1.getBlockY() - l2.getBlockY());
         int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
-        if (x >= y && x >= z)
+        if (x >= y && x >= z) {
             return x;
-        else if (y >= x && y >= z)
+        } else if (y >= x && y >= z) {
             return y;
-        else if (z >= x && z >= y) return z;
-        else
+        } else if (z >= x && z >= y) {
+            return z;
+        } else {
             return x;
+        }
     }
 
     /**
@@ -295,10 +298,11 @@ public final class LocationUtil {
 
         List<Player> players = new ArrayList<>();
         for (Chunk chunk : getSurroundingChunks(block, radius)) {
-            for (Entity e : chunk.getEntities())
+            for (Entity e : chunk.getEntities()) {
                 if (e instanceof Player) {
                     players.add((Player) e);
                 }
+            }
         }
         return players;
     }
@@ -316,7 +320,7 @@ public final class LocationUtil {
     public static Vector getRevertedViewDirection(Location location) {
 
         double pitch = ((90 - location.getPitch()) * Math.PI) / 180;
-        double yaw  = ((location.getYaw() + 90 + 180) * Math.PI) / 180;
+        double yaw = ((location.getYaw() + 90 + 180) * Math.PI) / 180;
 
         double x = Math.sin(pitch) * Math.cos(yaw);
         double y = Math.sin(pitch) * Math.sin(yaw);

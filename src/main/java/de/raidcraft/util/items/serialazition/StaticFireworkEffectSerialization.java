@@ -17,7 +17,6 @@ import java.util.List;
 public class StaticFireworkEffectSerialization {
 
 
-
     /*
      * Firework conversation methods
      *
@@ -26,18 +25,18 @@ public class StaticFireworkEffectSerialization {
      */
     public static String serialize(FireworkMeta fireworkMeta) {
 
-        if(fireworkMeta.getEffects().size() == 0) return "";
-        
+        if (fireworkMeta.getEffects().size() == 0) return "";
+
         String serialized = fireworkMeta.getPower() + "=";
         for (FireworkEffect effect : fireworkMeta.getEffects()) {
             serialized += effect.getType().name() + ":";
             serialized += ((effect.hasFlicker()) ? "1" : "0") + ":";
             serialized += ((effect.hasTrail()) ? "1" : "0") + ":";
-            for(Color color : effect.getColors()) {
+            for (Color color : effect.getColors()) {
                 serialized += color.asRGB() + ",";
             }
             serialized += ":";
-            for(Color color : effect.getFadeColors()) {
+            for (Color color : effect.getFadeColors()) {
                 serialized += color.asRGB() + ",";
             }
             serialized += "|";
@@ -46,33 +45,34 @@ public class StaticFireworkEffectSerialization {
     }
 
     public static FireworkMeta deserialize(String serializedData) {
+
         try {
-            FireworkMeta fireworkMeta = (FireworkMeta)(new ItemStack(Material.FIREWORK)).getItemMeta();
+            FireworkMeta fireworkMeta = (FireworkMeta) (new ItemStack(Material.FIREWORK)).getItemMeta();
             String[] powerPair = serializedData.split("=");
 
             fireworkMeta.setPower(Integer.valueOf(powerPair[0]));
 
             String[] effects = powerPair[1].split("\\|");
 
-            for(String effect : effects) {
+            for (String effect : effects) {
                 String[] effectParameter = effect.split(":");
-                if(effectParameter.length < 4) continue;
+                if (effectParameter.length < 4) continue;
 
-                boolean flicker = (effectParameter[1] == "1") ? true : false;
-                boolean trail = (effectParameter[2] == "1") ? true : false;
+                boolean flicker = (effectParameter[1].equals("1"));
+                boolean trail = (effectParameter[2].equals("1"));
 
                 String[] colorString = effectParameter[3].split(",");
                 List<Color> colors = new ArrayList<>();
-                for(String color : colorString) {
-                    if(color.length() <= 0) continue;
+                for (String color : colorString) {
+                    if (color.length() <= 0) continue;
                     colors.add(Color.fromRGB(Integer.valueOf(color)));
                 }
 
                 List<Color> fadeColors = new ArrayList<>();
-                if(effectParameter.length > 4) {
+                if (effectParameter.length > 4) {
                     String[] fadeColorString = effectParameter[4].split(",");
-                    for(String color : fadeColorString) {
-                        if(color.length() <= 0) continue;
+                    for (String color : fadeColorString) {
+                        if (color.length() <= 0) continue;
                         fadeColors.add(Color.fromRGB(Integer.valueOf(color)));
                     }
                 }
@@ -88,8 +88,7 @@ public class StaticFireworkEffectSerialization {
                 fireworkMeta.addEffect(fireworkEffect);
                 return fireworkMeta;
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             RaidCraft.LOGGER.warning("Can't deserialize FireworkEffect ItemData");
             e.printStackTrace();
         }

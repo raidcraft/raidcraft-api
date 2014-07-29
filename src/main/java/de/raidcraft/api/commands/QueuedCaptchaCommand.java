@@ -24,9 +24,10 @@ public class QueuedCaptchaCommand extends QueuedCommand {
     }
 
     /**
-     *  Generate a CAPTCHA String consisting of random lowercase and uppercase letters, and numbers.
+     * Generate a CAPTCHA String consisting of random lowercase and uppercase letters, and numbers.
      */
     public String generateCaptchaString() {
+
         int length = 5 + (Math.abs(MathUtil.RANDOM.nextInt()) % 3);
 
         StringBuilder captchaStringBuffer = new StringBuilder();
@@ -35,14 +36,12 @@ public class QueuedCaptchaCommand extends QueuedCommand {
             int charNumber;
             if (baseCharNumber < 26) {
                 charNumber = 65 + baseCharNumber;
-            }
-            else if (baseCharNumber < 52){
+            } else if (baseCharNumber < 52) {
                 charNumber = 97 + (baseCharNumber - 26);
-            }
-            else {
+            } else {
                 charNumber = 48 + (baseCharNumber - 52);
             }
-            captchaStringBuffer.append((char)charNumber);
+            captchaStringBuffer.append((char) charNumber);
         }
 
         return captchaStringBuffer.toString();

@@ -8,26 +8,29 @@ import org.bukkit.event.player.PlayerInteractEvent;
  * @author Dragonfire
  */
 public class PlayerSignInteractEvent extends Event {
+
+    private static final HandlerList HANDLER = new HandlerList();
+
     private PlayerInteractEvent parentEvent;
 
     public PlayerSignInteractEvent(PlayerInteractEvent parentEvent) {
+
         this.parentEvent = parentEvent;
-    }
-
-    public PlayerInteractEvent getParentEvent() {
-        return parentEvent;
-    }
-
-    // Bukkit stuff
-    private static final HandlerList handlers = new HandlerList();
-
-    public HandlerList getHandlers() {
-
-        return handlers;
     }
 
     public static HandlerList getHandlerList() {
 
-        return handlers;
+        return HANDLER;
+    }
+
+    public PlayerInteractEvent getParentEvent() {
+
+        return parentEvent;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+
+        return HANDLER;
     }
 }

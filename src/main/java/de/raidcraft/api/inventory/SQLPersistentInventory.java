@@ -124,7 +124,7 @@ public final class SQLPersistentInventory implements PersistentInventory {
     public void setInventory(Inventory inventory) {
 
         this.inventory = inventory;
-        if(getId() != 0) {
+        if (getId() != 0) {
             RaidCraft.getComponent(InventoryManager.class).loadInventory(this);
         }
     }

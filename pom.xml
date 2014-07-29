@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>raidcraft-api</artifactId>
     <packaging>jar</packaging>
-    <version>1.4.3-develop-SNAPSHOT</version>
+    <version>1.4.4-develop-SNAPSHOT</version>
     <name>RaidCraft-API</name>
 
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
-        <version>3.4.14-develop-SNAPSHOT</version>
+        <version>RELEASE</version>
     </parent>
 
     <scm>
@@ -22,10 +22,6 @@
             <id>raidcraft</id>
             <url>http://nexus.raid-craft.de/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>Citizens</id>
-            <url>http://repo.citizensnpcs.co</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -36,8 +32,8 @@
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizensapi</artifactId>
-            <version>${rc.citizens-api-version}</version>
+            <artifactId>citizens</artifactId>
+            <version>${rc.version}</version>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>

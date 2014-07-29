@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public final class ActionFactory implements Component {
 
     private static final ActionFactory INSTANCE = new ActionFactory();
+
     @NonNull
     public static ActionFactory getInstance() {
 

@@ -116,8 +116,9 @@ public final class CustomItemUtil {
         }
         StringBuilder out = new StringBuilder();
         for (int i = 0; i < 16; i++) {
-            if (str.charAt(i) != ChatColor.COLOR_CHAR)
+            if (str.charAt(i) != ChatColor.COLOR_CHAR) {
                 throw new CustomItemException("Item ist kein Custom Item.");
+            }
             i++;
             out.append(str.charAt(i));
         }
@@ -289,9 +290,11 @@ public final class CustomItemUtil {
 
     public static int firstEmpty(ItemStack... inventory) {
 
-        for (int i = 9; i < inventory.length; i++)
-            if (inventory[i] == null)
+        for (int i = 9; i < inventory.length; i++) {
+            if (inventory[i] == null) {
                 return i;
+            }
+        }
 
         return -1;
     }
@@ -354,17 +357,19 @@ public final class CustomItemUtil {
         int maxStackSize = itemStack.getMaxStackSize();
 
         int slotIndex = -1;
-        for(int stackSize=1; stackSize<maxStackSize; stackSize++) // Loop 1 less than max stack size so there is room for this item in the stack.
+        for (int stackSize = 1; stackSize < maxStackSize; stackSize++) // Loop 1 less than max stack size so there is room for this item in the stack.
         {
             itemStack.setAmount(stackSize);
             slotIndex = inventory.first(itemStack);
 
-            if(slotIndex != -1)
+            if (slotIndex != -1) {
                 break;
+            }
         }
 
-        if(slotIndex == -1)
+        if (slotIndex == -1) {
             slotIndex = inventory.firstEmpty();
+        }
 
         return slotIndex;
     }

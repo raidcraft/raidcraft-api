@@ -9,9 +9,9 @@ import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.util.BlockUtil;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -120,19 +120,20 @@ public class PlayerTrigger extends Trigger implements Listener {
         // if no coordinates are defined always return true
         // otherwise check the coordinates and the radius
         informListeners("move", event.getPlayer(), config -> {
-            
-            World world = Bukkit.getWorld(config.getString("world"));
+
+            World world = Bukkit.getWorld(config.getString("world", event.getPlayer().getWorld().getName()));
             if (config.isSet("world") && (world == null || !event.getPlayer().getWorld().equals(world))) return false;
             if (world == null) world = event.getPlayer().getWorld();
             return ((!config.isSet("x") || !config.isSet("y") || !config.isSet("z"))
-                        || LocationUtil.isWithinRadius(
-                        event.getPlayer().getLocation(),
-                        new Location(
-                                world,
-                                config.getInt("x"),
-                                config.getInt("y"),
-                                config.getInt("z")),
-                        config.getInt("radius", 0)));
+                    || LocationUtil.isWithinRadius(
+                    event.getPlayer().getLocation(),
+                    new Location(
+                            world,
+                            config.getInt("x"),
+                            config.getInt("y"),
+                            config.getInt("z")),
+                    config.getInt("radius", 0)
+            ));
         });
     }
 

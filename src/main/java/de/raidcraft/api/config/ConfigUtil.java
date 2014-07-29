@@ -52,7 +52,8 @@ public class ConfigUtil {
                     new SetTypeConversion(),
                     new ListTypeConversion(),
                     new MapTypeConversion()
-            ));
+            )
+    );
 
     public static Object smartCast(Type genericType, Object value) {
 

@@ -97,7 +97,8 @@ public interface AchievementTemplate extends RequirementHolder, ActionHolder, Tr
      * Creates a valid achievement from this template and the given holder.
      *
      * @param holder to create achievement for
-     * @param <T> type of the holder
+     * @param <T>    type of the holder
+     *
      * @return active achievement
      */
     public <T> Achievement<T> createAchievement(AchievementHolder<T> holder);

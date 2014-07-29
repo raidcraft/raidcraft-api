@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 @Data
 public abstract class Trigger implements TriggerConfigGenerator {
 
-    private final String identifier;
+    private String identifier;
     private final String[] actions;
     private final Map<String, List<TriggerListenerConfigWrapper<?>>> registeredListeners = new CaseInsensitiveMap<>();
 
@@ -57,11 +57,11 @@ public abstract class Trigger implements TriggerConfigGenerator {
             new ArrayList<>(registeredListeners.get(identifier)).stream()
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
-                    // first lets check all predicates and if we can execute at all
+                            // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
-                    // then lets process the trigger
+                            // then lets process the trigger
                     .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity))
-                    // if we get true back we are ready for action processing
+                            // if we get true back we are ready for action processing
                     .forEach(wrapper -> wrapper.executeActions(triggeringEntity));
         }
     }

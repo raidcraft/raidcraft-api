@@ -2,8 +2,8 @@ package de.raidcraft.api.quests.quest;
 
 import com.avaje.ebean.annotation.EnumValue;
 import de.raidcraft.api.action.trigger.TriggerListener;
-import de.raidcraft.api.quests.objective.PlayerObjective;
 import de.raidcraft.api.quests.holder.QuestHolder;
+import de.raidcraft.api.quests.objective.PlayerObjective;
 import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;

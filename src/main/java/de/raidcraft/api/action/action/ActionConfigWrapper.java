@@ -20,7 +20,6 @@ class ActionConfigWrapper<T> implements Action<T> {
         this.config = config;
     }
 
-    @Override
     public ConfigurationSection getConfig() {
 
         ConfigurationSection args = this.config.getConfigurationSection("args");
@@ -28,9 +27,13 @@ class ActionConfigWrapper<T> implements Action<T> {
         return args;
     }
 
-    @Override
     public void accept(T type) {
 
-        action.accept(type);
+        accept(type, getConfig());
+    }
+
+    public void accept(T type, ConfigurationSection config) {
+
+        action.accept(type, config);
     }
 }

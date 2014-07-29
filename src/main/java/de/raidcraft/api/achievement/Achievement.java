@@ -32,8 +32,9 @@ public interface Achievement<T> extends TriggerListener<T> {
     /**
      * Gets the holder of the achievement the template is assigned to.
      *
-     * @see AchievementHolder
      * @return achievement holder
+     *
+     * @see AchievementHolder
      */
     public AchievementHolder<T> getHolder();
 
@@ -41,8 +42,9 @@ public interface Achievement<T> extends TriggerListener<T> {
      * Gets the template of the achievement. The template holds all the information
      * and is loaded once per config file.
      *
-     * @see AchievementTemplate
      * @return achievement template
+     *
+     * @see AchievementTemplate
      */
     public AchievementTemplate getTemplate();
 

@@ -16,8 +16,8 @@ public class InventoryListener implements Listener {
 
         InventoryManager manager = RaidCraft.getComponent(InventoryManager.class);
         for (PersistentInventory inventory : manager.getLoadedInventories()) {
-            for(HumanEntity human : inventory.getInventory().getViewers()) {
-                if(event.getPlayer().getName().equalsIgnoreCase(human.getName())) {
+            for (HumanEntity human : inventory.getInventory().getViewers()) {
+                if (event.getPlayer().getName().equalsIgnoreCase(human.getName())) {
                     inventory.save();
                     return;
                 }

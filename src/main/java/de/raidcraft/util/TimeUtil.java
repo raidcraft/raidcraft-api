@@ -26,12 +26,12 @@ public final class TimeUtil {
 
     public static double ticksToSeconds(long ticks) {
 
-        return ((int) (((double)ticks / 20.0) * 100.0)) / 100.0;
+        return ((int) (((double) ticks / 20.0) * 100.0)) / 100.0;
     }
 
     public static double millisToSeconds(long millis) {
 
-        return ((int) (((double)millis / 1000.0) * 100.0)) / 100.0;
+        return ((int) (((double) millis / 1000.0) * 100.0)) / 100.0;
     }
 
     public static long secondsToTicks(double seconds) {

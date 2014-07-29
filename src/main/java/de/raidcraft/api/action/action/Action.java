@@ -5,17 +5,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
 import java.lang.reflect.Method;
-import java.util.function.Consumer;
 
 /**
  * @author Silthus
  */
-public interface Action<T> extends Consumer<T>, ActionConfigGenerator {
-
-    public default ConfigurationSection getConfig() {
-
-        return new MemoryConfiguration();
-    }
+@FunctionalInterface
+public interface Action<T> extends ActionConfigGenerator {
 
     public default boolean matchesType(Class<?> entity) {
 
@@ -25,5 +20,12 @@ public interface Action<T> extends Consumer<T>, ActionConfigGenerator {
             }
         }
         return false;
+    }
+
+    public void accept(T type, ConfigurationSection config);
+
+    public default void accept(T type) {
+
+        accept(type, new MemoryConfiguration());
     }
 }

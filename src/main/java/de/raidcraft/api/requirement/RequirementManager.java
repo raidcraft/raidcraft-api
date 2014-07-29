@@ -24,7 +24,9 @@ public final class RequirementManager {
     private static final Map<String, Class<? extends Requirement<?>>> requirementClasses = new CaseInsensitiveMap<>();
     private static final Map<Class<? extends Requirement<?>>, Constructor<? extends Requirement<?>>> constructors = new HashMap<>();
 
-    private RequirementManager() {}
+    private RequirementManager() {
+
+    }
 
     @SuppressWarnings("unchecked")
     public static <O> List<Requirement<O>> createRequirements(RequirementResolver<O> resolver, ConfigurationSection config) {
@@ -36,7 +38,7 @@ public final class RequirementManager {
 
         if (config.getKeys(false) == null) return requirements;
         for (String key : config.getKeys(false)) {
-//            key = StringUtils.formatName(key);
+            //            key = StringUtils.formatName(key);
             if (requirementClasses.containsKey(key)) {
                 if (config.getConfigurationSection(key).getKeys(false) == null) continue;
 

@@ -11,6 +11,7 @@ public abstract class SimpleSerialization implements Serializable {
     private ItemStack item;
 
     public SimpleSerialization(ItemStack item) {
+
         this.item = item;
     }
 
@@ -21,6 +22,7 @@ public abstract class SimpleSerialization implements Serializable {
     abstract public ItemStack deserialize(String serializedData);
 
     public ItemStack getItem() {
+
         return item;
     }
 }

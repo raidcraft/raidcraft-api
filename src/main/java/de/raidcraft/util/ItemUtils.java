@@ -52,11 +52,11 @@ public final class ItemUtils {
         String[] parts = name.split(":");
         Material material = getItem(parts[0]);
         short subid = 0;
-        if(parts.length > 1) {
+        if (parts.length > 1) {
             try {
                 subid = Short.valueOf(parts[1]);
+            } catch (NumberFormatException ignored) {
             }
-            catch(NumberFormatException ignored) {}
         }
         return new ItemStack(material, 1, subid);
     }
@@ -88,7 +88,7 @@ public final class ItemUtils {
 
     public static String getFriendlyName(Material material, Language language) {
 
-        if(Item.getItemByMaterial(material) != null) {
+        if (Item.getItemByMaterial(material) != null) {
             return Item.getItemByMaterial(material).getFriendlyName(language);
         }
         return getFriendlyName(material);
@@ -134,38 +134,42 @@ public final class ItemUtils {
         CLAY(Material.CLAY, ItemType.BLOCK, "Lehm"),
         SMOOTH_BRICK(Material.SMOOTH_BRICK, ItemType.BLOCK, "Steinziegel"),
         COBBLESTONE(Material.COBBLESTONE, ItemType.BLOCK, "Pflasterstein"),
-        LEAVES(Material.LEAVES, ItemType.BLOCK, "Blätter")
-        ;
+        LEAVES(Material.LEAVES, ItemType.BLOCK, "Blätter");
 
         private Material material;
         private ItemType type;
         private String germanFriendlyName;
 
         private Item(Material material, ItemType type, String germanFriendlyName) {
+
             this.material = material;
             this.type = type;
             this.germanFriendlyName = germanFriendlyName;
         }
 
         public Material getMaterial() {
+
             return material;
         }
 
         public ItemType getType() {
+
             return type;
         }
 
         public String getGermanFriendlyName() {
+
             return germanFriendlyName;
         }
 
         public String getEnglishFriendlyName() {
+
             return ItemUtils.getFriendlyName(material);
         }
 
         public String getFriendlyName(Language language) {
 
-            if(language == Language.GERMAN) {
+            if (language == Language.GERMAN) {
                 return getGermanFriendlyName();
             }
 
@@ -173,8 +177,9 @@ public final class ItemUtils {
         }
 
         public static Item getItemByMaterial(Material material) {
-            for(Item item : Item.values()) {
-                if(item.getMaterial().equals(material)) {
+
+            for (Item item : Item.values()) {
+                if (item.getMaterial().equals(material)) {
                     return item;
                 }
             }
@@ -199,15 +204,14 @@ public final class ItemUtils {
         private Serializable serializable;
 
         public Serialization(ItemStack item) {
+
             this.item = item;
 
-            if(item.getType() == Material.FIREWORK) {
+            if (item.getType() == Material.FIREWORK) {
                 serializable = new FireworkEffectSerialization(item);
-            }
-            else if(item.getType() == Material.BOOK_AND_QUILL) {
+            } else if (item.getType() == Material.BOOK_AND_QUILL) {
                 serializable = new BookSerialization(item);
-            }
-            else {
+            } else {
                 serializable = new EnchantmentSerialization(item);
             }
         }
