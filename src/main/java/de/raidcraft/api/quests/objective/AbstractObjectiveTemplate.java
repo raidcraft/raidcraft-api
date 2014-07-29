@@ -35,7 +35,7 @@ public abstract class AbstractObjectiveTemplate implements ObjectiveTemplate {
 
         this.id = id;
         this.friendlyName = QuestUtil.replaceRefrences(questTemplate.getBasePath(), data.getString("name"));
-        this.description = QuestUtil.replaceRefrences(questTemplate.getBasePath(), data.getString("desc"));
+        this.description = QuestUtil.replaceRefrences(questTemplate.getBasePath(), data.getString("description"));
         this.optional = data.getBoolean("optional", false);
         this.questTemplate = questTemplate;
         this.requirements = loadRequirements(data.getConfigurationSection("requirements"));

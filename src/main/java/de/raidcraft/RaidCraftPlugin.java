@@ -1,5 +1,8 @@
 package de.raidcraft;
 
+import com.avaje.ebean.SqlUpdate;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionCommand;
@@ -16,6 +19,7 @@ import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
+import de.raidcraft.model.TCommand;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
 import lombok.Getter;
@@ -31,6 +35,8 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
+import javax.persistence.PersistenceException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,6 +57,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @Override
     public void enable() {
 
+        setupDatabase();
         this.config = configure(new LocalConfiguration(this));
         registerEvents(this);
         registerEvents(new RaidCraft());
@@ -85,6 +92,19 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         // lets run this last if any mc errors occur
         // TODO: reimplement and find fix
         // if (config.hideAttributes) attributeHider = new AttributeHider(this);
+    }
+
+    private void setupDatabase() {
+
+        try {
+            // delete all commands
+            SqlUpdate deleteCommands = getDatabase().createSqlUpdate("DELETE FROM rc_commands");
+            deleteCommands.execute();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+            getLogger().warning("Installing database for " + getDescription().getName() + " due to first time usage");
+            installDDL();
+        }
     }
 
     @Override
@@ -136,6 +156,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TObjectStorage.class);
         classes.add(TPersistentInventory.class);
         classes.add(TPersistentInventorySlot.class);
+        classes.add(TCommand.class);
         return classes;
     }
 
@@ -215,6 +236,31 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         if (!started) {
             event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, "Server wird gerade gestartet...");
+        }
+    }
+
+    /**
+     * Do not call this method
+     * use registerCommands(Class<?> class, String host)
+     *
+     * @param clazz
+     */
+    public void trackCommand(Class<?> clazz, String host, String baseClass) {
+
+        Method[] methods = clazz.getMethods();
+        for (Method method : methods) {
+            Command anno_cmd = method.getAnnotation(Command.class);
+            if (anno_cmd == null) {
+                return;
+            }
+            NestedCommand anno_nested = method.getAnnotation(NestedCommand.class);
+            if (anno_nested != null) {
+                for (Class<?> childClass : anno_nested.value()) {
+                    trackCommand(childClass, host, TCommand.printArray(anno_cmd.aliases()));
+                }
+                return;
+            }
+            getDatabase().save(TCommand.parseCommand(method, host, baseClass));
         }
     }
 }
