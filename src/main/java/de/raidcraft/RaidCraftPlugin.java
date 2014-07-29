@@ -64,8 +64,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerEvents(new RaidCraft());
         registerEvents(new BarAPI(this));
         registeerChildListener();
-        registerCommands(ConfirmCommand.class);
-        registerCommands(ActionCommand.class);
+        registerCommands(ConfirmCommand.class, getName());
+        registerCommands(ActionCommand.class, getName());
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
