@@ -1,5 +1,6 @@
 package de.raidcraft.api.economy;
 
+import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -8,39 +9,25 @@ import org.bukkit.event.HandlerList;
  */
 public class BalanceChangeEvent extends Event {
 
+    @Getter
     private BalanceSource source;
+    @Getter
     private String detail;
+    @Getter
+    private AccountType type;
+    @Getter
     private String accountName;
+    @Getter
     private double amount;
 
-    public BalanceChangeEvent(BalanceSource source, String detail, String accountName, double amount) {
+    public BalanceChangeEvent(BalanceSource source, String detail, AccountType type, String accountName, double amount) {
 
         this.source = source;
         this.detail = detail;
         this.accountName = accountName;
+        this.type = type;
         this.amount = amount;
     }
-
-    public BalanceSource getSource() {
-
-        return source;
-    }
-
-    public String getDetail() {
-
-        return detail;
-    }
-
-    public String getAccountName() {
-
-        return accountName;
-    }
-
-    public double getAmount() {
-
-        return amount;
-    }
-
     //<-- Handler -->//
 
     private static final HandlerList handlers = new HandlerList();
