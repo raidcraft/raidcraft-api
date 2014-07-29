@@ -73,6 +73,9 @@ public class NPC_Manager implements Listener {
         this.removeNPC(getNPC(npcID, host), host);
     }
 
+    /**
+     * Worked not for non persist NPC's
+     */
     public NPC getNPC(UUID npcID, String host) {
 
         return this.register.get(host).getByUniqueId(npcID);
