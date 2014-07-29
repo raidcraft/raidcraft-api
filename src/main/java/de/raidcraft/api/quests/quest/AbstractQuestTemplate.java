@@ -45,7 +45,7 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
         this.basePath = id.replace("." + name, "");
         this.friendlyName = data.getString("name", name);
         this.author = data.getString("author", "Raid-Craft Team");
-        this.description = data.getString("description");
+        this.description = data.getString("desc");
         this.requiredObjectiveAmount = data.getInt("required", 0);
         this.ordered = data.getBoolean("ordered", false);
         this.locked = data.getBoolean("locked", true);
