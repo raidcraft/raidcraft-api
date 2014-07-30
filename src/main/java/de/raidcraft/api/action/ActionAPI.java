@@ -163,7 +163,6 @@ public final class ActionAPI {
     }
 
     public static void registerGlobalTrigger(TriggerManager manager) {
-
         manager.registerGlobalTrigger(new PlayerTrigger());
     }
 
