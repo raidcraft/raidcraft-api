@@ -101,6 +101,7 @@ public class RaidCraft implements Listener {
      *
      * @return RCPlayer
      */
+    @Deprecated
     public static RCPlayer safeGetPlayer(String name) throws UnknownPlayerException {
 
         Player player = Bukkit.getPlayer(name);
@@ -132,6 +133,7 @@ public class RaidCraft implements Listener {
      *
      * @return wrapped RCPlayer object
      */
+    @Deprecated
     public static RCPlayer getPlayer(String name) {
 
         try {

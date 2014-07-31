@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -23,19 +24,19 @@ import java.util.stream.Collectors;
 public abstract class AbstractQuestHolder implements QuestHolder {
 
     private final int id;
-    private final String player;
+    private final UUID player;
     private final Map<String, Quest> allQuests = new CaseInsensitiveMap<>();
 
-    public AbstractQuestHolder(int id, String player) {
+    public AbstractQuestHolder(int id, UUID player) {
 
         this.id = id;
         this.player = player;
     }
 
     @Override
-    public String getName() {
+    public UUID getPlayerId() {
 
-        return getPlayer() == null ? player : getPlayer().getName();
+        return getPlayer() == null ? player : getPlayer().getUniqueId();
     }
 
     @Override

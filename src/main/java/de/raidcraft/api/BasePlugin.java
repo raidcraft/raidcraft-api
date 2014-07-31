@@ -228,6 +228,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         return RaidCraft.getPlayer(player);
     }
 
+    // TODO: UUID rework
+    @Deprecated
     public RCPlayer getPlayer(String player) {
 
         return RaidCraft.getPlayer(player);
