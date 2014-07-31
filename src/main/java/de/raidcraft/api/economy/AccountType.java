@@ -5,6 +5,7 @@ package de.raidcraft.api.economy;
  */
 public enum AccountType {
     PLAYER("Player"),
+    PLUGIN("Plugin"),
     CITY("City");
 
     private String type;
