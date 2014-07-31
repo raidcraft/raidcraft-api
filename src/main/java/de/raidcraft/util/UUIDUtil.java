@@ -37,8 +37,12 @@ public class UUIDUtil {
         return uuid != null ? uuid.toString() : null;
     }
 
+    public static String getNameFromUUID(UUID uuid) {
+        return Bukkit.getOfflinePlayer(uuid).getName();
+    }
+
     public static String getNameFromUUID(String uuid) {
-        return Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName();
+        return getNameFromUUID(UUID.fromString(uuid));
     }
 
     public static String castUUID(CommandSender sender) {
