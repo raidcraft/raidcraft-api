@@ -148,6 +148,28 @@ public final class BlockUtil {
         return blocks;
     }
 
+    public static Set<Block> getBlocks(Block source, int radius, Set<Material> types) {
+
+        Set<Block> blocks = new HashSet<>();
+        Block block;
+        for (int x = 0; x < radius; x++) {
+            for (int y = 0; y < radius; y++) {
+                for (int z = 0; z < radius; z++) {
+                    block = source.getRelative(x, y, z);
+                    if (types.contains(block.getType())) {
+                        blocks.add(block);
+                    }
+                    block = source.getRelative(-x, -y, -z);
+                    if (types.contains(block.getType())) {
+                        blocks.add(block);
+                    }
+                }
+            }
+        }
+        return blocks;
+    }
+
+
     public static void destroyBlock(Block block) {
 
         ItemStack item = new ItemStack(block.getTypeId(), 1, block.getData());
