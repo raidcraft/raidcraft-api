@@ -2,7 +2,7 @@ package de.raidcraft.util;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
-import de.raidcraft.tables.TPlayer;
+import de.raidcraft.tables.TRcPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -34,7 +34,7 @@ public class UUIDUtil {
             }
         }
         Plugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-        TPlayer tPlayer = plugin.getDatabase().find(TPlayer.class).where().eq("last_name", name).findUnique();
+        TRcPlayer tPlayer = plugin.getDatabase().find(TRcPlayer.class).where().eq("last_name", name).findUnique();
         if(tPlayer != null) {
             return tPlayer.getUuid();
         }
