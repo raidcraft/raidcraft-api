@@ -34,7 +34,7 @@ import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
 import de.raidcraft.api.trades.TradeProvider;
-import de.raidcraft.model.TActionApi;
+import de.raidcraft.tables.TActionApi;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MetaDataKey;

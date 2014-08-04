@@ -1,4 +1,4 @@
-package de.raidcraft.model;
+package de.raidcraft.tables;
 
 import lombok.Getter;
 import lombok.Setter;
