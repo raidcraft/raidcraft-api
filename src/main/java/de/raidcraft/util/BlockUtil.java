@@ -127,6 +127,7 @@ public final class BlockUtil {
         return changedBlocks;
     }
 
+    @Deprecated
     public static Set<Block> getBlocks(Block source, int radius, Set<Integer> types) {
 
         Set<Block> blocks = new HashSet<>();
@@ -148,21 +149,16 @@ public final class BlockUtil {
         return blocks;
     }
 
-    public static Set<Block> getBlocksNew(Block source, int radius, Set<Material> types) {
+    public static Set<Block> getBlocksFlat(Block source, int radius, Set<Material> types) {
 
         Set<Block> blocks = new HashSet<>();
+        int y = 0;
         Block block;
-        for (int x = 0; x < radius; x++) {
-            for (int y = 0; y < radius; y++) {
-                for (int z = 0; z < radius; z++) {
-                    block = source.getRelative(x, y, z);
-                    if (types.contains(block.getType())) {
-                        blocks.add(block);
-                    }
-                    block = source.getRelative(-x, -y, -z);
-                    if (types.contains(block.getType())) {
-                        blocks.add(block);
-                    }
+        for (int x = -radius; x < radius; x++) {
+            for (int z = -radius; z < radius; z++) {
+                block = source.getRelative(x, y, z);
+                if (types.contains(block.getType())) {
+                    blocks.add(block);
                 }
             }
         }
