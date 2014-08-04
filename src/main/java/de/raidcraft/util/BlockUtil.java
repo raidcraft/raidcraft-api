@@ -148,7 +148,7 @@ public final class BlockUtil {
         return blocks;
     }
 
-    public static Set<Block> getBlocks(Block source, int radius, Set<Material> types) {
+    public static Set<Block> getBlocksNew(Block source, int radius, Set<Material> types) {
 
         Set<Block> blocks = new HashSet<>();
         Block block;
