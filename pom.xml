@@ -31,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
-            <artifactId>vault</artifactId>
+            <artifactId>Vault</artifactId>
             <version>1.4.1</version>
         </dependency>
         <dependency>
