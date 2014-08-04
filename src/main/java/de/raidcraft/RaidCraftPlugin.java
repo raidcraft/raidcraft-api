@@ -21,6 +21,7 @@ import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
 import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TCommand;
+import de.raidcraft.tables.TPlayer;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
 import lombok.Getter;
@@ -170,6 +171,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TPersistentInventorySlot.class);
         classes.add(TCommand.class);
         classes.add(TActionApi.class);
+        classes.add(TPlayer.class);
         return classes;
     }
 

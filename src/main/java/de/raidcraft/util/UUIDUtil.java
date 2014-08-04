@@ -1,9 +1,13 @@
 package de.raidcraft.util;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.tables.TPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
@@ -24,10 +28,20 @@ public class UUIDUtil {
     public static UUID convertPlayer(String name) {
         if(name == null) {
             try {
-                throw new Exception("null name for uuid convert");
+                throw new NullPointerException();
             } catch (Exception e) {
                e.printStackTrace();
             }
+        }
+        Plugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
+        TPlayer tPlayer = plugin.getDatabase().find(TPlayer.class).where().eq("last_name", name).findUnique();
+        if(tPlayer != null) {
+            return tPlayer.getUuid();
+        }
+        try {
+            throw new Exception("UUID not found for playername: " + name);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return Bukkit.getOfflinePlayer(name).getUniqueId();
     }
