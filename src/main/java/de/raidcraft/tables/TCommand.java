@@ -1,4 +1,4 @@
-package de.raidcraft.model;
+package de.raidcraft.tables;
 
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
