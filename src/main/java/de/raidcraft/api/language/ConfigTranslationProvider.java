@@ -265,7 +265,7 @@ public class ConfigTranslationProvider implements TranslationProvider {
     @Override
     public int broadcastMessage(final String path, final ChatColor color, final String def, final Object... args) {
 
-        return broadcastMessage(path, color, def, args);
+        return broadcast(path, color, def, args);
     }
 
     /**
@@ -280,7 +280,7 @@ public class ConfigTranslationProvider implements TranslationProvider {
     @Override
     public int broadcastMessage(final String path, final ChatColor color, final Object... args) {
 
-        return broadcastMessage(path, color, null, args);
+        return broadcast(path, color, null, args);
     }
 
     private int broadcast(final String path, final ChatColor color, final String def, final Object... args) {
