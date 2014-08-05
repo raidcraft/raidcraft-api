@@ -34,9 +34,15 @@ public interface Economy {
 
     public double parseCurrencyInput(String input);
 
+    @Deprecated
+    public boolean hasEnough(String playerName, double amount);
+
     public boolean hasEnough(UUID player, double amount);
 
     public boolean hasEnough(AccountType type, String accountName, double amount);
+
+    @Deprecated
+    public void substract(String playerName, double amount);
 
     public void substract(UUID player, double amount);
 
@@ -45,6 +51,9 @@ public interface Economy {
     public void substract(UUID player, double amount, BalanceSource source, String detail);
 
     public void substract(AccountType type, String accountName, double amount, BalanceSource source, String detail);
+
+    @Deprecated
+    public void add(String playerName, double amount);
 
     public void add(UUID player, double amount);
 
