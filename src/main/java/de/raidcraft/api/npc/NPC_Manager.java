@@ -26,6 +26,7 @@ import java.util.UUID;
 
 /**
  * Handle all NPC's
+ *
  * @author Dragonfire
  */
 public class NPC_Manager implements Listener {
@@ -148,6 +149,14 @@ public class NPC_Manager implements Listener {
         npc.spawn(loc);
         store(host);
         return npc;
+    }
+
+    /**
+     * @return Citizens NPC registry that does not save any NPC's
+     */
+    public NPCRegistry getNonPersistentRegistry() {
+
+        return nonPersistentRegistry;
     }
 
     /**
