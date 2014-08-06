@@ -35,7 +35,8 @@ public class NPC_Manager implements Listener {
     private Map<String, NPCRegistry> register = new HashMap<>();
     private Map<String, NPCDataStore> stores = new HashMap<>();
     private Map<String, Storage> saves = new HashMap<>();
-    private NPCRegistry nonPersistentRegistry = CitizensAPI.createAnonymousNPCRegistry(null);
+    private NPCRegistry nonPersistentRegistry =
+            CitizensAPI.createAnonymousNPCRegistry(new NonPersitentNPCDataStore());
 
     // Singleton
     private NPC_Manager() {
@@ -257,5 +258,47 @@ public class NPC_Manager implements Listener {
     public boolean isNPC(Entity entity) {
 
         return entity.hasMetadata("NPC");
+    }
+
+    public class NonPersitentNPCDataStore implements NPCDataStore {
+
+        private int id = 0;
+
+        @Override
+        public void clearData(NPC npc) {
+            // nothing
+        }
+
+        @Override
+        public int createUniqueNPCId(NPCRegistry npcs) {
+
+            id++;
+            return id - 1;
+        }
+
+        @Override
+        public void loadInto(NPCRegistry npcs) {
+            // nothing
+        }
+
+        @Override
+        public void saveToDisk() {
+            // nothing
+        }
+
+        @Override
+        public void saveToDiskImmediate() {
+            // nothing
+        }
+
+        @Override
+        public void store(NPC npc) {
+            // nothing
+        }
+
+        @Override
+        public void storeAll(NPCRegistry npcs) {
+            // nothing
+        }
     }
 }
