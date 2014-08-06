@@ -29,20 +29,13 @@ public interface Economy {
 
     public String getFormattedBalance(AccountType type, String accountName);
 
-
     public String getFormattedAmount(double amount);
 
     public double parseCurrencyInput(String input);
 
-    @Deprecated
-    public boolean hasEnough(String playerName, double amount);
-
     public boolean hasEnough(UUID player, double amount);
 
     public boolean hasEnough(AccountType type, String accountName, double amount);
-
-    @Deprecated
-    public void substract(String playerName, double amount);
 
     public void substract(UUID player, double amount);
 
@@ -51,9 +44,6 @@ public interface Economy {
     public void substract(UUID player, double amount, BalanceSource source, String detail);
 
     public void substract(AccountType type, String accountName, double amount, BalanceSource source, String detail);
-
-    @Deprecated
-    public void add(String playerName, double amount);
 
     public void add(UUID player, double amount);
 
@@ -79,10 +69,56 @@ public interface Economy {
 
     public void set(AccountType type, String accountName, double amount, BalanceSource source, String detail);
 
-
     public String getCurrencyNameSingular();
 
     public String getCurrencyNamePlural();
 
     public void printFlow(CommandSender sender, AccountType type, String accountName, int entries);
+
+    // depracted stuff
+
+    @Deprecated
+    public void createAccount(String accountName);
+
+    @Deprecated
+    public void deleteAccount(String accountName);
+
+    @Deprecated
+    public boolean accountExists(String accountName);
+
+    @Deprecated
+    public double getBalance(String accountName);
+
+    @Deprecated
+    public String getFormattedBalance(String accountName);
+
+    @Deprecated
+    public boolean hasEnough(String accountName, double amount);
+
+    @Deprecated
+    public void substract(String accountName, double amount);
+
+    @Deprecated
+    public void substract(String accountName, double amount, BalanceSource source, String detail);
+
+    @Deprecated
+    public void add(String accountName, double amount);
+
+    @Deprecated
+    public void add(String accountName, double amount, BalanceSource source, String detail);
+
+    @Deprecated
+    public void modify(String accountName, double amount);
+
+    @Deprecated
+    public void modify(String accountName, double amount, BalanceSource source, String detail);
+
+    @Deprecated
+    public void set(String accountName, double amount);
+
+    @Deprecated
+    public void set(String accountName, double amount, BalanceSource source, String detail);
+
+    @Deprecated
+    public void printFlow(CommandSender sender, String accountName, int entries);
 }
