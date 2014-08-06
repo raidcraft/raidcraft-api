@@ -131,8 +131,7 @@ public interface Aircraft<T> {
                 RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
                 setAircraftMoverTask(Bukkit.getScheduler().runTaskTimer(plugin,
                         new de.raidcraft.api.flight.aircraft.AircraftMoverTask(this, flight),
-                        flight.getMoveInterval(),
-                        flight.getMoveInterval()));
+                        -1, flight.getMoveInterval()));
             }
         }
     }
