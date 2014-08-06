@@ -75,6 +75,8 @@ public interface Economy {
 
     public void printFlow(CommandSender sender, AccountType type, String accountName, int entries);
 
+    public void printFlow(CommandSender sender, UUID playerId, int entries);
+
     // depracted stuff
 
     @Deprecated
