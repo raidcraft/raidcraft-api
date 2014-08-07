@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.flight.flight.Flight;
 import de.raidcraft.api.flight.flight.Waypoint;
+import de.raidcraft.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -123,6 +124,11 @@ public interface Aircraft<T> {
 
         if (!isFlying()) {
             setFlying(true);
+            Location start = flight.getStartLocation();
+            Location end = flight.getEndLocation();
+            start.setPitch(0);
+            start.setYaw(BukkitUtil.lookAtIgnoreY(start.getX(), start.getZ(),
+                    end.getX(), end.getZ()));
             spawn(flight.getStartLocation());
             final RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
             new BukkitRunnable() {
