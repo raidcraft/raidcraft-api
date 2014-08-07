@@ -33,6 +33,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -46,6 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Silthus
@@ -254,6 +256,45 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, "Server wird gerade gestartet...");
         }
     }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void preJoin(AsyncPlayerPreLoginEvent event) {
+
+        UUID uuid = event.getUniqueId();
+        String name = event.getName();
+
+        TRcPlayer player = getDatabase().find(TRcPlayer.class)
+                .where().eq("uuid", uuid.toString()).findUnique();
+        // known player
+        if (player != null) {
+            // if name changed
+            if (!player.getLastName().equals(name)) {
+                getLogger().warning("---- NAME CHANGE FOUND (" + uuid + ") !!! ----");
+                getLogger().warning("---- old name (" + player.getLastName() + ") !!! ----");
+                getLogger().warning("---- new name (" + name + ") !!! ----");
+                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+                        "You changed your playername. Contact raid-craft.de to reactivate.");
+            }
+            return;
+        }
+        // new player
+        player = getDatabase().find(TRcPlayer.class)
+                .where().eq("last_name", name).findUnique();
+        // check if name already in use
+        if (player != null) {
+            getLogger().warning("---- NEW UUID FOR NAME (" + name + ") FOUND !!! ----");
+            getLogger().warning("---- new uuid (" + uuid + ") FOUND !!! ----");
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
+                    "Your playername is protected. Visit raid-craft.de for more informations");
+            return;
+        }
+        // add new player
+        player = new TRcPlayer();
+        player.setLastName(name);
+        player.setUuid(uuid);
+        getDatabase().save(player);
+    }
+
 
     /**
      * Do not call this method
