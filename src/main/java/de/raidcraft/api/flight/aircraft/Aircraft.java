@@ -7,6 +7,7 @@ import de.raidcraft.api.flight.flight.Waypoint;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
@@ -118,21 +119,35 @@ public interface Aircraft<T> {
      *
      * @param flight that triggered the takeoff
      */
-    public default void takeoff(Flight flight) {
+    public default void takeoff(final Flight flight) {
 
         if (!isFlying()) {
             setFlying(true);
-            if (!isSpawned()) spawn(flight.getStartLocation());
-            mountPassenger(flight);
-            startNavigation(flight);
-            move(flight, flight.getPath().getFirstWaypoint());
-            if (flight.getMoveInterval() > 0) {
-                // lets start the task that moves the aircraft around from waypoint to waypoint
-                RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-                setAircraftMoverTask(Bukkit.getScheduler().runTaskTimer(plugin,
-                        new de.raidcraft.api.flight.aircraft.AircraftMoverTask(this, flight),
-                        -1, flight.getMoveInterval()));
-            }
+            spawn(flight.getStartLocation());
+            final RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    // wait until dragon is spawned
+                    if (!isSpawned()) {
+                        plugin.getLogger().info("Dragon not spawned");
+                        return;
+                    }
+                    cancel();
+                    // start flight
+                    mountPassenger(flight);
+                    startNavigation(flight);
+                    move(flight, flight.getPath().getFirstWaypoint());
+                    if (flight.getMoveInterval() > 0) {
+                        // lets start the task that moves the aircraft around from waypoint to waypoint
+                        setAircraftMoverTask(Bukkit.getScheduler().runTaskTimer(plugin,
+                                new de.raidcraft.api.flight.aircraft.AircraftMoverTask(Aircraft.this, flight),
+                                -1, flight.getMoveInterval()));
+                    } else {
+                        plugin.getLogger().info("Move Interval from flight to fast");
+                    }
+                }
+            }.runTaskTimer(plugin, -1, 1);
         }
     }
 
