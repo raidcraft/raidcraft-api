@@ -102,10 +102,10 @@ public final class LocationUtil {
     /**
      * @return the correct distance between blocks without y layer
      */
-    public static double getRealDistance(double x1, double y1, double x2, double y2) {
+    public static double getRealDistance(double x1, double z1, double x2, double z2) {
 
         double dx = Math.abs(x2 - x1);
-        double dy = Math.abs(y2 - y1);
+        double dy = Math.abs(z2 - z1);
         return Math.sqrt(dx * dx + dy * dy);
     }
 
