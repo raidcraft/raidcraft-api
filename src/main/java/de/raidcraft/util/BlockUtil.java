@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
 import javax.annotation.Nullable;
@@ -167,10 +166,8 @@ public final class BlockUtil {
 
 
     public static void destroyBlock(Block block) {
-
-        ItemStack item = new ItemStack(block.getTypeId(), 1, block.getData());
-        block.getLocation().getWorld().dropItemNaturally(block.getLocation(), item);
-        block.setTypeId(0, true);
+        // TODO: check if allowed?
+        block.breakNaturally();
     }
 
     @Nullable
