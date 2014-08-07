@@ -19,6 +19,7 @@ import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.storage.TObjectStorage;
+import de.raidcraft.tables.PlayerPlacedBlock;
 import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TCommand;
 import de.raidcraft.tables.TRcPlayer;
