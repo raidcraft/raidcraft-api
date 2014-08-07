@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
@@ -26,16 +25,17 @@ public class UUIDUtil {
     }
 
     public static UUID convertPlayer(String name) {
-        if(name == null) {
+
+        if (name == null) {
             try {
                 throw new NullPointerException();
             } catch (Exception e) {
-               e.printStackTrace();
+                e.printStackTrace();
             }
         }
-        Plugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-        TRcPlayer tPlayer = plugin.getDatabase().find(TRcPlayer.class).where().eq("last_name", name).findUnique();
-        if(tPlayer != null) {
+        TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase()
+                .find(TRcPlayer.class).where().eq("last_name", name).findUnique();
+        if (tPlayer != null) {
             return tPlayer.getUuid();
         }
         try {
@@ -47,15 +47,28 @@ public class UUIDUtil {
     }
 
     public static String getUUIDStringFromName(String name) {
+
         UUID uuid = convertPlayer(name);
         return uuid != null ? uuid.toString() : null;
     }
 
     public static String getNameFromUUID(UUID uuid) {
+
+        TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase()
+                .find(TRcPlayer.class).where().eq("uuid", uuid.toString()).findUnique();
+        if (tPlayer != null) {
+            return tPlayer.getLastName();
+        }
+        try {
+            throw new Exception("Name not found for UUID: " + uuid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Bukkit.getOfflinePlayer(uuid).getName();
     }
 
     public static String getNameFromUUID(String uuid) {
+
         return getNameFromUUID(UUID.fromString(uuid));
     }
 
