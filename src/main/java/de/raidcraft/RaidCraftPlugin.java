@@ -35,7 +35,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
@@ -48,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Silthus
@@ -57,7 +57,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @Getter
     private LocalConfiguration config;
     private final Map<Chunk, Set<PlayerPlacedBlock>> playerPlacedBlocks = new HashMap<>();
-    private boolean started = false;
+    private AtomicBoolean started = new AtomicBoolean(false);
 
     @Override
     public void enable() {
@@ -86,12 +86,12 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 @Override
                 public void run() {
 
-                    started = true;
+                    started.set(true);
                     RaidCraft.LOGGER.info("Player login now allowed");
                 }
             }, TimeUtil.secondsToTicks(config.startDelay));
         } else {
-            started = true;
+            started.set(true);
         }
 
         // sync all ActionAPI stuff into Database
@@ -250,15 +250,16 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onPreLogin(PlayerLoginEvent event) {
+    public void preJoin(AsyncPlayerPreLoginEvent event) {
 
-        if (!started) {
-            event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, "Server wird gerade gestartet...");
+        if (!started.get()) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST,
+                    "The server has just been started and is in the initialization phase ...");
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void preJoin(AsyncPlayerPreLoginEvent event) {
+    public void preJoinUUID(AsyncPlayerPreLoginEvent event) {
 
         UUID uuid = event.getUniqueId();
         String name = event.getName();
