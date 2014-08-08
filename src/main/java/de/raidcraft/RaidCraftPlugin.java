@@ -269,7 +269,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         // known player
         if (player != null) {
             // if name changed
-            if (!player.getLastName().equals(name)) {
+            if (!player.getLastName().equalsIgnoreCase(name)) {
                 getLogger().warning("---- NAME CHANGE FOUND (" + uuid + ") !!! ----");
                 getLogger().warning("---- old name (" + player.getLastName() + ") !!! ----");
                 getLogger().warning("---- new name (" + name + ") !!! ----");
@@ -280,7 +280,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }
         // new player
         player = getDatabase().find(TRcPlayer.class)
-                .where().eq("last_name", name).findUnique();
+                .where().ieq("last_name", name).findUnique();
         // check if name already in use
         if (player != null) {
             getLogger().warning("---- NEW UUID FOR NAME (" + name + ") FOUND !!! ----");
