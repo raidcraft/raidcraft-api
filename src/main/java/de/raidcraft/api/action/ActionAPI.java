@@ -13,9 +13,11 @@ import de.raidcraft.api.action.trigger.global.PlayerTrigger;
 import de.raidcraft.api.economy.AccountType;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -61,21 +63,31 @@ public final class ActionAPI {
             }
         }),
         TOGGLE_DOOR("door.toggle", new DoorAction()),
-        SET_BLOCK("block.set", new SetBlockAction()),
-        TELEPORT_COORDS("teleport.location", new Action<Player>() {
-            @Override
-            public void accept(Player player, ConfigurationSection config) {
-
-                World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
-                if (world == null) return;
-                Location location = new Location(world,
-                        config.getInt("x"),
-                        config.getInt("y"),
-                        config.getInt("z"),
-                        (float) config.getDouble("yaw"),
-                        (float) config.getDouble("pitch"));
-                player.teleport(location);
+        SPAWN_COMPASS("spawn.compass", (Player player, ConfigurationSection config) -> {
+            ItemStack item = ItemUtils.createItem(Material.COMPASS, config.getString("name"));
+            World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
+            if (world == null) return;
+            Location location = new Location(world,
+                    config.getInt("x"),
+                    config.getInt("y"),
+                    config.getInt("z"));
+            player.setCompassTarget(location);
+            if (player.getInventory().addItem(item).size() != 0) {
+                player.getWorld().dropItem(player.getLocation(), item);
             }
+        }),
+        SET_BLOCK("block.set", new SetBlockAction()),
+        TELEPORT_COORDS("teleport.location", (Player player, ConfigurationSection config) -> {
+
+            World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
+            if (world == null) return;
+            Location location = new Location(world,
+                    config.getInt("x"),
+                    config.getInt("y"),
+                    config.getInt("z"),
+                    (float) config.getDouble("yaw"),
+                    (float) config.getDouble("pitch"));
+            player.teleport(location);
         });
 
         private final String id;
@@ -163,6 +175,7 @@ public final class ActionAPI {
     }
 
     public static void registerGlobalTrigger(TriggerManager manager) {
+
         manager.registerGlobalTrigger(new PlayerTrigger());
     }
 
