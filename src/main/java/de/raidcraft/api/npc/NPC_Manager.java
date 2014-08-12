@@ -11,13 +11,9 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.citizensnpcs.api.util.Storage;
 import net.citizensnpcs.api.util.YamlStorage;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginDisableEvent;
 
 import java.io.File;
 import java.util.HashMap;
@@ -29,7 +25,7 @@ import java.util.UUID;
  *
  * @author Dragonfire
  */
-public class NPC_Manager implements Listener {
+public class NPC_Manager {
 
     private static NPC_Manager INSTANCE;
     private Map<String, NPCRegistry> register = new HashMap<>();
@@ -45,8 +41,6 @@ public class NPC_Manager implements Listener {
             RaidCraft.LOGGER.warning("Citiziens not loaded! NPC_Manager not available");
             return;
         }
-        // save all NPC's if server shut down
-        Bukkit.getPluginManager().registerEvents(this, Bukkit.getPluginManager().getPlugin("RaidCraft-API"));
     }
 
     public static NPC_Manager getInstance() {
@@ -247,12 +241,6 @@ public class NPC_Manager implements Listener {
         for (String host : this.stores.keySet()) {
             storeImmediate(host);
         }
-    }
-
-    @EventHandler
-    private void pluginDisable(PluginDisableEvent event) {
-
-        this.saveToDiskImmediate();
     }
 
     public boolean isNPC(Entity entity) {
