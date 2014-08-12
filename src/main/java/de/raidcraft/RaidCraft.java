@@ -35,6 +35,7 @@ import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
 import de.raidcraft.api.trades.TradeProvider;
 import de.raidcraft.tables.TActionApi;
+import de.raidcraft.tables.TListener;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MetaDataKey;
@@ -58,6 +59,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -525,6 +527,22 @@ public class RaidCraft implements Listener {
             }
             RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase().save(actionApi);
         }
+    }
+
+    public static void registerEvents(Listener listener, Plugin plugin) {
+        RaidCraftPlugin rPlugin = RaidCraft.getComponent(RaidCraftPlugin.class);
+        String listenerName = listener.getClass().getName();
+        TListener tListener = rPlugin.getDatabase().find(TListener.class)
+                .where().eq("listener", listenerName).findUnique();
+        if(tListener == null) {
+            tListener = new TListener();
+            tListener.setListener(listenerName);
+            tListener.setPlugin(plugin.getName());
+            rPlugin.getDatabase().save(tListener);
+        }
+        tListener.setLastLoaded(new Date());
+        rPlugin.getDatabase().update(tListener);
+        Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 
 }
