@@ -224,7 +224,7 @@ public class NPC_Manager implements Listener {
         for (NPC npc : this.register.get(host)) {
             this.stores.get(host).store(npc);
         }
-        this.stores.get(host).saveToDisk();
+        this.stores.get(host).saveToDiskImmediate();
     }
 
     public void storeAll() {
