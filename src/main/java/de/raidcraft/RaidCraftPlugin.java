@@ -18,6 +18,7 @@ import de.raidcraft.api.inventory.TPersistentInventory;
 import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
+import de.raidcraft.api.npc.NPC_Manager;
 import de.raidcraft.api.storage.TObjectStorage;
 import de.raidcraft.tables.PlayerPlacedBlock;
 import de.raidcraft.tables.TActionApi;
@@ -129,6 +130,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             getDatabase().save(set);
         }
         RaidCraft.unregisterComponent(CustomItemManager.class);
+        // save all NPC's
+        NPC_Manager.getInstance().storeAll();
     }
 
     public void registeerChildListener() {
