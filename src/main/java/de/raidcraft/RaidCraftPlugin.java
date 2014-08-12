@@ -22,6 +22,7 @@ import de.raidcraft.api.storage.TObjectStorage;
 import de.raidcraft.tables.PlayerPlacedBlock;
 import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TCommand;
+import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TRcPlayer;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
@@ -175,6 +176,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TCommand.class);
         classes.add(TActionApi.class);
         classes.add(TRcPlayer.class);
+        classes.add(TListener.class);
         return classes;
     }
 
