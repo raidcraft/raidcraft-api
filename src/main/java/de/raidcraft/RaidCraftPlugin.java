@@ -11,6 +11,7 @@ import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
+import de.raidcraft.api.config.MultiComment;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.api.events.PlayerSignInteractEvent;
 import de.raidcraft.api.inventory.InventoryManager;
@@ -50,6 +51,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 /**
  * @author Silthus
@@ -104,7 +106,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 RaidCraft.trackActionApi();
             }
         }, TimeUtil.secondsToTicks(config.actoionapiSyncDelay));
-
+        if (config.heartbeatTicks > 0) {
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Hearthbeat(getLogger()),
+                    -1, config.heartbeatTicks);
+        }
         // lets run this last if any mc errors occur
         // TODO: reimplement and find fix
         // if (config.hideAttributes) attributeHider = new AttributeHider(this);
@@ -166,6 +171,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public boolean hideAttributes = true;
         @Setting("action-api.parallel")
         public boolean parallelActionAPI = true;
+        @Setting("heartbeat-ticks")
+        @MultiComment({"prints a heartbeat message in this interval",
+                "-1: off, 20: each second"})
+        public long heartbeatTicks = -1;
     }
 
     @Override
@@ -324,6 +333,31 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 return;
             }
             getDatabase().save(TCommand.parseCommand(method, host, baseClass));
+        }
+    }
+
+    public class Hearthbeat implements Runnable {
+
+        private long start;
+        private long tick;
+        private Logger logger;
+
+        public Hearthbeat(Logger logger) {
+
+            this.logger = logger;
+            start = System.currentTimeMillis();
+        }
+
+        @Override
+        public void run() {
+
+            tick++;
+            logger.info("Heartbeat: " + tick + " (diff: " + getDiff() + ")");
+        }
+
+        public long getDiff() {
+
+            return System.currentTimeMillis() - (start + tick * 1000);
         }
     }
 }
