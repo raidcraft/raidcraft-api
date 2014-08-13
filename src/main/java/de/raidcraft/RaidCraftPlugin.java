@@ -107,7 +107,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             }
         }, TimeUtil.secondsToTicks(config.actoionapiSyncDelay));
         if (config.heartbeatTicks > 0) {
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Hearthbeat(getLogger()),
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Hearthbeat(getLogger(), config.heartbeatTicks),
                     -1, config.heartbeatTicks);
         }
         // lets run this last if any mc errors occur
@@ -340,9 +340,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         private long start;
         private long tick;
+        private long interval;
         private Logger logger;
 
-        public Hearthbeat(Logger logger) {
+        public Hearthbeat(Logger logger, long interval) {
 
             this.logger = logger;
             start = System.currentTimeMillis();
@@ -357,7 +358,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         public long getDiff() {
 
-            return System.currentTimeMillis() - (start + tick * 1000);
+            return System.currentTimeMillis() - (start + (tick * interval) * (1000 / 20));
         }
     }
 }
