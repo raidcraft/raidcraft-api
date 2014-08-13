@@ -107,7 +107,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             }
         }, TimeUtil.secondsToTicks(config.actoionapiSyncDelay));
         if (config.heartbeatTicks > 0) {
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Hearthbeat(getLogger(), config.heartbeatTicks),
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Heartbeat(getLogger(), config.heartbeatTicks),
                     -1, config.heartbeatTicks);
         }
         // lets run this last if any mc errors occur
@@ -336,14 +336,14 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }
     }
 
-    public class Hearthbeat implements Runnable {
+    public class Heartbeat implements Runnable {
 
         private long start;
         private long tick;
         private long interval;
         private Logger logger;
 
-        public Hearthbeat(Logger logger, long interval) {
+        public Heartbeat(Logger logger, long interval) {
 
             this.logger = logger;
             start = System.currentTimeMillis();
