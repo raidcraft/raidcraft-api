@@ -22,4 +22,5 @@ public class TListener {
     private String listener;
     private String plugin;
     private Date lastLoaded = new Date();
+    private String server;
 }
