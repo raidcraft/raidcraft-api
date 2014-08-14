@@ -6,11 +6,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
-import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionFactory;
-import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.requirement.RequirementFactory;
-import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.config.builder.ConfigGenerator;
@@ -460,82 +457,54 @@ public class RaidCraft implements Listener {
 
     public static void trackActionApi() {
         // deacative all
-        SqlUpdate deleteCommands = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class)
-                .getDatabase().createSqlUpdate("DELETE FROM rc_actionapi");
-        deleteCommands.execute();
+        SqlUpdate deactiveUpdate = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class)
+                .getDatabase().createSqlUpdate("UPDATE rc_actionapi SET active = 0 WHERE server = :server");
+        deactiveUpdate.setParameter("server", Bukkit.getServerName());
+        deactiveUpdate.execute();
 
-        trackActions();
-        trackRequrements();
-        trackTriggers();
+        tackActionApi("action", ActionFactory.getInstance().getActions());
+        tackActionApi("requirement", RequirementFactory.getInstance().getRequirements());
+        tackActionApi("trigger", TriggerManager.getInstance().getTrigger());
     }
 
-    public static void trackActions() {
+    public static <T extends ConfigGenerator> void tackActionApi(String type, Map<String, T> map) {
 
-        Map<String, Action<?>> actions = ActionFactory.getInstance().getActions();
-        Action<?> action = null;
-        for (String actionKey : actions.keySet()) {
-            action = actions.get(actionKey);
-            if (action == null) {
+        EbeanServer db = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase();
+        String server = Bukkit.getServerName();
+        for (String key : map.keySet()) {
+            T entry = map.get(key);
+            if (entry == null) {
                 continue;
             }
-            TActionApi actionApi = new TActionApi();
-            actionApi.setAction_type("action");
-            actionApi.setName(actionKey);
-            ConfigGenerator.Information information = action.getInformation(actionKey);
-            if (information != null) {
-                actionApi.setDescription(information.desc());
+            TActionApi actionApi = db.find(TActionApi.class)
+                    .where()
+                    .eq("name", key)
+                    .eq("action_type", type)
+                    .eq("server", server).findUnique();
+            if (actionApi == null) {
+                actionApi = new TActionApi();
+                actionApi.setName(key);
+                actionApi.setAction_type(type);
+                actionApi.setServer(server);
+                ConfigGenerator.Information information = entry.getInformation(key);
+                if (information != null) {
+                    actionApi.setDescription(information.desc());
+                }
             }
-            RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase().save(actionApi);
-        }
-    }
-
-    public static void trackRequrements() {
-
-        Map<String, Requirement<?>> requires = RequirementFactory.getInstance().getRequirements();
-        Requirement<?> require = null;
-        for (String actionKey : requires.keySet()) {
-            require = requires.get(actionKey);
-            if (require == null) {
-                continue;
-            }
-            TActionApi actionApi = new TActionApi();
-            actionApi.setAction_type("requirement");
-            actionApi.setName(actionKey);
-            ConfigGenerator.Information information = require.getInformation(actionKey);
-            if (information != null) {
-                actionApi.setDescription(information.desc());
-            }
-            RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase().save(actionApi);
-        }
-    }
-
-    public static void trackTriggers() {
-
-        Map<String, Trigger> triggers = TriggerManager.getInstance().getTrigger();
-        Trigger trigger = null;
-        for (String triggerKey : triggers.keySet()) {
-            trigger = triggers.get(triggerKey);
-            if (trigger == null) {
-                continue;
-            }
-            TActionApi actionApi = new TActionApi();
-            actionApi.setAction_type("trigger");
-            actionApi.setName(triggerKey);
-            ConfigGenerator.Information information = trigger.getInformation(triggerKey);
-            if (information != null) {
-                actionApi.setDescription(information.desc());
-            }
-            RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase().save(actionApi);
+            actionApi.setActive(true);
+            actionApi.setLastActive(new Date());
+            db.save(actionApi);
         }
     }
 
     public static void registerEvents(Listener listener, Plugin plugin) {
+
         RaidCraftPlugin rPlugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         String listenerName = listener.getClass().getName();
         String server = Bukkit.getServerName();
         TListener tListener = rPlugin.getDatabase().find(TListener.class)
                 .where().eq("listener", listenerName).eq("server", server).findUnique();
-        if(tListener == null) {
+        if (tListener == null) {
             tListener = new TListener();
             tListener.setListener(listenerName);
             tListener.setPlugin(plugin.getName());
