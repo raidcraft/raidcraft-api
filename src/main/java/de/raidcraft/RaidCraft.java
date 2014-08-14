@@ -532,12 +532,14 @@ public class RaidCraft implements Listener {
     public static void registerEvents(Listener listener, Plugin plugin) {
         RaidCraftPlugin rPlugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         String listenerName = listener.getClass().getName();
+        String server = Bukkit.getServerName();
         TListener tListener = rPlugin.getDatabase().find(TListener.class)
-                .where().eq("listener", listenerName).findUnique();
+                .where().eq("listener", listenerName).eq("server", server).findUnique();
         if(tListener == null) {
             tListener = new TListener();
             tListener.setListener(listenerName);
             tListener.setPlugin(plugin.getName());
+            tListener.setServer(server);
             rPlugin.getDatabase().save(tListener);
         }
         tListener.setLastLoaded(new Date());
