@@ -459,7 +459,7 @@ public class RaidCraft implements Listener {
     }
 
     public static void trackActionApi() {
-        // delete all actionapi entries
+        // deacative all
         SqlUpdate deleteCommands = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class)
                 .getDatabase().createSqlUpdate("DELETE FROM rc_actionapi");
         deleteCommands.execute();
