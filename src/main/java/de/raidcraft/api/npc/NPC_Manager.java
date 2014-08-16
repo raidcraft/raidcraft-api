@@ -32,8 +32,7 @@ public class NPC_Manager {
     private Map<String, NPCRegistry> register = new HashMap<>();
     private Map<String, NPCDataStore> stores = new HashMap<>();
     private Map<String, Storage> saves = new HashMap<>();
-    private NPCRegistry nonPersistentRegistry =
-            CitizensAPI.createAnonymousNPCRegistry(new NonPersitentNPCDataStore());
+    private Map<String, NPCRegistry> nonPersistentRegistry = new HashMap<>();
 
     // Singleton
     private NPC_Manager() {
@@ -138,21 +137,19 @@ public class NPC_Manager {
      *
      * @see this.spawnNonPersistNpc
      */
-    // TODO: optimize save
     public NPC spawnPersistNpc(Location loc, String name, String host) {
 
         NPC npc = this.createPersistNpc(name, host);
+        npc.addTrait(CurrentLocation.class);
+        npc.getTrait(CurrentLocation.class).setLocation(loc);
         npc.spawn(loc);
         store(host);
         return npc;
     }
 
-    /**
-     * @return Citizens NPC registry that does not save any NPC's
-     */
-    public NPCRegistry getNonPersistentRegistry() {
+    public NPCRegistry createNonPersistentNpcRegistry() {
 
-        return nonPersistentRegistry;
+        return CitizensAPI.createAnonymousNPCRegistry(new NonPersitentNPCDataStore());
     }
 
     /**
@@ -167,7 +164,10 @@ public class NPC_Manager {
      */
     public NPC createNonPersistNpc(String name, String host) {
 
-        return nonPersistentRegistry.createNPC(EntityType.PLAYER, name);
+        if (!nonPersistentRegistry.containsKey(host)) {
+            nonPersistentRegistry.put(host, createNonPersistentNpcRegistry());
+        }
+        return nonPersistentRegistry.get(host).createNPC(EntityType.PLAYER, name);
     }
 
     /**
@@ -246,6 +246,14 @@ public class NPC_Manager {
     public boolean isNPC(Entity entity) {
 
         return entity.hasMetadata("NPC");
+    }
+
+    public void clear(String host) {
+
+        if (!nonPersistentRegistry.containsKey(host)) {
+            return;
+        }
+        nonPersistentRegistry.get(host).forEach(npc -> npc.despawn(DespawnReason.REMOVAL));
     }
 
     public class NonPersitentNPCDataStore implements NPCDataStore {
