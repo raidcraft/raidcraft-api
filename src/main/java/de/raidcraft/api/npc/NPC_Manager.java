@@ -11,6 +11,7 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.citizensnpcs.api.util.Storage;
 import net.citizensnpcs.api.util.YamlStorage;
+import net.citizensnpcs.trait.CurrentLocation;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -166,9 +167,7 @@ public class NPC_Manager {
      */
     public NPC createNonPersistNpc(String name, String host) {
 
-        NPC npc = nonPersistentRegistry.createNPC(EntityType.PLAYER, name);
-        store(host);
-        return npc;
+        return nonPersistentRegistry.createNPC(EntityType.PLAYER, name);
     }
 
     /**
@@ -184,8 +183,9 @@ public class NPC_Manager {
     public NPC spawnNonPersistNpc(Location loc, String name, String host) {
 
         NPC npc = this.createPersistNpc(name, host);
+        npc.addTrait(CurrentLocation.class);
+        npc.getTrait(CurrentLocation.class).setLocation(loc);
         npc.spawn(loc);
-        store(host);
         return npc;
     }
 
