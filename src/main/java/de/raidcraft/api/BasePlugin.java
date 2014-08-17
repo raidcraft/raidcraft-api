@@ -202,7 +202,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         database.registerTable(clazz, table);
     }
 
-    @Deprecated
     public final void registerCommands(Class<?> clazz) {
 
         registerCommands(clazz, null);
