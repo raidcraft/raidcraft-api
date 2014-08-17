@@ -211,8 +211,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
     public final void registerCommands(Class<?> clazz, String host) {
 
         if (host == null) {
-            RaidCraft.LOGGER.warning("Please use newregisterCommands method for " + clazz.getName());
-            host = clazz.getName();
+            host = this.getName();
         }
         RaidCraft.getComponent(RaidCraftPlugin.class).trackCommand(clazz, host, null);
         commandRegistration.register(clazz);
