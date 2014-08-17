@@ -41,7 +41,8 @@ public final class RequirementFactory implements Component {
 
         requirements.put(identifier, requirement);
         ConfigBuilder.registerConfigGenerator(requirement);
-        RaidCraft.LOGGER.info("registered global requirement: " + identifier);
+        RaidCraft.info("registered global requirement: " + identifier
+                , "requirement.global");
     }
 
     @SneakyThrows
@@ -53,7 +54,8 @@ public final class RequirementFactory implements Component {
         }
         requirements.put(identifier, requirement);
         ConfigBuilder.registerConfigGenerator(requirement);
-        RaidCraft.LOGGER.info("registered requirement: " + identifier);
+        RaidCraft.info("registered requirement: " + identifier
+                , "requirement." + plugin.getName());
     }
 
     public void unregisterRequirement(@NonNull JavaPlugin plugin, @NonNull String identifier) {
@@ -61,7 +63,8 @@ public final class RequirementFactory implements Component {
         Requirement<?> requirement = requirements.remove(identifier);
         if (requirement == null) requirement = requirements.remove(plugin.getName() + "." + identifier);
         if (requirement != null) {
-            RaidCraft.LOGGER.info("removed requirement: " + identifier + " (" + plugin.getName() + ")");
+            RaidCraft.info("removed requirement: " + identifier + " (" + plugin.getName() + ")"
+                    , "requirement." + plugin.getName());
         }
     }
 
@@ -70,7 +73,8 @@ public final class RequirementFactory implements Component {
         requirements.keySet().stream()
                 .filter(key -> key.startsWith(plugin.getName().toLowerCase()))
                 .forEach(requirements::remove);
-        RaidCraft.LOGGER.info("removed all requirements of: " + plugin.getName());
+        RaidCraft.info("removed all requirements of: " + plugin.getName()
+                , "requirement." + plugin.getName());
     }
 
     public Map<String, Requirement<?>> getRequirements() {
