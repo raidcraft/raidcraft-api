@@ -106,8 +106,12 @@ public final class CustomItemManager implements Component {
                 throw new CustomItemException("Es gibt kein Custom Item mit dem Namen: " + name);
             }
             if (matching.size() > 1) {
+                List<String> names = new ArrayList<>(matching.size());
+                for(CustomItem item : matching) {
+                    names.add(item.getName());
+                }
                 throw new CustomItemException("Es gibt mehrere Custom Items mit dem Namen " + name + ": " +
-                        StringUtil.joinString(matching, ", ", 0));
+                        StringUtil.joinString(names, ", ", 0));
             }
             return matching.get(0);
         }

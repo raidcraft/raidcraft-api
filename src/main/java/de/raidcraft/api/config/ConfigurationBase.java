@@ -1,18 +1,24 @@
 package de.raidcraft.api.config;
 
 import de.raidcraft.api.BasePlugin;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -37,6 +43,8 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
      */
     private File file;
     private DataMap override = null;
+
+    private HashMap<String, String[]> annos = new HashMap<>();
 
     public ConfigurationBase(T plugin, File file) {
 
@@ -214,8 +222,10 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
     public final void save(File file) {
 
         try {
+            annos.clear();
             saveAnnotations();
             super.save(file);
+            commentPostProcess(file);
         } catch (IOException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
@@ -236,6 +246,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
                     saveAnnotations(field.get(object));
                 } else if (field.isAnnotationPresent(Setting.class)) {
                     String key = field.getAnnotation(Setting.class).value();
+                    onComment(key, field);
                     set(key, prepareSerialization(field.get(object)));
                 }
             } catch (IllegalAccessException e) {
@@ -243,6 +254,81 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
                 e.printStackTrace();
             }
         }
+    }
+
+    private void onComment(String path, Field field) {
+
+        if (field.getAnnotation(Comment.class) != null) {
+            annos.put(path, new String[]{field.getAnnotation(Comment.class)
+                    .value()});
+            return;
+        }
+        if (field.getAnnotation(MultiComment.class) != null) {
+            annos.put(path, field.getAnnotation(MultiComment.class).value());
+        }
+
+    }
+
+    private int level(String path) {
+
+        int count = 0;
+        for (int i = 0; i < path.length(); i++) {
+            if (path.charAt(i) != ' ') {
+                break;
+            }
+            count++;
+        }
+        return count / 2;
+    }
+
+    private void commentPostProcess(File file)
+            throws IOException {
+
+        ArrayList<String> buffer = new ArrayList<String>();
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            buffer.add(line);
+        }
+        reader.close();
+        ArrayList<String> key = new ArrayList<String>();
+        int level;
+        String newKey;
+        String tmpKey;
+        int diff;
+        String[] comment;
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        for (int i = 0; i < buffer.size(); i++) {
+            if (buffer.get(i).charAt(0) == '#') {
+                continue;
+            }
+            newKey = buffer.get(i).split(":")[0];
+            level = level(newKey);
+            newKey = newKey.trim();
+            if (level == 0) {
+                key.clear();
+            } else {
+                diff = key.size() - level;
+                for (int j = 0; j < diff; j++) {
+                    key.remove(key.size() - 1);
+                }
+                tmpKey = StringUtils.join(key, ".");
+                tmpKey += "." + newKey;
+
+                if (annos.containsKey(tmpKey)) {
+                    comment = annos.get(tmpKey);
+                    for (int j = 0; j < comment.length; j++) {
+                        writer.write("# " + comment[j]);
+                        writer.newLine();
+                    }
+                }
+            }
+            key.add(newKey);
+            writer.write(buffer.get(i));
+            writer.newLine();
+        }
+        writer.close();
     }
 
     private List<Field> getFieldsRecur(Class<?> clazz) {

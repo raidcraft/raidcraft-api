@@ -1,4 +1,4 @@
-package de.raidcraft;
+package de.raidcraft.tables;
 
 import de.raidcraft.api.database.Bean;
 import org.bukkit.block.Block;

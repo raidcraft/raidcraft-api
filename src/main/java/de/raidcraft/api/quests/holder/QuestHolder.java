@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Silthus
@@ -15,7 +16,7 @@ public interface QuestHolder {
 
     public int getId();
 
-    public String getName();
+    public UUID getPlayerId();
 
     public Player getPlayer();
 

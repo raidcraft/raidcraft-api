@@ -1,11 +1,16 @@
 package de.raidcraft;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.SqlUpdate;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
+import de.raidcraft.api.action.action.ActionFactory;
+import de.raidcraft.api.action.requirement.RequirementFactory;
+import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.bukkit.BukkitPlayer;
+import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.api.conversations.ConversationProvider;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
@@ -26,6 +31,10 @@ import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
 import de.raidcraft.api.trades.TradeProvider;
+import de.raidcraft.tables.RcLogLeevel;
+import de.raidcraft.tables.TActionApi;
+import de.raidcraft.tables.TListener;
+import de.raidcraft.tables.TLog;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MetaDataKey;
@@ -49,6 +58,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +102,7 @@ public class RaidCraft implements Listener {
      *
      * @return RCPlayer
      */
+    @Deprecated
     public static RCPlayer safeGetPlayer(String name) throws UnknownPlayerException {
 
         Player player = Bukkit.getPlayer(name);
@@ -123,6 +134,7 @@ public class RaidCraft implements Listener {
      *
      * @return wrapped RCPlayer object
      */
+    @Deprecated
     public static RCPlayer getPlayer(String name) {
 
         try {
@@ -444,4 +456,85 @@ public class RaidCraft implements Listener {
 
         return RaidCraft.getComponent(InventoryManager.class).createInventory(title, size);
     }
+
+    public static void trackActionApi() {
+        // deacative all
+        SqlUpdate deactiveUpdate = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class)
+                .getDatabase().createSqlUpdate("UPDATE rc_actionapi SET active = 0 WHERE server = :server");
+        deactiveUpdate.setParameter("server", Bukkit.getServerName());
+        deactiveUpdate.execute();
+
+        tackActionApi("action", ActionFactory.getInstance().getActions());
+        tackActionApi("requirement", RequirementFactory.getInstance().getRequirements());
+        tackActionApi("trigger", TriggerManager.getInstance().getTrigger());
+    }
+
+    public static <T extends ConfigGenerator> void tackActionApi(String type, Map<String, T> map) {
+
+        EbeanServer db = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase();
+        String server = Bukkit.getServerName();
+        for (String key : map.keySet()) {
+            T entry = map.get(key);
+            if (entry == null) {
+                continue;
+            }
+            TActionApi actionApi = db.find(TActionApi.class)
+                    .where()
+                    .eq("name", key)
+                    .eq("action_type", type)
+                    .eq("server", server).findUnique();
+            if (actionApi == null) {
+                actionApi = new TActionApi();
+                actionApi.setName(key);
+                actionApi.setAction_type(type);
+                actionApi.setServer(server);
+                ConfigGenerator.Information information = entry.getInformation(key);
+                if (information != null) {
+                    actionApi.setDescription(information.desc());
+                }
+            }
+            actionApi.setActive(true);
+            actionApi.setLastActive(new Date());
+            db.save(actionApi);
+        }
+    }
+
+    public static void registerEvents(Listener listener, Plugin plugin) {
+
+        RaidCraftPlugin rPlugin = RaidCraft.getComponent(RaidCraftPlugin.class);
+        String listenerName = listener.getClass().getName();
+        String server = Bukkit.getServerName();
+        TListener tListener = rPlugin.getDatabase().find(TListener.class)
+                .where().eq("listener", listenerName).eq("server", server).findUnique();
+        if (tListener == null) {
+            tListener = new TListener();
+            tListener.setListener(listenerName);
+            tListener.setPlugin(plugin.getName());
+            tListener.setServer(server);
+            rPlugin.getDatabase().save(tListener);
+        }
+        tListener.setLastLoaded(new Date());
+        rPlugin.getDatabase().update(tListener);
+        Bukkit.getPluginManager().registerEvents(listener, plugin);
+    }
+
+    /**
+     * Intern Rc Log, saved into rc_log table
+     */
+    public static void info(String message, String category) {
+
+        log(message, category, RcLogLeevel.INFO);
+    }
+
+    public static void log(String message, String category, RcLogLeevel level) {
+
+        TLog log = new TLog();
+        log.setLast(new Date());
+        log.setServer(Bukkit.getServerName());
+        log.setCategory(category);
+        log.setLevel(level);
+        log.setLog(message);
+        RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase().save(log);
+    }
+
 }

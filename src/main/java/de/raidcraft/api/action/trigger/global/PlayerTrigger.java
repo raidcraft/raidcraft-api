@@ -24,16 +24,10 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 /**
  * @author Silthus
  */
 public class PlayerTrigger extends Trigger implements Listener {
-
-    private Map<UUID, Location> playerLocations = new HashMap<>();
 
     public PlayerTrigger() {
 
@@ -115,7 +109,7 @@ public class PlayerTrigger extends Trigger implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event) {
 
-        if (!hasMoved(event.getPlayer(), event.getTo())) return;
+        if (!hasMoved(event)) return;
 
         // if no coordinates are defined always return true
         // otherwise check the coordinates and the radius
@@ -137,14 +131,11 @@ public class PlayerTrigger extends Trigger implements Listener {
         });
     }
 
-    private boolean hasMoved(Player player, Location to) {
-
-        if (!playerLocations.containsKey(player.getUniqueId())) {
-            playerLocations.put(player.getUniqueId(), player.getLocation());
-        }
-        Location current = playerLocations.get(player.getUniqueId());
-        if (current.getBlockX() != to.getBlockX() || current.getBlockY() != to.getBlockY() || current.getBlockZ() != to.getBlockZ()) {
-            playerLocations.put(player.getUniqueId(), to);
+    private boolean hasMoved(PlayerMoveEvent event) {
+        // Did we move a block?
+        if (event.getFrom().getBlockX() != event.getTo().getBlockX()
+                || event.getFrom().getBlockY() != event.getTo().getBlockY()
+                || event.getFrom().getBlockZ() != event.getTo().getBlockZ()) {
             return true;
         }
         return false;

@@ -104,10 +104,9 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     }
 
     @Override
-    public void startFlight() {
+    public synchronized void startFlight() {
 
         if (isActive()) return;
-        if (getAircraft() == null) return;
         try {
             onStartFlight();
             getAircraft().takeoff(this);
@@ -121,10 +120,7 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     public abstract void onStartFlight() throws FlightException;
 
     @Override
-    public void abortFlight() {
-
-        if (!isActive()) return;
-        if (getAircraft() == null) return;
+    public synchronized void abortFlight() {
         try {
             onAbortFlight();
             getAircraft().abortFlight(this);
@@ -139,9 +135,6 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
 
     @Override
     public void endFlight() {
-
-        if (!isActive()) return;
-        if (getAircraft() == null) return;
         try {
             onEndFlight();
             getAircraft().land(this);

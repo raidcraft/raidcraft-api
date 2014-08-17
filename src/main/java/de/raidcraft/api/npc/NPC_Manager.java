@@ -11,13 +11,10 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitInfo;
 import net.citizensnpcs.api.util.Storage;
 import net.citizensnpcs.api.util.YamlStorage;
-import org.bukkit.Bukkit;
+import net.citizensnpcs.trait.CurrentLocation;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginDisableEvent;
 
 import java.io.File;
 import java.util.HashMap;
@@ -26,15 +23,16 @@ import java.util.UUID;
 
 /**
  * Handle all NPC's
- * User: IDragonfire
+ *
+ * @author Dragonfire
  */
-public class NPC_Manager implements Listener {
+public class NPC_Manager {
 
     private static NPC_Manager INSTANCE;
     private Map<String, NPCRegistry> register = new HashMap<>();
     private Map<String, NPCDataStore> stores = new HashMap<>();
     private Map<String, Storage> saves = new HashMap<>();
-    private NPCRegistry nonPersistentRegistry = CitizensAPI.createAnonymousNPCRegistry(null);
+    private Map<String, NPCRegistry> nonPersistentRegistry = new HashMap<>();
 
     // Singleton
     private NPC_Manager() {
@@ -43,8 +41,6 @@ public class NPC_Manager implements Listener {
             RaidCraft.LOGGER.warning("Citiziens not loaded! NPC_Manager not available");
             return;
         }
-        // save all NPC's if server shut down
-        Bukkit.getPluginManager().registerEvents(this, Bukkit.getPluginManager().getPlugin("RaidCraft-API"));
     }
 
     public static NPC_Manager getInstance() {
@@ -114,6 +110,8 @@ public class NPC_Manager implements Listener {
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
+     *
+     * @see this.createNonPersistNpc
      */
     // TODO: optimize save
     public NPC createPersistNpc(String name, String host) {
@@ -136,14 +134,22 @@ public class NPC_Manager implements Listener {
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
+     *
+     * @see this.spawnNonPersistNpc
      */
-    // TODO: optimize save
     public NPC spawnPersistNpc(Location loc, String name, String host) {
 
         NPC npc = this.createPersistNpc(name, host);
+        npc.addTrait(CurrentLocation.class);
+        npc.getTrait(CurrentLocation.class).setLocation(loc);
         npc.spawn(loc);
         store(host);
         return npc;
+    }
+
+    public NPCRegistry createNonPersistentNpcRegistry() {
+
+        return CitizensAPI.createAnonymousNPCRegistry(new NonPersitentNPCDataStore());
     }
 
     /**
@@ -153,12 +159,20 @@ public class NPC_Manager implements Listener {
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
+     *
+     * @see this.createPersistNpc
      */
     public NPC createNonPersistNpc(String name, String host) {
 
-        NPC npc = nonPersistentRegistry.createNPC(EntityType.PLAYER, name);
-        store(host);
-        return npc;
+        return getNonPersistentNpcRegistry(host).createNPC(EntityType.PLAYER, name);
+    }
+
+    public NPCRegistry getNonPersistentNpcRegistry(String host) {
+
+        if (!nonPersistentRegistry.containsKey(host)) {
+            nonPersistentRegistry.put(host, createNonPersistentNpcRegistry());
+        }
+        return nonPersistentRegistry.get(host);
     }
 
     /**
@@ -168,12 +182,15 @@ public class NPC_Manager implements Listener {
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
+     *
+     * @see this.spawnPersistNpc
      */
     public NPC spawnNonPersistNpc(Location loc, String name, String host) {
 
-        NPC npc = this.createPersistNpc(name, host);
+        NPC npc = this.createNonPersistNpc(name, host);
+        npc.addTrait(CurrentLocation.class);
+        npc.getTrait(CurrentLocation.class).setLocation(loc);
         npc.spawn(loc);
-        store(host);
         return npc;
     }
 
@@ -193,6 +210,8 @@ public class NPC_Manager implements Listener {
      * ATTENTION: load NPCs after you register all customs traits
      *
      * @param host name of the holder of the npcs, typically the plugin name
+     *
+     * @see this.registerTrait
      */
     public void loadNPCs(String host) {
 
@@ -204,7 +223,7 @@ public class NPC_Manager implements Listener {
         for (NPC npc : this.register.get(host)) {
             this.stores.get(host).store(npc);
         }
-        this.stores.get(host).saveToDisk();
+        this.stores.get(host).saveToDiskImmediate();
     }
 
     public void storeAll() {
@@ -229,14 +248,64 @@ public class NPC_Manager implements Listener {
         }
     }
 
-    @EventHandler
-    private void pluginDisable(PluginDisableEvent event) {
-
-        this.saveToDiskImmediate();
-    }
-
     public boolean isNPC(Entity entity) {
 
         return entity.hasMetadata("NPC");
+    }
+
+    /**
+     * Clear and kill all NPC's of a non persistent host
+     *
+     * @param host non persistent host
+     */
+
+    public void clear(String host) {
+
+        if (!nonPersistentRegistry.containsKey(host)) {
+            return;
+        }
+        nonPersistentRegistry.get(host).forEach(npc -> npc.despawn(DespawnReason.REMOVAL));
+    }
+
+    public class NonPersitentNPCDataStore implements NPCDataStore {
+
+        private int id = 0;
+
+        @Override
+        public void clearData(NPC npc) {
+            // nothing
+        }
+
+        @Override
+        public int createUniqueNPCId(NPCRegistry npcs) {
+
+            id++;
+            return id - 1;
+        }
+
+        @Override
+        public void loadInto(NPCRegistry npcs) {
+            // nothing
+        }
+
+        @Override
+        public void saveToDisk() {
+            // nothing
+        }
+
+        @Override
+        public void saveToDiskImmediate() {
+            // nothing
+        }
+
+        @Override
+        public void store(NPC npc) {
+            // nothing
+        }
+
+        @Override
+        public void storeAll(NPCRegistry npcs) {
+            // nothing
+        }
     }
 }

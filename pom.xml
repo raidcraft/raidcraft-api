@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>raidcraft-api</artifactId>
     <packaging>jar</packaging>
-    <version>1.4.8-SNAPSHOT</version>
+    <version>1.4.9-develop-SNAPSHOT</version>
     <name>RaidCraft-API</name>
 
     <parent>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>vault</artifactId>
-            <version>1.2.26</version>
+            <version>${rc.version}</version>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>

@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BlockIterator;
 
 import javax.annotation.Nullable;
@@ -127,6 +126,7 @@ public final class BlockUtil {
         return changedBlocks;
     }
 
+    @Deprecated
     public static Set<Block> getBlocks(Block source, int radius, Set<Integer> types) {
 
         Set<Block> blocks = new HashSet<>();
@@ -148,11 +148,26 @@ public final class BlockUtil {
         return blocks;
     }
 
-    public static void destroyBlock(Block block) {
+    public static Set<Block> getBlocksFlat(Block source, int radius, Set<Material> types) {
 
-        ItemStack item = new ItemStack(block.getTypeId(), 1, block.getData());
-        block.getLocation().getWorld().dropItemNaturally(block.getLocation(), item);
-        block.setTypeId(0, true);
+        Set<Block> blocks = new HashSet<>();
+        int y = 0;
+        Block block;
+        for (int x = -radius; x < radius; x++) {
+            for (int z = -radius; z < radius; z++) {
+                block = source.getRelative(x, y, z);
+                if (types.contains(block.getType())) {
+                    blocks.add(block);
+                }
+            }
+        }
+        return blocks;
+    }
+
+
+    public static void destroyBlock(Block block) {
+        // TODO: check if allowed?
+        block.breakNaturally();
     }
 
     @Nullable

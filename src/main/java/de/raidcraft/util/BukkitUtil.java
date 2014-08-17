@@ -195,4 +195,28 @@ public final class BukkitUtil {
 
         return Math.abs((float) Math.toDegrees(v1.angle(v2)));
     }
+
+    public static float lookAtIgnoreY(double x, double z, double lookAtX, double lookAtZ) {
+
+        // Values of change in distance (make it relative)
+        double dx = x - lookAtX;
+        double dz = z - lookAtZ;
+
+        double myyaw = 0;
+        // Set yaw
+        if (dx != 0) {
+            // Set yaw start value based on dx
+            if (dx < 0) {
+                myyaw = 1.5 * Math.PI;
+            } else {
+                myyaw = 0.5 * Math.PI;
+            }
+            myyaw = myyaw - Math.atan(dz / dx);
+        } else if (dz < 0) {
+            myyaw = Math.PI;
+        }
+
+        // Set values, convert to degrees (invert the yaw since Bukkit uses a different yaw dimension format)
+        return (float) (-myyaw * 180f / Math.PI);
+    }
 }

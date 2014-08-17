@@ -10,6 +10,7 @@ import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
 import com.sk89q.minecraft.util.commands.SimpleInjector;
 import com.sk89q.minecraft.util.commands.WrappedCommandException;
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
 import de.raidcraft.api.database.Database;
@@ -19,6 +20,7 @@ import de.raidcraft.api.ebean.RaidCraftDatabase;
 import de.raidcraft.api.language.ConfigTranslationProvider;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
+import de.raidcraft.tables.RcLogLeevel;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -203,12 +205,21 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     public final void registerCommands(Class<?> clazz) {
 
+        registerCommands(clazz, null);
+    }
+
+    public final void registerCommands(Class<?> clazz, String host) {
+
+        if (host == null) {
+            host = this.getName();
+        }
+        RaidCraft.getComponent(RaidCraftPlugin.class).trackCommand(clazz, host, null);
         commandRegistration.register(clazz);
     }
 
     public final void registerEvents(Listener listener) {
 
-        Bukkit.getPluginManager().registerEvents(listener, this);
+        RaidCraft.registerEvents(listener, this);
     }
 
     public RCPlayer getPlayer(Player player) {
@@ -216,6 +227,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         return RaidCraft.getPlayer(player);
     }
 
+    // TODO: UUID rework
+    @Deprecated
     public RCPlayer getPlayer(String player) {
 
         return RaidCraft.getPlayer(player);
@@ -254,4 +267,26 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
         return (chat != null);
     }
+
+    // Rc log methods for informations
+
+    public void info(String message) {
+
+        info(message, null);
+    }
+
+    public void info(String message, String category) {
+
+        log(message, category, RcLogLeevel.INFO);
+    }
+
+    public void log(String message, String category, RcLogLeevel level) {
+
+        String tcategory = getName();
+        if (category != null && !category.equals("")) {
+            tcategory += "." + category;
+        }
+        RaidCraft.log(message, tcategory, level);
+    }
+
 }

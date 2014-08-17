@@ -100,6 +100,16 @@ public final class LocationUtil {
     }
 
     /**
+     * @return the correct distance between blocks without y layer
+     */
+    public static double getRealDistance(double x1, double z1, double x2, double z2) {
+
+        double dx = Math.abs(x2 - x1);
+        double dy = Math.abs(z2 - z1);
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
      * Gets the block located relative to the signs facing. That
      * means that when the sign is attached to a block and the player
      * is looking at it it will add the offsetX to left or right,
