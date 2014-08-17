@@ -4,6 +4,7 @@ import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -57,6 +58,19 @@ public class CommandUtil {
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) {
             throw new CommandException("No player with the name (" + name + ") is online");
+        }
+        return player;
+    }
+
+    public static OfflinePlayer grabOfflinePlayer(String name) throws CommandException {
+
+        UUID uuid = UUIDUtil.convertPlayer(name);
+        if (uuid == null) {
+            throw new CommandException("No player with the name (" + name + ") found");
+        }
+        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+        if (player == null) {
+            throw new CommandException("Player with the name (" + name + ") does not exist");
         }
         return player;
     }
