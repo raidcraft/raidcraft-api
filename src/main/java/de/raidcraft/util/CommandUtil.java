@@ -47,4 +47,17 @@ public class CommandUtil {
         player.teleport(to);
         return player;
     }
+
+    public static Player grabPlayer(String name) throws CommandException {
+
+        UUID uuid = UUIDUtil.convertPlayer(name);
+        if (uuid == null) {
+            throw new CommandException("No player with the name (" + name + ") found");
+        }
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) {
+            throw new CommandException("No player with the name (" + name + ") is online");
+        }
+        return player;
+    }
 }
