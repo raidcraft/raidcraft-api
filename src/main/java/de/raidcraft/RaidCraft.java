@@ -31,8 +31,10 @@ import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
 import de.raidcraft.api.trades.TradeProvider;
+import de.raidcraft.tables.RcLogLeevel;
 import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TListener;
+import de.raidcraft.tables.TLog;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MetaDataKey;
@@ -514,6 +516,25 @@ public class RaidCraft implements Listener {
         tListener.setLastLoaded(new Date());
         rPlugin.getDatabase().update(tListener);
         Bukkit.getPluginManager().registerEvents(listener, plugin);
+    }
+
+    /**
+     * Intern Rc Log, saved into rc_log table
+     */
+    public static void info(String message, String category) {
+
+        log(message, category, RcLogLeevel.INFO);
+    }
+
+    public static void log(String message, String category, RcLogLeevel level) {
+
+        TLog log = new TLog();
+        log.setLast(new Date());
+        log.setServer(Bukkit.getServerName());
+        log.setCategory(category);
+        log.setLevel(level);
+        log.setLog(message);
+        RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase().save(log);
     }
 
 }

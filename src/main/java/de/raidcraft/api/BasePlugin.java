@@ -20,6 +20,7 @@ import de.raidcraft.api.ebean.RaidCraftDatabase;
 import de.raidcraft.api.language.ConfigTranslationProvider;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
+import de.raidcraft.tables.RcLogLeevel;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -218,7 +219,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     public final void registerEvents(Listener listener) {
 
-       RaidCraft.registerEvents(listener, this);
+        RaidCraft.registerEvents(listener, this);
     }
 
     public RCPlayer getPlayer(Player player) {
@@ -266,4 +267,26 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
         return (chat != null);
     }
+
+    // Rc log methods for informations
+
+    public void info(String message) {
+
+        info(message, null);
+    }
+
+    public void info(String message, String category) {
+
+        log(message, category, RcLogLeevel.INFO);
+    }
+
+    public void log(String message, String category, RcLogLeevel level) {
+
+        String tcategory = getName();
+        if (category != null && !category.equals("")) {
+            tcategory += "." + category;
+        }
+        RaidCraft.log(message, tcategory, level);
+    }
+
 }

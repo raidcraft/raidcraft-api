@@ -40,7 +40,7 @@ public final class ActionFactory implements Component {
 
         actions.put(identifier, action);
         ConfigBuilder.registerConfigGenerator(action);
-        RaidCraft.LOGGER.info("registered global action: " + identifier);
+        RaidCraft.info("registered global action: " + identifier, "action.globa");
     }
 
     public <T> void registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Action<T> action) throws ActionException {
@@ -51,7 +51,7 @@ public final class ActionFactory implements Component {
         }
         actions.put(identifier, action);
         ConfigBuilder.registerConfigGenerator(action);
-        RaidCraft.LOGGER.info("registered action: " + identifier);
+        RaidCraft.info("registered action: " + identifier, "action." + plugin.getName());
     }
 
     public void unregisterAction(@NonNull JavaPlugin plugin, @NonNull String identifier) {
@@ -59,14 +59,16 @@ public final class ActionFactory implements Component {
         Action<?> action = actions.remove(identifier);
         if (action == null) action = actions.remove(plugin.getName() + "." + identifier);
         if (action != null) {
-            RaidCraft.LOGGER.info("removed action: " + identifier + " (" + plugin.getName() + ")");
+            RaidCraft.info("removed action: " + identifier + " (" + plugin.getName() + ")"
+                    , "action." + plugin.getName());
         }
     }
 
     public void unregisterActions(@NonNull JavaPlugin plugin) {
 
         actions.keySet().removeIf(key -> key.startsWith(plugin.getName().toLowerCase()));
-        RaidCraft.LOGGER.info("removed all actions of: " + plugin.getName());
+        RaidCraft.info("removed all actions of: " + plugin.getName()
+                , "action." + plugin.getName());
     }
 
     public Map<String, Action<?>> getActions() {
