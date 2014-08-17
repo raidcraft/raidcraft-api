@@ -164,10 +164,15 @@ public class NPC_Manager {
      */
     public NPC createNonPersistNpc(String name, String host) {
 
+        return getNonPersistentNpcRegistry(host).createNPC(EntityType.PLAYER, name);
+    }
+
+    public NPCRegistry getNonPersistentNpcRegistry(String host) {
+
         if (!nonPersistentRegistry.containsKey(host)) {
             nonPersistentRegistry.put(host, createNonPersistentNpcRegistry());
         }
-        return nonPersistentRegistry.get(host).createNPC(EntityType.PLAYER, name);
+        return nonPersistentRegistry.get(host);
     }
 
     /**
@@ -182,7 +187,7 @@ public class NPC_Manager {
      */
     public NPC spawnNonPersistNpc(Location loc, String name, String host) {
 
-        NPC npc = this.createPersistNpc(name, host);
+        NPC npc = this.createNonPersistNpc(name, host);
         npc.addTrait(CurrentLocation.class);
         npc.getTrait(CurrentLocation.class).setLocation(loc);
         npc.spawn(loc);
@@ -247,6 +252,12 @@ public class NPC_Manager {
 
         return entity.hasMetadata("NPC");
     }
+
+    /**
+     * Clear and kill all NPC's of a non persistent host
+     *
+     * @param host non persistent host
+     */
 
     public void clear(String host) {
 
