@@ -87,7 +87,7 @@ public final class RequirementManager {
                 // get the name for aliasing
                 String name = StringUtils.formatName(rClass.getAnnotation(RequirementInformation.class).value());
                 requirementClasses.put(name, rClass);
-                RaidCraft.LOGGER.info("Registered Requirement Type: " + name);
+                RaidCraft.info("Registered Requirement Type: " + name, "RequirementManager");
                 break;
             }
         }
