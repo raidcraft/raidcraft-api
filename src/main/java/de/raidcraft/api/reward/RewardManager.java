@@ -68,7 +68,7 @@ public class RewardManager {
                 // get the name for aliasing
                 String name = StringUtils.formatName(rClass.getAnnotation(RewardInformation.class).value());
                 rewardClasses.put(name, rClass);
-                RaidCraft.LOGGER.info("Registered Reward Type: " + name);
+                RaidCraft.info("Registered Reward Type: " + name, "RewardManager");
                 break;
             }
         }
