@@ -120,7 +120,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         try {
             // delete all commands
-            SqlUpdate deleteCommands = getDatabase().createSqlUpdate("DELETE FROM rc_commands");
+            SqlUpdate deleteCommands = getDatabase().createSqlUpdate("DELETE FROM rc_commands WHERE server = :server");
+            deleteCommands.setParameter("server", Bukkit.getServerName());
             deleteCommands.execute();
         } catch (PersistenceException e) {
             e.printStackTrace();
