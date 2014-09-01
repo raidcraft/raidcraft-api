@@ -1,5 +1,6 @@
 package de.raidcraft.api.quests.holder;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.quests.QuestException;
 import de.raidcraft.api.quests.quest.Quest;
 import de.raidcraft.api.quests.quest.QuestTemplate;
@@ -18,6 +19,22 @@ public interface QuestHolder {
     public String getName();
 
     public Player getPlayer();
+
+    public default boolean hasCompletedQuest(String quest) {
+
+        try {
+            return hasQuest(quest) && getQuest(quest).isCompleted();
+        } catch (QuestException e) {
+            RaidCraft.LOGGER.warning(e.getMessage());
+        }
+        return false;
+    }
+
+    public default boolean hasCompletedQuest(QuestTemplate questTemplate) {
+
+        Quest quest = getQuest(questTemplate);
+        return quest != null && quest.isCompleted();
+    }
 
     public boolean hasQuest(String quest);
 
