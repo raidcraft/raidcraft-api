@@ -38,12 +38,12 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>${rc.version}</version>
+            <version>3.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.comphenix.packetwrapper</groupId>
             <artifactId>PacketWrapper</artifactId>
-            <version>${rc.version}</version>
+            <version>1.7.2-R0.5</version>
         </dependency>
         <dependency>
             <groupId>mkremins</groupId>
