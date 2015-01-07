@@ -1,10 +1,12 @@
 // Gradle repositories and dependencies
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
     }
     dependencies {
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
     }
 }
 
@@ -18,6 +20,7 @@ checkstyle {
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 // Default tasks
 defaultTasks 'licenseFormat', 'check', 'build'
@@ -43,6 +46,7 @@ ext.commit = project.hasProperty("commit") ? commit : 'unknown'
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
+
 // Project repositories
 repositories {
     mavenCentral()
@@ -59,7 +63,7 @@ configurations {
 // Project dependencies
 dependencies {
     compile 'net.milkbowl.vault:Vault:1.5.2'
-    compile 'net.citizensnpcs:citizensapi:2.0.14-SNAPSHOT	'
+    compile 'net.citizensnpcs:citizensapi:2.0.14-SNAPSHOT'
     compile 'com.comphenix.protocol:ProtocolLib:3.4.0'
     compile 'com.comphenix.packetwrapper:PacketWrapper:1.7.2-R0.5'
     compile 'mkremins:fanciful:0.2.1-SNAPSHOT'
@@ -70,6 +74,20 @@ dependencies {
     // maven
     deployerJars 'org.apache.maven.wagon:wagon-ftp:2.7'
 }
+
+shadowJar {
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+    dependencies {
+        include(dependency('cmkremins:fanciful:0.2.1-SNAPSHOT'))
+        include(dependency('com.comphenix.packetwrapper:PacketWrapper:1.7.2-R0.5'))
+        include(dependency('com.comphenix.protocol:ProtocolLib:3.4.0'))
+        include(dependency('net.citizensnpcs:citizensapi:2.0.14-SNAPSHOT'))
+        include(dependency('net.milkbowl.vault:Vault:1.5.2'))
+    }
+    classifier = ''
+}
+build.dependsOn(shadowJar)
 
 // Filter, process, and include resources
 processResources {
