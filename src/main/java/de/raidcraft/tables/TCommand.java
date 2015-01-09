@@ -14,43 +14,23 @@ import java.util.Arrays;
 /**
  * @author Dragonfire
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "rc_commands")
 public class TCommand {
 
-    @Getter
-    @Setter
     @Id
     private int id;
-    @Getter
-    @Setter
     private String host;
-    @Getter
-    @Setter
     private String base;
-    @Getter
-    @Setter
     private String aliases;
-    @Getter
-    @Setter
     private String description;
-    @Getter
-    @Setter
     private String usage_; // sql reservered word
-    @Getter
-    @Setter
     private int min;
-    @Getter
-    @Setter
     private int max;
-    @Getter
-    @Setter
     private String flags;
-    @Getter
-    @Setter
     private String help_; // sql reservered word
-    @Getter
-    @Setter
     private String permission;
 
     public static TCommand parseCommand(Method method, String host, String base) {

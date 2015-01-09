@@ -26,6 +26,7 @@ import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TCommand;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
+import de.raidcraft.tables.TPlugin;
 import de.raidcraft.tables.TRcPlayer;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
@@ -191,6 +192,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TRcPlayer.class);
         classes.add(TListener.class);
         classes.add(TLog.class);
+        classes.add(TPlugin.class);
         return classes;
     }
 
@@ -316,7 +318,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     /**
      * Do not call this method
      * use registerCommands(Class<?> class, String host)
-     *
      * @param clazz
      */
     public void trackCommand(Class<?> clazz, String host, String baseClass) {
