@@ -1,6 +1,6 @@
 package de.raidcraft.api.language;
 
-import de.raidcraft.api.RaidCraft;
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -1,6 +1,6 @@
 package de.raidcraft.util;
 
-import de.raidcraft.api.RaidCraft;
+import de.raidcraft.RaidCraft;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,10 +18,6 @@ public final class DateUtil {
     }
 
     public static final SimpleDateFormat DATE = new SimpleDateFormat("dd-MM-yyy HH:mm:ss");
-
-    public static Date getCurrentTime() {
-        return new Date();
-    }
 
     public static String getCurrentDateString() {
 

@@ -9,29 +9,48 @@ import com.sk89q.minecraft.util.commands.CommandsManager;
 import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
 import com.sk89q.minecraft.util.commands.SimpleInjector;
 import com.sk89q.minecraft.util.commands.WrappedCommandException;
-import de.raidcraft.RaidCraftBasePlugin;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
+import de.raidcraft.api.database.Database;
+import de.raidcraft.api.database.Table;
 import de.raidcraft.api.ebean.DatabaseConfig;
 import de.raidcraft.api.ebean.RaidCraftDatabase;
 import de.raidcraft.api.language.ConfigTranslationProvider;
 import de.raidcraft.api.language.TranslationProvider;
+import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.tables.RcLogLeevel;
 import de.raidcraft.tables.TPlugin;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Silthus
  */
 public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component {
 
+    // vault variables
+    private static Chat chat;
+    private static Permission permission;
+    // member variables
+    private final Map<String, QueuedCommand> queuedCommands = new HashMap<>();
+    private Database database;
     private RaidCraftDatabase ebeanDatabase;
     private TranslationProvider translationProvider;
     private CommandsManager<CommandSender> commands;
@@ -47,9 +66,29 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         // add translation provider
         this.translationProvider = new ConfigTranslationProvider(this);
 
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
+        if (plugin != null) {
+            if (chat == null) {
+                if (setupChat()) {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Chat API.");
+                } else {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Chat API.");
+                }
+            }
+            if (permission == null) {
+                if (setupPermissions()) {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Permissions API.");
+                } else {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Permissions API.");
+                }
+            }
+        }
+
         this.commands = new CommandsManager<CommandSender>() {
+
             @Override
             public boolean hasPermission(CommandSender sender, String s) {
+
                 return sender.isOp() || sender.hasPermission(s);
             }
         };
@@ -62,10 +101,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         }
         // call the sub plugins to enable
         enable();
-        logEnableStep();
-    }
 
-    private void logEnableStep() {
         // log plugin activation into db
         PluginDescriptionFile description = getDescription();
         getLogger().info(description.getName() + "-v" + description.getVersion() + " enabled.");
@@ -89,15 +125,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     public abstract void enable();
 
-
     public abstract void disable();
-
-
-    public final <T extends Config> T configure(T config) {
-
-        config.load();
-        return config;
-    }
 
     @Override
     public EbeanServer getDatabase() {
@@ -115,6 +143,40 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
         disable();
         enable();
+    }
+
+    @Deprecated
+    /**
+     * @deprecated Please use the configure(T config) method instead.
+     * Annotations are now only loaded if there are any.
+     */
+    public final <T extends Config> T configure(T config, boolean annotations) {
+
+        config.load();
+        return config;
+    }
+
+    public final <T extends Config> T configure(T config) {
+
+        return configure(config, true);
+    }
+
+    public final void queueCommand(final QueuedCommand command) {
+
+        queuedCommands.put(command.getSender().getName(), command);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+
+                queuedCommands.remove(command.getSender().getName());
+            }
+        }, 600L);
+        // 30 second remove delay
+    }
+
+    public final Map<String, QueuedCommand> getQueuedCommands() {
+
+        return queuedCommands;
     }
 
     @Override
@@ -142,9 +204,12 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         return true;
     }
 
-    public final void registerEvents(Listener listener) {
+    public final void registerTable(Class<? extends Table> clazz, Table table) {
 
-        RaidCraft.registerEvents(listener, this);
+        if (database == null) {
+            database = new Database();
+        }
+        database.registerTable(clazz, table);
     }
 
     public final void registerCommands(Class<?> clazz) {
@@ -157,13 +222,59 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         if (host == null) {
             host = this.getName();
         }
-        RaidCraft.getComponent(RaidCraftBasePlugin.class).trackCommand(clazz, host, null);
+        RaidCraft.getComponent(RaidCraftPlugin.class).trackCommand(clazz, host, null);
         commandRegistration.register(clazz);
+    }
+
+    public final void registerEvents(Listener listener) {
+
+        RaidCraft.registerEvents(listener, this);
+    }
+
+    public RCPlayer getPlayer(Player player) {
+
+        return RaidCraft.getPlayer(player);
+    }
+
+    // TODO: UUID rework
+    @Deprecated
+    public RCPlayer getPlayer(String player) {
+
+        return RaidCraft.getPlayer(player);
+    }
+
+    public final Chat getChat() {
+
+        return chat;
+    }
+
+    public final Permission getPermissions() {
+
+        return permission;
     }
 
     public TranslationProvider getTranslationProvider() {
 
         return translationProvider;
+    }
+
+    private boolean setupPermissions() {
+
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
+    }
+
+    private boolean setupChat() {
+
+        RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
+        if (chatProvider != null) {
+            chat = chatProvider.getProvider();
+        }
+
+        return (chat != null);
     }
 
     // Rc log methods for informations

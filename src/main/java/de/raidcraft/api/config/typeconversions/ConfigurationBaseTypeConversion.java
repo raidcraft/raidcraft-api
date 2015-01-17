@@ -1,7 +1,6 @@
 package de.raidcraft.api.config.typeconversions;
 
-
-import de.raidcraft.api.config.ConfigurationBase;
+import com.zachsthings.libcomponents.config.ConfigurationBase;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

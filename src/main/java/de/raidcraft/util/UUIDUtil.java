@@ -1,7 +1,7 @@
 package de.raidcraft.util;
 
-import de.raidcraft.api.RaidCraft;
-import de.raidcraft.RaidCraftBasePlugin;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.tables.TRcPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -33,7 +33,7 @@ public class UUIDUtil {
                 e.printStackTrace();
             }
         }
-        TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftBasePlugin.class).getDatabase()
+        TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase()
                 .find(TRcPlayer.class).where().eq("last_name", name).findUnique();
         if (tPlayer != null) {
             return tPlayer.getUuid();
@@ -54,7 +54,7 @@ public class UUIDUtil {
 
     public static String getNameFromUUID(UUID uuid) {
 
-        TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftBasePlugin.class).getDatabase()
+        TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase()
                 .find(TRcPlayer.class).where().eq("uuid", uuid.toString()).findUnique();
         if (tPlayer != null) {
             return tPlayer.getLastName();
