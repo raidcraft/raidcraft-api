@@ -1,7 +1,7 @@
 name: RaidCraft-API
-main: de.raidcraft.RaidCraftPlugin
+main: de.raidcraft.RaidCraftBasePlugin
 version: ${project.version}#${build.number}
-author: Silthus
-website: www.raid-craft.de
-softdepend: [WorldGuard, WorldEdit, Citizens]
+author: Silthus, IDragonfire
+website: www.raid-craft.eu
+softdepend: [WorldGuard, WorldEdit]
 database: true

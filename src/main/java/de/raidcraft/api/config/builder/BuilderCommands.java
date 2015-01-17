@@ -3,7 +3,7 @@ package de.raidcraft.api.config.builder;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
-import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.RaidCraftBasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
  */
 public class BuilderCommands {
 
-    private final RaidCraftPlugin plugin;
+    private final RaidCraftBasePlugin plugin;
 
-    public BuilderCommands(RaidCraftPlugin plugin) {
+    public BuilderCommands(RaidCraftBasePlugin plugin) {
 
         this.plugin = plugin;
     }
