@@ -1,12 +1,12 @@
 package de.raidcraft.api.config.builder;
 
 import com.sk89q.minecraft.util.commands.CommandContext;
-import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.api.RaidCraft;
+import de.raidcraft.RaidCraftBasePlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.SimpleConfiguration;
-import de.raidcraft.util.CaseInsensitiveMap;
+import de.raidcraft.util.data.CaseInsensitiveMap;
 import lombok.Data;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -111,7 +111,7 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
     public static ConfigBuilder getBuilder(Player player) {
 
         return CURRENT_BUILDERS.getOrDefault(player.getUniqueId(),
-                new ConfigBuilder<>(RaidCraft.getComponent(RaidCraftPlugin.class), player, "config-builders"));
+                new ConfigBuilder<>(RaidCraft.getComponent(RaidCraftBasePlugin.class), player, "config-builders"));
     }
 
     public static <T extends BasePlugin> ConfigBuilder<T> createBuilder(T plugin, Player player, String baseFilePath) {

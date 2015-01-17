@@ -1,7 +1,7 @@
 package de.raidcraft.util;
 
-import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.api.RaidCraft;
+import de.raidcraft.RaidCraftBasePlugin;
 import org.bukkit.entity.Player;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +30,7 @@ public class BungeeCordUtil {
             msgData.writeUTF(channel);            // Channel
             msgData.writeShort(message.length());    // Data Length
             msgData.writeBytes(message);            // Data
-            player.sendPluginMessage(RaidCraft.getComponent(RaidCraftPlugin.class), "BungeeCord", bao.toByteArray());
+            player.sendPluginMessage(RaidCraft.getComponent(RaidCraftBasePlugin.class), "BungeeCord", bao.toByteArray());
         } catch (IOException ex) {
             ex.printStackTrace();
             return;
@@ -44,7 +44,7 @@ public class BungeeCordUtil {
             DataOutputStream msgData = new DataOutputStream(bao);
             msgData.writeUTF("Connect");
             msgData.writeUTF(targetServer);
-            player.sendPluginMessage(RaidCraft.getComponent(RaidCraftPlugin.class), "BungeeCord", bao.toByteArray());
+            player.sendPluginMessage(RaidCraft.getComponent(RaidCraftBasePlugin.class), "BungeeCord", bao.toByteArray());
             bao.reset();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -59,7 +59,7 @@ public class BungeeCordUtil {
             DataOutputStream msgData = new DataOutputStream(bao);
             msgData.writeUTF("PlayerList");
             msgData.writeUTF("ALL");
-            player.sendPluginMessage(RaidCraft.getComponent(RaidCraftPlugin.class), "BungeeCord", bao.toByteArray());
+            player.sendPluginMessage(RaidCraft.getComponent(RaidCraftBasePlugin.class), "BungeeCord", bao.toByteArray());
             bao.reset();
         } catch (IOException ex) {
             ex.printStackTrace();

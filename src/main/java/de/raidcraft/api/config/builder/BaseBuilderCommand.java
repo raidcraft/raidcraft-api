@@ -3,7 +3,7 @@ package de.raidcraft.api.config.builder;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.NestedCommand;
-import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.RaidCraftBasePlugin;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
  */
 public class BaseBuilderCommand {
 
-    private final RaidCraftPlugin plugin;
+    private final RaidCraftBasePlugin plugin;
 
-    public BaseBuilderCommand(RaidCraftPlugin plugin) {
+    public BaseBuilderCommand(RaidCraftBasePlugin plugin) {
 
         this.plugin = plugin;
     }

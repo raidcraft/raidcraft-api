@@ -1,8 +1,8 @@
 package de.raidcraft.api.database;
 
-import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.RaidCraftBasePlugin;
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.RaidCraft;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.Setting;
 
@@ -27,8 +27,8 @@ public class Database {
 
     public Database() {
 
-        BasePlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-        this.config = plugin.configure(new DatabaseConfig(plugin), true);
+        BasePlugin plugin = RaidCraft.getComponent(RaidCraftBasePlugin.class);
+        this.config = plugin.configure(new DatabaseConfig(plugin));
 
         try {
             connect();

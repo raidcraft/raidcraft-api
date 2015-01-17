@@ -1,6 +1,6 @@
 package de.raidcraft.api.config.typeconversions;
 
-import com.zachsthings.libcomponents.config.ConfigUtil;
+import de.raidcraft.api.config.ConfigUtil;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
