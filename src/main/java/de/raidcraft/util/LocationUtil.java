@@ -1,5 +1,9 @@
 package de.raidcraft.util;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import de.raidcraft.RaidCraft;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,17 +30,38 @@ public final class LocationUtil {
     }
 
     public static boolean isWithinRadius(Location l1, Location l2, int radius) {
-        return l1.getWorld() != null
-                && l2.getWorld() != null
-                && l1.getWorld().equals(l2.getWorld())
-                && getDistanceSquared(l1, l2) <= radius * radius;
 
+        if (l1.getWorld() != null && l2.getWorld() != null) {
+            return l1.getWorld().equals(l2.getWorld()) && getDistanceSquared(l1,
+                    l2) <= radius * radius;
+        }
+        return false;
+    }
+
+    public static Entity[] getNearbyEntities(Location l, int radius) {
+
+        int chunkRadius = radius < 16 ? 1 : (radius - radius % 16) / 16;
+        HashSet<Entity> radiusEntities = new HashSet<>();
+        for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
+            for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+                int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
+                for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
+                    if (e.getLocation().getWorld().equals(l.getWorld())
+                            && e.getLocation().distanceSquared(l) <= radius * radius && e.getLocation().getBlock() != l.getBlock()) {
+                        radiusEntities.add(e);
+                    }
+                }
+            }
+        }
+        return radiusEntities.toArray(new Entity[radiusEntities.size()]);
     }
 
     /**
      * Gets the distance between two points.
+     *
      * @param l1
      * @param l2
+     *
      * @return
      */
     public static double getDistance(Location l1, Location l2) {
@@ -51,8 +77,10 @@ public final class LocationUtil {
     /**
      * Gets the greatest distance between two locations. Only takes
      * int locations and does not check a round radius.
+     *
      * @param l1 to compare
      * @param l2 to compare
+     *
      * @return greatest distance
      */
     public static int getBlockDistance(Location l1, Location l2) {
@@ -86,11 +114,13 @@ public final class LocationUtil {
      * means that when the sign is attached to a block and the player
      * is looking at it it will add the offsetX to left or right,
      * offsetY is added up or down and offsetZ is added front or back.
-     * @param block to get relative position from
-     * @param facing to work with
+     *
+     * @param block   to get relative position from
+     * @param facing  to work with
      * @param offsetX amount to move left(negative) or right(positive)
      * @param offsetY amount to move up(positive) or down(negative)
      * @param offsetZ amount to move back(negative) or front(positive)
+     *
      * @return block located at the relative offset position
      */
     public static Block getRelativeOffset(Block block, BlockFace facing, int offsetX, int offsetY, int offsetZ) {
@@ -153,8 +183,10 @@ public final class LocationUtil {
 
     /**
      * Gets all surrounding chunks near the given block and radius.
-     * @param block to get surrounding chunks for
+     *
+     * @param block  to get surrounding chunks for
      * @param radius around the block
+     *
      * @return chunks in the given radius
      */
     public static Set<Chunk> getSurroundingChunks(Block block, int radius) {
@@ -182,9 +214,11 @@ public final class LocationUtil {
 
     /**
      * Get relative block X that way.
+     *
      * @param block
      * @param facing
      * @param amount
+     *
      * @return The block
      */
     private static Block getRelativeBlock(Block block, BlockFace facing, int amount) {
@@ -198,8 +232,10 @@ public final class LocationUtil {
 
     /**
      * Gets next vertical free space
+     *
      * @param block
      * @param direction
+     *
      * @return next air block vertically.
      */
     public static Block getNextFreeSpace(Block block, BlockFace direction) {
@@ -215,7 +251,9 @@ public final class LocationUtil {
 
     /**
      * Gets centre of passed block.
+     *
      * @param block
+     *
      * @return Centre location
      */
     public static Location getCenterOfBlock(Block block) {
@@ -277,6 +315,16 @@ public final class LocationUtil {
             }
         }
         return players;
+    }
+
+    public static boolean isSafeZone(Location location) {
+
+        WorldGuardPlugin worldGuard = RaidCraft.getWorldGuard();
+        if (worldGuard != null) {
+            ApplicableRegionSet regions = worldGuard.getRegionManager(location.getWorld()).getApplicableRegions(location);
+            return regions.allows(DefaultFlag.PVP) && regions.allows(DefaultFlag.MOB_DAMAGE);
+        }
+        return false;
     }
 
     public static Vector getRevertedViewDirection(Location location) {

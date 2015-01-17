@@ -1,7 +1,7 @@
 package de.raidcraft.api.config.builder;
 
 import com.sk89q.minecraft.util.commands.CommandContext;
-import de.raidcraft.api.RaidCraft;
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
