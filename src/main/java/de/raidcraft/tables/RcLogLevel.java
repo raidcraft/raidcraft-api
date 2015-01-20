@@ -6,5 +6,6 @@ package de.raidcraft.tables;
 public enum RcLogLevel {
     INFO,
     WARNING,
+    SEVERE,
     DEPRECATED
 }
