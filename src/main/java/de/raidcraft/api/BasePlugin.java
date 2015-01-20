@@ -279,6 +279,16 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     // Rc log methods for informations
 
+    public void severe(String message) {
+
+        log(message, null, RcLogLevel.SEVERE);
+    }
+
+    public void warning(String message) {
+
+        log(message, null, RcLogLevel.WARNING);
+    }
+
     public void info(String message) {
 
         info(message, null);
