@@ -26,7 +26,7 @@ import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TCommand;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
-import de.raidcraft.tables.TPlugin;
+import de.raidcraft.tables.TPlugin_;
 import de.raidcraft.tables.TRcPlayer;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
@@ -193,7 +193,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TRcPlayer.class);
         classes.add(TListener.class);
         classes.add(TLog.class);
-        classes.add(TPlugin.class);
+        classes.add(TPlugin_.class);
         return classes;
     }
 

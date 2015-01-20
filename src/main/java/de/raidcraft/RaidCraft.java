@@ -31,7 +31,7 @@ import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
 import de.raidcraft.api.trades.TradeProvider;
-import de.raidcraft.tables.RcLogLeevel;
+import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
@@ -523,10 +523,10 @@ public class RaidCraft implements Listener {
      */
     public static void info(String message, String category) {
 
-        log(message, category, RcLogLeevel.INFO);
+        log(message, category, RcLogLevel.INFO);
     }
 
-    public static void log(String message, String category, RcLogLeevel level) {
+    public static void log(String message, String category, RcLogLevel level) {
 
         TLog log = new TLog();
         log.setLast(new Date());
