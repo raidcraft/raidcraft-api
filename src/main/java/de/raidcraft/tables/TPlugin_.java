@@ -12,7 +12,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "rc_plugin")
-public class TPlugin {
+public class TPlugin_ {
 
     @Id
     private int id;

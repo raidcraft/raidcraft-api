@@ -20,8 +20,8 @@ import de.raidcraft.api.ebean.RaidCraftDatabase;
 import de.raidcraft.api.language.ConfigTranslationProvider;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
-import de.raidcraft.tables.RcLogLeevel;
-import de.raidcraft.tables.TPlugin;
+import de.raidcraft.tables.RcLogLevel;
+import de.raidcraft.tables.TPlugin_;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -105,7 +105,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         // log plugin activation into db
         PluginDescriptionFile description = getDescription();
         getLogger().info(description.getName() + "-v" + description.getVersion() + " enabled.");
-        TPlugin tPlugin = new TPlugin();
+        TPlugin_ tPlugin = new TPlugin_();
         tPlugin.setAuthor(String.join(", ", this.getDescription().getAuthors()));
         tPlugin.setName(this.getDescription().getFullName());
         tPlugin.setVersion(this.getDescription().getVersion());
@@ -286,10 +286,10 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     public void info(String message, String category) {
 
-        log(message, category, RcLogLeevel.INFO);
+        log(message, category, RcLogLevel.INFO);
     }
 
-    public void log(String message, String category, RcLogLeevel level) {
+    public void log(String message, String category, RcLogLevel level) {
 
         String tcategory = getName();
         if (category != null && !category.equals("")) {
