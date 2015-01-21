@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -20,4 +21,6 @@ public class TRcPlayer {
     @Id
     private UUID uuid;
     private String lastName;
+    private Date lastSeen;
+    private Date firstJoined;
 }
