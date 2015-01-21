@@ -46,6 +46,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -295,6 +296,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                         "You changed your playername. Contact raid-craft.de to reactivate.");
             }
+            player.setLastSeen(new Date());
+            getDatabase().save(player);
             return;
         }
         // new player
@@ -312,6 +315,9 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         player = new TRcPlayer();
         player.setLastName(name);
         player.setUuid(uuid);
+        Date currentTime = new Date();
+        player.setFirstJoined(currentTime);
+        player.setLastSeen(currentTime);
         getDatabase().save(player);
     }
 
