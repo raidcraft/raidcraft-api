@@ -110,7 +110,7 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         tPlugin.setName(this.getDescription().getFullName());
         tPlugin.setVersion(this.getDescription().getVersion());
         tPlugin.setLastActive(new Date());
-        getDatabase().save(tPlugin);
+        RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase().save(tPlugin);
     }
 
     public final void onDisable() {
