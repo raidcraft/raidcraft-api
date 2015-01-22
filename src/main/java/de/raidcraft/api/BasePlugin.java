@@ -20,7 +20,8 @@ import de.raidcraft.api.ebean.RaidCraftDatabase;
 import de.raidcraft.api.language.ConfigTranslationProvider;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
-import de.raidcraft.tables.RcLogLeevel;
+import de.raidcraft.tables.RcLogLevel;
+import de.raidcraft.tables.TPlugin_;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -35,6 +36,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,8 +102,15 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         // call the sub plugins to enable
         enable();
 
+        // log plugin activation into db
         PluginDescriptionFile description = getDescription();
         getLogger().info(description.getName() + "-v" + description.getVersion() + " enabled.");
+        TPlugin_ tPlugin = new TPlugin_();
+        tPlugin.setAuthor(String.join(", ", this.getDescription().getAuthors()));
+        tPlugin.setName(this.getDescription().getFullName());
+        tPlugin.setVersion(this.getDescription().getVersion());
+        tPlugin.setLastActive(new Date());
+        RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase().save(tPlugin);
     }
 
     public final void onDisable() {
@@ -270,6 +279,16 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     // Rc log methods for informations
 
+    public void severe(String message) {
+
+        log(message, null, RcLogLevel.SEVERE);
+    }
+
+    public void warning(String message) {
+
+        log(message, null, RcLogLevel.WARNING);
+    }
+
     public void info(String message) {
 
         info(message, null);
@@ -277,10 +296,10 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     public void info(String message, String category) {
 
-        log(message, category, RcLogLeevel.INFO);
+        log(message, category, RcLogLevel.INFO);
     }
 
-    public void log(String message, String category, RcLogLeevel level) {
+    public void log(String message, String category, RcLogLevel level) {
 
         String tcategory = getName();
         if (category != null && !category.equals("")) {

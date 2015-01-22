@@ -3,8 +3,9 @@ package de.raidcraft.tables;
 /**
  * @author Dragonfire
  */
-public enum RcLogLeevel {
+public enum RcLogLevel {
     INFO,
     WARNING,
+    SEVERE,
     DEPRECATED
 }

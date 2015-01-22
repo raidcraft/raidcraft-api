@@ -26,6 +26,7 @@ import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TCommand;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
+import de.raidcraft.tables.TPlugin_;
 import de.raidcraft.tables.TRcPlayer;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
@@ -45,6 +46,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -191,6 +193,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TRcPlayer.class);
         classes.add(TListener.class);
         classes.add(TLog.class);
+        classes.add(TPlugin_.class);
         return classes;
     }
 
@@ -292,6 +295,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                         "You changed your playername. Contact raid-craft.de to reactivate.");
             }
+            player.setLastSeen(new Date());
+            getDatabase().save(player);
             return;
         }
         // new player
@@ -309,6 +314,9 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         player = new TRcPlayer();
         player.setLastName(name);
         player.setUuid(uuid);
+        Date currentTime = new Date();
+        player.setFirstJoined(currentTime);
+        player.setLastSeen(currentTime);
         getDatabase().save(player);
     }
 
@@ -316,7 +324,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     /**
      * Do not call this method
      * use registerCommands(Class<?> class, String host)
-     *
      * @param clazz
      */
     public void trackCommand(Class<?> clazz, String host, String baseClass) {

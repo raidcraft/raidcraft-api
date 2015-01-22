@@ -20,7 +20,7 @@ public class TLog {
 
     @Id
     private int id;
-    private RcLogLeevel level;
+    private RcLogLevel level;
     private String category;
     @Column(columnDefinition = "TEXT")
     private String log;
