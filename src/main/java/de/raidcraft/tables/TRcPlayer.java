@@ -21,6 +21,6 @@ public class TRcPlayer {
     @Id
     private UUID uuid;
     private String lastName;
-    private Date lastSeen;
+    private Date lastJoined;
     private Date firstJoined;
 }
