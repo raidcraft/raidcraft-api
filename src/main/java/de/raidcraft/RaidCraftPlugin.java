@@ -295,7 +295,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                         "You changed your playername. Contact raid-craft.de to reactivate.");
             }
-            player.setLastSeen(new Date());
+            player.setLastJoined(new Date());
             getDatabase().save(player);
             return;
         }
@@ -316,7 +316,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         player.setUuid(uuid);
         Date currentTime = new Date();
         player.setFirstJoined(currentTime);
-        player.setLastSeen(currentTime);
+        player.setLastJoined(currentTime);
         getDatabase().save(player);
     }
 
