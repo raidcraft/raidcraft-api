@@ -21,7 +21,7 @@
     <repositories>
         <repository>
             <id>raidcraft</id>
-            <url>http://nexus.raid-craft.de/content/groups/public/</url>
+            <url>http://repo.raid-craft.de/artifactory/repo/</url>
         </repository>
     </repositories>
 
