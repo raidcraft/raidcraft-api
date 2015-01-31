@@ -1,5 +1,6 @@
 package de.raidcraft.api.action.trigger;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,9 +9,11 @@ import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * @author Silthus
@@ -53,16 +56,25 @@ public abstract class Trigger implements TriggerConfigGenerator {
     protected final <T> void informListeners(@NonNull String action, @NonNull T triggeringEntity, @NonNull Predicate<ConfigurationSection> predicate) {
 
         String identifier = getIdentifier() + "." + action;
-        if (registeredListeners.containsKey(identifier)) {
-            new ArrayList<>(registeredListeners.get(identifier)).stream()
-                    .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
-                    .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
-                            // first lets check all predicates and if we can execute at all
-                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
-                            // then lets process the trigger
-                    .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity))
-                            // if we get true back we are ready for action processing
-                    .forEach(wrapper -> wrapper.executeActions(triggeringEntity));
+        if (!registeredListeners.containsKey(identifier)) {
+            return;
+        }
+        Stream<TriggerListenerConfigWrapper<T>> listeners = new ArrayList<>(registeredListeners.get(identifier)).stream()
+                .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
+                .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
+                        // first lets check all predicates and if we can execute at all
+                .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
+                        // then lets process the trigger
+                .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity));
+        // if we get true back we are ready for action processing
+        ArrayList<Object> objects = new ArrayList<>();
+        listeners.forEach(wrapper -> {
+            wrapper.executeActions(triggeringEntity);
+            objects.add(wrapper);
+        });
+        RaidCraft.LOGGER.warning(objects.size() + "");
+        if (objects.size() > 0) {
+            RaidCraft.LOGGER.warning(Arrays.toString(objects.toArray()));
         }
     }
 }
