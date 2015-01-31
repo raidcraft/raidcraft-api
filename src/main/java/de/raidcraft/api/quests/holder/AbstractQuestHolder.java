@@ -6,6 +6,7 @@ import de.raidcraft.api.quests.quest.QuestTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * @author Silthus
  */
 @Data
+@ToString(exclude = "allQuests")
 @EqualsAndHashCode(of = "id")
 public abstract class AbstractQuestHolder implements QuestHolder {
 

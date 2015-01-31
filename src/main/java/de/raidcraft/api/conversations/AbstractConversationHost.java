@@ -1,9 +1,10 @@
 package de.raidcraft.api.conversations;
 
-import de.raidcraft.util.CaseInsensitiveMap;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Silthus
@@ -12,7 +13,7 @@ public abstract class AbstractConversationHost implements ConversationHost {
 
     private final String name;
     private final String defaultConversationName;
-    private final Map<String, String> playerConversations = new CaseInsensitiveMap<>();
+    private final Map<UUID, String> playerConversations = new HashMap<>();
 
     public AbstractConversationHost(String name, String defaultConversationName) {
 
@@ -35,14 +36,14 @@ public abstract class AbstractConversationHost implements ConversationHost {
     @Override
     public void setConversation(Player player, String conversation) {
 
-        playerConversations.put(player.getName(), conversation);
+        playerConversations.put(player.getUniqueId(), conversation);
     }
 
     @Override
     public String getConversation(Player player) {
 
-        if (playerConversations.containsKey(player.getName())) {
-            return playerConversations.get(player.getName());
+        if (playerConversations.containsKey(player.getUniqueId())) {
+            return playerConversations.get(player.getUniqueId());
         }
         return defaultConversationName;
     }
