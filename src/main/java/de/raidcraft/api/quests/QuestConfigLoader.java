@@ -3,6 +3,8 @@ package de.raidcraft.api.quests;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
+ * Quest plugin loads all yml files in the quest folder.
+ * For each type, e.g. host, conv, quest their is a different loader.
  * @author Silthus
  */
 public abstract class QuestConfigLoader {
