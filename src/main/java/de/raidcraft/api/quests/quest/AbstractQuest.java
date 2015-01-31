@@ -54,15 +54,16 @@ public abstract class AbstractQuest implements Quest {
         if (!getPlayer().equals(player)) {
             return false;
         }
-        if (isActive()) {
-            Collection<Requirement<Player>> requirements = getTemplate().getRequirements();
-            if (requirements.stream().allMatch(requirement -> requirement.test(player))) {
-                unregisterListeners();
-                registerListeners();
-            }
-            return true;
+        if (!isActive()) {
+            return false;
         }
-        return false;
+        Collection<Requirement<Player>> requirements = getTemplate().getRequirements();
+        if (requirements.stream().allMatch(requirement -> requirement.test(player))) {
+            unregisterListeners();
+            registerListeners();
+        }
+        return true;
+
     }
 
     public void registerListeners() {
