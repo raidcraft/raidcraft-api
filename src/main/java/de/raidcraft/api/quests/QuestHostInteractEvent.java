@@ -1,37 +1,26 @@
 package de.raidcraft.api.quests;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-/**
- * @author Silthus
- */
+
 public class QuestHostInteractEvent extends Event {
 
-    private final QuestHost host;
+
+    @Getter
+    private final QuestHost questHost;
+    @Getter
     private final Player player;
 
-    public QuestHostInteractEvent(QuestHost host, Player player) {
+    public QuestHostInteractEvent(QuestHost questHost, Player player) {
 
-        this.host = host;
+        this.questHost = questHost;
         this.player = player;
     }
 
-    public QuestHost getHost() {
-
-        return host;
-    }
-
-    public Player getPlayer() {
-
-        return player;
-    }
-
-    /*///////////////////////////////////////////////////
-    //              Needed Bukkit Stuff
-    ///////////////////////////////////////////////////*/
-
+    // Bukkit stuff
     private static final HandlerList handlers = new HandlerList();
 
     public HandlerList getHandlers() {
@@ -43,4 +32,5 @@ public class QuestHostInteractEvent extends Event {
 
         return handlers;
     }
+
 }

@@ -6,6 +6,7 @@ import de.raidcraft.api.quests.holder.QuestHolder;
 import de.raidcraft.api.quests.objective.PlayerObjective;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,6 +20,7 @@ import java.util.List;
  * @author Silthus
  */
 @Data
+@ToString(exclude = {"playerObjectives", "startTrigger", "completionTrigger"})
 @EqualsAndHashCode(of = "id")
 public abstract class AbstractQuest implements Quest {
 
