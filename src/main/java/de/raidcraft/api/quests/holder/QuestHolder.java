@@ -34,6 +34,20 @@ public interface QuestHolder {
         return hasActiveQuest(template.getId());
     }
 
+    // TODO: do it better in AbstractQuestHolder class
+    public default boolean hasCompletedQuest(String questId) {
+        for (Quest quest : getCompletedQuests()) {
+            if (quest.getTemplate().getId().equals(questId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public default boolean hasCompletedQuest(QuestTemplate template) {
+        return hasCompletedQuest(template.getId());
+    }
+
     public Quest getQuest(String quest) throws QuestException;
 
     @Nullable
