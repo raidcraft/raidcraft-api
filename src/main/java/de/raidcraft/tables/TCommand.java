@@ -4,6 +4,7 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -32,10 +33,12 @@ public class TCommand {
     private String flags;
     private String help_; // sql reservered word
     private String permission;
+    private String server;
 
     public static TCommand parseCommand(Method method, String host, String base) {
 
         TCommand cmd = new TCommand();
+        cmd.setServer(Bukkit.getServerName());
         if (base != null) {
             cmd.setBase(base);
         }
