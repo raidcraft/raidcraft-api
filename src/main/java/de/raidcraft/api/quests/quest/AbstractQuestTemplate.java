@@ -62,7 +62,14 @@ public abstract class AbstractQuestTemplate implements QuestTemplate {
         QuestHolder questHolder = Quests.getQuestHolder(player);
         // lets check if we already have a quest that is started
         // and do not execute actions if the quest is started
-        return !questHolder.hasQuest(this);
+        if (questHolder.hasActiveQuest(this)) {
+            return false;
+        }
+        // if holder has completed the quest also pass the trigger
+        if (questHolder.hasCompletedQuest(this)) {
+            return false;
+        }
+        return true;
     }
 
     public void registerListeners() {
