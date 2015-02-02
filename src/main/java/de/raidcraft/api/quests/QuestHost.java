@@ -18,10 +18,6 @@ public interface QuestHost extends ConversationHost {
 
     public String getFriendlyName();
 
-    public String getEndConversationName();
-
-    public String getActiveConversationName();
-
     public void interact(Player player);
 
     public void spawn();
