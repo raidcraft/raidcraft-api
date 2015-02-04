@@ -7,7 +7,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.config.ConfigurationBase;
-import de.raidcraft.api.quests.util.QuestUtil;
+import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
@@ -108,7 +108,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     public String getCountText(T entity) {
 
         String string = getConfig().getString("count-text", "%current%/%count%");
-        string = QuestUtil.replaceCount(getPath(), string, getCount(entity), getRequiredCount());
+        string = ConfigUtil.replaceCount(getPath(), string, getCount(entity), getRequiredCount());
         return string;
     }
 
