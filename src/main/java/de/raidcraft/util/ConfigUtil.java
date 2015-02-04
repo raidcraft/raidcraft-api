@@ -1,17 +1,14 @@
-package de.raidcraft.api.quests.util;
+package de.raidcraft.util;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.mobs.Mobs;
-import de.raidcraft.api.quests.InvalidQuestHostException;
-import de.raidcraft.api.quests.Quests;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author Silthus
- */
-public class QuestUtil {
+public class ConfigUtil {
 
     private final static Pattern pattern = Pattern.compile(".*#([\\w\\d\\s]+):([\\w\\d\\s]+)#.*");
 
@@ -58,13 +55,12 @@ public class QuestUtil {
             if (type.equalsIgnoreCase("mob")) {
                 return Mobs.getFriendlyName(name);
             } else if (type.equalsIgnoreCase("host")) {
-                try {
-                    return Quests.getQuestHost(name).getFriendlyName();
-                } catch (InvalidQuestHostException ignored) {
-                }
+                RaidCraft.getComponent(RaidCraftPlugin.class).warning("replaceRefrences: no host found for: " + basePath + ":" + value);
             }
+
             return name;
         }
         return value;
     }
 }
+
