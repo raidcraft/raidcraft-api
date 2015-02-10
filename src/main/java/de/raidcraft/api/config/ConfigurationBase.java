@@ -174,6 +174,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         try {
             if (!file.exists()) {
                 copyFile();
+                save();
             }
             // load the config by calling the bukkit super method
             super.load(file);
