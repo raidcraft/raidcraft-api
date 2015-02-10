@@ -133,7 +133,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         if (this.ebeanDatabase == null) {
             this.ebeanDatabase = new RaidCraftDatabase(this);
             DatabaseConfig config = configure(new DatabaseConfig(this));
-            config.save();
             this.ebeanDatabase.initializeDatabase(config);
         }
         return this.ebeanDatabase.getDatabase();
@@ -152,13 +151,13 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
      */
     public final <T extends Config> T configure(T config, boolean annotations) {
 
-        config.load();
-        return config;
+        return configure(config);
     }
 
     public final <T extends Config> T configure(T config) {
 
-        return configure(config, true);
+        config.load();
+        return config;
     }
 
     public final void queueCommand(final QueuedCommand command) {
