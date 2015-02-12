@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * @author Silthus
  */
-@EqualsAndHashCode(of = {"requirement", "config"})
+@EqualsAndHashCode(of = {"requirement"})
 @Data
 class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirement<T>> {
 
@@ -29,18 +29,23 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     private static final String COUNT_KEY = "count";
 
     private final Requirement<T> requirement;
+    private final boolean persistant;
+    private final int order;
+    private final int requiredCount;
+    private final String countText;
+    private final boolean optional;
     private final ConfigurationSection config;
     private final Map<UUID, Map<String, Object>> mappings = new HashMap<>();
 
     protected RequirementConfigWrapper(Requirement<T> requirement, ConfigurationSection config) {
 
         this.requirement = requirement;
+        this.persistant = config.getBoolean("persistant", false);
+        this.order = config.getInt("order", 0);
+        this.requiredCount = config.getInt("count", 0);
+        this.countText = config.getString("count-text");
+        this.optional = config.getBoolean("optional", false);
         this.config = config;
-    }
-
-    public ConfigurationSection getConfig() {
-
-        return this.config;
     }
 
     private Object getMapping(T entity, String key) {
@@ -68,29 +73,14 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         return checked != null && (boolean) checked;
     }
 
-    public boolean isPersistant() {
-
-        return getConfig().getBoolean("persistant", false);
-    }
-
     public boolean isOrdered() {
 
         return getOrder() > 0;
     }
 
-    public int getOrder() {
-
-        return getConfig().getInt("order", 0);
-    }
-
     public boolean isCounting() {
 
         return getRequiredCount() > 1;
-    }
-
-    public int getRequiredCount() {
-
-        return getConfig().getInt("count", 0);
     }
 
     public int getCount(T entity) {
@@ -102,7 +92,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
 
     public boolean hasCountText() {
 
-        return getConfig().isSet("count-text");
+        return countText != null && !countText.equals("");
     }
 
     public String getCountText(T entity) {
