@@ -33,6 +33,8 @@ public interface ConfigGenerator {
 
         String desc();
 
+        String[] conf() default {};
+
         int min() default 0;
 
         int max() default -1;

@@ -43,11 +43,11 @@ public final class ActionFactory implements Component {
         RaidCraft.info("registered global action: " + identifier, "action.globa");
     }
 
-    public <T> void registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Action<T> action) throws ActionException {
+    public <T> void registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Action<T> action) {
 
         identifier = plugin.getName() + "." + identifier;
         if (actions.containsKey(identifier)) {
-            throw new ActionException("Action '" + identifier + "' is already registered!");
+            RaidCraft.LOGGER.warning("Action '" + identifier + "' is already registered!" + plugin.getName() + " tried to register duplicate!");
         }
         actions.put(identifier, action);
         ConfigBuilder.registerConfigGenerator(action);
