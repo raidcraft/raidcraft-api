@@ -20,6 +20,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -31,7 +32,7 @@ public class PlayerTrigger extends Trigger implements Listener {
 
     public PlayerTrigger() {
 
-        super("player", "interact", "block.break", "block.place", "move", "craft");
+        super("player", "interact", "block.break", "block.place", "move", "craft", "death");
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -57,6 +58,13 @@ public class PlayerTrigger extends Trigger implements Listener {
             value = "player.interact",
             desc = "Listens for player interaction (with certain blocks at the defined location).",
             help = "Target the block you want to listen for or define the -x flag to listen for all interacts",
+            conf = {
+                    "x",
+                    "y",
+                    "z",
+                    "world",
+                    "type: e.g. minecraft:dirt"
+            },
             usage = "[-x]",
             flags = "x",
             multiSection = true
@@ -79,13 +87,19 @@ public class PlayerTrigger extends Trigger implements Listener {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
-        informListeners("craft", ((Player) event.getWhoClicked()), config -> {
+        informListeners("craft", event.getWhoClicked(), config -> {
             try {
                 return !config.isSet("item") || RaidCraft.getItem(config.getString("item")).isSimilar(event.getRecipe().getResult());
             } catch (CustomItemException e) {
                 return false;
             }
         });
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onDeath(PlayerDeathEvent event) {
+
+        informListeners("death", event.getEntity());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

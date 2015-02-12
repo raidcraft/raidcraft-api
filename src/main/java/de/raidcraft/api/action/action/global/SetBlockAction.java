@@ -32,6 +32,12 @@ public class SetBlockAction implements Action<Player> {
             value = "block.set",
             desc = "Sets a block at the given x,y,z coordinates.",
             help = "Target the block type and location you want to set with your cursor.",
+            conf = {
+                "x",
+                "y",
+                "z",
+                "block: e.g.: minecraft:air"
+            },
             multiSection = true
     )
     public <T extends BasePlugin> void build(ConfigBuilder<T> builder, CommandContext args, Player player) throws ConfigBuilderException {
