@@ -491,6 +491,7 @@ public class RaidCraft implements Listener {
                 ConfigGenerator.Information information = entry.getInformation(key);
                 if (information != null) {
                     actionApi.setDescription(information.desc());
+                    actionApi.setConf(String.join(";", information.conf()));
                 }
             }
             actionApi.setActive(true);
