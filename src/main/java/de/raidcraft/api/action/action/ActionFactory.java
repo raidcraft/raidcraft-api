@@ -36,22 +36,24 @@ public final class ActionFactory implements Component {
         ActionAPI.registerGlobalActions(this);
     }
 
-    public <T> void registerGlobalAction(@NonNull String identifier, @NonNull Action<T> action) {
+    public <T> ActionFactory registerGlobalAction(@NonNull String identifier, @NonNull Action<T> action) {
 
         actions.put(identifier, action);
         ConfigBuilder.registerConfigGenerator(action);
-        RaidCraft.info("registered global action: " + identifier, "action.globa");
+        RaidCraft.info("registered global action: " + identifier, "action.global");
+        return this;
     }
 
-    public <T> void registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Action<T> action) throws ActionException {
+    public <T> ActionFactory registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Action<T> action) {
 
         identifier = plugin.getName() + "." + identifier;
         if (actions.containsKey(identifier)) {
-            throw new ActionException("Action '" + identifier + "' is already registered!");
+            RaidCraft.LOGGER.warning("Action '" + identifier + "' is already registered!" + plugin.getName() + " tried to register duplicate!");
         }
         actions.put(identifier, action);
         ConfigBuilder.registerConfigGenerator(action);
         RaidCraft.info("registered action: " + identifier, "action." + plugin.getName());
+        return this;
     }
 
     public void unregisterAction(@NonNull JavaPlugin plugin, @NonNull String identifier) {

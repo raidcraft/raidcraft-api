@@ -24,6 +24,7 @@ public class TActionApi {
     private String name;
     private String description;
     private String server;
+    private String conf;
     private boolean active;
     private Date lastActive;
 }

@@ -464,12 +464,12 @@ public class RaidCraft implements Listener {
         deactiveUpdate.setParameter("server", Bukkit.getServerName());
         deactiveUpdate.execute();
 
-        tackActionApi("action", ActionFactory.getInstance().getActions());
-        tackActionApi("requirement", RequirementFactory.getInstance().getRequirements());
-        tackActionApi("trigger", TriggerManager.getInstance().getTrigger());
+        trackActionApi("action", ActionFactory.getInstance().getActions());
+        trackActionApi("requirement", RequirementFactory.getInstance().getRequirements());
+        trackActionApi("trigger", TriggerManager.getInstance().getTrigger());
     }
 
-    public static <T extends ConfigGenerator> void tackActionApi(String type, Map<String, T> map) {
+    public static <T extends ConfigGenerator> void trackActionApi(String type, Map<String, T> map) {
 
         EbeanServer db = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase();
         String server = Bukkit.getServerName();
@@ -491,6 +491,7 @@ public class RaidCraft implements Listener {
                 ConfigGenerator.Information information = entry.getInformation(key);
                 if (information != null) {
                     actionApi.setDescription(information.desc());
+                    actionApi.setConf(String.join(";", information.conf()));
                 }
             }
             actionApi.setActive(true);

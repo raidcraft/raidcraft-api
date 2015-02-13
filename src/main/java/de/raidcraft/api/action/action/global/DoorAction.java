@@ -46,6 +46,11 @@ public class DoorAction implements Action<Player> {
     @Information(
             value = "door.toggle",
             desc = "Toggles (-t) the targeted door into an open (-o) or close state.",
+            conf = {
+                    "location: world,x,y,z coordinates of the door base",
+                    "toggle: false/true will toggle to the opposite state",
+                    "open: true/false will open/close the door"
+            },
             usage = "[-o/-t]",
             flags = "ot",
             help = "Target the openable block (door, trapdoor, gate, etc.) you want to toggle.",
