@@ -37,16 +37,17 @@ public final class RequirementFactory implements Component {
         ActionAPI.registerGlobalRequirements(this);
     }
 
-    public <T> void registerGlobalRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
+    public <T> RequirementFactory registerGlobalRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
 
         requirements.put(identifier, requirement);
         ConfigBuilder.registerConfigGenerator(requirement);
         RaidCraft.info("registered global requirement: " + identifier
                 , "requirement.global");
+        return this;
     }
 
     @SneakyThrows
-    public <T> void registerRequirement(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Requirement<T> requirement) {
+    public <T> RequirementFactory registerRequirement(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Requirement<T> requirement) {
 
         identifier = plugin.getName() + "." + identifier;
         if (requirements.containsKey(identifier)) {
@@ -56,6 +57,7 @@ public final class RequirementFactory implements Component {
         ConfigBuilder.registerConfigGenerator(requirement);
         RaidCraft.info("registered requirement: " + identifier
                 , "requirement." + plugin.getName());
+        return this;
     }
 
     public void unregisterRequirement(@NonNull JavaPlugin plugin, @NonNull String identifier) {
