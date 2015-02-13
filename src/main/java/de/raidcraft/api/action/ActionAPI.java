@@ -1,6 +1,7 @@
 package de.raidcraft.api.action;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.action.global.DoorAction;
@@ -15,6 +16,7 @@ import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.LocationUtil;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -189,5 +191,66 @@ public final class ActionAPI {
             return ((Trigger) object).getIdentifier();
         }
         return "undefined";
+    }
+
+    public static ActionAPI register(BasePlugin plugin) {
+
+        return new ActionAPI(plugin);
+    }
+
+    private final ActionFactory actions;
+    private final TriggerManager trigges;
+    private final RequirementFactory requirements;
+    private final BasePlugin plugin;
+    private boolean global = false;
+
+    private ActionAPI(BasePlugin plugin) {
+
+        this.actions = ActionFactory.getInstance();
+        this.trigges = TriggerManager.getInstance();
+        this.requirements = RequirementFactory.getInstance();
+        this.plugin = plugin;
+    }
+
+    public <T> ActionAPI action(@NonNull String identifier, @NonNull Action<T> action) {
+
+        if (global) {
+            actions.registerGlobalAction(identifier, action);
+        } else {
+            actions.registerAction(plugin, identifier, action);
+        }
+        return this;
+    }
+
+    public <T> ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
+
+        if (global) {
+            requirements.registerGlobalRequirement(identifier, requirement);
+        } else {
+            requirements.registerRequirement(plugin, identifier, requirement);
+        }
+        return this;
+    }
+
+    public ActionAPI trigger(@NonNull Trigger trigger) {
+
+        if (global) {
+            trigges.registerGlobalTrigger(trigger);
+        } else {
+            trigges.registerTrigger(plugin, trigger);
+        }
+        return this;
+    }
+
+    public ActionAPI global() {
+
+        global = true;
+        return this;
+    }
+
+    public ActionAPI local() {
+
+        global = false;
+        return this;
     }
 }

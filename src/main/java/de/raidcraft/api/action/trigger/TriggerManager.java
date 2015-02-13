@@ -40,7 +40,7 @@ public final class TriggerManager implements Component {
         ActionAPI.registerGlobalTrigger(this);
     }
 
-    public void registerGlobalTrigger(@NonNull Trigger trigger) {
+    public TriggerManager registerGlobalTrigger(@NonNull Trigger trigger) {
 
         for (String action : trigger.getActions()) {
             registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
@@ -49,9 +49,10 @@ public final class TriggerManager implements Component {
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
         }
+        return this;
     }
 
-    public void registerTrigger(@NonNull JavaPlugin plugin, @NonNull Trigger trigger) {
+    public TriggerManager registerTrigger(@NonNull JavaPlugin plugin, @NonNull Trigger trigger) {
 
         String triggerName;
         String identifier = plugin.getName() + "." + trigger.getIdentifier();
@@ -68,6 +69,7 @@ public final class TriggerManager implements Component {
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
         }
+        return this;
     }
 
     public void unregisterTrigger(@NonNull JavaPlugin plugin, @NonNull String identifier) {
