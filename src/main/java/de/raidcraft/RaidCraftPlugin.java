@@ -122,7 +122,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         try {
             // delete all commands
-            SqlUpdate deleteCommands = getDatabase().createSqlUpdate("DELETE FROM rc_commands");
+            SqlUpdate deleteCommands = getDatabase().createSqlUpdate("DELETE FROM rc_commands WHERE server = :server");
+            deleteCommands.setParameter("server", Bukkit.getServerName());
             deleteCommands.execute();
         } catch (PersistenceException e) {
             e.printStackTrace();
@@ -332,14 +333,14 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         for (Method method : methods) {
             Command anno_cmd = method.getAnnotation(Command.class);
             if (anno_cmd == null) {
-                return;
+                continue;
             }
             NestedCommand anno_nested = method.getAnnotation(NestedCommand.class);
             if (anno_nested != null) {
                 for (Class<?> childClass : anno_nested.value()) {
                     trackCommand(childClass, host, TCommand.printArray(anno_cmd.aliases()));
                 }
-                return;
+                continue;
             }
             getDatabase().save(TCommand.parseCommand(method, host, baseClass));
         }

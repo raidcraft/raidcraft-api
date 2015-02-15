@@ -37,9 +37,8 @@ public class NPC_Manager {
     // Singleton
     private NPC_Manager() {
 
-        if (CitizensAPI.hasImplementation()) {
+        if (!CitizensAPI.hasImplementation()) {
             RaidCraft.LOGGER.warning("Citiziens not loaded! NPC_Manager not available");
-            return;
         }
     }
 
