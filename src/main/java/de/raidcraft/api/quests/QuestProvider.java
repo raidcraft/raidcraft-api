@@ -7,9 +7,9 @@ import de.raidcraft.api.quests.host.QuestHost;
  */
 public interface QuestProvider {
 
-    public void registerQuestHost(String type, Class<? extends QuestHost> clazz) throws InvalidQuestHostException;
+    public void registerQuestHost(String type, Class<? extends QuestHost> clazz);
 
-    public void registerQuestConfigLoader(QuestConfigLoader loader) throws QuestException;
+    public void registerQuestConfigLoader(QuestConfigLoader loader);
 
     public QuestHost getQuestHost(String id) throws InvalidQuestHostException;
 }

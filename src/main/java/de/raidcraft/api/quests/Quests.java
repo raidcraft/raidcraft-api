@@ -27,20 +27,12 @@ public class Quests {
         provider = questProvider;
         // and all queued hosts
         for (Map.Entry<String, Class<? extends QuestHost>> entry : queuedHosts.entrySet()) {
-            try {
-                provider.registerQuestHost(entry.getKey(), entry.getValue());
-            } catch (InvalidQuestHostException e) {
-                RaidCraft.LOGGER.warning(e.getMessage());
-            }
+            provider.registerQuestHost(entry.getKey(), entry.getValue());
         }
         queuedHosts.clear();
         // and all queued config loader
         for (QuestConfigLoader loader : queuedConfigLoader) {
-            try {
-                provider.registerQuestConfigLoader(loader);
-            } catch (QuestException e) {
-                RaidCraft.LOGGER.warning(e.getMessage());
-            }
+            provider.registerQuestConfigLoader(loader);
         }
         queuedConfigLoader.clear();
     }
@@ -55,25 +47,27 @@ public class Quests {
         return provider != null;
     }
 
-    public static void registerQuestLoader(QuestConfigLoader loader) throws QuestException {
+    public static void registerQuestLoader(QuestConfigLoader loader) {
 
         if (isEnabled()) {
             provider.registerQuestConfigLoader(loader);
         } else {
             if (queuedConfigLoader.contains(loader)) {
-                throw new QuestException("Config loaded with same suffix is arelady registered: " + loader.getSuffix());
+                RaidCraft.LOGGER.warning("Config loaded with same suffix is arelady registered: " + loader.getSuffix());
+                return;
             }
             queuedConfigLoader.add(loader);
         }
     }
 
-    public static void registerQuestHost(JavaPlugin plugin, String type, Class<? extends QuestHost> clazz) throws InvalidQuestHostException {
+    public static void registerQuestHost(JavaPlugin plugin, String type, Class<? extends QuestHost> clazz) {
 
         if (isEnabled()) {
             provider.registerQuestHost(type, clazz);
         } else {
             if (queuedHosts.containsKey(type)) {
-                throw new InvalidQuestHostException(plugin.getName() + " tried to register already registered quest host: " + type);
+                RaidCraft.LOGGER.warning(plugin.getName() + " tried to register already registered quest host: " + type);
+                return;
             }
             queuedHosts.put(type, clazz);
         }
