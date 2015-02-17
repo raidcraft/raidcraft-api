@@ -1,16 +1,14 @@
 package de.raidcraft.api.action.action.global;
 
 import com.sk89q.minecraft.util.commands.CommandContext;
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigBuilderException;
 import de.raidcraft.util.BlockUtil;
-import org.bukkit.Bukkit;
+import de.raidcraft.util.ConfigUtil;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -24,15 +22,7 @@ public class DoorAction implements Action<Player> {
     @Override
     public void accept(Player player, ConfigurationSection config) {
 
-        ConfigurationSection locationSection = config.getConfigurationSection("location");
-        World world = Bukkit.getWorld(locationSection.getString("world"));
-        if (world == null && !locationSection.isSet("world")) {
-            world = player.getWorld();
-        } else {
-            RaidCraft.LOGGER.warning("Unknown world defined in door action config: " + config.getName());
-            return;
-        }
-        Location location = new Location(world, locationSection.getInt("x"), locationSection.getInt("y"), locationSection.getInt("z"));
+        Location location = ConfigUtil.getLocationFromConfig(config, player);
 
         Block block = location.getBlock();
         if (block.getState() instanceof Openable) {

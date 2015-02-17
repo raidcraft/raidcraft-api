@@ -1,8 +1,6 @@
 package de.raidcraft.api.config.typeconversions;
 
 
-import de.raidcraft.api.config.ConfigUtil;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +17,7 @@ public class ListTypeConversion extends TypeConversion {
         List<Object> values = new ArrayList<>();
         Collection raw = (Collection) value;
         for (Object obj : raw) {
-            values.add(ConfigUtil.smartCast(neededGenerics[0], obj));
+            values.add(de.raidcraft.util.ConfigUtil.smartCast(neededGenerics[0], obj));
         }
         return values;
     }

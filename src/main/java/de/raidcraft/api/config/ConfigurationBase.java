@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
-import static de.raidcraft.api.config.ConfigUtil.prepareSerialization;
-import static de.raidcraft.api.config.ConfigUtil.smartCast;
+import static de.raidcraft.util.ConfigUtil.prepareSerialization;
+import static de.raidcraft.util.ConfigUtil.smartCast;
 
 /**
  * @author Silthus

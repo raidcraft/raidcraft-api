@@ -6,6 +6,7 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigBuilderException;
 import de.raidcraft.util.BlockUtil;
+import de.raidcraft.util.ConfigUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,8 +21,8 @@ public class SetBlockAction implements Action<Player> {
     @Override
     public void accept(Player player, ConfigurationSection config) {
 
-        Location location = new Location(player.getWorld(), config.getInt("x"), config.getInt("y"), config.getInt("z"));
-        Material material = Material.getMaterial(config.getString("block", "minecraft:air"));
+        Location location = ConfigUtil.getLocationFromConfig(config, player);
+        Material material = Material.matchMaterial(config.getString("block", "minecraft:air"));
         if (material == null) {
             return;
         }

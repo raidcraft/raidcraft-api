@@ -11,5 +11,7 @@ public interface QuestProvider {
 
     public void registerQuestConfigLoader(QuestConfigLoader loader);
 
+    public QuestConfigLoader getQuestConfigLoader(String suffix);
+
     public QuestHost getQuestHost(String id) throws InvalidQuestHostException;
 }

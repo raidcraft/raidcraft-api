@@ -5,6 +5,7 @@ import de.raidcraft.api.quests.host.QuestHost;
 import de.raidcraft.util.CaseInsensitiveMap;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -76,5 +77,11 @@ public class Quests {
     public static QuestHost getQuestHost(String id) throws InvalidQuestHostException {
 
         return provider.getQuestHost(id);
+    }
+
+    @Nullable
+    public static QuestConfigLoader getQuestConfigLoader(String suffix) {
+
+        return provider.getQuestConfigLoader(suffix);
     }
 }
