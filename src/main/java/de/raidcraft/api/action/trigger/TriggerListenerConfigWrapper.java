@@ -37,7 +37,9 @@ class TriggerListenerConfigWrapper<T> {
             this.actions = RaidCraft.getComponent(ActionFactory.class)
                     .createActions(config.getConfigurationSection("actions"), getTriggerListener().getTriggerEntityType());
             this.requirements = RaidCraft.getComponent(RequirementFactory.class)
-                    .createRequirements(config.getConfigurationSection("requirements"), getTriggerListener().getTriggerEntityType());
+                    .createRequirements(triggerListener.getListenerId(),
+                            config.getConfigurationSection("requirements"),
+                            getTriggerListener().getTriggerEntityType());
         } catch (ActionException | RequirementException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();

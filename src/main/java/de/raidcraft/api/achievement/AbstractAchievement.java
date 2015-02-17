@@ -49,6 +49,12 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
     }
 
     @Override
+    public String getListenerId() {
+
+        return getIdentifier();
+    }
+
+    @Override
     public void registerListeners() {
 
         if (isCompleted() || !isActive()) return;

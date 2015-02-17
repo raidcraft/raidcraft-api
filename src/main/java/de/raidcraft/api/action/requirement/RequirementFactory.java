@@ -84,32 +84,32 @@ public final class RequirementFactory implements Component {
         return new HashMap<>(requirements);
     }
 
-    public Requirement<?> create(@NonNull String identifier, @NonNull ConfigurationSection config) throws RequirementException {
+    private Requirement<?> create(String id, @NonNull String requirement, @NonNull ConfigurationSection config) throws RequirementException {
 
-        if (!requirements.containsKey(identifier)) {
-            throw new RequirementException("unknown requirement: " + identifier);
+        if (!requirements.containsKey(requirement)) {
+            throw new RequirementException("unknown requirement: " + requirement);
         }
-        RequirementConfigWrapper<?> wrapper = new RequirementConfigWrapper<>(requirements.get(identifier), config);
+        RequirementConfigWrapper<?> wrapper = new RequirementConfigWrapper<>(id, requirements.get(requirement), config);
         wrapper.load();
         return wrapper;
     }
 
-    public Collection<Requirement<?>> createRequirements(ConfigurationSection requirements) throws RequirementException {
+    public Collection<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) throws RequirementException {
 
         ArrayList<Requirement<?>> list = new ArrayList<>();
         if (requirements == null) {
             return list;
         }
         for (String key : requirements.getKeys(false)) {
-            list.add(create(requirements.getString(key + ".type"), requirements.getConfigurationSection(key)));
+            list.add(create(id, requirements.getString(key + ".type"), requirements.getConfigurationSection(key)));
         }
         return list;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Collection<Requirement<T>> createRequirements(ConfigurationSection requirements, Class<T> type) throws RequirementException {
+    public <T> Collection<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) throws RequirementException {
 
-        return createRequirements(requirements).stream()
+        return createRequirements(id, requirements).stream()
                 .filter(action -> action.matchesType(type))
                 .map(action -> (Requirement<T>) action)
                 .collect(Collectors.toList());

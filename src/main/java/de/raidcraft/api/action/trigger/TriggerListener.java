@@ -5,6 +5,11 @@ package de.raidcraft.api.action.trigger;
  */
 public interface TriggerListener<T> {
 
+    public default String getListenerId() {
+
+        return "GLOBAL";
+    }
+
     public Class<T> getTriggerEntityType();
 
     /**

@@ -28,6 +28,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     private static final String CHECKED_KEY = "checked";
     private static final String COUNT_KEY = "count";
 
+    private final String id;
     private final Requirement<T> requirement;
     private final boolean persistant;
     private final int order;
@@ -37,8 +38,9 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     private final ConfigurationSection config;
     private final Map<UUID, Map<String, Object>> mappings = new HashMap<>();
 
-    protected RequirementConfigWrapper(Requirement<T> requirement, ConfigurationSection config) {
+    protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config) {
 
+        this.id = id;
         this.requirement = requirement;
         this.persistant = config.getBoolean("persistant", false);
         this.order = config.getInt("order", 0);
@@ -142,7 +144,6 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         if (!isPersistant()) return;
         if (getConfig().getRoot() instanceof ConfigurationBase) {
             BasePlugin plugin = ((ConfigurationBase) getConfig().getRoot()).getPlugin();
-            String file = ((ConfigurationBase) getConfig().getRoot()).getFile().getAbsoluteFile().getName();
             EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
             mappings.entrySet().stream().forEach(entry -> {
 
@@ -150,11 +151,11 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
                         .where()
                         .eq("uuid", entry.getKey())
                         .eq("plugin", plugin.getName())
-                        .eq("requirement", file).findUnique();
+                        .eq("requirement", getId()).findUnique();
                 if (dbEntry == null) {
                     dbEntry = new TPersistantRequirement();
                     dbEntry.setPlugin(plugin.getName());
-                    dbEntry.setRequirement(file);
+                    dbEntry.setRequirement(getId());
                     dbEntry.setUuid(entry.getKey());
                     database.save(dbEntry);
                 }
@@ -186,12 +187,11 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         if (!isPersistant()) return;
         if (getConfig().getRoot() instanceof ConfigurationBase) {
             BasePlugin plugin = ((ConfigurationBase) getConfig().getRoot()).getPlugin();
-            String file = ((ConfigurationBase) getConfig().getRoot()).getFile().getAbsoluteFile().getName();
             EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
             List<TPersistantRequirement> list = database.find(TPersistantRequirement.class)
                     .where()
                     .eq("plugin", plugin.getName())
-                    .eq("requirement", file).findList();
+                    .eq("requirement", getId()).findList();
             list.forEach(entry -> {
                 if (!mappings.containsKey(entry.getUuid())) {
                     mappings.put(entry.getUuid(), new HashMap<>());
@@ -208,13 +208,12 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         if (!isPersistant()) return;
         if (entity instanceof Player && getConfig().getRoot() instanceof ConfigurationBase) {
             BasePlugin plugin = ((ConfigurationBase) getConfig().getRoot()).getPlugin();
-            String file = ((ConfigurationBase) getConfig().getRoot()).getFile().getAbsoluteFile().getName();
             EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
             List<TPersistantRequirement> list = database.find(TPersistantRequirement.class)
                     .where()
                     .eq("uuid", ((Player) entity).getUniqueId())
                     .eq("plugin", plugin.getName())
-                    .eq("requirement", file).findList();
+                    .eq("requirement", getId()).findList();
             database.delete(list);
         }
     }
