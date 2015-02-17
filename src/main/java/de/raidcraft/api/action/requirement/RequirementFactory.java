@@ -101,7 +101,7 @@ public final class RequirementFactory implements Component {
             return list;
         }
         for (String key : requirements.getKeys(false)) {
-            list.add(create(id, requirements.getString(key + ".type"), requirements.getConfigurationSection(key)));
+            list.add(create(id + "." + key, requirements.getString(key + ".type"), requirements.getConfigurationSection(key)));
         }
         return list;
     }
