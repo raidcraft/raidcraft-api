@@ -24,5 +24,5 @@ public class TPersistantRequirementMapping {
     @Column(name = "requirement_id")
     private TPersistantRequirement requirement;
     private String mappedKey;
-    private Object mappedValue;
+    private String mappedValue;
 }

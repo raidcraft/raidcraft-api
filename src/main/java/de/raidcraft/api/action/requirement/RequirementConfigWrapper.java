@@ -36,7 +36,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     private final String countText;
     private final boolean optional;
     private final ConfigurationSection config;
-    private final Map<UUID, Map<String, Object>> mappings = new HashMap<>();
+    private final Map<UUID, Map<String, String>> mappings = new HashMap<>();
 
     protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config) {
 
@@ -50,7 +50,19 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         this.config = config;
     }
 
-    private Object getMapping(T entity, String key) {
+    private int getIntMapping(T entity, String key) {
+
+        String mapping = getMapping(entity, key);
+        return mapping == null ? 0 : Integer.parseInt(mapping);
+    }
+
+    private boolean getBoolMapping(T entity, String key) {
+
+        String mapping = getMapping(entity, key);
+        return mapping != null && Boolean.parseBoolean(mapping);
+    }
+
+    private String getMapping(T entity, String key) {
 
         if (entity instanceof Player) {
             return mappings.getOrDefault(((Player) entity).getUniqueId(), new HashMap<>()).getOrDefault(key, null);
@@ -58,7 +70,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         return null;
     }
 
-    private void setMapping(T entity, String key, Object value) {
+    private void setMapping(T entity, String key, String value) {
 
         if (entity instanceof Player) {
             UUID uniqueId = ((Player) entity).getUniqueId();
@@ -69,10 +81,19 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         }
     }
 
+    private void setMapping(T entity, String key, int value) {
+
+        setMapping(entity, key, Integer.toString(value));
+    }
+
+    private void setMapping(T entity, String key, boolean value) {
+
+        setMapping(entity, key, Boolean.toString(value));
+    }
+
     public boolean isChecked(T entity) {
 
-        Object checked = getMapping(entity, CHECKED_KEY);
-        return checked != null && (boolean) checked;
+        return getBoolMapping(entity, CHECKED_KEY);
     }
 
     public boolean isOrdered() {
@@ -87,9 +108,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
 
     public int getCount(T entity) {
 
-        Object count = getMapping(entity, COUNT_KEY);
-        if (count == null) return 0;
-        return (int) count;
+        return getIntMapping(entity, COUNT_KEY);
     }
 
     public boolean hasCountText() {
@@ -159,7 +178,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
                     dbEntry.setUuid(entry.getKey());
                     database.save(dbEntry);
                 }
-                Map<String, Object> values = new HashMap<>(entry.getValue());
+                Map<String, String> values = new HashMap<>(entry.getValue());
                 List<TPersistantRequirementMapping> dbEntryMappings = dbEntry.getMappings();
                 // update the existing values
                 dbEntryMappings.forEach(mapping -> {
@@ -196,7 +215,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
                 if (!mappings.containsKey(entry.getUuid())) {
                     mappings.put(entry.getUuid(), new HashMap<>());
                 }
-                Map<String, Object> map = mappings.get(entry.getUuid());
+                Map<String, String> map = mappings.get(entry.getUuid());
                 entry.getMappings().forEach(mapEntry -> map.put(mapEntry.getMappedKey(), mapEntry.getMappedValue()));
             });
         }
