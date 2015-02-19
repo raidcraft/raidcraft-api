@@ -3,6 +3,7 @@ package de.raidcraft.util;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.tables.TRcPlayer;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -24,25 +25,14 @@ public class UUIDUtil {
         }
     }
 
-    public static UUID convertPlayer(String name) {
+    public static UUID convertPlayer(@NonNull String name) {
 
-        if (name == null) {
-            try {
-                throw new NullPointerException();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase()
                 .find(TRcPlayer.class).where().eq("last_name", name).findUnique();
         if (tPlayer != null) {
             return tPlayer.getUuid();
         }
-        try {
-            throw new Exception("UUID not found for playername: " + name);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // if we are here there is no player for this name -> must be a npc
         return Bukkit.getOfflinePlayer(name).getUniqueId();
     }
 
@@ -58,11 +48,6 @@ public class UUIDUtil {
                 .find(TRcPlayer.class).where().eq("uuid", uuid.toString()).findUnique();
         if (tPlayer != null) {
             return tPlayer.getLastName();
-        }
-        try {
-            throw new Exception("Name not found for UUID: " + uuid);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return Bukkit.getOfflinePlayer(uuid).getName();
     }
