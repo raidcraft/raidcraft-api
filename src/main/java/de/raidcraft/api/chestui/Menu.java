@@ -220,11 +220,19 @@ public class Menu {
     }
 
     public MenuItemAPI getMenuItem(int menuPage, int slot) {
+
+        if (menus_api.length < 1) return null;
         // if toolbar
         if (slot > availableSlots) {
-            return menus_api[0][slot];
+            if (menus_api[0].length > slot) {
+                return menus_api[0][slot];
+            }
+            return null;
         }
-        return menus_api[menuPage][slot];
+        if (menuPage < menus_api.length && slot < menus_api[menuPage].length) {
+            return menus_api[menuPage][slot];
+        }
+        return null;
     }
 
     public int getCurrentPageIndex() {
