@@ -138,16 +138,14 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
 
         successfullyChecked = requirement.test(entity, config);
 
-        if (successfullyChecked) setMapping(entity, COUNT_KEY, getCount(entity) + 1);
-
-        setMapping(entity, CHECKED_KEY, successfullyChecked);
-
         if (isCounting()) {
-            if (hasCountText() && entity instanceof Player) {
+            if (successfullyChecked) setMapping(entity, COUNT_KEY, getCount(entity) + 1);
+            if (hasCountText() && entity instanceof Player && successfullyChecked) {
                 ((Player) entity).sendMessage(getCountText(entity));
             }
-            return getRequiredCount() <= getCount(entity);
+            successfullyChecked = getRequiredCount() <= getCount(entity);
         }
+        if (isPersistant()) setMapping(entity, CHECKED_KEY, successfullyChecked);
         return successfullyChecked;
     }
 
@@ -195,6 +193,8 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
                     mapping.setMappedValue(valueEntry.getValue());
                     dbEntryMappings.add(mapping);
                 });
+                database.save(dbEntryMappings);
+                dbEntry.setMappings(dbEntryMappings);
                 database.update(dbEntry);
             });
         }
