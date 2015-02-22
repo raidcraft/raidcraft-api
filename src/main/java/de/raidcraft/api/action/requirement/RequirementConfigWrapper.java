@@ -162,8 +162,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         if (getConfig().getRoot() instanceof ConfigurationBase) {
             BasePlugin plugin = ((ConfigurationBase) getConfig().getRoot()).getPlugin();
             EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
-            mappings.entrySet().stream().forEach(entry -> {
-
+            for (Map.Entry<UUID, Map<String, String>> entry : mappings.entrySet()) {
                 TPersistantRequirement dbEntry = database.find(TPersistantRequirement.class)
                         .where()
                         .eq("uuid", entry.getKey())
@@ -187,16 +186,17 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
                     }
                 });
                 // add the remaining values
-                values.entrySet().forEach(valueEntry -> {
+                for (Map.Entry<String, String> valueEntry : values.entrySet()) {
                     TPersistantRequirementMapping mapping = new TPersistantRequirementMapping();
+                    mapping.setRequirement(dbEntry);
                     mapping.setMappedKey(valueEntry.getKey());
                     mapping.setMappedValue(valueEntry.getValue());
                     dbEntryMappings.add(mapping);
-                });
+                }
                 database.save(dbEntryMappings);
                 dbEntry.setMappings(dbEntryMappings);
                 database.update(dbEntry);
-            });
+            }
         }
     }
 
