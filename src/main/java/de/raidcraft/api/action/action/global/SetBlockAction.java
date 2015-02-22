@@ -1,6 +1,7 @@
 package de.raidcraft.api.action.action.global;
 
 import com.sk89q.minecraft.util.commands.CommandContext;
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.config.builder.ConfigBuilder;
@@ -24,6 +25,7 @@ public class SetBlockAction implements Action<Player> {
         Location location = ConfigUtil.getLocationFromConfig(config, player);
         Material material = Material.matchMaterial(config.getString("block", "minecraft:air"));
         if (material == null) {
+            RaidCraft.LOGGER.warning("Unknown block material " + config.getString("block") + " in block.set action!");
             return;
         }
         location.getBlock().setType(material);
