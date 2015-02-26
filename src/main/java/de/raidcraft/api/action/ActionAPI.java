@@ -14,6 +14,7 @@ import de.raidcraft.api.action.trigger.global.PlayerTrigger;
 import de.raidcraft.api.economy.AccountType;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.util.InventoryUtils;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.LocationUtil;
 import lombok.NonNull;
@@ -38,7 +39,7 @@ public final class ActionAPI {
 
                 try {
                     ItemStack item = RaidCraft.getItem(config.getString("item"), config.getInt("amount", 1));
-                    player.getInventory().addItem(item);
+                    InventoryUtils.addOrDropItems(player, item);
                 } catch (CustomItemException e) {
                     RaidCraft.LOGGER.warning("player.give.item (" + player.getName() + "): " + e.getMessage());
                 }
@@ -74,9 +75,7 @@ public final class ActionAPI {
                     config.getInt("y"),
                     config.getInt("z"));
             player.setCompassTarget(location);
-            if (player.getInventory().addItem(item).size() != 0) {
-                player.getWorld().dropItem(player.getLocation(), item);
-            }
+            InventoryUtils.addOrDropItems(player, item);
         }),
         SET_BLOCK("block.set", new SetBlockAction()),
         TELEPORT_COORDS("teleport.location", (Player player, ConfigurationSection config) -> {
