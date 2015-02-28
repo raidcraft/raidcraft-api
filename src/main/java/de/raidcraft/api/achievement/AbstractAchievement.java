@@ -93,9 +93,8 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
         // disable all trigger listener
         unregisterListeners();
 
-        this.setCompletionDate(null);
         getHolder().removeAchievement(this);
-        save();
+        delete();
     }
 
     @Override
