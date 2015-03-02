@@ -16,6 +16,6 @@ public class InventoryUtils {
     public static void addOrDropItems(Player player, ItemStack... items) {
 
         HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(items);
-        leftovers.values().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
+        leftovers.values().forEach(item -> player.getWorld().dropItem(player.getLocation(), item));
     }
 }
