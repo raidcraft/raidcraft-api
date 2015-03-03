@@ -54,7 +54,7 @@ public final class ActionAPI {
                 economy.add(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(config.getString("amount")));
             }
         }),
-        KILL_PLAYER("player.kill", (Player player, ConfigurationSection config) -> player.setHealth(0.0)),
+        KILL_PLAYER("player.kill", (Player player, ConfigurationSection config) -> player.damage(player.getMaxHealth() * 10)),
         MESSAGE_PLAYER("player.message", new Action<Player>() {
             @Override
             public void accept(Player player, ConfigurationSection config) {
