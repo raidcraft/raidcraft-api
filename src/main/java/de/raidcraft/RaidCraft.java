@@ -62,6 +62,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
@@ -375,11 +376,11 @@ public class RaidCraft implements Listener {
                 // its a stored item object
                 return new ItemStorage("API").getObject(Integer.parseInt(lowercaseId.replace(STORED_OBJECT_IDENTIFIER, "")));
             } else {
-                try {
-                    // maybe it is a named custom item
-                    return RaidCraft.getComponent(CustomItemManager.class).getCustomItem(lowercaseId).createNewItem();
-                } catch (CustomItemException e) {
-                    // its a minecraft item
+                // maybe it is a named custom item
+                Optional<CustomItem> customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(lowercaseId);
+                if (customItem.isPresent()) {
+                    return customItem.get().createNewItem();
+                } else {
                     Material item = ItemUtils.getItem(lowercaseId);
                     if (item != null && (item == Material.SKULL_ITEM || item == Material.SKULL)) {
                         return Skull.getSkull(id);

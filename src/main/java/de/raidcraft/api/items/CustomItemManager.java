@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Silthus
@@ -40,7 +41,7 @@ public final class CustomItemManager implements Component {
                 try {
                     CustomItem item;
                     if (id == CustomItem.NAMED_CUSTOM_ITEM_ID) {
-                        item = getCustomItem(itemStack.getItemMeta().getDisplayName());
+                        item = findCustomItem(itemStack.getItemMeta().getDisplayName());
                     } else {
                         item = getCustomItem(id);
                     }
@@ -81,7 +82,19 @@ public final class CustomItemManager implements Component {
         throw new CustomItemException("Unknown custom item with the id: " + id);
     }
 
-    public CustomItem getCustomItem(String name) throws CustomItemException {
+    public Optional<CustomItem> getCustomItem(String name) {
+
+        try {
+            return Optional.ofNullable(getCustomItem(Integer.parseInt(name)));
+        } catch (NumberFormatException | CustomItemException ignored) {
+            if (namedCustomItems.containsKey(name)) {
+                return Optional.ofNullable(namedCustomItems.get(name));
+            }
+            return customItems.values().stream().filter(item -> item.getName().equalsIgnoreCase(name)).findFirst();
+        }
+    }
+
+    public CustomItem findCustomItem(String name) throws CustomItemException {
 
         try {
             return getCustomItem(Integer.parseInt(name));
@@ -119,7 +132,7 @@ public final class CustomItemManager implements Component {
 
     public CustomItemStack getCustomItemStack(String name) throws CustomItemException {
 
-        CustomItem customItem = getCustomItem(name);
+        CustomItem customItem = findCustomItem(name);
         return customItem.createNewItem();
     }
 
