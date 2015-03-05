@@ -14,6 +14,7 @@ import java.util.Map;
 public interface CustomItem extends RequirementResolver<Player> {
 
     public static final int NAMED_CUSTOM_ITEM_ID = 0;
+    public static final int DYNAMIC_CUSTOM_ITEM_ID = 10;
 
     public int getId();
 
