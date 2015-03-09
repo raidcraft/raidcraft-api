@@ -19,6 +19,7 @@ import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.LocationUtil;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -41,7 +42,20 @@ public final class ActionAPI {
                     ItemStack item = RaidCraft.getItem(config.getString("item"), config.getInt("amount", 1));
                     InventoryUtils.addOrDropItems(player, item);
                 } catch (CustomItemException e) {
+                    player.sendMessage(ChatColor.RED + e.getMessage());
                     RaidCraft.LOGGER.warning("player.give.item (" + player.getName() + "): " + e.getMessage());
+                }
+            }
+        }),
+        REMOVE_ITEM("player.remove.item", new Action<Player>() {
+            @Override
+            public void accept(Player player, ConfigurationSection config) {
+
+                try {
+                    player.getInventory().remove(RaidCraft.getItem(config.getString("item")));
+                } catch (CustomItemException e) {
+                    player.sendMessage(ChatColor.RED + e.getMessage());
+                    RaidCraft.LOGGER.warning("player.remove.item (" + player.getName() + "): " + e.getMessage());
                 }
             }
         }),
