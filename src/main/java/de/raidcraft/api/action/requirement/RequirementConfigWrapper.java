@@ -40,7 +40,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
 
     protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config) {
 
-        this.id = id;
+        this.id = config.isSet("id") ? config.getString("id") : id;
         this.requirement = requirement;
         this.persistant = config.getBoolean("persistant", false);
         this.order = config.getInt("order", 0);
@@ -146,6 +146,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
             successfullyChecked = getRequiredCount() <= getCount(entity);
         }
         if (isPersistant()) setMapping(entity, CHECKED_KEY, successfullyChecked);
+        save();
         return successfullyChecked;
     }
 
