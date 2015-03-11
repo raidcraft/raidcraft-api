@@ -25,6 +25,9 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Silthus
  */
@@ -49,6 +52,14 @@ public class PlayerTrigger extends Trigger implements Listener {
                         || !blockLocation.getWorld().equals(Bukkit.getWorld(config.getString("world", blockLocation.getWorld().getName())))) {
                     return false;
                 }
+            }
+            Set<Material> blocks = new HashSet<>();
+            if (config.isList("blocks")) {
+                config.getStringList("blocks").forEach(b -> {
+                    Material material = Material.matchMaterial(b);
+                    if (material != null) blocks.add(material);
+                });
+                return blocks.contains(block.getType());
             }
             return !config.isSet("block") || Material.matchMaterial(config.getString("block", "minecraft:air")) == block.getType();
         });
@@ -115,6 +126,14 @@ public class PlayerTrigger extends Trigger implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
 
         informListeners("block.place", event.getPlayer(), config -> {
+            Set<Material> blocks = new HashSet<>();
+            if (config.isList("blocks")) {
+                config.getStringList("blocks").forEach(b -> {
+                    Material material = Material.matchMaterial(b);
+                    if (material != null) blocks.add(material);
+                });
+                return blocks.contains(event.getBlock().getType());
+            }
             Material block = Material.matchMaterial(config.getString("block", "minecraft:air"));
             return block == Material.AIR || block == event.getBlock().getType();
         });

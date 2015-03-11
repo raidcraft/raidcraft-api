@@ -26,6 +26,7 @@ class TriggerListenerConfigWrapper<T> {
 
     private final TriggerListener<T> triggerListener;
     private final ConfigurationSection config;
+    private final boolean executeOnce;
     private Collection<Action<T>> actions = new ArrayList<>();
     private Collection<Requirement<T>> requirements = new ArrayList<>();
 
@@ -33,6 +34,7 @@ class TriggerListenerConfigWrapper<T> {
 
         this.triggerListener = triggerListener;
         this.config = config;
+        this.executeOnce = config.getBoolean("execute-once", false);
         try {
             this.actions = RaidCraft.getComponent(ActionFactory.class)
                     .createActions(config.getConfigurationSection("actions"), getTriggerListener().getTriggerEntityType());
