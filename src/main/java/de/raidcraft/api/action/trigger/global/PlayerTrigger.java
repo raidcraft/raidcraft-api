@@ -50,7 +50,7 @@ public class PlayerTrigger extends Trigger implements Listener {
                     return false;
                 }
             }
-            return !config.isSet("type") || Material.valueOf(config.getString("type", "minecraft:air")) == block.getType();
+            return !config.isSet("block") || Material.matchMaterial(config.getString("block", "minecraft:air")) == block.getType();
         });
     }
 
@@ -106,7 +106,7 @@ public class PlayerTrigger extends Trigger implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
 
         informListeners("block.break", event.getPlayer(), config -> {
-            Material block = Material.getMaterial(config.getString("block", "minecraft:air"));
+            Material block = Material.matchMaterial(config.getString("block", "minecraft:air"));
             return block == Material.AIR || block == event.getBlock().getType();
         });
     }
@@ -115,7 +115,7 @@ public class PlayerTrigger extends Trigger implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
 
         informListeners("block.place", event.getPlayer(), config -> {
-            Material block = Material.getMaterial(config.getString("block", "minecraft:air"));
+            Material block = Material.matchMaterial(config.getString("block", "minecraft:air"));
             return block == Material.AIR || block == event.getBlock().getType();
         });
     }
