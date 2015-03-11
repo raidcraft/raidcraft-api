@@ -146,7 +146,6 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
             successfullyChecked = getRequiredCount() <= getCount(entity);
         }
         if (isPersistant()) setMapping(entity, CHECKED_KEY, successfullyChecked);
-        save();
         return successfullyChecked;
     }
 

@@ -128,7 +128,7 @@ public final class ActionAPI {
     public enum GlobalRequirements {
 
         IS_SPRINTING("player.is-sprinting", (Player player, ConfigurationSection config) -> player.isSprinting()),
-        COUNT("count", (Player player, ConfigurationSection config) -> true),
+        DUMMY("dummy", (Player player, ConfigurationSection config) -> true),
         PLAYER_LOCATION("player.location", new Requirement<Player>() {
             @Override
             public boolean test(Player player, ConfigurationSection config) {
