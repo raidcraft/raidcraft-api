@@ -42,6 +42,8 @@ public class CustomItemStack extends ItemStack {
         this.item = item;
         // lets add the item tooltips to our item stack
         tooltips.putAll(item.getTooltips());
+        // lets parse the item for a meta data and attach it
+        setMetaDataId(CustomItemUtil.parseMetaDataId(itemStack));
 
         if (item instanceof CustomEquipment && ((CustomEquipment) item).getMaxDurability() > 0) {
             setCustomDurability(parseDurability());
@@ -134,7 +136,11 @@ public class CustomItemStack extends ItemStack {
 
     public void setMetaDataId(int id) {
 
-        setTooltip(new SingleLineTooltip(TooltipSlot.META_ID, CustomItemUtil.encodeItemId(id)));
+        if (id < 0) {
+            removeTooltip(TooltipSlot.META_ID);
+        } else {
+            setTooltip(new SingleLineTooltip(TooltipSlot.META_ID, CustomItemUtil.encodeItemId(id)));
+        }
         rebuild();
     }
 

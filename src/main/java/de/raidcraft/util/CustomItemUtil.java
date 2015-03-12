@@ -20,6 +20,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
+
 /**
  * @author Silthus
  */
@@ -123,6 +125,19 @@ public final class CustomItemUtil {
             out.append(str.charAt(i));
         }
         return Integer.parseInt(out.toString(), 16);
+    }
+
+    public static int parseMetaDataId(ItemStack itemStack) {
+
+        if (isCustomItem(itemStack) && itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore()) {
+            try {
+                List<String> lore = itemStack.getItemMeta().getLore();
+                String metaDataString = lore.get(lore.size() - 1);
+                return decodeItemId(metaDataString);
+            } catch (CustomItemException ignored) {
+            }
+        }
+        return -1;
     }
 
     public static int getStringWidth(String str) {
