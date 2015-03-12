@@ -26,6 +26,12 @@ public enum ItemType {
     CONSUMEABLE("Verbrauchbar"),
     @EnumValue("TRASH")
     TRASH("Plunder"),
+    @EnumValue("SPECIAL")
+    SPECIAL("SPECIAL"),
+    @EnumValue("PROFESSION")
+    PROFESSION("PROFESSION"),
+    @EnumValue("CLASS")
+    CLASS("CLASS"),
     @EnumValue("UNDEFINED")
     UNDEFINED("Undefined");
 
