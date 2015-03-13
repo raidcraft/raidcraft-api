@@ -6,7 +6,7 @@ import lombok.Data;
  * @author Silthus
  */
 @Data
-public abstract class AbstractRDSObject implements RDSObject {
+public class GenericRDSObject implements RDSObject {
 
     private boolean enabled;
     private boolean always;
@@ -14,22 +14,21 @@ public abstract class AbstractRDSObject implements RDSObject {
     private double probability;
     private RDSTable table;
 
-    public AbstractRDSObject() {
+    public GenericRDSObject() {
 
         this(0);
     }
 
-    public AbstractRDSObject(double probability) {
+    public GenericRDSObject(double probability) {
 
         this(probability, true, false, false);
     }
 
-    public AbstractRDSObject(double probability, boolean enabled, boolean always, boolean unique) {
+    public GenericRDSObject(double probability, boolean enabled, boolean always, boolean unique) {
 
         this.probability = probability;
         this.enabled = enabled;
         this.always = always;
         this.unique = unique;
     }
-
 }

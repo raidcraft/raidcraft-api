@@ -3,22 +3,23 @@ package de.raidcraft.api.random;
 import java.util.Collection;
 
 /**
- * @author Silthus
+ * This interface describes a table of IRDSObjects. One (or more) of them is/are picked as the result set.
  */
 public interface RDSTable extends RDSObject {
 
     /**
-     * Gets how many items should drop from this table.
+     * The maximum number of entries expected in the Result. The final count of items in the result may be lower
+     * if some of the entries may return a null result (no drop).
      *
-     * @return maximum of dropped items
+     * @return maximum number of entries expected in the result
      */
     int getCount();
 
     /**
-     * Sets the count of items that should drop from this table.
-     * The result may be less but never more than the set count.
+     * Sets the maximum number of entries expected in the Result. The final count of items in the result may be lower
+     * if some of the entries may return a null result (no drop).
      *
-     * @param count to drop
+     * @param count of the maximum entries to expected in the result
      */
     void setCount(int count);
 
@@ -38,9 +39,11 @@ public interface RDSTable extends RDSObject {
     RDSTable addEntry(RDSObject object, double probability, boolean enabled, boolean always, boolean unique);
 
     /**
-     * Gets the result returned by this tunning random calculations.
+     * Gets the result. Calling this method will start the random pick process and generate the result.
+     * This result remains constant for the lifetime of this table object.
+     * Use the ResetResult method to clear the result and create a new one.
      *
-     * @return calculated random result
+     * @return calculated random result of this table
      */
     Collection<RDSObject> getResult();
 }
