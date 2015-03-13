@@ -411,6 +411,16 @@ public class RaidCraft implements Listener {
         }
     }
 
+    public static Optional<ItemStack> getUnsafeItem(String id, int amount) {
+
+        ItemStack item = getUnsafeItem(id);
+        if (item != null) {
+            item.setAmount(amount);
+            return Optional.of(item);
+        }
+        return Optional.empty();
+    }
+
     public static String getItemIdString(ItemStack itemStack) {
 
         return getItemIdString(itemStack, false);

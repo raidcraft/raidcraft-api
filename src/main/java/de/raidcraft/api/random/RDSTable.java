@@ -1,11 +1,22 @@
 package de.raidcraft.api.random;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Collection;
 
 /**
  * This interface describes a table of IRDSObjects. One (or more) of them is/are picked as the result set.
  */
 public interface RDSTable extends RDSObject {
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Name {
+
+        String value();
+    }
 
     /**
      * The maximum number of entries expected in the Result. The final count of items in the result may be lower

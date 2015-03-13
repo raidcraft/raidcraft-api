@@ -1,5 +1,7 @@
 package de.raidcraft.api.random;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -21,7 +23,7 @@ public class RDSCreateableObject extends GenericRDSObject implements RDSObjectCr
      * @return A new instance of an object of the type where this method is implemented
      */
     @Override
-    public RDSObject createInstance() {
+    public RDSObject createInstance(ConfigurationSection config) {
 
         try {
             Constructor<? extends RDSCreateableObject> constructor = getClass().getConstructor();

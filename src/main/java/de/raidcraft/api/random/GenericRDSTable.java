@@ -2,6 +2,7 @@ package de.raidcraft.api.random;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,12 +17,27 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = false)
 public class GenericRDSTable extends GenericRDSObject implements RDSTable {
 
+    @RDSObjectFactory.Name("generic-table")
+    public static class GenericTableFactory implements RDSObjectFactory {
+
+        @Override
+        public RDSObject createInstance(ConfigurationSection config) {
+
+            return new GenericRDSTable(config.getInt("count", 1), config.getDouble("probability", 1));
+        }
+    }
+
     private final Collection<RDSObject> contents;
     private int count;
 
     public GenericRDSTable() {
 
         this(null, 1, 1);
+    }
+
+    public GenericRDSTable(int count, double probability) {
+
+        this(null, count, probability);
     }
 
     public GenericRDSTable(Collection<RDSObject> contents, int count, double probability) {
@@ -98,7 +114,7 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
     }
 
     @Override
-    public Collection<RDSObject> getResult() {
+    public final Collection<RDSObject> getResult() {
 
         // The return value, a list of hit objects
         List<RDSObject> result = new ArrayList<>();

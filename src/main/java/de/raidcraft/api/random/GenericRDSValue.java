@@ -18,6 +18,16 @@ public class GenericRDSValue<T> extends GenericRDSObject implements RDSValue<T> 
 
     private Optional<T> value;
 
+    public GenericRDSValue() {
+
+        this(null, 1);
+    }
+
+    public GenericRDSValue(T value) {
+
+        this(value, 1);
+    }
+
     public GenericRDSValue(T value, double probability) {
 
         this(value, probability, true, false, false);

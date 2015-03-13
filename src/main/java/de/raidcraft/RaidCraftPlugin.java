@@ -22,6 +22,13 @@ import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.npc.NPC_Manager;
+import de.raidcraft.api.random.GenericRDSTable;
+import de.raidcraft.api.random.RDS;
+import de.raidcraft.api.random.RDSNullValue;
+import de.raidcraft.api.random.objects.ItemLootObject;
+import de.raidcraft.api.random.objects.MoneyLootObject;
+import de.raidcraft.api.random.objects.RandomMoneyLootObject;
+import de.raidcraft.api.random.tables.ConfiguredRDSTable;
 import de.raidcraft.api.storage.TObjectStorage;
 import de.raidcraft.tables.PlayerPlacedBlock;
 import de.raidcraft.tables.TActionApi;
@@ -87,6 +94,13 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         ActionFactory.getInstance();
         TriggerManager.getInstance();
 
+        // register random objects
+        RDS.registerObject(new ItemLootObject.ItemLootFactory());
+        RDS.registerObject(new MoneyLootObject.MoneyLootFactory());
+        RDS.registerObject(new RandomMoneyLootObject.RandomMoneyLootFactory());
+        RDS.registerObject(new RDSNullValue.RDSNullFactory());
+        RDS.registerObject(new GenericRDSTable.GenericTableFactory());
+        RDS.registerObject(new ConfiguredRDSTable.TableFactory());
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
