@@ -117,8 +117,18 @@ public class PlayerTrigger extends Trigger implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
 
         informListeners("block.break", event.getPlayer(), config -> {
-            Material block = Material.matchMaterial(config.getString("block", "minecraft:air"));
-            return block == Material.AIR || block == event.getBlock().getType();
+            Set<Material> blocks = new HashSet<>();
+            if (config.isList("blocks")) {
+                config.getStringList("blocks").forEach(b -> {
+                    Material material = Material.matchMaterial(b);
+                    if (material != null) {
+                        blocks.add(material);
+                    }
+                });
+                return blocks.contains(event.getBlock().getType());
+            }
+            Material block = Material.matchMaterial(config.getString("block", "AIR"));
+            return block == null || block == Material.AIR || block == event.getBlock().getType();
         });
     }
 
@@ -134,8 +144,8 @@ public class PlayerTrigger extends Trigger implements Listener {
                 });
                 return blocks.contains(event.getBlock().getType());
             }
-            Material block = Material.matchMaterial(config.getString("block", "minecraft:air"));
-            return block == Material.AIR || block == event.getBlock().getType();
+            Material block = Material.matchMaterial(config.getString("block", "AIR"));
+            return block == null || block == Material.AIR || block == event.getBlock().getType();
         });
     }
 
