@@ -68,6 +68,15 @@ public final class ActionAPI {
                 economy.add(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(config.getString("amount")));
             }
         }),
+	    TAKE_MONEY("player.take.money", new Action<Player>() {
+		    @Override
+		    public void accept(Player player, ConfigurationSection config) {
+
+			    if (!config.isSet("amount")) return;
+			    Economy economy = RaidCraft.getEconomy();
+			    economy.substract(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(config.getString("amount")));
+		    }
+	    }),
         KILL_PLAYER("player.kill", (Player player, ConfigurationSection config) -> player.damage(player.getMaxHealth() * 10)),
         MESSAGE_PLAYER("player.message", new Action<Player>() {
             @Override
