@@ -1,6 +1,7 @@
 package de.raidcraft.util;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.KeyValueMap;
 import de.raidcraft.api.config.typeconversions.BooleanTypeConversion;
 import de.raidcraft.api.config.typeconversions.EnumTypeConversion;
@@ -16,6 +17,7 @@ import de.raidcraft.api.quests.Quests;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
@@ -109,6 +111,24 @@ public class ConfigUtil {
             }
         }
         return value;
+    }
+
+    public static String getFileName(ConfigurationSection config) {
+
+        ConfigurationBase base = null;
+        if (config instanceof ConfigurationBase) {
+            base = (ConfigurationBase) config;
+        } else {
+            Configuration root = config.getRoot();
+            if (root != null && root instanceof ConfigurationBase) {
+                base = (ConfigurationBase) root;
+            }
+        }
+        if (base != null) {
+            return base.getFile().getAbsolutePath();
+        } else {
+            return config.getRoot().getName();
+        }
     }
 
     public static Object smartCast(Type genericType, Object value) {

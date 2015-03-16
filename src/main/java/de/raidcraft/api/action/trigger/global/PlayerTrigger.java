@@ -7,6 +7,7 @@ import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigBuilderException;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.util.BlockUtil;
+import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -57,11 +58,15 @@ public class PlayerTrigger extends Trigger implements Listener {
             if (config.isList("blocks")) {
                 config.getStringList("blocks").forEach(b -> {
                     Material material = Material.matchMaterial(b);
-                    if (material != null) blocks.add(material);
+                    if (material != null) {
+                        blocks.add(material);
+                    } else {
+                        RaidCraft.LOGGER.warning("Wrong block defined in player.interact trigger! " + ConfigUtil.getFileName(config));
+                    }
                 });
                 return blocks.contains(block.getType());
             }
-            return !config.isSet("block") || Material.matchMaterial(config.getString("block", "minecraft:air")) == block.getType();
+            return !config.isSet("block") || Material.matchMaterial(config.getString("block", "AIR")) == block.getType();
         });
     }
 
@@ -123,11 +128,16 @@ public class PlayerTrigger extends Trigger implements Listener {
                     Material material = Material.matchMaterial(b);
                     if (material != null) {
                         blocks.add(material);
+                    } else {
+                        RaidCraft.LOGGER.warning("Wrong block defined in player.interact trigger! " + ConfigUtil.getFileName(config));
                     }
                 });
                 return blocks.contains(event.getBlock().getType());
             }
             Material block = Material.matchMaterial(config.getString("block", "AIR"));
+            if (block == null) {
+                RaidCraft.LOGGER.warning("Wrong block defined in player.interact trigger! " + ConfigUtil.getFileName(config));
+            }
             return block == null || block == Material.AIR || block == event.getBlock().getType();
         });
     }
@@ -140,11 +150,18 @@ public class PlayerTrigger extends Trigger implements Listener {
             if (config.isList("blocks")) {
                 config.getStringList("blocks").forEach(b -> {
                     Material material = Material.matchMaterial(b);
-                    if (material != null) blocks.add(material);
+                    if (material != null) {
+                        blocks.add(material);
+                    } else {
+                        RaidCraft.LOGGER.warning("Wrong block defined in player.interact trigger! " + ConfigUtil.getFileName(config));
+                    }
                 });
                 return blocks.contains(event.getBlock().getType());
             }
             Material block = Material.matchMaterial(config.getString("block", "AIR"));
+            if (block == null) {
+                RaidCraft.LOGGER.warning("Wrong block defined in player.interact trigger! " + ConfigUtil.getFileName(config));
+            }
             return block == null || block == Material.AIR || block == event.getBlock().getType();
         });
     }
