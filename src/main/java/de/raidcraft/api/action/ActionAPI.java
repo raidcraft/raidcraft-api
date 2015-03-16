@@ -82,7 +82,7 @@ public final class ActionAPI {
             @Override
             public void accept(Player player, ConfigurationSection config) {
 
-                String[] text = config.getString("text").split("|");
+                String[] text = config.getString("text").split("\\|");
                 for (String msg : text) {
                     player.sendMessage(msg);
                 }
