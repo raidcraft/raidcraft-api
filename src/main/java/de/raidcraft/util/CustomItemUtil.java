@@ -133,10 +133,10 @@ public final class CustomItemUtil {
             try {
                 List<String> lore = itemStack.getItemMeta().getLore();
                 String metaDataString = lore.get(lore.size() - 1);
-                return decodeItemId(metaDataString);
-            } catch (CustomItemException e) {
-                // TODO: remove this when done with debugging
-                e.printStackTrace();
+                if (metaDataString.length() == 16 && metaDataString.charAt(0) == ChatColor.COLOR_CHAR) {
+                    return decodeItemId(metaDataString);
+                }
+            } catch (CustomItemException ignored) {
             }
         }
         return -1;
