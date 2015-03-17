@@ -72,7 +72,7 @@ public final class CustomItemUtil {
 
     public static String encodeItemId(int id) {
 
-        String hex = String.format("%08x", id);
+        String hex = Integer.toHexString(id);
         StringBuilder out = new StringBuilder();
         for (char h : hex.toCharArray()) {
             out.append(ChatColor.COLOR_CHAR);

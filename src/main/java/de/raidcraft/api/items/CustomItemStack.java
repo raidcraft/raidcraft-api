@@ -136,7 +136,7 @@ public class CustomItemStack extends ItemStack {
 
     public void setMetaDataId(int id) {
 
-        if (id < 0) {
+        if (id <= 0) {
             removeTooltip(TooltipSlot.META_ID);
         } else {
             setTooltip(new SingleLineTooltip(TooltipSlot.META_ID, CustomItemUtil.encodeItemId(id)));
