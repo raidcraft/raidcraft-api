@@ -6,6 +6,7 @@ import de.raidcraft.api.items.attachments.ItemAttachment;
 import de.raidcraft.api.items.attachments.RequiredItemAttachment;
 import de.raidcraft.api.items.tooltip.AttributeTooltip;
 import de.raidcraft.api.items.tooltip.DPSTooltip;
+import de.raidcraft.api.items.tooltip.MetaDataTooltip;
 import de.raidcraft.api.items.tooltip.RequirementTooltip;
 import de.raidcraft.api.items.tooltip.SingleLineTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
@@ -139,7 +140,7 @@ public class CustomItemStack extends ItemStack {
         if (id <= 0) {
             removeTooltip(TooltipSlot.META_ID);
         } else {
-            setTooltip(new SingleLineTooltip(TooltipSlot.META_ID, CustomItemUtil.encodeItemId(id)));
+            setTooltip(new MetaDataTooltip(id));
         }
         rebuild();
     }
@@ -150,7 +151,8 @@ public class CustomItemStack extends ItemStack {
             if (hasTooltip(TooltipSlot.META_ID)) {
                 return CustomItemUtil.decodeItemId(getTooltip(TooltipSlot.META_ID).getTooltip()[0]);
             }
-        } catch (CustomItemException ignored) {
+        } catch (CustomItemException e) {
+            e.printStackTrace();
         }
         return -1;
     }

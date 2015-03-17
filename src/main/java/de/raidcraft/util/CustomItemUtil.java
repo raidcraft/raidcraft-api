@@ -114,12 +114,12 @@ public final class CustomItemUtil {
     public static int decodeItemId(String str) throws CustomItemException {
 
         if (str.length() < 16) {
-            throw new CustomItemException("Item ist kein Custom Item.");
+            throw new CustomItemException("Item contains an invalid item id. (String length < 16) -> " + str + "(" + str.length() + ")");
         }
         StringBuilder out = new StringBuilder();
         for (int i = 0; i < 16; i++) {
             if (str.charAt(i) != ChatColor.COLOR_CHAR) {
-                throw new CustomItemException("Item ist kein Custom Item.");
+                throw new CustomItemException("Item contains an invalid item id. (No color chars!) " + str);
             }
             i++;
             out.append(str.charAt(i));
@@ -134,7 +134,8 @@ public final class CustomItemUtil {
                 List<String> lore = itemStack.getItemMeta().getLore();
                 String metaDataString = lore.get(lore.size() - 1);
                 return decodeItemId(metaDataString);
-            } catch (CustomItemException ignored) {
+            } catch (CustomItemException e) {
+                e.printStackTrace();
             }
         }
         return -1;
