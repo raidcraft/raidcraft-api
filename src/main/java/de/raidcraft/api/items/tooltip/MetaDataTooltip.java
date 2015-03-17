@@ -1,5 +1,6 @@
 package de.raidcraft.api.items.tooltip;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.util.CustomItemUtil;
 
 /**
@@ -12,7 +13,9 @@ public class MetaDataTooltip extends Tooltip {
     public MetaDataTooltip(int id) {
 
         super(TooltipSlot.META_ID);
-        text = new String[]{CustomItemUtil.encodeItemId(id)};
+        String itemId = CustomItemUtil.encodeItemId(id);
+        RaidCraft.LOGGER.info("Encoded meta data id from " + id + " to " + itemId);
+        text = new String[]{itemId};
     }
 
     @Override

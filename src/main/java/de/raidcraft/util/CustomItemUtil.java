@@ -135,6 +135,7 @@ public final class CustomItemUtil {
                 String metaDataString = lore.get(lore.size() - 1);
                 return decodeItemId(metaDataString);
             } catch (CustomItemException e) {
+                // TODO: remove this when done with debugging
                 e.printStackTrace();
             }
         }
