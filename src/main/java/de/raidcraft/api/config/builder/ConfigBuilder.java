@@ -40,18 +40,18 @@ public class ConfigBuilder<T extends BasePlugin> implements Listener {
 
         for (Method method : generator.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
+                ConfigGenerator.Information information = method.getAnnotation(ConfigGenerator.Information.class);
+                String name = information.value();
                 if (method.getParameterTypes().length == 3
                         && method.getParameterTypes()[0] == ConfigBuilder.class
                         && method.getParameterTypes()[1] == CommandContext.class
                         && method.getParameterTypes()[2] == Player.class) {
-                    ConfigGenerator.Information information = method.getAnnotation(ConfigGenerator.Information.class);
-                    String name = information.value();
                     if (!CONFIG_GENERATORS.containsKey(name)) {
                         CONFIG_GENERATORS.put(name, generator);
-                        GENERATOR_INFORMATIONS.put(name, information);
                         RaidCraft.LOGGER.warning("Config Builder with the same name is already registered: " + name);
                     }
                 }
+                GENERATOR_INFORMATIONS.put(name, information);
             }
         }
     }
