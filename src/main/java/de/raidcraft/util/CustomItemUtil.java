@@ -426,6 +426,7 @@ public final class CustomItemUtil {
         for (int i = 0; i < lore.size(); i++) {
             try {
                 int tooltipSlotId = decodeItemId(lore.get(i));
+                if (tooltipSlotId >= TooltipSlot.values().length) continue;
                 // remove the hidden line id
                 lore.set(i, lore.get(i).substring(16));
                 if (slot == TooltipSlot.values()[tooltipSlotId]) {
