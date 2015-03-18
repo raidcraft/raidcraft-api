@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 
 import java.lang.reflect.Constructor;
@@ -32,7 +33,8 @@ public class RewardManager {
             ConfigurationSection rewardSection = config.getConfigurationSection(rewardKey);
 
             String type = rewardSection.getString("type");
-            ConfigurationSection args = rewardSection.getConfigurationSection("args");
+            ConfigurationSection args = rewardSection.isConfigurationSection("args")
+                    ? rewardSection.getConfigurationSection("args") : new MemoryConfiguration();
             args.set("name", type);
 
             Class<? extends Reward<?>> rClass = rewardClasses.get(type);
@@ -42,7 +44,7 @@ public class RewardManager {
                 return rewards;
             }
             try {
-                final Reward<O> reward = (Reward<O>) constructors.get(rClass).newInstance(args);
+                final Reward<O> reward = (Reward<O>) constructors.get(rClass).newInstance(rewardSection);
                 if (reward instanceof AbstractReward) {
                     ((AbstractReward) reward).load(args);
                 }

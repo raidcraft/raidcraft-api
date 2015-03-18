@@ -6,6 +6,7 @@ import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 
 import java.lang.reflect.Constructor;
@@ -56,8 +57,10 @@ public final class RequirementManager {
                         if (requirement instanceof AbstractRequirement) {
                             // load the config one tick later to allow all processing to take place
                             // this helps to avoid stack overflow errors when a skill requires itself
+                            ConfigurationSection args = section.isConfigurationSection("args")
+                                    ? section.getConfigurationSection("args") : new MemoryConfiguration();
                             Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class),
-                                    () -> ((AbstractRequirement) requirement).load(section), 1L);
+                                    () -> ((AbstractRequirement) requirement).load(args), 1L);
                         }
                         requirements.add(requirement);
                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
