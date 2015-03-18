@@ -62,6 +62,12 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         return mapping != null && Boolean.parseBoolean(mapping);
     }
 
+    private double getDoubleMapping(T entity, String key) {
+
+        String mapping = getMapping(entity, key);
+        return mapping == null ? 0.0 : Double.parseDouble(mapping);
+    }
+
     private String getMapping(T entity, String key) {
 
         if (entity instanceof Player) {
@@ -70,14 +76,19 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         return null;
     }
 
+    private void setMapping(UUID uuid, String key, String value) {
+
+        if (!mappings.containsKey(uuid)) {
+            mappings.put(uuid, new HashMap<>());
+        }
+        mappings.get(uuid).put(key, value);
+    }
+
     private void setMapping(T entity, String key, String value) {
 
         if (entity instanceof Player) {
             UUID uniqueId = ((Player) entity).getUniqueId();
-            if (!mappings.containsKey(uniqueId)) {
-                mappings.put(uniqueId, new HashMap<>());
-            }
-            mappings.get(uniqueId).put(key, value);
+            setMapping(uniqueId, key, value);
         }
     }
 
@@ -146,6 +157,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
             successfullyChecked = getRequiredCount() <= getCount(entity);
         }
         if (isPersistant()) setMapping(entity, CHECKED_KEY, successfullyChecked);
+        save();
         return successfullyChecked;
     }
 
@@ -212,11 +224,9 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
                     .eq("plugin", plugin.getName())
                     .eq("requirement", getId()).findList();
             list.forEach(entry -> {
-                if (!mappings.containsKey(entry.getUuid())) {
-                    mappings.put(entry.getUuid(), new HashMap<>());
+                for (TPersistantRequirementMapping mapping : entry.getMappings()) {
+                    setMapping(entry.getUuid(), mapping.getMappedKey(), mapping.getMappedValue());
                 }
-                Map<String, String> map = mappings.get(entry.getUuid());
-                entry.getMappings().forEach(mapEntry -> map.put(mapEntry.getMappedKey(), mapEntry.getMappedValue()));
             });
         }
     }
