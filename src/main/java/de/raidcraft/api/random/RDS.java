@@ -1,6 +1,8 @@
 package de.raidcraft.api.random;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.random.tables.ConfiguredRDSTable;
 import de.raidcraft.util.CaseInsensitiveMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -14,7 +16,7 @@ import java.util.Optional;
 public class RDS {
 
     private static final Map<String, RDSObjectFactory> registeredFactories = new CaseInsensitiveMap<>();
-    private static final Map<String, RDSTable> registeredTables = new CaseInsensitiveMap<>();
+    private static final Map<String, Map<String, RDSTable>> registeredTables = new CaseInsensitiveMap<>();
 
     public static void registerObject(RDSObjectFactory creator) {
 
@@ -62,38 +64,60 @@ public class RDS {
         return Optional.ofNullable(registeredFactories.get(name));
     }
 
-    public static void registerTable(String name, RDSTable table) {
+    private static void registerTable(BasePlugin plugin, String name, RDSTable table) {
 
-        registeredTables.put(name, table);
+        if (!registeredTables.containsKey(plugin.getName())) {
+            registeredTables.put(plugin.getName(), new CaseInsensitiveMap<>());
+        }
+        registeredTables.get(plugin.getName()).put(name, table);
+        plugin.getLogger().info("Registered loot table (" + table.getClass().getTypeName() + "): " + name);
     }
 
-    public static void registerTable(RDSTable table) {
+    public static void registerTable(BasePlugin plugin, RDSTable table) {
 
         Class<? extends RDSTable> tableClass = table.getClass();
         if (!tableClass.isAnnotationPresent(RDSTable.Name.class)) {
+            if (table instanceof ConfiguredRDSTable) {
+                registerTable(plugin, ((ConfiguredRDSTable) table).getName(), table);
+                return;
+            }
             RaidCraft.LOGGER.warning("RDSTable has no name defined! " + tableClass.getCanonicalName());
             return;
         }
-        registerTable(tableClass.getAnnotation(RDSTable.Name.class).value(), table);
+        registerTable(plugin, tableClass.getAnnotation(RDSTable.Name.class).value(), table);
     }
 
-    public static void unregisterTable(String name) {
+    public static void unregisterTable(BasePlugin plugin, String name) {
 
-        registeredTables.remove(name);
+        registeredTables.getOrDefault(plugin, new CaseInsensitiveMap<>()).remove(name);
     }
 
-    public static void unregisterTable(RDSTable table) {
+    public static void unregisterTable(BasePlugin plugin, RDSTable table) {
 
         Class<? extends RDSTable> tableClass = table.getClass();
         if (!tableClass.isAnnotationPresent(RDSTable.Name.class)) {
+            if (table instanceof ConfiguredRDSTable) {
+                unregisterTable(plugin, ((ConfiguredRDSTable) table).getName());
+                return;
+            }
             RaidCraft.LOGGER.warning("RDSTable has no name defined! " + tableClass.getCanonicalName());
             return;
         }
-        unregisterTable(tableClass.getAnnotation(RDSTable.Name.class).value());
+        unregisterTable(plugin, tableClass.getAnnotation(RDSTable.Name.class).value());
+    }
+
+    public static void unregisterTables(BasePlugin plugin) {
+
+        registeredTables.remove(plugin.getName());
     }
 
     public static Optional<RDSTable> getTable(String name) {
 
-        return Optional.ofNullable(registeredTables.get(name));
+        for (Map<String, RDSTable> tableMap : registeredTables.values()) {
+            if (tableMap.containsKey(name)) {
+                return Optional.of(tableMap.get(name));
+            }
+        }
+        return Optional.empty();
     }
 }
