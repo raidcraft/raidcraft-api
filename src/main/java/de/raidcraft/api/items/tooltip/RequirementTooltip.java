@@ -19,16 +19,30 @@ public class RequirementTooltip extends Tooltip {
 
         super(TooltipSlot.REQUIREMENT);
         requirements.put(requirement.getName(), requirement);
+        buildTooltips();
+    }
+
+    private void buildTooltips() {
+
+        String[] strings = new String[requirements.size()];
+        int i = 0;
+        for (RequiredItemAttachment requirement : requirements.values()) {
+            strings[i] = color + requirement.getItemText();
+            i++;
+        }
+        setTooltip(strings);
     }
 
     public void removeRequirement(RequiredItemAttachment requirement) {
 
         requirements.remove(requirement.getName());
+        buildTooltips();
     }
 
     public void addRequirement(RequiredItemAttachment requirement) {
 
         requirements.put(requirement.getName(), requirement);
+        buildTooltips();
     }
 
     public boolean hasRequirement(String name) {
@@ -55,17 +69,5 @@ public class RequirementTooltip extends Tooltip {
                 setWidth(width);
             }
         }
-    }
-
-    @Override
-    public String[] getTooltip() {
-
-        String[] strings = new String[requirements.size()];
-        int i = 0;
-        for (RequiredItemAttachment requirement : requirements.values()) {
-            strings[i] = color + requirement.getItemText();
-            i++;
-        }
-        return strings;
     }
 }

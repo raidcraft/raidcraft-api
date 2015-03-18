@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -27,9 +28,31 @@ public class AttributeTooltip extends Tooltip {
             try {
                 this.attributes.put(attribute.getType(), attribute.clone());
             } catch (CloneNotSupportedException ignored) {
-
             }
         }
+        setTooltip(buildTooltip());
+    }
+
+    private String[] buildTooltip() {
+
+        List<ItemAttribute> attributes = new ArrayList<>(this.attributes.values());
+        String[] array = new String[attributes.size()];
+        List<ItemAttribute> addLater = attributes.stream()
+                .filter(attribute -> attribute.getType().getDisplayType() == AttributeDisplayType.BELOW)
+                .collect(Collectors.toList());
+        attributes.removeAll(addLater);
+        Collections.sort(attributes);
+        Collections.sort(addLater);
+        int i = 0;
+        for (ItemAttribute attribute : attributes) {
+            array[i] = attribute.getItemLine();
+            i++;
+        }
+        for (ItemAttribute attribute : addLater) {
+            array[i] = attribute.getItemLine();
+            i++;
+        }
+        return array;
     }
 
     public Collection<ItemAttribute> getAttributes() {
@@ -56,31 +79,5 @@ public class AttributeTooltip extends Tooltip {
                 setWidth(width);
             }
         }
-    }
-
-    @Override
-    public String[] getTooltip() {
-
-        List<ItemAttribute> attributes = new ArrayList<>(this.attributes.values());
-        String[] array = new String[attributes.size()];
-        List<ItemAttribute> addLater = new ArrayList<>();
-        for (ItemAttribute attribute : attributes) {
-            if (attribute.getType().getDisplayType() == AttributeDisplayType.BELOW) {
-                addLater.add(attribute);
-            }
-        }
-        attributes.removeAll(addLater);
-        Collections.sort(attributes);
-        Collections.sort(addLater);
-        int i = 0;
-        for (ItemAttribute attribute : attributes) {
-            array[i] = attribute.getItemLine();
-            i++;
-        }
-        for (ItemAttribute attribute : addLater) {
-            array[i] = attribute.getItemLine();
-            i++;
-        }
-        return array;
     }
 }

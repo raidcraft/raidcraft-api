@@ -6,9 +6,9 @@ import de.raidcraft.api.items.attachments.ItemAttachment;
 import de.raidcraft.api.items.attachments.RequiredItemAttachment;
 import de.raidcraft.api.items.tooltip.AttributeTooltip;
 import de.raidcraft.api.items.tooltip.DPSTooltip;
+import de.raidcraft.api.items.tooltip.DurabilityTooltip;
 import de.raidcraft.api.items.tooltip.MetaDataTooltip;
 import de.raidcraft.api.items.tooltip.RequirementTooltip;
-import de.raidcraft.api.items.tooltip.SingleLineTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
 import de.raidcraft.util.CustomItemUtil;
@@ -22,15 +22,11 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Silthus
  */
 public class CustomItemStack extends ItemStack {
-
-    private static final Pattern DURABILITY_PATTERN = Pattern.compile("^Haltbarkeit: ([0-9]+)/([0-9]+)$");
 
     private final CustomItem item;
     private final Map<TooltipSlot, Tooltip> tooltips = new EnumMap<>(TooltipSlot.class);
@@ -43,8 +39,8 @@ public class CustomItemStack extends ItemStack {
         this.item = item;
         // lets add the item tooltips to our item stack
         tooltips.putAll(item.getTooltips());
-        // lets parse the item for a meta data and attach it
-        setMetaDataId(CustomItemUtil.parseMetaDataId(itemStack));
+        // lets parse all existing tooltips of the itemstack
+        tooltips.putAll(CustomItemUtil.parseTooltips(itemStack));
 
         if (item instanceof CustomEquipment && ((CustomEquipment) item).getMaxDurability() > 0) {
             setCustomDurability(parseDurability());
@@ -62,18 +58,10 @@ public class CustomItemStack extends ItemStack {
             durability = 0;
         }
         this.durability = durability;
-        // define the state of the item via color
-        ChatColor color = ChatColor.GRAY;
-        double durabilityInPercent = (double) durability / (double) getMaxDurability();
-        if (durabilityInPercent < 0.10) {
-            color = ChatColor.DARK_RED;
-        } else if (durabilityInPercent < 0.20) {
-            color = ChatColor.GOLD;
-        }
         // lets reset the mc durability
         setDurability(CustomItemUtil.getMinecraftDurability(this, durability, getMaxDurability()));
         // set the new tooltip line
-        setTooltip(new SingleLineTooltip(TooltipSlot.DURABILITY, color + "Haltbarkeit: " + durability + "/" + getMaxDurability()));
+        setTooltip(new DurabilityTooltip(durability, getMaxDurability()));
     }
 
     public int getMaxDurability() {
@@ -86,15 +74,8 @@ public class CustomItemStack extends ItemStack {
 
     public int parseDurability() {
 
-        if (hasItemMeta() && getItemMeta().hasLore()) {
-            Matcher matcher;
-            for (String line : getItemMeta().getLore()) {
-                matcher = DURABILITY_PATTERN.matcher(ChatColor.stripColor(line));
-                if (matcher.matches()) {
-                    int durability = Integer.parseInt(matcher.group(1));
-                    return durability < 1 ? 0 : durability;
-                }
-            }
+        if (hasTooltip(TooltipSlot.DURABILITY)) {
+            return ((DurabilityTooltip) getTooltip(TooltipSlot.DURABILITY)).getDurability();
         }
         return getMaxDurability();
     }
@@ -147,12 +128,8 @@ public class CustomItemStack extends ItemStack {
 
     public int getMetaDataId() {
 
-        try {
-            if (hasTooltip(TooltipSlot.META_ID)) {
-                return CustomItemUtil.decodeItemId(getTooltip(TooltipSlot.META_ID).getTooltip()[0]);
-            }
-        } catch (CustomItemException e) {
-            e.printStackTrace();
+        if (hasTooltip(TooltipSlot.META_ID)) {
+            return ((MetaDataTooltip) getTooltip(TooltipSlot.META_ID)).getId();
         }
         return -1;
     }

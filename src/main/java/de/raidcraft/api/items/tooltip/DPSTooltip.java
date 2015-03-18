@@ -10,14 +10,13 @@ public class DPSTooltip extends Tooltip {
 
     private final double dps;
     private double equipedDps;
-    private String lineMessage;
 
     public DPSTooltip(double dps) {
 
         super(TooltipSlot.DPS);
         this.dps = dps;
         this.equipedDps = dps;
-        lineMessage = ChatColor.WHITE + "(" + getDps() + " Schaden pro Sekunde)";
+        setTooltip(ChatColor.WHITE + "(" + getDps() + " Schaden pro Sekunde)");
     }
 
     public double getDps() {
@@ -41,18 +40,12 @@ public class DPSTooltip extends Tooltip {
             color = ChatColor.RED;
             // lineMessage = ChatColor.RED + "(" + getDps() + " [-" + (getEquipedDps() - getDps()) + "] Schaden pro Sekunde)";
         }
-        lineMessage = color + "(" + getDps() + " Schaden pro Sekunde)";
+        setTooltip(color + "(" + getDps() + " Schaden pro Sekunde)");
     }
 
     @Override
     protected void updateLineWidth() {
 
-        setWidth(CustomItemUtil.getStringWidth(lineMessage));
-    }
-
-    @Override
-    public String[] getTooltip() {
-
-        return new String[]{lineMessage};
+        setWidth(CustomItemUtil.getStringWidth(getTooltip()[0]));
     }
 }

@@ -7,23 +7,23 @@ import de.raidcraft.util.CustomItemUtil;
  */
 public class MetaDataTooltip extends Tooltip {
 
-    private String[] text;
+    private final int id;
 
     public MetaDataTooltip(int id) {
 
         super(TooltipSlot.META_ID);
+        this.id = id;
         String itemId = CustomItemUtil.encodeItemId(id);
-        text = new String[]{itemId};
+        setTooltip(itemId);
+    }
+
+    public int getId() {
+
+        return id;
     }
 
     @Override
     protected void updateLineWidth() {
 
-    }
-
-    @Override
-    public String[] getTooltip() {
-
-        return text;
     }
 }

@@ -7,27 +7,19 @@ import de.raidcraft.util.CustomItemUtil;
  */
 public class FixedMultilineTooltip extends Tooltip {
 
-    private final String[] lines;
-
     public FixedMultilineTooltip(TooltipSlot slot, String... lines) {
 
         super(slot);
-        this.lines = lines;
+        setTooltip(lines);
     }
 
     @Override
     protected void updateLineWidth() {
 
-        for (String line : lines) {
+        for (String line : getTooltip()) {
             if (getWidth() < CustomItemUtil.getStringWidth(line)) {
                 setWidth(CustomItemUtil.getStringWidth(line));
             }
         }
-    }
-
-    @Override
-    public String[] getTooltip() {
-
-        return lines;
     }
 }

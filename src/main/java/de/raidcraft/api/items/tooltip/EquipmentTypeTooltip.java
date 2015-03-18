@@ -7,14 +7,14 @@ import org.bukkit.ChatColor;
  */
 public class EquipmentTypeTooltip extends SingleLineTooltip {
 
-    private final String text;
+    private String text;
 
     public EquipmentTypeTooltip(String text, ChatColor color) {
 
         super(TooltipSlot.EQUIPMENT_TYPE, text, color);
         this.color = color == null ? ChatColor.WHITE : color;
         this.text = text;
-        this.tooltip = new String[]{this.color + text};
+        setTooltip(this.color + text);
         updateLineWidth();
     }
 
@@ -26,13 +26,7 @@ public class EquipmentTypeTooltip extends SingleLineTooltip {
     public void setColor(ChatColor color) {
 
         this.color = color;
-        this.tooltip = new String[]{color + text};
+        setTooltip(color + text);
         updateLineWidth();
-    }
-
-    @Override
-    public String[] getTooltip() {
-
-        return tooltip;
     }
 }

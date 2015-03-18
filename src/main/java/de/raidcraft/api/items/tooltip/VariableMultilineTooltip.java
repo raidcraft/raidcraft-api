@@ -15,7 +15,6 @@ public class VariableMultilineTooltip extends Tooltip {
     private boolean quote;
     private boolean italic;
     private ChatColor color;
-    private String[] lines;
 
     public VariableMultilineTooltip(TooltipSlot slot, String original, boolean quote, boolean italic, ChatColor color) {
 
@@ -74,12 +73,6 @@ public class VariableMultilineTooltip extends Tooltip {
         out.append(temp);
         output.add(out.toString());
 
-        lines = output.toArray(new String[output.size()]);
-    }
-
-    @Override
-    public String[] getTooltip() {
-
-        return lines;
+        setTooltip(output.toArray(new String[output.size()]));
     }
 }

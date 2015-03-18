@@ -9,6 +9,7 @@ public abstract class Tooltip {
     public static final int DEFAULT_WIDTH = 150;
 
     private final TooltipSlot slot;
+    private String[] tooltip;
     private int width = DEFAULT_WIDTH;
 
     public Tooltip(TooltipSlot slot) {
@@ -36,5 +37,13 @@ public abstract class Tooltip {
 
     protected abstract void updateLineWidth();
 
-    public abstract String[] getTooltip();
+    protected final void setTooltip(String... tooltip) {
+
+        this.tooltip = tooltip;
+    }
+
+    public final String[] getTooltip() {
+
+        return tooltip;
+    }
 }

@@ -9,8 +9,14 @@ import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.items.CustomWeapon;
 import de.raidcraft.api.items.EquipmentSlot;
+import de.raidcraft.api.items.tooltip.DurabilityTooltip;
 import de.raidcraft.api.items.tooltip.EquipmentTypeTooltip;
+import de.raidcraft.api.items.tooltip.FixedMultilineTooltip;
+import de.raidcraft.api.items.tooltip.MetaDataTooltip;
+import de.raidcraft.api.items.tooltip.SingleLineTooltip;
+import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
+import de.raidcraft.api.items.tooltip.VariableMultilineTooltip;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,7 +26,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Silthus
@@ -129,15 +139,9 @@ public final class CustomItemUtil {
 
     public static int parseMetaDataId(ItemStack itemStack) {
 
-        if (isCustomItem(itemStack) && itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore()) {
-            try {
-                List<String> lore = itemStack.getItemMeta().getLore();
-                String metaDataString = lore.get(lore.size() - 1);
-                if (metaDataString.length() == 16 && metaDataString.charAt(0) == ChatColor.COLOR_CHAR) {
-                    return decodeItemId(metaDataString);
-                }
-            } catch (CustomItemException ignored) {
-            }
+        Map<TooltipSlot, Tooltip> tooltips = parseTooltips(itemStack);
+        if (tooltips.containsKey(TooltipSlot.META_ID)) {
+            return ((MetaDataTooltip) tooltips.get(TooltipSlot.META_ID)).getId();
         }
         return -1;
     }
@@ -406,5 +410,94 @@ public final class CustomItemUtil {
             itemStack.rebuild(player);
         } catch (CustomItemException ignored) {
         }
+    }
+
+    private static final Pattern DURABILITY_PATTERN = Pattern.compile("^Haltbarkeit: ([0-9]+)/([0-9]+)$");
+
+    public static Map<TooltipSlot, Tooltip> parseTooltips(ItemStack itemStack) {
+
+        Map<TooltipSlot, Tooltip> tooltips = new HashMap<>();
+        if (!itemStack.hasItemMeta() || !itemStack.getItemMeta().hasLore()) {
+            return tooltips;
+        }
+        List<String> lore = itemStack.getItemMeta().getLore();
+        TooltipSlot slot = null;
+        int multilineStart = -1;
+        for (int i = 0; i < lore.size(); i++) {
+            try {
+                int tooltipSlotId = decodeItemId(lore.get(i));
+                // remove the hidden line id
+                lore.set(i, lore.get(i).substring(16));
+                if (slot == TooltipSlot.values()[tooltipSlotId]) {
+                    slot = TooltipSlot.values()[tooltipSlotId];
+                    // we have a multiline tooltip
+                    multilineStart = i;
+                } else if (multilineStart > -1) {
+                    // the multiline tooltip ended in the last iteration
+                    Tooltip tooltip;
+                    List<String> strings = lore.subList(multilineStart, i);
+                    switch (slot.getLineType()) {
+                        case FIXED_MULTI_LINE:
+                            tooltip = new FixedMultilineTooltip(slot, strings.toArray(new String[strings.size()]));
+                            break;
+                        default:
+                        case VARIABLE_MULTI_LINE:
+                            String text = String.join(" ", strings);
+                            ChatColor color = ChatColor.GOLD;
+                            boolean italic = false;
+                            if (text.startsWith(ChatColor.COLOR_CHAR + "")) {
+                                if (ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
+                                    italic = true;
+                                } else {
+                                    color = ChatColor.getByChar(text.charAt(1));
+                                }
+                                text = text.substring(2);
+                                if (text.startsWith(ChatColor.COLOR_CHAR + "") && ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
+                                    italic = true;
+                                    text = text.substring(2);
+                                }
+                            }
+                            boolean quote = text.startsWith("\"") && text.endsWith("\"");
+                            if (quote) text = text.substring(1, text.length() - 1);
+                            tooltip = new VariableMultilineTooltip(slot, ChatColor.stripColor(text), quote, italic, color);
+                            break;
+                    }
+                    tooltips.put(slot, tooltip);
+                    multilineStart = -1;
+                } else {
+                    Tooltip tooltip = null;
+                    slot = TooltipSlot.values()[tooltipSlotId];
+                    String line = lore.get(i);
+                    switch (slot) {
+                        case META_ID:
+                            tooltip = new MetaDataTooltip(decodeItemId(lore.get(i)));
+                            break;
+                        case MISC:
+                            ChatColor color = ChatColor.WHITE;
+                            if (line.startsWith(ChatColor.COLOR_CHAR + "")) {
+                                color = ChatColor.getByChar(line.charAt(2));
+                                line = line.substring(2);
+                            }
+                            tooltip = new SingleLineTooltip(slot, line, color);
+                            break;
+                        case DURABILITY:
+                            Matcher matcher = DURABILITY_PATTERN.matcher(ChatColor.stripColor(line));
+                            if (matcher.matches()) {
+                                int durability = Integer.parseInt(matcher.group(1));
+                                durability = durability < 1 ? 0 : durability;
+                                int maxDurability = Integer.parseInt(matcher.group(2));
+                                maxDurability = durability > maxDurability ? durability : maxDurability;
+                                // set the new tooltip line
+                                tooltip = new DurabilityTooltip(durability, maxDurability);
+                            }
+                            break;
+                    }
+                    if (tooltip != null) tooltips.put(slot, tooltip);
+                }
+
+            } catch (CustomItemException ignored) {
+            }
+        }
+        return tooltips;
     }
 }
