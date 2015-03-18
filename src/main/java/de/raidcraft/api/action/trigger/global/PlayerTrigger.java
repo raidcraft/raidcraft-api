@@ -79,7 +79,7 @@ public class PlayerTrigger extends Trigger implements Listener {
                     "y",
                     "z",
                     "world",
-                    "type: e.g. minecraft:dirt"
+                    "type: e.g. DIRT"
             },
             usage = "[-x]",
             flags = "x",
