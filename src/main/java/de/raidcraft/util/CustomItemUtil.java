@@ -436,7 +436,7 @@ public final class CustomItemUtil {
                 if (slot == TooltipSlot.values()[tooltipSlotId]) {
                     slot = TooltipSlot.values()[tooltipSlotId];
                     // we have a multiline tooltip
-                    multilineStart = i;
+                    if (multilineStart < 0) multilineStart = i;
                 } else if (multilineStart > -1) {
                     // the multiline tooltip ended in the last iteration
                     Tooltip tooltip;
@@ -469,10 +469,11 @@ public final class CustomItemUtil {
                     }
                     tooltips.put(slot, tooltip);
                     multilineStart = -1;
+                    // repeat the iteration to catch the current line
+                    i--;
                 } else {
                     Tooltip tooltip = null;
                     slot = TooltipSlot.values()[tooltipSlotId];
-                    RaidCraft.LOGGER.info("Matching single line tooltip: " + slot + " of item " + itemStack.getItemMeta().getDisplayName());
                     String line = lore.get(i);
                     switch (slot) {
                         case META_ID:
