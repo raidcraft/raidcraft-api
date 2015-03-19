@@ -428,7 +428,6 @@ public final class CustomItemUtil {
             try {
                 tooltipSlotId = decodeItemId(lore.get(i));
             } catch (CustomItemException e) {
-                e.printStackTrace();
                 continue;
             }
             // remove the hidden line id
