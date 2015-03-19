@@ -467,10 +467,11 @@ public final class CustomItemUtil {
                 } else {
                     Tooltip tooltip = null;
                     slot = TooltipSlot.values()[tooltipSlotId];
+                    RaidCraft.LOGGER.info("Matching single line tooltip: " + slot + " of item " + itemStack.getItemMeta().getDisplayName());
                     String line = lore.get(i);
                     switch (slot) {
                         case META_ID:
-                            tooltip = new MetaDataTooltip(decodeItemId(lore.get(i)));
+                            tooltip = new MetaDataTooltip(decodeItemId(line));
                             break;
                         case MISC:
                             ChatColor color = ChatColor.WHITE;
