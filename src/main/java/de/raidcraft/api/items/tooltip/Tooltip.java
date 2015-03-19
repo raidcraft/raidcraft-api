@@ -47,7 +47,7 @@ public abstract class Tooltip {
         this.tooltip = tooltip;
     }
 
-    public final String[] getTooltip() {
+    public String[] getTooltip() {
 
         return tooltip;
     }

@@ -8,15 +8,23 @@ import org.bukkit.ChatColor;
  */
 public class NameTooltip extends Tooltip {
 
+    private final String encodedName;
+
     public NameTooltip(int id, String name, ChatColor color) {
 
         super(TooltipSlot.NAME);
-        setTooltip(CustomItemUtil.encodeItemId(id) + color + name);
+        encodedName = CustomItemUtil.encodeItemId(id) + color + name;
     }
 
     @Override
     protected void updateLineWidth() {
 
 
+    }
+
+    @Override
+    public String[] getTooltip() {
+
+        return new String[]{encodedName};
     }
 }
