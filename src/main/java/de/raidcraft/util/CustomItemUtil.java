@@ -424,9 +424,14 @@ public final class CustomItemUtil {
         TooltipSlot slot = null;
         int multilineStart = -1;
         for (int i = 0; i < lore.size(); i++) {
+            int tooltipSlotId = 0;
             try {
-                int tooltipSlotId = decodeItemId(lore.get(i));
-                // remove the hidden line id
+                tooltipSlotId = decodeItemId(lore.get(i));
+            } catch (CustomItemException e) {
+                e.printStackTrace();
+                continue;
+            }
+            // remove the hidden line id
                 lore.set(i, lore.get(i).substring(16));
                 if (slot == TooltipSlot.values()[tooltipSlotId]) {
                     slot = TooltipSlot.values()[tooltipSlotId];
@@ -471,7 +476,12 @@ public final class CustomItemUtil {
                     String line = lore.get(i);
                     switch (slot) {
                         case META_ID:
-                            tooltip = new MetaDataTooltip(decodeItemId(line));
+                            try {
+                                tooltip = new MetaDataTooltip(decodeItemId(line));
+                            } catch (CustomItemException e) {
+                                e.printStackTrace();
+                                continue;
+                            }
                             break;
                         case MISC:
                             ChatColor color = ChatColor.WHITE;
@@ -495,9 +505,6 @@ public final class CustomItemUtil {
                     }
                     if (tooltip != null) tooltips.put(slot, tooltip);
                 }
-
-            } catch (CustomItemException ignored) {
-            }
         }
         return tooltips;
     }
