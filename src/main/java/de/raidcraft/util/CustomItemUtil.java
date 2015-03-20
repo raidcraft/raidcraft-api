@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -413,6 +414,20 @@ public final class CustomItemUtil {
     }
 
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("^Haltbarkeit: ([0-9]+)/([0-9]+)$");
+    private static final List<TooltipSlot> IGNORED_TOOLTIP_SLOTS = Arrays.asList(
+            TooltipSlot.NAME,
+            TooltipSlot.ARMOR,
+            TooltipSlot.ATTACHMENT,
+            TooltipSlot.ATTRIBUTES,
+            TooltipSlot.DAMAGE,
+            TooltipSlot.DPS,
+            TooltipSlot.EQUIPMENT_TYPE,
+            TooltipSlot.ITEM_LEVEL,
+            TooltipSlot.REQUIREMENT,
+            TooltipSlot.SELL_PRICE,
+            TooltipSlot.SPACER,
+            TooltipSlot.LORE
+    );
 
     public static Map<TooltipSlot, Tooltip> parseTooltips(ItemStack itemStack) {
 
@@ -421,8 +436,7 @@ public final class CustomItemUtil {
             return tooltips;
         }
         List<String> lore = itemStack.getItemMeta().getLore();
-        TooltipSlot slot = null;
-        int multilineStart = -1;
+
         for (int i = 0; i < lore.size(); i++) {
             int tooltipSlotId = 0;
             try {
@@ -430,81 +444,86 @@ public final class CustomItemUtil {
             } catch (CustomItemException e) {
                 continue;
             }
+            TooltipSlot currentSlot = TooltipSlot.fromId(tooltipSlotId);
+            if (IGNORED_TOOLTIP_SLOTS.contains(currentSlot)) continue;
             // remove the hidden line id
-                lore.set(i, lore.get(i).substring(16));
-                if (slot == TooltipSlot.values()[tooltipSlotId]) {
-                    slot = TooltipSlot.values()[tooltipSlotId];
-                    // we have a multiline tooltip
-                    if (multilineStart < 0) multilineStart = i;
-                } else if (multilineStart > -1) {
-                    // the multiline tooltip ended in the last iteration
-                    Tooltip tooltip;
-                    List<String> strings = lore.subList(multilineStart, i);
-                    switch (slot.getLineType()) {
-                        case FIXED_MULTI_LINE:
-                            tooltip = new FixedMultilineTooltip(slot, strings.toArray(new String[strings.size()]));
-                            break;
-                        default:
-                        case VARIABLE_MULTI_LINE:
-                            String text = String.join(" ", strings);
-                            ChatColor color = ChatColor.GOLD;
-                            boolean italic = false;
-                            if (text.startsWith(ChatColor.COLOR_CHAR + "")) {
-                                if (ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
-                                    italic = true;
-                                } else {
-                                    color = ChatColor.getByChar(text.charAt(1));
-                                }
-                                text = text.substring(2);
-                                if (text.startsWith(ChatColor.COLOR_CHAR + "") && ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
-                                    italic = true;
-                                    text = text.substring(2);
-                                }
-                            }
-                            boolean quote = text.startsWith("\"") && text.endsWith("\"");
-                            if (quote) text = text.substring(1, text.length() - 1);
-                            tooltip = new VariableMultilineTooltip(slot, ChatColor.stripColor(text), quote, italic, color);
-                            break;
-                    }
-                    tooltips.put(slot, tooltip);
-                    multilineStart = -1;
-                    // repeat the iteration to catch the current line
-                    i--;
-                } else {
-                    Tooltip tooltip = null;
-                    slot = TooltipSlot.values()[tooltipSlotId];
-                    String line = lore.get(i);
-                    switch (slot) {
-                        case META_ID:
-                            try {
-                                tooltip = new MetaDataTooltip(decodeItemId(line));
-                            } catch (CustomItemException e) {
-                                e.printStackTrace();
-                                continue;
-                            }
-                            break;
-                        case MISC:
-                            ChatColor color = ChatColor.WHITE;
-                            if (line.startsWith(ChatColor.COLOR_CHAR + "")) {
-                                color = ChatColor.getByChar(line.charAt(2));
-                                line = line.substring(2);
-                            }
-                            tooltip = new SingleLineTooltip(slot, line, color);
-                            break;
-                        case DURABILITY:
-                            Matcher matcher = DURABILITY_PATTERN.matcher(ChatColor.stripColor(line));
-                            if (matcher.matches()) {
-                                int durability = Integer.parseInt(matcher.group(1));
-                                durability = durability < 1 ? 0 : durability;
-                                int maxDurability = Integer.parseInt(matcher.group(2));
-                                maxDurability = durability > maxDurability ? durability : maxDurability;
-                                // set the new tooltip line
-                                tooltip = new DurabilityTooltip(durability, maxDurability);
-                            }
-                            break;
-                    }
-                    if (tooltip != null) tooltips.put(slot, tooltip);
+            lore.set(i, lore.get(i).substring(16));
+            // lets check for a multiline tooltip
+            int multilineEnd = -1;
+            int x = i + 1;
+            try {
+                while (x < lore.size() && currentSlot == TooltipSlot.fromId(decodeItemId(lore.get(x)))) {
+                    multilineEnd = x;
+                    x++;
                 }
+            } catch (CustomItemException ignored) {
+            }
+            if (multilineEnd > -1) {
+                // the multiline tooltip ended in the last iteration
+                Tooltip tooltip;
+                List<String> strings = lore.subList(i, multilineEnd + 1);
+                switch (currentSlot.getLineType()) {
+                    case FIXED_MULTI_LINE:
+                        tooltip = new FixedMultilineTooltip(currentSlot, strings.toArray(new String[strings.size()]));
+                        break;
+                    default:
+                    case VARIABLE_MULTI_LINE:
+                        String text = String.join(" ", strings);
+                        ChatColor color = ChatColor.GOLD;
+                        boolean italic = false;
+                        if (text.startsWith(ChatColor.COLOR_CHAR + "")) {
+                            if (ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
+                                italic = true;
+                            } else {
+                                color = ChatColor.getByChar(text.charAt(1));
+                            }
+                            text = text.substring(2);
+                            if (text.startsWith(ChatColor.COLOR_CHAR + "") && ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
+                                italic = true;
+                                text = text.substring(2);
+                            }
+                        }
+                        boolean quote = text.startsWith("\"") && text.endsWith("\"");
+                        if (quote) text = text.substring(1, text.length() - 1);
+                        tooltip = new VariableMultilineTooltip(currentSlot, ChatColor.stripColor(text), quote, italic, color);
+                        break;
+                }
+                tooltips.put(currentSlot, tooltip);
+            } else {
+                Tooltip tooltip = null;
+                currentSlot = TooltipSlot.values()[tooltipSlotId];
+                String line = lore.get(i);
+                switch (currentSlot) {
+                    case META_ID:
+                        try {
+                            tooltip = new MetaDataTooltip(decodeItemId(line));
+                        } catch (CustomItemException e) {
+                            e.printStackTrace();
+                            continue;
+                        }
+                        break;
+                    case MISC:
+                        ChatColor color = ChatColor.WHITE;
+                        if (line.startsWith(ChatColor.COLOR_CHAR + "")) {
+                            color = ChatColor.getByChar(line.charAt(2));
+                            line = line.substring(2);
+                        }
+                        tooltip = new SingleLineTooltip(currentSlot, line, color);
+                        break;
+                    case DURABILITY:
+                        Matcher matcher = DURABILITY_PATTERN.matcher(ChatColor.stripColor(line));
+                        if (matcher.matches()) {
+                            int durability = Integer.parseInt(matcher.group(1));
+                            durability = durability < 1 ? 0 : durability;
+                            int maxDurability = Integer.parseInt(matcher.group(2));
+                            maxDurability = durability > maxDurability ? durability : maxDurability;
+                            // set the new tooltip line
+                            tooltip = new DurabilityTooltip(durability, maxDurability);
+                        }
+                        break;
+                }
+                if (tooltip != null) tooltips.put(currentSlot, tooltip);
+            }
         }
         return tooltips;
     }
