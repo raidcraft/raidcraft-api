@@ -1,7 +1,15 @@
 package de.raidcraft.util;
 
+import net.minecraft.server.v1_7_R4.EntityCreature;
+import net.minecraft.server.v1_7_R4.EntityInsentient;
+import net.minecraft.server.v1_7_R4.EntityLiving;
+import net.minecraft.server.v1_7_R4.PathfinderGoalPanic;
+import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 
 import java.lang.reflect.Field;
@@ -24,7 +32,7 @@ public class EntityUtil {
 
     public static void addPanicMode(LivingEntity entity) {
 
-        /*if (entity instanceof Creature) {
+        if (entity instanceof Creature) {
             try {
                 EntityCreature handle = ((CraftCreature) entity).getHandle();
                 PathfinderGoalPanic goal = new PathfinderGoalPanic(handle, 0.38F);
@@ -36,12 +44,12 @@ public class EntityUtil {
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
     }
 
     public static void walkToLocation(LivingEntity entity, Location loc, float speed) {
 
-        /*((EntityInsentient) ((CraftLivingEntity) entity).getHandle()).getNavigation().a(loc.getX(), loc.getY(), loc.getZ(), speed);*/
+        ((EntityInsentient) ((CraftLivingEntity) entity).getHandle()).getNavigation().a(loc.getX(), loc.getY(), loc.getZ(), speed);
     }
 
     public static String drawMobName(String name, int level, ChatColor color, boolean elite, boolean rare) {
