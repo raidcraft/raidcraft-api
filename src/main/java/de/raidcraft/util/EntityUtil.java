@@ -2,6 +2,7 @@ package de.raidcraft.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
 import java.lang.reflect.Field;
@@ -176,6 +177,11 @@ public class EntityUtil {
                     }
             }
         }
+    }
+
+    public static void registerEntity(EntityType type, Class<?> customClass) {
+
+        registerEntity(type.getName(), type.getTypeId(), customClass);
     }
 
     @SuppressWarnings("unchecked")

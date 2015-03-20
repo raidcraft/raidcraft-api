@@ -2,6 +2,8 @@ package de.raidcraft.util;
 
 import org.bukkit.Bukkit;
 
+import java.lang.reflect.Field;
+
 /**
  * @author Silthus
  */
@@ -23,5 +25,19 @@ public class ReflectionUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static Object getPrivateField(String fieldName, Class clazz, Object object) {
+
+        Field field;
+        Object o = null;
+        try {
+            field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            o = field.get(object);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return o;
     }
 }
