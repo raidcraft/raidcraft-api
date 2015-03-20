@@ -137,6 +137,7 @@ public final class ActionAPI {
     public enum GlobalRequirements {
 
         IS_SPRINTING("player.is-sprinting", (Player player, ConfigurationSection config) -> player.isSprinting()),
+	    IS_ALIVE("player.is-alive", (Player player, ConfigurationSection config) -> !player.isDead()),
         DUMMY("dummy", (Player player, ConfigurationSection config) -> true),
         PLAYER_LOCATION("player.location", new Requirement<Player>() {
             @Override
