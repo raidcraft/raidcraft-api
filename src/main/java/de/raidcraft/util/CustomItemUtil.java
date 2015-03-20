@@ -489,6 +489,7 @@ public final class CustomItemUtil {
                         break;
                 }
                 tooltips.put(currentSlot, tooltip);
+                i = multilineEnd;
             } else {
                 Tooltip tooltip = null;
                 currentSlot = TooltipSlot.values()[tooltipSlotId];
