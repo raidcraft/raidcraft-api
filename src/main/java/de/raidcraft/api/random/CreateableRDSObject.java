@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
  * If it is implemented, this object's CreateInstance method is called, and with this tweak it is possible
  * to enter completely new instances into the result set at the moment they are hit.
  */
-public class RDSCreateableObject extends GenericRDSObject implements RDSObjectCreator {
+public class CreateableRDSObject extends GenericRDSObject implements RDSObjectCreator {
 
     /**
      * Creates an instance of the object where this method is implemented in.
@@ -24,7 +24,7 @@ public class RDSCreateableObject extends GenericRDSObject implements RDSObjectCr
     public RDSObject createInstance() {
 
         try {
-            Constructor<? extends RDSCreateableObject> constructor = getClass().getConstructor();
+            Constructor<? extends CreateableRDSObject> constructor = getClass().getConstructor();
             return constructor.newInstance();
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
