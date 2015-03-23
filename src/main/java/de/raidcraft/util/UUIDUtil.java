@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -60,5 +61,29 @@ public class UUIDUtil {
     public static String castUUID(CommandSender sender) {
 
         return ((Player) sender).getUniqueId().toString();
+    }
+
+    public static int getPlayerId(Player player) {
+
+        return getPlayerId(getUUIDfrom(player));
+    }
+
+    public static int getPlayerId(UUID uuid) {
+
+        if (uuid == null) return 0;
+        TRcPlayer rcPlayer = RaidCraft.getDatabase(RaidCraftPlugin.class).find(TRcPlayer.class).where().eq("uuid", uuid).findUnique();
+        if (rcPlayer != null) {
+            return rcPlayer.getId();
+        }
+        return 0;
+    }
+
+    public static Optional<UUID> getUuidFromPlayerId(int id) {
+
+        TRcPlayer rcPlayer = RaidCraft.getDatabase(RaidCraftPlugin.class).find(TRcPlayer.class, id);
+        if (rcPlayer != null) {
+            return Optional.of(rcPlayer.getUuid());
+        }
+        return Optional.empty();
     }
 }

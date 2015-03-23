@@ -13,6 +13,8 @@ public enum TooltipSlot {
     DAMAGE(5, TooltipSlotType.SINGLE),
     DPS(6, TooltipSlotType.SINGLE),
     ATTRIBUTES(7, TooltipSlotType.FIXED_MULTI_LINE),
+    SOCKETS(16, TooltipSlotType.FIXED_MULTI_LINE),
+    ENCHANTMENTS(17, TooltipSlotType.FIXED_MULTI_LINE),
     LORE(8, TooltipSlotType.FIXED_MULTI_LINE),
     ATTACHMENT(9, TooltipSlotType.FIXED_MULTI_LINE),
     SPACER(10, TooltipSlotType.SINGLE),

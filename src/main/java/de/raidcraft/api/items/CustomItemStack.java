@@ -5,6 +5,7 @@ import de.raidcraft.api.items.attachments.AttachableCustomItem;
 import de.raidcraft.api.items.attachments.ItemAttachment;
 import de.raidcraft.api.items.attachments.RequiredItemAttachment;
 import de.raidcraft.api.items.tooltip.AttributeTooltip;
+import de.raidcraft.api.items.tooltip.BindTooltip;
 import de.raidcraft.api.items.tooltip.DPSTooltip;
 import de.raidcraft.api.items.tooltip.DurabilityTooltip;
 import de.raidcraft.api.items.tooltip.MetaDataTooltip;
@@ -22,6 +23,8 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author Silthus
@@ -31,7 +34,6 @@ public class CustomItemStack extends ItemStack {
     private final CustomItem item;
     private final Map<TooltipSlot, Tooltip> tooltips = new EnumMap<>(TooltipSlot.class);
     private int durability;
-    private boolean soulbound = false;
 
     protected CustomItemStack(CustomItem item, ItemStack itemStack) {
 
@@ -82,7 +84,32 @@ public class CustomItemStack extends ItemStack {
 
     public boolean isSoulbound() {
 
-        return soulbound;
+        return getItem().getBindType() != ItemBindType.NONE
+                && hasTooltip(TooltipSlot.BIND_TYPE)
+                && ((BindTooltip) getTooltip(TooltipSlot.BIND_TYPE)).getOwner() != null;
+    }
+
+    public void setOwner(Player player) {
+
+        try {
+            setOwner(player != null ? player.getUniqueId() : null);
+            rebuild(player);
+        } catch (CustomItemException ignored) {
+        }
+    }
+
+    public void setOwner(UUID owner) {
+
+        setTooltip(new BindTooltip(getItem().getBindType(), owner));
+        rebuild();
+    }
+
+    public Optional<UUID> getOwner() {
+
+        if (hasTooltip(TooltipSlot.BIND_TYPE)) {
+            return Optional.ofNullable(((BindTooltip) getTooltip(TooltipSlot.BIND_TYPE)).getOwner());
+        }
+        return Optional.empty();
     }
 
     public CustomItem getItem() {

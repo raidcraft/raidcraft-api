@@ -18,6 +18,10 @@ public enum ItemType {
     EQUIPMENT("Equipment"),
     @EnumValue("QUEST")
     QUEST("Quest"),
+    @EnumValue("ENCHANTMENT")
+    ENCHANTMENT("Verzauberung"),
+    @EnumValue("GEM")
+    GEM("Edelstein"),
     @EnumValue("ENHANCEMENT")
     ENHANCEMENT("Verbesserung"),
     @EnumValue("CRAFTING")

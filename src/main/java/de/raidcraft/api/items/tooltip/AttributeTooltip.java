@@ -22,8 +22,12 @@ public class AttributeTooltip extends Tooltip {
 
     public AttributeTooltip(Collection<ItemAttribute> attributes) {
 
-        super(TooltipSlot.ATTRIBUTES);
-        // we need to sort the attributes and make them nicer
+        this(TooltipSlot.ATTRIBUTES, attributes.toArray(new ItemAttribute[attributes.size()]));
+    }
+
+    public AttributeTooltip(TooltipSlot slot, ItemAttribute... attributes) {
+
+        super(slot);
         for (ItemAttribute attribute : attributes) {
             try {
                 this.attributes.put(attribute.getType(), attribute.clone());

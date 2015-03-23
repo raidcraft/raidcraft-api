@@ -118,6 +118,10 @@ public enum AttributeType {
 
     public static AttributeType fromString(String str) {
 
-        return EnumUtils.getEnumFromString(AttributeType.class, str);
+        AttributeType type = EnumUtils.getEnumFromString(AttributeType.class, str);
+        if (type == null) {
+            return fromGermanName(str);
+        }
+        return type;
     }
 }

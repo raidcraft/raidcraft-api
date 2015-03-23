@@ -2,6 +2,7 @@ package de.raidcraft.util;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.ArmorType;
+import de.raidcraft.api.items.AttributeType;
 import de.raidcraft.api.items.CustomArmor;
 import de.raidcraft.api.items.CustomEquipment;
 import de.raidcraft.api.items.CustomItemException;
@@ -9,7 +10,11 @@ import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.items.CustomWeapon;
 import de.raidcraft.api.items.EquipmentSlot;
+import de.raidcraft.api.items.ItemAttribute;
+import de.raidcraft.api.items.ItemBindType;
+import de.raidcraft.api.items.tooltip.BindTooltip;
 import de.raidcraft.api.items.tooltip.DurabilityTooltip;
+import de.raidcraft.api.items.tooltip.EnchantmentTooltip;
 import de.raidcraft.api.items.tooltip.EquipmentTypeTooltip;
 import de.raidcraft.api.items.tooltip.FixedMultilineTooltip;
 import de.raidcraft.api.items.tooltip.MetaDataTooltip;
@@ -26,7 +31,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -414,6 +421,7 @@ public final class CustomItemUtil {
     }
 
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("^Haltbarkeit: ([0-9]+)/([0-9]+)$");
+    private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^([\\+-])([0-9]+) (\\w+).*$");
     private static final List<TooltipSlot> IGNORED_TOOLTIP_SLOTS = Arrays.asList(
             TooltipSlot.NAME,
             TooltipSlot.ARMOR,
@@ -511,6 +519,15 @@ public final class CustomItemUtil {
                         }
                         tooltip = new SingleLineTooltip(currentSlot, line, color);
                         break;
+                    case BIND_TYPE:
+                        try {
+                            tooltip = new BindTooltip(ItemBindType.fromName(line.substring(16)),
+                                    UUIDUtil.getUuidFromPlayerId(decodeItemId(line)).get());
+                        } catch (CustomItemException e) {
+                            e.printStackTrace();
+                            continue;
+                        }
+                        break;
                     case DURABILITY:
                         Matcher matcher = DURABILITY_PATTERN.matcher(ChatColor.stripColor(line));
                         if (matcher.matches()) {
@@ -527,5 +544,23 @@ public final class CustomItemUtil {
             }
         }
         return tooltips;
+    }
+
+    private static EnchantmentTooltip buildEnchantmentTooltip(String... lines) {
+
+        Collection<ItemAttribute> attributes = new ArrayList<>();
+        for (String line : lines) {
+            line = ChatColor.stripColor(line).trim();
+            Matcher matcher = ATTRIBUTE_PATTERN.matcher(line);
+            if (matcher.matches()) {
+                // positive or negative attribute + int amount
+                int value = Integer.parseInt(matcher.group(1) + matcher.group(2));
+                AttributeType type = AttributeType.fromString(matcher.group(3));
+                if (value != 0 && type != null) {
+                    attributes.add(new ItemAttribute(type, value));
+                }
+            }
+        }
+        return new EnchantmentTooltip(attributes.toArray(new ItemAttribute[attributes.size()]));
     }
 }

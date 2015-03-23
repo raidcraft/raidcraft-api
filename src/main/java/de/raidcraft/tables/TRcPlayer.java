@@ -19,6 +19,7 @@ import java.util.UUID;
 public class TRcPlayer {
 
     @Id
+    private int id;
     private UUID uuid;
     private String lastName;
     private Date lastJoined;
