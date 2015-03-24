@@ -22,18 +22,18 @@ public class RandomMoneyLootObject extends MoneyLootObject {
         @Override
         public RDSObject createInstance(ConfigurationSection config) {
 
-            return new RandomMoneyLootObject(config.getDouble("min"), config.getDouble("max"));
+            return new RandomMoneyLootObject(config.getDouble("min", 0), config.getDouble("max", 0), config.getString("reason"));
         }
     }
 
     private double min;
     private double max;
 
-    public RandomMoneyLootObject(double min, double max) {
+    public RandomMoneyLootObject(double min, double max, String reason) {
 
-        super(min);
+        super(min, reason);
         this.min = min;
-        this.max = max;
+        this.max = max >= min ? max : min;
     }
 
     @Override

@@ -339,6 +339,14 @@ public class RaidCraft implements Listener {
         return getComponent(CustomItemManager.class).getCustomItem(itemStack);
     }
 
+    public static CustomItem getCustomItem(String name) {
+
+        if (name.startsWith(CUSTOM_ITEM_IDENTIFIER)) name = name.replaceFirst(CUSTOM_ITEM_IDENTIFIER, "");
+        Optional<CustomItem> customItem = getComponent(CustomItemManager.class).getCustomItem(name);
+        if (customItem.isPresent()) return customItem.get();
+        return null;
+    }
+
     public static CustomItem getCustomItem(int id) throws CustomItemException {
 
         return getComponent(CustomItemManager.class).getCustomItem(id);
@@ -411,14 +419,14 @@ public class RaidCraft implements Listener {
         }
     }
 
-    public static Optional<ItemStack> getUnsafeItem(String id, int amount) {
+    public static ItemStack getUnsafeItem(String id, int amount) {
 
         ItemStack item = getUnsafeItem(id);
         if (item != null) {
             item.setAmount(amount);
-            return Optional.of(item);
+            return item;
         }
-        return Optional.empty();
+        return null;
     }
 
     public static String getItemIdString(ItemStack itemStack) {
