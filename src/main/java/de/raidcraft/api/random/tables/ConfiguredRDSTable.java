@@ -1,6 +1,7 @@
 package de.raidcraft.api.random.tables;
 
 import de.raidcraft.api.random.GenericRDSTable;
+import de.raidcraft.api.random.Loadable;
 import de.raidcraft.api.random.RDS;
 import de.raidcraft.api.random.RDSObject;
 import de.raidcraft.api.random.RDSObjectFactory;
@@ -15,7 +16,7 @@ import java.util.Optional;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ConfiguredRDSTable extends GenericRDSTable {
+public class ConfiguredRDSTable extends GenericRDSTable implements Loadable {
 
     @RDSObjectFactory.Name("table")
     public static class TableFactory implements RDSObjectFactory {
@@ -27,13 +28,11 @@ public class ConfiguredRDSTable extends GenericRDSTable {
         }
     }
 
-    private final String name;
     private final ConfigurationSection config;
 
-    public ConfiguredRDSTable(String name, ConfigurationSection config) {
+    public ConfiguredRDSTable(ConfigurationSection config) {
 
         super();
-        this.name = name;
         this.config = config;
     }
 

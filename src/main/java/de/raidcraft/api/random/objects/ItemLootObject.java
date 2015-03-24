@@ -1,6 +1,7 @@
 package de.raidcraft.api.random.objects;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.items.CustomItem;
 import de.raidcraft.api.random.GenericRDSValue;
 import de.raidcraft.api.random.Obtainable;
 import de.raidcraft.api.random.RDSObject;
@@ -37,6 +38,11 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
     public ItemLootObject(ItemStack itemStack) {
 
         super(itemStack);
+    }
+
+    public ItemLootObject(CustomItem customItem) {
+
+        super(customItem.createNewItem());
     }
 
     @Override

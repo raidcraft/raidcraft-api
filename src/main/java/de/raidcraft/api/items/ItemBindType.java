@@ -37,7 +37,7 @@ public enum ItemBindType {
         return color;
     }
 
-    public static ItemBindType fromName(String name) {
+    public static ItemBindType fromString(String name) {
 
         if (name == null || name.equals("")) return NONE;
         name = ChatColor.stripColor(name).trim();

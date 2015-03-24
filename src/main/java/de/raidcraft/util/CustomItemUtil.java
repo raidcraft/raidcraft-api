@@ -521,7 +521,7 @@ public final class CustomItemUtil {
                         break;
                     case BIND_TYPE:
                         try {
-                            tooltip = new BindTooltip(ItemBindType.fromName(line.substring(16)),
+                            tooltip = new BindTooltip(ItemBindType.fromString(line.substring(16)),
                                     UUIDUtil.getUuidFromPlayerId(decodeItemId(line)));
                         } catch (CustomItemException e) {
                             e.printStackTrace();
