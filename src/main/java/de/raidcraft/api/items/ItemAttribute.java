@@ -84,6 +84,25 @@ public class ItemAttribute implements Comparable<ItemAttribute>, Cloneable {
     }
 
     @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof ItemAttribute)) return false;
+
+        ItemAttribute that = (ItemAttribute) o;
+
+        if (type != that.type) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return type != null ? type.hashCode() : 0;
+    }
+
+    @Override
     public ItemAttribute clone() throws CloneNotSupportedException {
 
         super.clone();

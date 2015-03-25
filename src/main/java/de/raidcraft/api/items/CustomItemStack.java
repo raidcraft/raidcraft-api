@@ -8,6 +8,7 @@ import de.raidcraft.api.items.tooltip.AttributeTooltip;
 import de.raidcraft.api.items.tooltip.BindTooltip;
 import de.raidcraft.api.items.tooltip.DPSTooltip;
 import de.raidcraft.api.items.tooltip.DurabilityTooltip;
+import de.raidcraft.api.items.tooltip.EnchantmentTooltip;
 import de.raidcraft.api.items.tooltip.MetaDataTooltip;
 import de.raidcraft.api.items.tooltip.RequirementTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
@@ -19,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -159,6 +161,30 @@ public class CustomItemStack extends ItemStack {
             return ((MetaDataTooltip) getTooltip(TooltipSlot.META_ID)).getId();
         }
         return -1;
+    }
+
+    public Collection<ItemAttribute> getAttributes() {
+
+        Collection<ItemAttribute> attributes = new ArrayList<>();
+        if (getItem() instanceof AttributeHolder) {
+            attributes = ((AttributeHolder) getItem()).getAttributes();
+        }
+        if (hasTooltip(TooltipSlot.ENCHANTMENTS)) {
+            EnchantmentTooltip tooltip = (EnchantmentTooltip) getTooltip(TooltipSlot.ENCHANTMENTS);
+            for (ItemAttribute attribute : tooltip.getAttributes()) {
+                boolean exists = false;
+                for (ItemAttribute existingAttribute : new ArrayList<>(attributes)) {
+                    if (existingAttribute.getType() == attribute.getType()) {
+                        attributes.remove(existingAttribute);
+                        attributes.add(new ItemAttribute(existingAttribute.getType(), existingAttribute.getValue() + attribute.getValue()));
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) attributes.add(attribute);
+            }
+        }
+        return attributes;
     }
 
     public void rebuild(Player player) throws CustomItemException {
