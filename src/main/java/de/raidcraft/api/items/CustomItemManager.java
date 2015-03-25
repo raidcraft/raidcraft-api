@@ -20,6 +20,7 @@ public final class CustomItemManager implements Component {
 
     // custom item id | custom item
     private final Map<Integer, CustomItem> customItems = new HashMap<>();
+    private final Map<Integer, Gem> loadedGems = new HashMap<>();
     private final Map<String, CustomItem> namedCustomItems = new CaseInsensitiveMap<>();
     // minecraft item id | possible list of custom items
     private final Map<Integer, List<CustomItem>> mappedMinecraftItems = new HashMap<>();
@@ -170,5 +171,10 @@ public final class CustomItemManager implements Component {
     public List<CustomItem> getLoadedCustomItems() {
 
         return new ArrayList<>(customItems.values());
+    }
+
+    public Optional<Gem> getGem(int id) {
+
+        return Optional.ofNullable(loadedGems.get(id));
     }
 }

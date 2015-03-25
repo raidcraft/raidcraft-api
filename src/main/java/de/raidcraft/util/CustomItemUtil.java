@@ -10,8 +10,11 @@ import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.items.CustomWeapon;
 import de.raidcraft.api.items.EquipmentSlot;
+import de.raidcraft.api.items.Gem;
+import de.raidcraft.api.items.GemColor;
 import de.raidcraft.api.items.ItemAttribute;
 import de.raidcraft.api.items.ItemBindType;
+import de.raidcraft.api.items.Socket;
 import de.raidcraft.api.items.tooltip.BindTooltip;
 import de.raidcraft.api.items.tooltip.DurabilityTooltip;
 import de.raidcraft.api.items.tooltip.EnchantmentTooltip;
@@ -19,6 +22,7 @@ import de.raidcraft.api.items.tooltip.EquipmentTypeTooltip;
 import de.raidcraft.api.items.tooltip.FixedMultilineTooltip;
 import de.raidcraft.api.items.tooltip.MetaDataTooltip;
 import de.raidcraft.api.items.tooltip.SingleLineTooltip;
+import de.raidcraft.api.items.tooltip.SocketTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
 import de.raidcraft.api.items.tooltip.VariableMultilineTooltip;
@@ -37,6 +41,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -227,6 +232,15 @@ public final class CustomItemUtil {
 
         time = (int) (time * 100) / 100.0;
         return Double.toString(time);
+    }
+
+    public static Optional<Gem> getGem(int id) {
+
+        CustomItemManager manager = RaidCraft.getComponent(CustomItemManager.class);
+        if (manager != null) {
+            return manager.getGem(id);
+        }
+        return Optional.empty();
     }
 
     public static boolean isEquipment(ItemStack itemStack) {
@@ -470,31 +484,37 @@ public final class CustomItemUtil {
                 // the multiline tooltip ended in the last iteration
                 Tooltip tooltip;
                 List<String> strings = lore.subList(i, multilineEnd + 1);
-                switch (currentSlot.getLineType()) {
-                    case FIXED_MULTI_LINE:
-                        tooltip = new FixedMultilineTooltip(currentSlot, strings.toArray(new String[strings.size()]));
-                        break;
-                    default:
-                    case VARIABLE_MULTI_LINE:
-                        String text = String.join(" ", strings);
-                        ChatColor color = ChatColor.GOLD;
-                        boolean italic = false;
-                        if (text.startsWith(ChatColor.COLOR_CHAR + "")) {
-                            if (ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
-                                italic = true;
-                            } else {
-                                color = ChatColor.getByChar(text.charAt(1));
-                            }
-                            text = text.substring(2);
-                            if (text.startsWith(ChatColor.COLOR_CHAR + "") && ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
-                                italic = true;
+                if (currentSlot == TooltipSlot.SOCKETS) {
+                    tooltip = buildSocketTooltip(strings.toArray(new String[strings.size()]));
+                } else if (currentSlot == TooltipSlot.ENCHANTMENTS) {
+                    tooltip = buildEnchantmentTooltip(strings.toArray(new String[strings.size()]));
+                } else {
+                    switch (currentSlot.getLineType()) {
+                        case FIXED_MULTI_LINE:
+                            tooltip = new FixedMultilineTooltip(currentSlot, strings.toArray(new String[strings.size()]));
+                            break;
+                        default:
+                        case VARIABLE_MULTI_LINE:
+                            String text = String.join(" ", strings);
+                            ChatColor color = ChatColor.GOLD;
+                            boolean italic = false;
+                            if (text.startsWith(ChatColor.COLOR_CHAR + "")) {
+                                if (ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
+                                    italic = true;
+                                } else {
+                                    color = ChatColor.getByChar(text.charAt(1));
+                                }
                                 text = text.substring(2);
+                                if (text.startsWith(ChatColor.COLOR_CHAR + "") && ChatColor.getByChar(text.charAt(1)) == ChatColor.ITALIC) {
+                                    italic = true;
+                                    text = text.substring(2);
+                                }
                             }
-                        }
-                        boolean quote = text.startsWith("\"") && text.endsWith("\"");
-                        if (quote) text = text.substring(1, text.length() - 1);
-                        tooltip = new VariableMultilineTooltip(currentSlot, ChatColor.stripColor(text), quote, italic, color);
-                        break;
+                            boolean quote = text.startsWith("\"") && text.endsWith("\"");
+                            if (quote) text = text.substring(1, text.length() - 1);
+                            tooltip = new VariableMultilineTooltip(currentSlot, ChatColor.stripColor(text), quote, italic, color);
+                            break;
+                    }
                 }
                 tooltips.put(currentSlot, tooltip);
                 i = multilineEnd;
@@ -539,6 +559,12 @@ public final class CustomItemUtil {
                             tooltip = new DurabilityTooltip(durability, maxDurability);
                         }
                         break;
+                    case ENCHANTMENTS:
+                        tooltip = buildEnchantmentTooltip(line);
+                        break;
+                    case SOCKETS:
+                        tooltip = buildSocketTooltip(line);
+                        break;
                 }
                 if (tooltip != null) tooltips.put(currentSlot, tooltip);
             }
@@ -562,5 +588,28 @@ public final class CustomItemUtil {
             }
         }
         return new EnchantmentTooltip(attributes.toArray(new ItemAttribute[attributes.size()]));
+    }
+
+    private static SocketTooltip buildSocketTooltip(String... lines) {
+
+        Socket[] sockets = new Socket[lines.length];
+        int i = 0;
+        for (String line : lines) {
+            Gem gem = null;
+            if (line.contains(Socket.FILLED_SOCKET_SYMBOL + "")) {
+                try {
+                    // we need to parse the gem id
+                    Optional<Gem> gemOptional = getGem(decodeItemId(line));
+                    if (gemOptional.isPresent()) gem = gemOptional.get();
+                    line = line.substring(16);
+                } catch (CustomItemException e) {
+                    e.printStackTrace();
+                }
+            }
+            GemColor gemColor = GemColor.fromString(line.substring(0, 2));
+            sockets[i] = new Socket(gemColor, gem);
+            i++;
+        }
+        return new SocketTooltip(sockets);
     }
 }
