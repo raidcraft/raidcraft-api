@@ -334,7 +334,8 @@ public class CustomItemStack extends ItemStack {
 
         CustomItemStack that = (CustomItemStack) o;
 
-        return (!(getMetaDataId() > 0 && that.getMetaDataId() > 0) || that.getMetaDataId() == getMetaDataId()) && item.equals(that.item);
+        return super.equals(o) && (!(getMetaDataId() > 0 && that.getMetaDataId() > 0)
+                || that.getMetaDataId() == getMetaDataId()) && item.equals(that.item);
     }
 
     @Override
