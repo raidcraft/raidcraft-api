@@ -1,6 +1,7 @@
 package de.raidcraft.api.action.trigger;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionException;
 import de.raidcraft.api.action.action.ActionFactory;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,5 +62,20 @@ class TriggerListenerConfigWrapper<T> {
     protected void executeActions(T triggeringEntity) {
 
         actions.forEach(action -> action.accept(triggeringEntity));
+        // after we executed all of our actions set the executed flag
+        // by adding a requirement that is always false
+        if (isExecuteOnce()) {
+            try {
+                MemoryConfiguration configuration = new MemoryConfiguration();
+                configuration.set("persistant", true);
+                Requirement requirement = RaidCraft.getComponent(RequirementFactory.class).create(triggerListener.getListenerId()
+                                + ActionAPI.GlobalRequirements.EXECUTE_ONCE_TRIGGER.getId(),
+                        ActionAPI.GlobalRequirements.EXECUTE_ONCE_TRIGGER.getId(),
+                        configuration);
+                requirements.add(requirement);
+            } catch (RequirementException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

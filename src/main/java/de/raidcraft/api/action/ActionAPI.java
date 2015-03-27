@@ -139,6 +139,7 @@ public final class ActionAPI {
         IS_SPRINTING("player.is-sprinting", (Player player, ConfigurationSection config) -> player.isSprinting()),
 	    IS_ALIVE("player.is-alive", (Player player, ConfigurationSection config) -> !player.isDead()),
         DUMMY("dummy", (Player player, ConfigurationSection config) -> true),
+        EXECUTE_ONCE_TRIGGER("execute-once-trigger", (Player player, ConfigurationSection config) -> false),
         PLAYER_LOCATION("player.location", new Requirement<Player>() {
             @Override
             public boolean test(Player player, ConfigurationSection config) {
@@ -182,6 +183,11 @@ public final class ActionAPI {
 
             this.id = id;
             this.requirement = requirement;
+        }
+
+        public String getId() {
+
+            return id;
         }
     }
 

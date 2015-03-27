@@ -84,7 +84,7 @@ public final class RequirementFactory implements Component {
         return new HashMap<>(requirements);
     }
 
-    private Requirement<?> create(String id, @NonNull String requirement, @NonNull ConfigurationSection config) throws RequirementException {
+    public Requirement<?> create(String id, @NonNull String requirement, @NonNull ConfigurationSection config) throws RequirementException {
 
         if (!requirements.containsKey(requirement)) {
             throw new RequirementException("unknown requirement: " + requirement);
