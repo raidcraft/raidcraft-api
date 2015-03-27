@@ -120,21 +120,26 @@ public abstract class AbstractAchievement<T> implements Achievement<T> {
                 .filter(req -> !req.isOrdered())
                 .collect(Collectors.toList());
 
-        boolean allMatch = true;
+        boolean allUnorderedMatch = true;
         // now we go thru all unordered requirements and test them
         for (Requirement<T> requirement : unorderedRequirements) {
             boolean test = requirement.test(entity);
             // only set to false and not back to true
             // also dont set to false when the requirement is optional
-            if (allMatch && !requirement.isOptional()) {
-                allMatch = test;
+            if (allUnorderedMatch && !requirement.isOptional()) {
+                allUnorderedMatch = test;
+                // we dont break here because we want to check all requirements
+                // maybe one is counting or persistant
             }
         }
 
-        // we can check the ordered requirements via stream
-        // since the stream aborts as soon one does not match
-        allMatch = orderedRequirements.stream().allMatch(requirement -> requirement.test(entity));
+        // lets now check all of our ordered requirements and abort if one does not match
+        for (Requirement<T> requirement : orderedRequirements) {
+            if (!requirement.test(entity)) {
+                return false;
+            }
+        }
 
-        return allMatch && unlock();
+        return allUnorderedMatch && unlock();
     }
 }
