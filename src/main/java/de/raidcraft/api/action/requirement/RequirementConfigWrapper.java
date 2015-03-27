@@ -76,7 +76,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         return null;
     }
 
-    private void setMapping(UUID uuid, String key, String value) {
+    public void setMapping(UUID uuid, String key, String value) {
 
         if (!mappings.containsKey(uuid)) {
             mappings.put(uuid, new HashMap<>());
@@ -102,9 +102,19 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         setMapping(entity, key, Boolean.toString(value));
     }
 
+    public boolean isMapped(T entity, String key) {
+
+        return getMapping(entity, key) != null;
+    }
+
     public boolean isChecked(T entity) {
 
         return getBoolMapping(entity, CHECKED_KEY);
+    }
+
+    public void setChecked(T entity, boolean checked) {
+
+        setMapping(entity, CHECKED_KEY, checked);
     }
 
     public boolean isOrdered() {
@@ -145,7 +155,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
 
         boolean successfullyChecked = isChecked(entity);
 
-        if (isPersistant() && successfullyChecked) return true;
+        if (isPersistant() && isMapped(entity, CHECKED_KEY)) return successfullyChecked;
 
         successfullyChecked = requirement.test(entity, config);
 
@@ -156,7 +166,7 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
             }
             successfullyChecked = getRequiredCount() <= getCount(entity);
         }
-        if (isPersistant()) setMapping(entity, CHECKED_KEY, successfullyChecked);
+        if (isPersistant()) setChecked(entity, successfullyChecked);
         save();
         return successfullyChecked;
     }

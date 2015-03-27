@@ -11,8 +11,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -94,7 +94,7 @@ public final class RequirementFactory implements Component {
         return wrapper;
     }
 
-    public Collection<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) throws RequirementException {
+    public List<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) throws RequirementException {
 
         ArrayList<Requirement<?>> list = new ArrayList<>();
         if (requirements == null) {
@@ -107,7 +107,7 @@ public final class RequirementFactory implements Component {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Collection<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) throws RequirementException {
+    public <T> List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) throws RequirementException {
 
         return createRequirements(id, requirements).stream()
                 .filter(action -> action.matchesType(type))

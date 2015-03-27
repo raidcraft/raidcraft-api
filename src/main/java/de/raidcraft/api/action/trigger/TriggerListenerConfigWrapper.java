@@ -16,6 +16,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -30,7 +31,7 @@ class TriggerListenerConfigWrapper<T> {
     private final ConfigurationSection config;
     private final boolean executeOnce;
     private Collection<Action<T>> actions = new ArrayList<>();
-    private Collection<Requirement<T>> requirements = new ArrayList<>();
+    private List<Requirement<T>> requirements = new ArrayList<>();
 
     protected TriggerListenerConfigWrapper(TriggerListener<T> triggerListener, ConfigurationSection config) {
 
@@ -44,6 +45,11 @@ class TriggerListenerConfigWrapper<T> {
                     .createRequirements(triggerListener.getListenerId(),
                             config.getConfigurationSection("requirements"),
                             getTriggerListener().getTriggerEntityType());
+            if (isExecuteOnce()) {
+                // lets add our execute once requirement last
+                // this requirement will return false after is has been checked once
+                this.requirements.add(createExecuteOnceRequirement());
+            }
         } catch (ActionException | RequirementException e) {
             RaidCraft.LOGGER.warning(e.getMessage());
             e.printStackTrace();
@@ -59,23 +65,32 @@ class TriggerListenerConfigWrapper<T> {
                 && requirements.stream().allMatch(requirement -> requirement.test(triggeringEntity));
     }
 
+
     protected void executeActions(T triggeringEntity) {
 
         actions.forEach(action -> action.accept(triggeringEntity));
-        // after we executed all of our actions set the executed flag
-        // by adding a requirement that is always false
         if (isExecuteOnce()) {
-            try {
-                MemoryConfiguration configuration = new MemoryConfiguration();
-                configuration.set("persistant", true);
-                Requirement requirement = RaidCraft.getComponent(RequirementFactory.class).create(triggerListener.getListenerId()
-                                + ActionAPI.GlobalRequirements.EXECUTE_ONCE_TRIGGER.getId(),
-                        ActionAPI.GlobalRequirements.EXECUTE_ONCE_TRIGGER.getId(),
-                        configuration);
-                requirements.add(requirement);
-            } catch (RequirementException e) {
-                e.printStackTrace();
-            }
+            // lets get the last requirement which will be the executed once requirement
+            // and set the checked key to false
+            Requirement<T> requirement = this.requirements.get(this.requirements.size() - 1);
+            requirement.setChecked(triggeringEntity, false);
+            requirement.save();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Requirement<T> createExecuteOnceRequirement() {
+
+        try {
+            MemoryConfiguration configuration = new MemoryConfiguration();
+            configuration.set("persistant", true);
+            return  (Requirement<T>) RaidCraft.getComponent(RequirementFactory.class).create(
+                    triggerListener.getListenerId() + "." + ActionAPI.GlobalRequirements.EXECUTE_ONCE_TRIGGER.getId(),
+                    ActionAPI.GlobalRequirements.EXECUTE_ONCE_TRIGGER.getId(),
+                    configuration);
+        } catch (RequirementException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

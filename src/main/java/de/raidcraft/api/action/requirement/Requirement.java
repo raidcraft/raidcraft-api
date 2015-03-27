@@ -29,6 +29,15 @@ public interface Requirement<T> extends RequirementConfigGenerator {
         return false;
     }
 
+    public default boolean isChecked(T entity) {
+
+        return false;
+    }
+
+    public default void setChecked(T entity, boolean checked) {
+
+    }
+
     public default boolean isOrdered() {
 
         return false;
