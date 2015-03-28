@@ -476,6 +476,7 @@ public final class CustomItemUtil {
             int x = i + 1;
             try {
                 while (x < lore.size() && currentSlot == TooltipSlot.fromId(decodeItemId(lore.get(x)))) {
+                    lore.set(x, lore.get(x).substring(16));
                     multilineEnd = x;
                     x++;
                 }
