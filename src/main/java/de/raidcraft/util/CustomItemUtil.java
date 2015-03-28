@@ -467,7 +467,7 @@ public final class CustomItemUtil {
                 continue;
             }
             TooltipSlot currentSlot = TooltipSlot.fromId(tooltipSlotId);
-            if (IGNORED_TOOLTIP_SLOTS.contains(currentSlot)) continue;
+            if (currentSlot == null || IGNORED_TOOLTIP_SLOTS.contains(currentSlot)) continue;
             // remove the hidden line id
             lore.set(i, lore.get(i).substring(16));
             // lets check for a multiline tooltip
