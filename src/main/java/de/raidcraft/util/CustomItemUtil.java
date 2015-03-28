@@ -1,5 +1,6 @@
 package de.raidcraft.util;
 
+import com.sk89q.util.StringUtil;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.ArmorType;
 import de.raidcraft.api.items.AttributeType;
@@ -607,7 +608,11 @@ public final class CustomItemUtil {
                 }
             }
             GemColor gemColor = GemColor.fromString(line.substring(0, 2));
-            sockets[i] = new Socket(gemColor, gem);
+            if (gemColor == null) {
+                RaidCraft.LOGGER.warning("Failed to parse socket tooltip of lines " + StringUtil.joinString(lines, ","));
+            } else {
+                sockets[i] = new Socket(gemColor, gem);
+            }
             i++;
         }
         return new SocketTooltip(sockets);

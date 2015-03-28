@@ -17,6 +17,7 @@ public class SocketTooltip extends FixedMultilineTooltip {
         this.sockets = sockets;
         String[] lines = new String[sockets.length];
         for (int i = 0; i < sockets.length; i++) {
+            if (sockets[i] == null) continue;
             String line = "";
             if (sockets[i].isEmpty()) {
                 line += sockets[i].getColor().getColor() + "" + Socket.EMPTY_SOCKET_SYMBOL;
