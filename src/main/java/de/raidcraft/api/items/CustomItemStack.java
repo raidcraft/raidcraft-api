@@ -1,5 +1,6 @@
 package de.raidcraft.api.items;
 
+import com.sk89q.util.StringUtil;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.attachments.AttachableCustomItem;
 import de.raidcraft.api.items.attachments.ItemAttachment;
@@ -342,5 +343,14 @@ public class CustomItemStack extends ItemStack {
     public CustomItemStack clone() {
 
         return new CustomItemStack(getItem(), super.clone());
+    }
+
+    @Override
+    public String toString() {
+
+        return "CustomItemStack{" +
+                "item=" + item.toString() +
+                ", tooltips=[" + StringUtil.joinString(tooltips.values(), ",", 0) + "]" +
+                '}';
     }
 }
