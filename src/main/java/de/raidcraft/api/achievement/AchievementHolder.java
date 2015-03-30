@@ -225,6 +225,11 @@ public interface AchievementHolder<T> {
     }
 
     /**
+     * Loads all gained achievements from the used storage.
+     */
+    public void load();
+
+    /**
      * Saves the achievement holder by the underlying serialization method.
      */
     public void save();

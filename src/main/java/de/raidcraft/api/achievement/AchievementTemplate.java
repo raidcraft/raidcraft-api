@@ -3,6 +3,7 @@ package de.raidcraft.api.achievement;
 import de.raidcraft.api.action.action.ActionHolder;
 import de.raidcraft.api.action.requirement.RequirementHolder;
 import de.raidcraft.api.action.trigger.TriggerHolder;
+import de.raidcraft.api.action.trigger.TriggerListener;
 
 /**
  * The achievement template contains generic information about the achievement.
@@ -11,7 +12,7 @@ import de.raidcraft.api.action.trigger.TriggerHolder;
  * Depending on the implementation templates can be generated from a database,
  * file system or any other source.
  */
-public interface AchievementTemplate extends RequirementHolder, ActionHolder, TriggerHolder {
+public interface AchievementTemplate<T> extends RequirementHolder, ActionHolder, TriggerHolder, TriggerListener<T> {
 
     /**
      * Gets the unique name of the Achievement that can be used to compare
@@ -97,9 +98,20 @@ public interface AchievementTemplate extends RequirementHolder, ActionHolder, Tr
      * Creates a valid achievement from this template and the given holder.
      *
      * @param holder to create achievement for
-     * @param <T>    type of the holder
      *
      * @return active achievement
      */
-    public <T> Achievement<T> createAchievement(AchievementHolder<T> holder);
+    public Achievement<T> createAchievement(AchievementHolder<T> holder);
+
+    public Achievement<T> createAchievement(T entity);
+
+    /**
+     * Registers all trigger listeners of this achievement.
+     */
+    public void registerListeners();
+
+    /**
+     * Unregisters all trigger listeners associated with this achievement.
+     */
+    public void unregisterListeners();
 }

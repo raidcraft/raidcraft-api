@@ -1,7 +1,5 @@
 package de.raidcraft.api.achievement;
 
-import de.raidcraft.api.action.trigger.TriggerListener;
-
 import java.sql.Timestamp;
 
 /**
@@ -11,7 +9,7 @@ import java.sql.Timestamp;
  * database, even if the achievement was not yet unlocked.
  * The progress of the achivement is also saved in this object.
  */
-public interface Achievement<T> extends TriggerListener<T> {
+public interface Achievement<T> {
 
     /**
      * @see AchievementTemplate#getIdentifier()
@@ -68,16 +66,6 @@ public interface Achievement<T> extends TriggerListener<T> {
 
         return getCompletionDate() != null;
     }
-
-    /**
-     * Registers all trigger listeners of this achievement.
-     */
-    public void registerListeners();
-
-    /**
-     * Unregisters all trigger listeners associated with this achievement.
-     */
-    public void unregisterListeners();
 
     public void setCompletionDate(Timestamp timestamp);
 

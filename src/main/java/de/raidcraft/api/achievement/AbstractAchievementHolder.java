@@ -25,7 +25,6 @@ public abstract class AbstractAchievementHolder<T> implements AchievementHolder<
     public AbstractAchievementHolder(T type) {
 
         this.type = type;
-        this.achievements = loadAchievements();
     }
 
     @NonNull
@@ -80,5 +79,11 @@ public abstract class AbstractAchievementHolder<T> implements AchievementHolder<
             save();
         }
         return achievement;
+    }
+
+    @Override
+    public void load() {
+
+        this.achievements = loadAchievements();
     }
 }
