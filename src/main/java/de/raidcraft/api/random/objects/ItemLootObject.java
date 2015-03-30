@@ -8,7 +8,9 @@ import de.raidcraft.api.random.Obtainable;
 import de.raidcraft.api.random.RDSObject;
 import de.raidcraft.api.random.RDSObjectCreator;
 import de.raidcraft.api.random.RDSObjectFactory;
+import de.raidcraft.api.random.Spawnable;
 import de.raidcraft.util.InventoryUtils;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -17,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author mdoering
  */
-public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObjectCreator, Obtainable, Dropable {
+public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObjectCreator, Obtainable, Dropable, Spawnable {
 
     @RDSObjectFactory.Name("item")
     public static class ItemLootFactory implements RDSObjectFactory {
@@ -75,5 +77,11 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
     public void pickup(Player player) {
 
         addTo(player);
+    }
+
+    @Override
+    public void spawn(Location location) {
+
+        location.getWorld().dropItemNaturally(location, getItemStack());
     }
 }
