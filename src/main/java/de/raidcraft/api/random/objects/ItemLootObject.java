@@ -2,14 +2,14 @@ package de.raidcraft.api.random.objects;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.CustomItem;
+import de.raidcraft.api.random.Dropable;
 import de.raidcraft.api.random.GenericRDSValue;
 import de.raidcraft.api.random.Obtainable;
 import de.raidcraft.api.random.RDSObject;
 import de.raidcraft.api.random.RDSObjectCreator;
 import de.raidcraft.api.random.RDSObjectFactory;
-import de.raidcraft.api.random.Spawnable;
 import de.raidcraft.util.InventoryUtils;
-import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author mdoering
  */
-public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObjectCreator, Obtainable, Spawnable {
+public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObjectCreator, Obtainable, Dropable {
 
     @RDSObjectFactory.Name("item")
     public static class ItemLootFactory implements RDSObjectFactory {
@@ -63,10 +63,17 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
     }
 
     @Override
-    public void spawn(Location location) {
+    public ItemStack getItemStack() {
 
         if (getValue().isPresent()) {
-            location.getWorld().dropItemNaturally(location, getValue().get());
+            return getValue().get();
         }
+        return new ItemStack(Material.AIR);
+    }
+
+    @Override
+    public void pickup(Player player) {
+
+        addTo(player);
     }
 }
