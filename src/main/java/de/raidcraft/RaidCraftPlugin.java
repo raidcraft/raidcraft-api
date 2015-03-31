@@ -293,7 +293,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     private void createPlayerLog(Player player) {
 
         TPlayerLog log = new TPlayerLog();
-        log.setJoinTime(Timestamp.from(Instant.now()));
+        Timestamp joinTime = Timestamp.from(Instant.now());
+        log.setJoinTime(joinTime);
         log.setPlayer(player.getUniqueId());
         log.setName(player.getName());
         log.setWorld(player.getLocation().getWorld().getName());
@@ -314,13 +315,20 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             stat.setLogonValue(playerStat.getValue().getStatisticValue(player));
             getDatabase().save(stat);
         }
-        playerLogs.put(player.getUniqueId(), log.getId());
+        TPlayerLog addedLog = getDatabase().find(TPlayerLog.class).where().eq("player", player.getUniqueId()).eq("join_time", joinTime).findUnique();
+        if (addedLog == null) {
+            getLogger().warning("Could not find added log for " + player.getName());
+        } else {
+            playerLogs.put(player.getUniqueId(), addedLog.getId());
+        }
     }
 
     private void completePlayerLog(Player player) {
 
-        TPlayerLog log = getDatabase().find(TPlayerLog.class, playerLogs.remove(player.getUniqueId()));
+        int id = playerLogs.remove(player.getUniqueId());
+        TPlayerLog log = getDatabase().find(TPlayerLog.class, id);
         if (log == null) {
+            getLogger().warning("Could not find player log with id " + id);
             return;
         }
         log.setQuitTime(Timestamp.from(Instant.now()));
