@@ -20,5 +20,6 @@ public class TPlayerLogStatistic {
     private int id;
     private TPlayerLog log;
     private String statistic;
-    private int value;
+    private int logonValue;
+    private int logoffValue;
 }
