@@ -306,14 +306,14 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 log.getStatistics().add(stat);
             }
         }
+        getDatabase().save(log);
         for (Map.Entry<String, PlayerStatisticProvider> playerStat : RaidCraft.getStatisticProviders().entrySet()) {
             TPlayerLogStatistic stat = new TPlayerLogStatistic();
             stat.setLog(log);
             stat.setStatistic(playerStat.getKey());
             stat.setLogonValue(playerStat.getValue().getStatisticValue(player));
-            log.getStatistics().add(stat);
+            getDatabase().save(stat);
         }
-        getDatabase().save(log);
         playerLogs.put(player.getUniqueId(), log.getId());
     }
 
@@ -324,19 +324,19 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             return;
         }
         log.setQuitTime(Timestamp.from(Instant.now()));
+        getDatabase().update(log);
         for (TPlayerLogStatistic statistic : log.getStatistics()) {
             Statistic stat = Statistic.valueOf(statistic.getStatistic());
             if (stat != null) {
                 statistic.setLogoffValue(player.getStatistic(stat));
-                getDatabase().update(statistic);
             } else {
                 PlayerStatisticProvider provider = RaidCraft.getStatisticProvider(statistic.getStatistic());
                 if (provider != null) {
                     statistic.setLogoffValue(provider.getStatisticValue(player));
                 }
             }
+            getDatabase().update(statistic);
         }
-        getDatabase().update(log);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
