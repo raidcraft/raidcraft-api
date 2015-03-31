@@ -35,6 +35,8 @@ import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TCommand;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
+import de.raidcraft.tables.TPlayerLog;
+import de.raidcraft.tables.TPlayerLogStatistic;
 import de.raidcraft.tables.TPlugin_;
 import de.raidcraft.tables.TRcPlayer;
 import de.raidcraft.util.TimeUtil;
@@ -42,18 +44,25 @@ import de.raidcraft.util.bossbar.BarAPI;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Statistic;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,6 +82,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @Getter
     private LocalConfiguration config;
     private final Map<Chunk, Set<PlayerPlacedBlock>> playerPlacedBlocks = new HashMap<>();
+    private final Map<UUID, Integer> playerLogs = new HashMap<>();
     private AtomicBoolean started = new AtomicBoolean(false);
 
     @Override
@@ -213,6 +223,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TListener.class);
         classes.add(TLog.class);
         classes.add(TPlugin_.class);
+        classes.add(TPlayerLog.class);
+        classes.add(TPlayerLogStatistic.class);
         return classes;
     }
 
@@ -256,6 +268,62 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 getDatabase().delete(unique);
             }
         }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+
+        createPlayerLog(event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+
+        completePlayerLog(event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
+
+        completePlayerLog(event.getPlayer());
+        createPlayerLog(event.getPlayer());
+    }
+
+    private void createPlayerLog(Player player) {
+
+        TRcPlayer entry = getDatabase().find(TRcPlayer.class).where().eq("uuid", player.getUniqueId()).findUnique();
+        TPlayerLog log = new TPlayerLog();
+        log.setJoinTime(Timestamp.from(Instant.now()));
+        log.setPlayer(entry);
+        log.setWorld(player.getLocation().getWorld().getName());
+        for (Statistic statistic : Statistic.values()) {
+            if (!statistic.isSubstatistic()) {
+                TPlayerLogStatistic stat = new TPlayerLogStatistic();
+                stat.setLog(log);
+                stat.setStatistic(statistic.name());
+                stat.setValue(player.getStatistic(statistic));
+                log.getStatistics().add(stat);
+            }
+        }
+        getDatabase().save(log);
+        playerLogs.put(player.getUniqueId(), log.getId());
+    }
+
+    private void completePlayerLog(Player player) {
+
+        TPlayerLog log = getDatabase().find(TPlayerLog.class, playerLogs.remove(player.getUniqueId()));
+        if (log == null) {
+            return;
+        }
+        log.setQuitTime(Timestamp.from(Instant.now()));
+        for (TPlayerLogStatistic statistic : log.getStatistics()) {
+            Statistic stat = Statistic.valueOf(statistic.getStatistic());
+            if (stat != null) {
+                statistic.setValue(player.getStatistic(stat) - statistic.getValue());
+                getDatabase().update(statistic);
+            }
+        }
+        getDatabase().update(log);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
