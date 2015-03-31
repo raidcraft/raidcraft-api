@@ -6,10 +6,9 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Dragonfire
@@ -17,14 +16,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "rc_players")
-public class TRcPlayer {
+@Table(name = "rc_player_logs")
+public class TPlayerLog {
 
     @Id
     private int id;
-    private UUID uuid;
-    private String lastName;
-    private Date lastJoined;
-    private Date firstJoined;
-    private List<TPlayerLog> logs = new ArrayList<>();
+    private TRcPlayer player;
+    private Timestamp joinTime;
+    private Timestamp quitTime;
+    private String world;
+    private List<TPlayerLogStatistic> statistics = new ArrayList<>();
 }
