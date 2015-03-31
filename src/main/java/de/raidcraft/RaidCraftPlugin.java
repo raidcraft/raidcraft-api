@@ -292,10 +292,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
     private void createPlayerLog(Player player) {
 
-        TRcPlayer entry = getDatabase().find(TRcPlayer.class).where().eq("uuid", player.getUniqueId()).findUnique();
         TPlayerLog log = new TPlayerLog();
         log.setJoinTime(Timestamp.from(Instant.now()));
-        log.setPlayer(entry);
+        log.setPlayer(player.getUniqueId());
+        log.setName(player.getName());
         log.setWorld(player.getLocation().getWorld().getName());
         for (Statistic statistic : Statistic.values()) {
             if (!statistic.isSubstatistic()) {

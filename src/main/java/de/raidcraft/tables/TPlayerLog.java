@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Dragonfire
@@ -21,7 +22,8 @@ public class TPlayerLog {
 
     @Id
     private int id;
-    private TRcPlayer player;
+    private UUID player;
+    private String name;
     private Timestamp joinTime;
     private Timestamp quitTime;
     private String world;
