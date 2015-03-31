@@ -26,6 +26,7 @@ import de.raidcraft.api.items.Skull;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentProvider;
 import de.raidcraft.api.player.PlayerComponent;
+import de.raidcraft.api.player.PlayerStatisticProvider;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.api.storage.ItemStorage;
@@ -35,6 +36,7 @@ import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
+import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.MetaDataKey;
@@ -92,6 +94,7 @@ public class RaidCraft implements Listener {
 
     private static final Map<String, RCPlayer> players = new HashMap<>();
     private static final Map<Class<? extends Component>, Component> components = new HashMap<>();
+    private static final Map<String, PlayerStatisticProvider> statisticProviders = new CaseInsensitiveMap<>();
     private static Economy economy;
     private static ConversationProvider conversationProvider;
     private static TradeProvider tradeProvider;
@@ -555,6 +558,21 @@ public class RaidCraft implements Listener {
         log.setLevel(level);
         log.setLog(message);
         RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase().save(log);
+    }
+
+    public static void registerPlayerStatisticProvider(BasePlugin plugin, String name, PlayerStatisticProvider provider) {
+
+        statisticProviders.put(plugin.getName() + "." + name, provider);
+    }
+
+    public static Map<String, PlayerStatisticProvider> getStatisticProviders() {
+
+        return statisticProviders;
+    }
+
+    public static PlayerStatisticProvider getStatisticProvider(String name) {
+
+        return statisticProviders.get(name);
     }
 
 }

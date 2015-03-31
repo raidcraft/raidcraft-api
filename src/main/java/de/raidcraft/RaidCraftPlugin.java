@@ -22,6 +22,7 @@ import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.npc.NPC_Manager;
+import de.raidcraft.api.player.PlayerStatisticProvider;
 import de.raidcraft.api.random.GenericRDSTable;
 import de.raidcraft.api.random.RDS;
 import de.raidcraft.api.random.RDSNullValue;
@@ -305,6 +306,13 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 log.getStatistics().add(stat);
             }
         }
+        for (Map.Entry<String, PlayerStatisticProvider> playerStat : RaidCraft.getStatisticProviders().entrySet()) {
+            TPlayerLogStatistic stat = new TPlayerLogStatistic();
+            stat.setLog(log);
+            stat.setStatistic(playerStat.getKey());
+            stat.setValue(playerStat.getValue().onJoin(player));
+            log.getStatistics().add(stat);
+        }
         getDatabase().save(log);
         playerLogs.put(player.getUniqueId(), log.getId());
     }
@@ -321,6 +329,11 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             if (stat != null) {
                 statistic.setValue(player.getStatistic(stat) - statistic.getValue());
                 getDatabase().update(statistic);
+            } else {
+                PlayerStatisticProvider provider = RaidCraft.getStatisticProvider(statistic.getStatistic());
+                if (provider != null) {
+                    statistic.setValue(provider.onQuit(player) - statistic.getValue());
+                }
             }
         }
         getDatabase().update(log);
