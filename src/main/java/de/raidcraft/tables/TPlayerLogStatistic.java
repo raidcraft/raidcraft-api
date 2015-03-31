@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -18,6 +19,7 @@ public class TPlayerLogStatistic {
 
     @Id
     private int id;
+    @ManyToOne
     private TPlayerLog log;
     private String statistic;
     private int logonValue;
