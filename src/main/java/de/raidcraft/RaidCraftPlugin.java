@@ -297,16 +297,16 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         log.setPlayer(player.getUniqueId());
         log.setName(player.getName());
         log.setWorld(player.getLocation().getWorld().getName());
+        getDatabase().save(log);
         for (Statistic statistic : Statistic.values()) {
             if (!statistic.isSubstatistic()) {
                 TPlayerLogStatistic stat = new TPlayerLogStatistic();
                 stat.setLog(log);
                 stat.setStatistic(statistic.name());
                 stat.setLogonValue(player.getStatistic(statistic));
-                log.getStatistics().add(stat);
+                getDatabase().save(stat);
             }
         }
-        getDatabase().save(log);
         for (Map.Entry<String, PlayerStatisticProvider> playerStat : RaidCraft.getStatisticProviders().entrySet()) {
             TPlayerLogStatistic stat = new TPlayerLogStatistic();
             stat.setLog(log);
