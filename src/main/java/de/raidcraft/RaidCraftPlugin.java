@@ -165,6 +165,12 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         for (Set<PlayerPlacedBlock> set : playerPlacedBlocks.values()) {
             getDatabase().save(set);
         }
+        for (UUID uuid : playerLogs.keySet()) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                completePlayerLog(player);
+            }
+        }
         RaidCraft.unregisterComponent(CustomItemManager.class);
         // save all NPC's
         NPC_Manager.getInstance().storeAll();
@@ -334,16 +340,19 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         log.setQuitTime(Timestamp.from(Instant.now()));
         getDatabase().update(log);
         for (TPlayerLogStatistic statistic : log.getStatistics()) {
-            Statistic stat = Statistic.valueOf(statistic.getStatistic());
-            if (stat != null) {
-                statistic.setLogoffValue(player.getStatistic(stat));
-            } else {
-                PlayerStatisticProvider provider = RaidCraft.getStatisticProvider(statistic.getStatistic());
-                if (provider != null) {
-                    statistic.setLogoffValue(provider.getStatisticValue(player));
+            try {
+                Statistic stat = Statistic.valueOf(statistic.getStatistic());
+                if (stat != null) {
+                    statistic.setLogoffValue(player.getStatistic(stat));
+                } else {
+                    PlayerStatisticProvider provider = RaidCraft.getStatisticProvider(statistic.getStatistic());
+                    if (provider != null) {
+                        statistic.setLogoffValue(provider.getStatisticValue(player));
+                    }
                 }
+                getDatabase().update(statistic);
+            } catch (IllegalArgumentException ignored) {
             }
-            getDatabase().update(statistic);
         }
     }
 
