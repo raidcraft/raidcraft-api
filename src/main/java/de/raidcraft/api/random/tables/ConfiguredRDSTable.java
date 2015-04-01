@@ -1,5 +1,6 @@
 package de.raidcraft.api.random.tables;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.random.GenericRDSTable;
 import de.raidcraft.api.random.Loadable;
 import de.raidcraft.api.random.RDS;
@@ -9,6 +10,7 @@ import de.raidcraft.api.random.RDSTable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 
 import java.util.Optional;
 
@@ -38,7 +40,12 @@ public class ConfiguredRDSTable extends GenericRDSTable implements Loadable {
     public ConfiguredRDSTable(ConfigurationSection config) {
 
         super();
-        this.config = config;
+        if (config == null) {
+            this.config = new MemoryConfiguration();
+            RaidCraft.LOGGER.warning("NULL config in " + getClass().getCanonicalName());
+        } else {
+            this.config = config;
+        }
     }
 
     public void load() {
