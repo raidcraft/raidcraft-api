@@ -15,6 +15,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -97,13 +98,10 @@ public final class BukkitUtil {
     @SuppressWarnings("unchecked")
     public static List<LivingEntity> getNearbyEntities(final Entity source, int radius) {
 
-        List<LivingEntity> entities = new ArrayList<>();
-        for (Entity entity : source.getNearbyEntities(radius, radius, radius)) {
-            if (entity instanceof LivingEntity) {
-                entities.add((LivingEntity) entity);
-            }
-        }
-        return entities;
+        return source.getNearbyEntities(radius, radius, radius).stream()
+                .filter(entity -> entity instanceof LivingEntity)
+                .map(entity -> (LivingEntity) entity)
+                .collect(Collectors.toList());
     }
 
     public static BlockWorldVector toBlockWorldVector(Block block) {
