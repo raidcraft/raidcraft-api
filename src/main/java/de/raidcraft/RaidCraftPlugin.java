@@ -284,19 +284,19 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         createPlayerLog(event.getPlayer());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
 
         completePlayerLog(event.getPlayer());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerKick(PlayerKickEvent event) {
 
         completePlayerLog(event.getPlayer());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
 
         completePlayerLog(event.getPlayer());
