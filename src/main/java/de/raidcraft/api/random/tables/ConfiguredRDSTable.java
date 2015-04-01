@@ -5,6 +5,7 @@ import de.raidcraft.api.random.Loadable;
 import de.raidcraft.api.random.RDS;
 import de.raidcraft.api.random.RDSObject;
 import de.raidcraft.api.random.RDSObjectFactory;
+import de.raidcraft.api.random.RDSTable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,7 +25,11 @@ public class ConfiguredRDSTable extends GenericRDSTable implements Loadable {
         @Override
         public RDSObject createInstance(ConfigurationSection config) {
 
-            return RDS.getTable(config.getString("name")).get();
+            Optional<RDSTable> table = RDS.getTable(config.getString("name"));
+            if (table.isPresent()) {
+                return table.get();
+            }
+            return new ConfiguredRDSTable(config.getParent());
         }
     }
 
