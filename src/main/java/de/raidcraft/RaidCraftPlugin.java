@@ -351,15 +351,14 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 Statistic stat = Statistic.valueOf(statistic.getStatistic());
                 if (stat != null) {
                     statistic.setLogoffValue(player.getStatistic(stat));
-                } else {
-                    PlayerStatisticProvider provider = RaidCraft.getStatisticProvider(statistic.getStatistic());
-                    if (provider != null) {
-                        statistic.setLogoffValue(provider.getStatisticValue(player));
-                    }
                 }
-                getDatabase().update(statistic);
             } catch (IllegalArgumentException ignored) {
+                PlayerStatisticProvider provider = RaidCraft.getStatisticProvider(statistic.getStatistic());
+                if (provider != null) {
+                    statistic.setLogoffValue(provider.getStatisticValue(player));
+                }
             }
+            getDatabase().update(statistic);
         }
     }
 
