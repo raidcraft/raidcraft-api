@@ -56,7 +56,7 @@ public class RDS {
             ((RDSTable) object).setCount(config.getInt("count", 1));
         }
         if (object instanceof Loadable) {
-            ((Loadable) object).load();
+            ((Loadable) object).load(config);
         }
         return Optional.ofNullable(object);
     }

@@ -1,6 +1,5 @@
 package de.raidcraft.api.random.tables;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.random.GenericRDSTable;
 import de.raidcraft.api.random.Loadable;
 import de.raidcraft.api.random.RDS;
@@ -10,7 +9,6 @@ import de.raidcraft.api.random.RDSTable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
 
 import java.util.Optional;
 
@@ -31,26 +29,13 @@ public class ConfiguredRDSTable extends GenericRDSTable implements Loadable {
             if (table.isPresent()) {
                 return table.get();
             }
-            return new ConfiguredRDSTable(config.getParent());
+            return new ConfiguredRDSTable();
         }
     }
 
-    private final ConfigurationSection config;
+    public void load(ConfigurationSection config) {
 
-    public ConfiguredRDSTable(ConfigurationSection config) {
-
-        super();
-        if (config == null) {
-            this.config = new MemoryConfiguration();
-            RaidCraft.LOGGER.warning("NULL config in " + getClass().getCanonicalName());
-        } else {
-            this.config = config;
-        }
-    }
-
-    public void load() {
-
-        ConfigurationSection entries = getConfig().getConfigurationSection("entries");
+        ConfigurationSection entries = config.getConfigurationSection("entries");
         if (entries != null && entries.getKeys(false) != null && !entries.getKeys(false).isEmpty()) {
             for (String key : entries.getKeys(false)) {
                 ConfigurationSection section = entries.getConfigurationSection(key);
