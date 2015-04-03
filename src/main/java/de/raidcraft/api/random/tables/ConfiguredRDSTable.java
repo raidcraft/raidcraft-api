@@ -1,11 +1,13 @@
 package de.raidcraft.api.random.tables;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.random.GenericRDSTable;
 import de.raidcraft.api.random.Loadable;
 import de.raidcraft.api.random.RDS;
 import de.raidcraft.api.random.RDSObject;
 import de.raidcraft.api.random.RDSObjectFactory;
 import de.raidcraft.api.random.RDSTable;
+import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,6 +30,9 @@ public class ConfiguredRDSTable extends GenericRDSTable implements Loadable {
             Optional<RDSTable> table = RDS.getTable(config.getString("name"));
             if (table.isPresent()) {
                 return table.get();
+            } else if (config.isSet("name")) {
+                RaidCraft.LOGGER.info("RDSTable referenced in " + ConfigUtil.getFileName(config)
+                        + " " + config.getString("name") + " does not exist!");
             }
             return new ConfiguredRDSTable();
         }
@@ -42,6 +47,9 @@ public class ConfiguredRDSTable extends GenericRDSTable implements Loadable {
                 Optional<RDSObject> object = RDS.createObject(section.getString("type"), section);
                 if (object.isPresent()) {
                     addEntry(object.get());
+                } else {
+                    RaidCraft.LOGGER.info("RDSObject referenced in " + ConfigUtil.getFileName(config)
+                            + " " + section.getString("type") + " does not exist!");
                 }
             }
         }
