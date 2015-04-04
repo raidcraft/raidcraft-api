@@ -50,6 +50,11 @@
             <artifactId>PacketWrapper</artifactId>
             <version>1.7.2-R0.5</version>
         </dependency>
+        <dependency>
+            <groupId>mkremins</groupId>
+            <artifactId>fanciful</artifactId>
+            <version>0.3.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -68,6 +73,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.projectlombok:lombok</include>
+                                    <include>mkremins:fanciful</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
