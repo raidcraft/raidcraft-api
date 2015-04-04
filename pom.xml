@@ -54,6 +54,7 @@
             <groupId>mkremins</groupId>
             <artifactId>fanciful</artifactId>
             <version>0.3.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
