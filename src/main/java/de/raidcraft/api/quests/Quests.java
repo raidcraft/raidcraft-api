@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -83,5 +84,10 @@ public class Quests {
     public static QuestConfigLoader getQuestConfigLoader(String suffix) {
 
         return provider.getQuestConfigLoader(suffix);
+    }
+
+    public static Optional<QuestProvider> getQuestProvider() {
+
+        return Optional.ofNullable(provider);
     }
 }

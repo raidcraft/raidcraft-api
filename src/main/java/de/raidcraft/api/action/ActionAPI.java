@@ -14,6 +14,8 @@ import de.raidcraft.api.action.trigger.global.PlayerTrigger;
 import de.raidcraft.api.economy.AccountType;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.api.quests.QuestProvider;
+import de.raidcraft.api.quests.Quests;
 import de.raidcraft.util.InventoryUtils;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.LocationUtil;
@@ -26,6 +28,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Optional;
 
 /**
  * @author mdoering
@@ -176,7 +180,14 @@ public final class ActionAPI {
 
             try {
                 ItemStack item = RaidCraft.getItem(config.getString("item"));
-                return player.getInventory().contains(item);
+                int amount = config.getInt("amount", 1);
+                if (player.getInventory().containsAtLeast(item, amount)) {
+                    return true;
+                }
+                Optional<QuestProvider> questProvider = Quests.getQuestProvider();
+                if (questProvider.isPresent()) {
+                    return questProvider.get().hasQuestItem(player, item, amount);
+                }
             } catch (CustomItemException ignored) {
             }
             return false;

@@ -1,6 +1,8 @@
 package de.raidcraft.api.quests;
 
 import de.raidcraft.api.quests.host.QuestHost;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Silthus
@@ -14,4 +16,6 @@ public interface QuestProvider {
     public QuestConfigLoader getQuestConfigLoader(String suffix);
 
     public QuestHost getQuestHost(String id) throws InvalidQuestHostException;
+
+    public boolean hasQuestItem(Player player, ItemStack itemStack, int amount);
 }
