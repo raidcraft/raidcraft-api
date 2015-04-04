@@ -164,9 +164,15 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
             if (hasCountText() && entity instanceof Player && successfullyChecked) {
                 ((Player) entity).sendMessage(getCountText(entity));
             }
-            successfullyChecked = getRequiredCount() <= getCount(entity);
+            successfullyChecked = getCount(entity) >= getRequiredCount();
         }
-        if (isPersistant() && (!isCounting() || successfullyChecked)) setChecked(entity, successfullyChecked);
+        if (isPersistant()) {
+            if (isCounting()) {
+                if (successfullyChecked) setChecked(entity, true);
+            } else {
+                setChecked(entity, successfullyChecked);
+            }
+        }
         save();
         return successfullyChecked;
     }
