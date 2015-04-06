@@ -65,8 +65,12 @@ public class CustomItemStack extends ItemStack {
         this.durability = durability;
         // lets reset the mc durability
         setDurability(CustomItemUtil.getMinecraftDurability(this, durability, getMaxDurability()));
-        // set the new tooltip line
-        setTooltip(new DurabilityTooltip(durability, getMaxDurability()));
+        if (getMaxDurability() > 0) {
+            // set the new tooltip line
+            setTooltip(new DurabilityTooltip(durability, getMaxDurability()));
+        } else {
+            removeTooltip(TooltipSlot.DURABILITY);
+        }
     }
 
     public int getMaxDurability() {
