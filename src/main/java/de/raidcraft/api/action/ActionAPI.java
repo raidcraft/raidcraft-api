@@ -56,7 +56,7 @@ public final class ActionAPI {
             public void accept(Player player, ConfigurationSection config) {
 
                 try {
-                    player.getInventory().remove(RaidCraft.getItem(config.getString("item")));
+                    player.getInventory().remove(RaidCraft.getItem(config.getString("item"), config.getInt("amount", 1)));
                 } catch (CustomItemException e) {
                     player.sendMessage(ChatColor.RED + e.getMessage());
                     RaidCraft.LOGGER.warning("player.remove.item (" + player.getName() + "): " + e.getMessage());
