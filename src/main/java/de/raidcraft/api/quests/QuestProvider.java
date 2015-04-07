@@ -18,4 +18,8 @@ public interface QuestProvider {
     public QuestHost getQuestHost(String id) throws InvalidQuestHostException;
 
     public boolean hasQuestItem(Player player, ItemStack itemStack, int amount);
+
+    public void removeQuestItem(Player player, ItemStack... itemStack);
+
+    public void addQuestItem(Player player, ItemStack... itemStack);
 }

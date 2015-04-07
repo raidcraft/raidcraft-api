@@ -14,8 +14,10 @@ import de.raidcraft.api.action.trigger.global.PlayerTrigger;
 import de.raidcraft.api.economy.AccountType;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.api.items.ItemType;
 import de.raidcraft.api.quests.QuestProvider;
 import de.raidcraft.api.quests.Quests;
+import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.InventoryUtils;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.LocationUtil;
@@ -56,7 +58,28 @@ public final class ActionAPI {
             public void accept(Player player, ConfigurationSection config) {
 
                 try {
-                    player.getInventory().remove(RaidCraft.getItem(config.getString("item"), config.getInt("amount", 1)));
+                    ItemStack item = RaidCraft.getItem(config.getString("item"));
+                    int amount = config.getInt("amount", 1);
+                    do {
+                        if (amount <= item.getMaxStackSize()) {
+                            item.setAmount(amount);
+                            amount = 0;
+                        } else {
+                            item.setAmount(item.getMaxStackSize());
+                            amount -= item.getMaxStackSize();
+                        }
+                        if (CustomItemUtil.isCustomItem(item) && RaidCraft.getCustomItem(item).getItem().getType() == ItemType.QUEST) {
+                            Optional<QuestProvider> questProvider = Quests.getQuestProvider();
+                            if (questProvider.isPresent()) {
+                                questProvider.get().removeQuestItem(player, item);
+                            }
+                        } else {
+                            player.getInventory().removeItem(item);
+                        }
+                    } while (amount > 0);
+
+                    player.getInventory().removeItem(item);
+
                 } catch (CustomItemException e) {
                     player.sendMessage(ChatColor.RED + e.getMessage());
                     RaidCraft.LOGGER.warning("player.remove.item (" + player.getName() + "): " + e.getMessage());
@@ -188,7 +211,8 @@ public final class ActionAPI {
                 if (questProvider.isPresent()) {
                     return questProvider.get().hasQuestItem(player, item, amount);
                 }
-            } catch (CustomItemException ignored) {
+            } catch (CustomItemException e) {
+                e.printStackTrace();
             }
             return false;
         });
