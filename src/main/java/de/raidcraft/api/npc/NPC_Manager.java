@@ -1,6 +1,7 @@
 package de.raidcraft.api.npc;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.util.CaseInsensitiveMap;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
@@ -17,7 +18,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,10 +29,10 @@ import java.util.UUID;
 public class NPC_Manager {
 
     private static NPC_Manager INSTANCE;
-    private Map<String, NPCRegistry> register = new HashMap<>();
-    private Map<String, NPCDataStore> stores = new HashMap<>();
-    private Map<String, Storage> saves = new HashMap<>();
-    private Map<String, NPCRegistry> nonPersistentRegistry = new HashMap<>();
+    private Map<String, NPCRegistry> register = new CaseInsensitiveMap<>();
+    private Map<String, NPCDataStore> stores = new CaseInsensitiveMap<>();
+    private Map<String, Storage> saves = new CaseInsensitiveMap<>();
+    private Map<String, NPCRegistry> nonPersistentRegistry = new CaseInsensitiveMap<>();
 
     // Singleton
     private NPC_Manager() {
