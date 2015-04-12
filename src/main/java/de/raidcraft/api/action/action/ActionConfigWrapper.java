@@ -9,7 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 @EqualsAndHashCode(of = {"action", "config"})
 @Data
-class ActionConfigWrapper<T> implements Action<T> {
+class ActionConfigWrapper<T> implements RevertableAction<T> {
 
     private final Action<T> action;
     private final ConfigurationSection config;
@@ -35,5 +35,19 @@ class ActionConfigWrapper<T> implements Action<T> {
     public void accept(T type, ConfigurationSection config) {
 
         action.accept(type, config);
+    }
+
+    @Override
+    public void revert(T type) {
+
+        revert(type, getConfig());
+    }
+
+    @Override
+    public void revert(T type, ConfigurationSection config) {
+
+        if (action instanceof RevertableAction) {
+            ((RevertableAction<T>) action).revert(type, config);
+        }
     }
 }
