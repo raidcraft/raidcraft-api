@@ -338,6 +338,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
     private void completePlayerLog(Player player) {
 
+        if (player == null) return;
         int id = playerLogs.remove(player.getUniqueId());
         TPlayerLog log = getDatabase().find(TPlayerLog.class, id);
         if (log == null) {
