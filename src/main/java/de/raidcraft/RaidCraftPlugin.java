@@ -66,6 +66,7 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -75,6 +76,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -347,20 +349,19 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }
         log.setQuitTime(Timestamp.from(Instant.now()));
         getDatabase().update(log);
-        for (TPlayerLogStatistic statistic : log.getStatistics()) {
-            try {
-                Statistic stat = Statistic.valueOf(statistic.getStatistic());
-                if (stat != null) {
-                    statistic.setLogoffValue(player.getStatistic(stat));
-                }
-            } catch (IllegalArgumentException ignored) {
+        Set<String> stats = Arrays.asList(Statistic.values()).stream().map(s -> s.name()).collect(Collectors.toSet());
+        List<TPlayerLogStatistic> statistics = log.getStatistics();
+        for (TPlayerLogStatistic statistic : statistics) {
+            if (stats.contains(statistic.getStatistic())) {
+                statistic.setLogoffValue(player.getStatistic(Statistic.valueOf(statistic.getStatistic())));
+            } else {
                 PlayerStatisticProvider provider = RaidCraft.getStatisticProvider(statistic.getStatistic());
                 if (provider != null) {
                     statistic.setLogoffValue(provider.getStatisticValue(player));
                 }
             }
-            getDatabase().update(statistic);
         }
+        getDatabase().update(statistics);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
