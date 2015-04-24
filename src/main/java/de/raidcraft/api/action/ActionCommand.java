@@ -14,6 +14,8 @@ import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.PastebinPoster;
+import mkremins.fanciful.FancyMessage;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -35,6 +37,7 @@ public class ActionCommand {
     @CommandPermissions("raidcraft.actionapi.createhtml")
     public void createHTML(CommandContext args, CommandSender sender) throws CommandException {
 
+        new FancyMessage("Test Message").color(ChatColor.GREEN).achievementTooltip("Blubb bla").send(sender);
         if (args.argsLength() > 0 && args.getString(0).equalsIgnoreCase("help")) {
             if (args.argsLength() == 1) throw new CommandException("Please provide a config generator name!");
             String identifier = args.getString(1);
