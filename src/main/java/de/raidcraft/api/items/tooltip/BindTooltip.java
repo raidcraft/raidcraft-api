@@ -32,6 +32,6 @@ public class BindTooltip extends SingleLineTooltip {
         this.owner = owner;
         this.bindType = ItemBindType.SOULBOUND;
         setTooltip(CustomItemUtil.encodeItemId(UUIDUtil.getPlayerId(owner)) + bindType.getColor()
-                + bindType.getItemText() + "(" + UUIDUtil.getNameFromUUID(owner) + ")");
+                + bindType.getItemText() + " (" + UUIDUtil.getNameFromUUID(owner) + ")");
     }
 }
