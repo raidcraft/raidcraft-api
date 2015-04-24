@@ -17,9 +17,8 @@ public class BindTooltip extends SingleLineTooltip {
     public BindTooltip(ItemBindType bindType, UUID owner) {
 
         super(TooltipSlot.BIND_TYPE, bindType.getItemText(), bindType.getColor());
-        this.owner = owner;
         this.bindType = owner != null ? ItemBindType.SOULBOUND : bindType;
-        setTooltip(CustomItemUtil.encodeItemId(UUIDUtil.getPlayerId(owner)) + bindType.getColor() + bindType.getItemText());
+        setOwner(owner);
     }
 
     public UUID getOwner() {
@@ -29,7 +28,10 @@ public class BindTooltip extends SingleLineTooltip {
 
     public void setOwner(UUID owner) {
 
+        if (owner == null) return;
         this.owner = owner;
-        setTooltip(CustomItemUtil.encodeItemId(UUIDUtil.getPlayerId(owner)) + bindType.getColor() + bindType.getItemText());
+        this.bindType = ItemBindType.SOULBOUND;
+        setTooltip(CustomItemUtil.encodeItemId(UUIDUtil.getPlayerId(owner)) + bindType.getColor()
+                + bindType.getItemText() + "(" + UUIDUtil.getNameFromUUID(owner) + ")");
     }
 }
