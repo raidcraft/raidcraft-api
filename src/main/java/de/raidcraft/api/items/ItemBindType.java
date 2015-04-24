@@ -40,10 +40,10 @@ public enum ItemBindType {
     public static ItemBindType fromString(String name) {
 
         if (name == null || name.equals("")) return NONE;
-        name = ChatColor.stripColor(name).trim();
+        name = ChatColor.stripColor(name).trim().toLowerCase();
         for (ItemBindType type : values()) {
             if (type.name().equalsIgnoreCase(name)
-                    || type.getItemText().equalsIgnoreCase(name)) {
+                    || type.getItemText().toLowerCase().startsWith(name)) {
                 return type;
             }
         }

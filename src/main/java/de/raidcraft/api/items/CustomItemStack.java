@@ -107,7 +107,8 @@ public class CustomItemStack extends ItemStack {
 
     public void setOwner(UUID owner) {
 
-        setTooltip(new BindTooltip(getItem().getBindType(), owner));
+        if (owner == null) return;
+        setTooltip(new BindTooltip(ItemBindType.SOULBOUND, owner));
     }
 
     public Optional<UUID> getOwner() {

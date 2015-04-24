@@ -543,8 +543,14 @@ public final class CustomItemUtil {
                         break;
                     case BIND_TYPE:
                         try {
-                            tooltip = new BindTooltip(ItemBindType.fromString(line.substring(16)),
-                                    UUIDUtil.getUuidFromPlayerId(decodeItemId(line)));
+                            ItemBindType bindType = ItemBindType.fromString(line.substring(16));
+                            if (bindType != null) {
+                                if (bindType == ItemBindType.SOULBOUND) {
+                                    tooltip = new BindTooltip(bindType, UUIDUtil.getUuidFromPlayerId(decodeItemId(line)));
+                                } else {
+                                    tooltip = new BindTooltip(bindType, null);
+                                }
+                            }
                         } catch (CustomItemException e) {
                             e.printStackTrace();
                             continue;
