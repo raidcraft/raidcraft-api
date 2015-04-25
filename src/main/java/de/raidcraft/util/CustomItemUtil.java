@@ -6,6 +6,7 @@ import de.raidcraft.api.items.ArmorType;
 import de.raidcraft.api.items.AttributeType;
 import de.raidcraft.api.items.CustomArmor;
 import de.raidcraft.api.items.CustomEquipment;
+import de.raidcraft.api.items.CustomItem;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.CustomItemStack;
@@ -27,6 +28,7 @@ import de.raidcraft.api.items.tooltip.SocketTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
 import de.raidcraft.api.items.tooltip.VariableMultilineTooltip;
+import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -578,6 +580,21 @@ public final class CustomItemUtil {
             }
         }
         return tooltips;
+    }
+
+    public static FancyMessage getFormattedItemTooltip(FancyMessage msg, CustomItem item) {
+
+        return getFormattedItemTooltip(msg, item.createNewItem());
+    }
+
+    public static FancyMessage getFormattedItemTooltip(FancyMessage msg, CustomItemStack item) {
+
+        if (item == null) return msg;
+        return msg.then("[").color(ChatColor.DARK_AQUA)
+                .then(item.getItem().getName())
+                .color(item.getItem().getQuality().getColor())
+                .itemTooltip(item)
+                .then("]").color(ChatColor.DARK_AQUA);
     }
 
     private static EnchantmentTooltip buildEnchantmentTooltip(String... lines) {
