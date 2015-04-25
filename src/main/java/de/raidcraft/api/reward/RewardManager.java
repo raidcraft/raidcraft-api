@@ -5,7 +5,6 @@ import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -40,7 +39,7 @@ public class RewardManager {
             Class<? extends Reward<?>> rClass = rewardClasses.get(type);
             if (rClass == null) {
                 RaidCraft.LOGGER.warning("There are no reward types defined for the type " + type);
-                RaidCraft.LOGGER.warning("Available Reward Types are: " + Strings.join(new ArrayList<>(rewardClasses.keySet()), ", "));
+                RaidCraft.LOGGER.warning("Available Reward Types are: " + String.join(", ", new ArrayList<>(rewardClasses.keySet())));
                 return rewards;
             }
             try {

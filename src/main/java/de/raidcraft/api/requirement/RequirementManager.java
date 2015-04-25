@@ -7,7 +7,6 @@ import de.raidcraft.util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -70,7 +69,7 @@ public final class RequirementManager {
                 }
             } else {
                 RaidCraft.LOGGER.warning("There are no requirement types defined for the type " + key);
-                RaidCraft.LOGGER.warning("Available Requirement Types are: " + Strings.join(new ArrayList<>(requirementClasses.keySet()), ", "));
+                RaidCraft.LOGGER.warning("Available Requirement Types are: " + String.join(", ", new ArrayList<>(requirementClasses.keySet())));
             }
         }
         return requirements;
