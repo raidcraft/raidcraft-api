@@ -15,6 +15,7 @@ import de.raidcraft.api.items.tooltip.RequirementTooltip;
 import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
 import de.raidcraft.util.CustomItemUtil;
+import de.raidcraft.util.items.EnchantGlow;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -49,6 +50,10 @@ public class CustomItemStack extends ItemStack {
 
         if (item instanceof CustomEquipment && ((CustomEquipment) item).getMaxDurability() > 0) {
             setCustomDurability(parseDurability());
+        }
+
+        if (getItem().isEnchantmentEffect()) {
+            EnchantGlow.addGlow(this);
         }
     }
 

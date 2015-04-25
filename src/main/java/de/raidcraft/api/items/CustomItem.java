@@ -32,6 +32,8 @@ public interface CustomItem extends RequirementResolver<Player> {
 
     public int getItemLevel();
 
+    public boolean isEnchantmentEffect();
+
     public ItemType getType();
 
     public ItemBindType getBindType();
