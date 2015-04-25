@@ -360,8 +360,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                     statistic.setLogoffValue(provider.getStatisticValue(player));
                 }
             }
+            getDatabase().update(statistic);
         }
-        getDatabase().update(statistics);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
