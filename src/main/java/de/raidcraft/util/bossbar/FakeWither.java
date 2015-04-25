@@ -100,7 +100,7 @@ public class FakeWither {
         WrapperPlayServerEntityMetadata update = new WrapperPlayServerEntityMetadata();
 
         update.setEntityId(id);
-        update.setEntityMetadata(watcher.getWatchableObjects());
+        update.setMetadata(watcher.getWatchableObjects());
         broadcastPacket(update.getHandle(), true);
     }
 
@@ -140,7 +140,7 @@ public class FakeWither {
         }
 
         WrapperPlayServerEntityDestroy destroyMe = new WrapperPlayServerEntityDestroy();
-        destroyMe.setEntities(new int[]{id});
+        destroyMe.setEntityIds(new int[]{id});
 
         broadcastPacket(destroyMe.getHandle(), false);
         created = false;

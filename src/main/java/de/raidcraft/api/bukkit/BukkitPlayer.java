@@ -10,10 +10,12 @@ import de.raidcraft.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -117,7 +119,7 @@ public class BukkitPlayer extends AbstractPlayer {
     @Override
     public BlockWorldVector getTargetBlock() {
 
-        return BukkitUtil.toBlockWorldVector(player.getTargetBlock(null, 100));
+        return BukkitUtil.toBlockWorldVector(player.getTargetBlock(new HashSet<Material>(), 100));
     }
 
     @Override
