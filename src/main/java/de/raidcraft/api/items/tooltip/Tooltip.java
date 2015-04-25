@@ -43,7 +43,7 @@ public abstract class Tooltip {
     protected final void setTooltip(String... tooltip) {
 
         for (int i = 0; i < tooltip.length; i++) {
-            tooltip[i] = CustomItemUtil.encodeItemId(getSlot().ordinal()) + tooltip[i];
+            tooltip[i] = CustomItemUtil.encodeItemId(getSlot().getId()) + tooltip[i];
         }
         this.tooltip = tooltip;
     }
