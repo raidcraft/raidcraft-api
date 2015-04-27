@@ -38,16 +38,6 @@ public class ActionCommand {
     public void createHTML(CommandContext args, CommandSender sender) throws CommandException {
 
         new FancyMessage("Test Message").color(ChatColor.GREEN).achievementTooltip("Blubb bla").send(sender);
-        if (args.argsLength() > 0 && args.getString(0).equalsIgnoreCase("help")) {
-            if (args.argsLength() == 1) throw new CommandException("Please provide a config generator name!");
-            String identifier = args.getString(1);
-            ConfigGenerator configGenerator = ConfigBuilder.getConfigGenerator(identifier);
-            if (configGenerator == null) {
-                throw new CommandException("No config generator information found with the name: " + identifier);
-            }
-            configGenerator.printHelp(sender, identifier);
-            return;
-        }
         StringBuilder sb = new StringBuilder();
         sb.append("########### ACTIONS ###########\n");
         ActionFactory.getInstance().getActions().entrySet().forEach(
