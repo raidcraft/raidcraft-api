@@ -208,7 +208,12 @@ public class ConfigUtil {
             if (!any.isPresent()) return null;
             world = any.get();
         }
-        return new Location(world, config.getInt("x"), config.getInt("y"), config.getInt("z"));
+        return new Location(world,
+                config.getInt("x"),
+                config.getInt("y"),
+                config.getInt("z"),
+                (float) config.getDouble("yaw"),
+                (float) config.getDouble("float"));
     }
 
     public static Location getLocationFromConfig(ConfigurationSection section) {

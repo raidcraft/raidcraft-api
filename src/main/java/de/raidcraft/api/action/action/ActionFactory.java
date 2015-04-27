@@ -39,7 +39,7 @@ public final class ActionFactory implements Component {
     public <T> ActionFactory registerGlobalAction(@NonNull String identifier, @NonNull Action<T> action) {
 
         actions.put(identifier, action);
-        ConfigBuilder.registerConfigGenerator(action);
+        ConfigBuilder.registerInformation(action);
         RaidCraft.info("registered global action: " + identifier, "action.global");
         return this;
     }
@@ -51,7 +51,7 @@ public final class ActionFactory implements Component {
             RaidCraft.LOGGER.warning("Action '" + identifier + "' is already registered!" + plugin.getName() + " tried to register duplicate!");
         }
         actions.put(identifier, action);
-        ConfigBuilder.registerConfigGenerator(action);
+        ConfigBuilder.registerInformation(action);
         RaidCraft.info("registered action: " + identifier, "action." + plugin.getName());
         return this;
     }

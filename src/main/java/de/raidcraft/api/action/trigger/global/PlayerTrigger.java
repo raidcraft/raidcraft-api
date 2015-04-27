@@ -1,12 +1,8 @@
 package de.raidcraft.api.action.trigger.global;
 
-import com.sk89q.minecraft.util.commands.CommandContext;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.trigger.Trigger;
-import de.raidcraft.api.config.builder.ConfigBuilder;
-import de.raidcraft.api.config.builder.ConfigBuilderException;
 import de.raidcraft.api.items.CustomItemException;
-import de.raidcraft.util.BlockUtil;
 import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
@@ -14,7 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,6 +34,17 @@ public class PlayerTrigger extends Trigger implements Listener {
         super("player", "interact", "block.break", "block.place", "move", "craft", "death");
     }
 
+    @Information(
+            value = "player.interact",
+            desc = "Listens for player interaction (with certain blocks at the defined location).",
+            conf = {
+                    "x",
+                    "y",
+                    "z",
+                    "world",
+                    "type: DIRT"
+            }
+    )
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
@@ -71,32 +77,12 @@ public class PlayerTrigger extends Trigger implements Listener {
     }
 
     @Information(
-            value = "player.interact",
-            desc = "Listens for player interaction (with certain blocks at the defined location).",
-            help = "Target the block you want to listen for or define the -x flag to listen for all interacts",
+            value = "player.craft",
+            desc = "Listens for crafting of items (can be custom).",
             conf = {
-                    "x",
-                    "y",
-                    "z",
-                    "world",
-                    "type: e.g. DIRT"
-            },
-            usage = "[-x]",
-            flags = "x",
-            multiSection = true
+                    "item: <rc1337/so43034/world.quest.named-item/WOOD:5>"
+            }
     )
-    public void interact(ConfigBuilder builder, CommandContext args, Player player) throws ConfigBuilderException {
-
-        ConfigurationSection config = createConfigSection(getInformation("player.interact"));
-        if (!args.hasFlag('x')) {
-            Block block = BlockUtil.getTargetBlock(player);
-            if (block == null) throw new ConfigBuilderException("No valid target block found in crosshair!");
-            config.set("type", block.getType());
-            config.set("location", createLocationSection(block.getLocation()));
-        }
-        builder.append(this, config, getPath(), "player.interact");
-    }
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCraft(CraftItemEvent event) {
 
@@ -118,10 +104,34 @@ public class PlayerTrigger extends Trigger implements Listener {
         informListeners("death", event.getEntity());
     }
 
+    @Information(
+            value = "player.block.break",
+            desc = "Listens for block breaking and optionally at the defined location.",
+            conf = {
+                    "blocks: List of blocks to listen for (overrides a single block)",
+                    "block: DIRT",
+                    "world: [current]",
+                    "x",
+                    "y",
+                    "z"
+            }
+    )
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event) {
 
         informListeners("block.break", event.getPlayer(), config -> {
+
+            if (config.isSet("x")) {
+                Location location = ConfigUtil.getLocationFromConfig(config, event.getPlayer());
+                Location playerLocation = event.getPlayer().getLocation();
+                if (!location.getWorld().equals(playerLocation.getWorld())
+                        || location.getBlockX() != playerLocation.getBlockX()
+                        || location.getBlockY() != playerLocation.getBlockY()
+                        || location.getBlockZ() != playerLocation.getBlockZ()) {
+                    return false;
+                }
+            }
+
             Set<Material> blocks = new HashSet<>();
             if (config.isList("blocks")) {
                 config.getStringList("blocks").forEach(b -> {
@@ -134,6 +144,7 @@ public class PlayerTrigger extends Trigger implements Listener {
                 });
                 return blocks.contains(event.getBlock().getType());
             }
+
             Material block = Material.matchMaterial(config.getString("block", "AIR"));
             if (block == null) {
                 RaidCraft.LOGGER.warning("Wrong block defined in player.interact trigger! " + ConfigUtil.getFileName(config));
@@ -142,10 +153,34 @@ public class PlayerTrigger extends Trigger implements Listener {
         });
     }
 
+    @Information(
+            value = "player.block.place",
+            desc = "Listens for block placing and optionally at the defined location.",
+            conf = {
+                    "blocks: List of blocks to listen for (overrides a single block)",
+                    "block: DIRT",
+                    "world: [current]",
+                    "x",
+                    "y",
+                    "z"
+            }
+    )
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
 
         informListeners("block.place", event.getPlayer(), config -> {
+
+            if (config.isSet("x")) {
+                Location location = ConfigUtil.getLocationFromConfig(config, event.getPlayer());
+                Location playerLocation = event.getPlayer().getLocation();
+                if (!location.getWorld().equals(playerLocation.getWorld())
+                        || location.getBlockX() != playerLocation.getBlockX()
+                        || location.getBlockY() != playerLocation.getBlockY()
+                        || location.getBlockZ() != playerLocation.getBlockZ()) {
+                    return false;
+                }
+            }
+
             Set<Material> blocks = new HashSet<>();
             if (config.isList("blocks")) {
                 config.getStringList("blocks").forEach(b -> {
@@ -158,6 +193,7 @@ public class PlayerTrigger extends Trigger implements Listener {
                 });
                 return blocks.contains(event.getBlock().getType());
             }
+
             Material block = Material.matchMaterial(config.getString("block", "AIR"));
             if (block == null) {
                 RaidCraft.LOGGER.warning("Wrong block defined in player.interact trigger! " + ConfigUtil.getFileName(config));
@@ -166,6 +202,17 @@ public class PlayerTrigger extends Trigger implements Listener {
         });
     }
 
+    @Information(
+            value = "player.move",
+            desc = "Triggers if the player is at or in a radius of the given location.",
+            conf = {
+                    "world: [current]",
+                    "x",
+                    "y",
+                    "z",
+                    "radius: [0]"
+            }
+    )
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event) {
 
@@ -187,11 +234,7 @@ public class PlayerTrigger extends Trigger implements Listener {
             return ((!config.isSet("x") || !config.isSet("y") || !config.isSet("z"))
                     || LocationUtil.isWithinRadius(
                     event.getPlayer().getLocation(),
-                    new Location(
-                            world,
-                            config.getInt("x"),
-                            config.getInt("y"),
-                            config.getInt("z")),
+                    ConfigUtil.getLocationFromConfig(config, event.getPlayer()),
                     config.getInt("radius", 0)
             ));
         });

@@ -44,7 +44,7 @@ public final class TriggerManager implements Component {
 
         for (String action : trigger.getActions()) {
             registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
-            ConfigBuilder.registerConfigGenerator(trigger);
+            ConfigBuilder.registerInformation(trigger);
         }
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
@@ -64,7 +64,7 @@ public final class TriggerManager implements Component {
                 continue;
             }
             registeredTrigger.put(triggerName, trigger);
-            ConfigBuilder.registerConfigGenerator(trigger);
+            ConfigBuilder.registerInformation(trigger);
         }
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);

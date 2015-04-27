@@ -392,6 +392,7 @@ public class RaidCraft implements Listener {
                 if (customItem.isPresent()) {
                     return customItem.get().createNewItem();
                 } else {
+                    // or a normal minecraft item
                     Material item = ItemUtils.getItem(lowercaseId);
                     if (item != null && (item == Material.SKULL_ITEM || item == Material.SKULL)) {
                         return Skull.getSkull(id);

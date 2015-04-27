@@ -11,12 +11,15 @@ import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.action.trigger.global.PlayerTrigger;
+import de.raidcraft.api.config.builder.ConfigBuilder;
+import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.api.economy.AccountType;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.ItemType;
 import de.raidcraft.api.quests.QuestProvider;
 import de.raidcraft.api.quests.Quests;
+import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.InventoryUtils;
 import de.raidcraft.util.ItemUtils;
@@ -42,6 +45,14 @@ public final class ActionAPI {
 
         GIVE_ITEM("player.give.item", new Action<Player>() {
             @Override
+            @Information(
+                    value = "player.give.item",
+                    desc = "Gives the player the item or drops it if inventory is full.",
+                    conf = {
+                            "amount: [1]",
+                            "item: <rc1337/so43034/world.quest.named-item/WOOD:5>"
+                    }
+            )
             public void accept(Player player, ConfigurationSection config) {
 
                 try {
@@ -55,6 +66,14 @@ public final class ActionAPI {
         }),
         REMOVE_ITEM("player.remove.item", new Action<Player>() {
             @Override
+            @Information(
+                    value = "player.remove.item",
+                    desc = "Removes the item from the player, will also search in the quest inventory if it is a quest item.",
+                    conf = {
+                            "amount: [1]",
+                            "item: <rc1337/so43034/world.quest.named-item/WOOD:5>"
+                    }
+            )
             public void accept(Player player, ConfigurationSection config) {
 
                 try {
@@ -88,25 +107,56 @@ public final class ActionAPI {
         }),
         GIVE_MONEY("player.give.money", new Action<Player>() {
             @Override
+            @Information(
+                    value = "player.give.money",
+                    desc = "Gives the player the given amount of money.",
+                    conf = {
+                            "amount: <1g5s3k/1g/5g3k>|<50.0>"
+                    }
+            )
             public void accept(Player player, ConfigurationSection config) {
 
                 if (!config.isSet("amount")) return;
                 Economy economy = RaidCraft.getEconomy();
-                economy.add(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(config.getString("amount")));
+                String amount = config.getString("amount");
+                try {
+                    economy.add(AccountType.PLAYER, player.getUniqueId().toString(), Double.parseDouble(amount));
+                } catch (NumberFormatException ignored) {
+                    economy.add(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(amount));
+                }
             }
         }),
-	    TAKE_MONEY("player.take.money", new Action<Player>() {
+	    TAKE_MONEY("player.remove.money", new Action<Player>() {
 		    @Override
+            @Information(
+                    value = "player.remove.money",
+                    desc = "Removes the given amount of money from the player.",
+                    conf = {
+                            "amount: <1g5s3k/1g/5g3k>|<50.0>"
+                    }
+            )
 		    public void accept(Player player, ConfigurationSection config) {
 
 			    if (!config.isSet("amount")) return;
 			    Economy economy = RaidCraft.getEconomy();
-			    economy.substract(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(config.getString("amount")));
+                String amount = config.getString("amount");
+                try {
+                    economy.substract(AccountType.PLAYER, player.getUniqueId().toString(), Double.parseDouble(amount));
+                } catch (NumberFormatException ignored) {
+                    economy.substract(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(amount));
+                }
 		    }
 	    }),
         KILL_PLAYER("player.kill", (Player player, ConfigurationSection config) -> player.damage(player.getMaxHealth() * 10)),
         MESSAGE_PLAYER("player.message", new Action<Player>() {
             @Override
+            @Information(
+                    value = "player.message",
+                    desc = "Sends the given message to the player. Multiline splitting with |.",
+                    conf = {
+                            "text: <First line.|Second line.>"
+                    }
+            )
             public void accept(Player player, ConfigurationSection config) {
 
                 String[] text = config.getString("text").split("\\|");
@@ -116,29 +166,65 @@ public final class ActionAPI {
             }
         }),
         TOGGLE_DOOR("door.toggle", new DoorAction()),
-        SPAWN_COMPASS("spawn.compass", (Player player, ConfigurationSection config) -> {
-            ItemStack item = ItemUtils.createItem(Material.COMPASS, config.getString("name"));
-            World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
-            if (world == null) return;
-            Location location = new Location(world,
-                    config.getInt("x"),
-                    config.getInt("y"),
-                    config.getInt("z"));
-            player.setCompassTarget(location);
-            InventoryUtils.addOrDropItems(player, item);
+        GIVE_COMPASS("player.give.compass", new Action<Player>() {
+            @Override
+            @Information(
+                    value = "player.give.compass",
+                    desc = "Gives the player a compass that points to the given location and names it.",
+                    conf = {
+                            "name: [Compass]",
+                            "world: [current]",
+                            "x",
+                            "y",
+                            "z",
+                    }
+            )
+            public void accept(Player player, ConfigurationSection config) {
+
+                ItemStack item = ItemUtils.createItem(Material.COMPASS, config.getString("name", "Compass"));
+                Location location = ConfigUtil.getLocationFromConfig(config, player);
+                player.setCompassTarget(location);
+                InventoryUtils.addOrDropItems(player, item);
+            }
+        }),
+        REMOVE_COMPASS("player.remove.compass", new Action<Player>() {
+            @Override
+            @Information(
+                    value = "player.remove.compass",
+                    desc = "Removes the compass with the given name from the player.",
+                    conf = {
+                            "name: [Compass]"
+                    }
+            )
+            public void accept(Player player, ConfigurationSection config) {
+
+                String name = config.getString("name", "Compass");
+                for (ItemStack itemStack : player.getInventory().getContents()) {
+                    if (itemStack.hasItemMeta() && itemStack.getItemMeta().getDisplayName().equals(name)) {
+                        player.getInventory().remove(itemStack);
+                    }
+                }
+            }
         }),
         SET_BLOCK("block.set", new SetBlockAction()),
-        TELEPORT_COORDS("teleport.location", (Player player, ConfigurationSection config) -> {
+        TELEPORT_COORDS("teleport.location", new Action<Player>() {
+            @Override
+            @Information(
+                    value = "teleport.location",
+                    desc = "Teleports the player to the given location.",
+                    conf = {
+                            "world: [current]",
+                            "x",
+                            "y",
+                            "z",
+                            "yaw",
+                            "pitch"
+                    }
+            )
+            public void accept(Player player, ConfigurationSection config) {
 
-            World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
-            if (world == null) return;
-            Location location = new Location(world,
-                    config.getInt("x"),
-                    config.getInt("y"),
-                    config.getInt("z"),
-                    (float) config.getDouble("yaw"),
-                    (float) config.getDouble("pitch"));
-            player.teleport(location);
+                player.teleport(ConfigUtil.getLocationFromConfig(config, player));
+            }
         });
 
         private final String id;
@@ -163,8 +249,9 @@ public final class ActionAPI {
 
     public enum GlobalRequirements {
 
-        IS_SPRINTING("player.is-sprinting", (Player player, ConfigurationSection config) -> player.isSprinting()),
-	    IS_ALIVE("player.is-alive", (Player player, ConfigurationSection config) -> !player.isDead()),
+        IS_SPRINTING("player.sprinting", (Player player, ConfigurationSection config) -> player.isSprinting()),
+        IS_SNEAKING("player.sneaking", (Player player, ConfigurationSection config) -> player.isSneaking()),
+	    IS_ALIVE("player.alive", (Player player, ConfigurationSection config) -> !player.isDead()),
         DUMMY("dummy", (Player player, ConfigurationSection config) -> true),
         EXECUTE_ONCE_TRIGGER("execute-once-trigger", new Requirement<Player>() {
             @Override
@@ -175,6 +262,17 @@ public final class ActionAPI {
         }),
         PLAYER_LOCATION("player.location", new Requirement<Player>() {
             @Override
+            @Information(
+                    value = "player.location",
+                    desc = "Checks if the player is at or in a radius of the given location.",
+                    conf = {
+                            "world: [current]",
+                            "x",
+                            "y",
+                            "z",
+                            "radius: [0]"
+                    }
+            )
             public boolean test(Player player, ConfigurationSection config) {
 
                 Location location = player.getLocation();
@@ -184,10 +282,7 @@ public final class ActionAPI {
                 if (config.isSet("x") && config.isSet("y") && config.isSet("z") && config.isSet("world")) {
                     if (config.isSet("radius")) {
                         return LocationUtil.isWithinRadius(location,
-                                new Location(world,
-                                        config.getInt("x"),
-                                        config.getInt("y"),
-                                        config.getInt("z")),
+                                ConfigUtil.getLocationFromConfig(config, player),
                                 config.getInt("radius")
                         );
                     }
@@ -199,22 +294,33 @@ public final class ActionAPI {
                 return false;
             }
         }),
-        HAS_ITEM("player.has-item", (Player player, ConfigurationSection config) -> {
+        HAS_ITEM("player.has-item", new Requirement<Player>() {
+            @Override
+            @Information(
+                    value = "player.has-item",
+                    desc = "Checks if the player has the given item in his (quest) inventory.",
+                    conf = {
+                            "amount: [1]",
+                            "item: <rc1337/so43034/world.quest.named-item/WOOD:5>"
+                    }
+            )
+            public boolean test(Player player, ConfigurationSection config) {
 
-            try {
-                ItemStack item = RaidCraft.getItem(config.getString("item"));
-                int amount = config.getInt("amount", 1);
-                if (player.getInventory().containsAtLeast(item, amount)) {
-                    return true;
+                try {
+                    ItemStack item = RaidCraft.getItem(config.getString("item"));
+                    int amount = config.getInt("amount", 1);
+                    if (player.getInventory().containsAtLeast(item, amount)) {
+                        return true;
+                    }
+                    Optional<QuestProvider> questProvider = Quests.getQuestProvider();
+                    if (questProvider.isPresent()) {
+                        return questProvider.get().hasQuestItem(player, item, amount);
+                    }
+                } catch (CustomItemException e) {
+                    e.printStackTrace();
                 }
-                Optional<QuestProvider> questProvider = Quests.getQuestProvider();
-                if (questProvider.isPresent()) {
-                    return questProvider.get().hasQuestItem(player, item, amount);
-                }
-            } catch (CustomItemException e) {
-                e.printStackTrace();
+                return false;
             }
-            return false;
         });
 
         private final String id;
@@ -309,6 +415,38 @@ public final class ActionAPI {
             trigges.registerGlobalTrigger(trigger);
         } else {
             trigges.registerTrigger(plugin, trigger);
+        }
+        return this;
+    }
+
+    public <T> ActionAPI action(@NonNull Action<T> action) {
+
+        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(action);
+        if (!information.isPresent()) {
+            plugin.getLogger().warning("Tried to register ACTION without identifier and @Information Tag: " + action.getClass().getCanonicalName());
+            return this;
+        }
+        String identifier = information.get().value();
+        if (global) {
+            actions.registerGlobalAction(identifier, action);
+        } else {
+            actions.registerAction(plugin, identifier, action);
+        }
+        return this;
+    }
+
+    public <T> ActionAPI requirement(@NonNull Requirement<T> requirement) {
+
+        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(requirement);
+        if (!information.isPresent()) {
+            plugin.getLogger().warning("Tried to register REQUIREMENT without identifier and @Information Tag: " + requirement.getClass().getCanonicalName());
+            return this;
+        }
+        String identifier = information.get().value();
+        if (global) {
+            requirements.registerGlobalRequirement(identifier, requirement);
+        } else {
+            requirements.registerRequirement(plugin, identifier, requirement);
         }
         return this;
     }

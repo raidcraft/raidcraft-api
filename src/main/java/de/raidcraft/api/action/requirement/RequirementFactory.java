@@ -40,7 +40,7 @@ public final class RequirementFactory implements Component {
     public <T> RequirementFactory registerGlobalRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
 
         requirements.put(identifier, requirement);
-        ConfigBuilder.registerConfigGenerator(requirement);
+        ConfigBuilder.registerInformation(requirement);
         RaidCraft.info("registered global requirement: " + identifier
                 , "requirement.global");
         return this;
@@ -54,7 +54,7 @@ public final class RequirementFactory implements Component {
             throw new RequirementException("Requirement '" + identifier + "' is already registered!");
         }
         requirements.put(identifier, requirement);
-        ConfigBuilder.registerConfigGenerator(requirement);
+        ConfigBuilder.registerInformation(requirement);
         RaidCraft.info("registered requirement: " + identifier
                 , "requirement." + plugin.getName());
         return this;
