@@ -14,9 +14,9 @@ import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.PastebinPoster;
-import mkremins.fanciful.FancyMessage;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.util.Optional;
 
 /**
  * @author Silthus
@@ -37,7 +37,6 @@ public class ActionCommand {
     @CommandPermissions("raidcraft.actionapi.createhtml")
     public void createHTML(CommandContext args, CommandSender sender) throws CommandException {
 
-        new FancyMessage("Test Message").color(ChatColor.GREEN).achievementTooltip("Blubb bla").send(sender);
         StringBuilder sb = new StringBuilder();
         sb.append("########### ACTIONS ###########\n");
         ActionFactory.getInstance().getActions().entrySet().forEach(
@@ -45,8 +44,13 @@ public class ActionCommand {
                     Action<?> action = entry.getValue();
                     sb.append(entry.getKey());
                     if (action != null) {
-                        ConfigGenerator.Information information = action.getInformation(entry.getKey());
-                        if (information != null) sb.append(": ").append(information.desc());
+                        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(entry.getKey());
+                        if (information.isPresent()) {
+                            sb.append(": ").append(information.get().desc());
+                            for (String conf : information.get().conf()) {
+                                sb.append("\n\t-").append(conf);
+                            }
+                        }
                     }
                     sb.append("\n");
                 }
@@ -57,8 +61,13 @@ public class ActionCommand {
                     Requirement<?> requirement = entry.getValue();
                     sb.append(entry.getKey());
                     if (requirement != null) {
-                        ConfigGenerator.Information information = requirement.getInformation(entry.getKey());
-                        if (information != null) sb.append(": ").append(information.desc());
+                        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(entry.getKey());
+                        if (information.isPresent()) {
+                            sb.append(": ").append(information.get().desc());
+                            for (String conf : information.get().conf()) {
+                                sb.append("\n\t-").append(conf);
+                            }
+                        }
                     }
                     sb.append("\n");
                 }
@@ -69,8 +78,13 @@ public class ActionCommand {
                     Trigger trigger = entry.getValue();
                     sb.append(entry.getKey());
                     if (trigger != null) {
-                        ConfigGenerator.Information information = trigger.getInformation(entry.getKey());
-                        if (information != null) sb.append(": ").append(information.desc());
+                        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(entry.getKey());
+                        if (information.isPresent()) {
+                            sb.append(": ").append(information.get().desc());
+                            for (String conf : information.get().conf()) {
+                                sb.append("\n\t-").append(conf);
+                            }
+                        }
                     }
                     sb.append("\n");
                 }

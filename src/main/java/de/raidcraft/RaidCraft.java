@@ -10,6 +10,7 @@ import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.bukkit.BukkitPlayer;
+import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.api.conversations.ConversationProvider;
 import de.raidcraft.api.database.Database;
@@ -511,10 +512,10 @@ public class RaidCraft implements Listener {
                 actionApi.setName(key);
                 actionApi.setAction_type(type);
                 actionApi.setServer(server);
-                ConfigGenerator.Information information = entry.getInformation(key);
-                if (information != null) {
-                    actionApi.setDescription(information.desc());
-                    actionApi.setConf(String.join(";", information.conf()));
+                Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(key);
+                if (information.isPresent()) {
+                    actionApi.setDescription(information.get().desc());
+                    actionApi.setConf(String.join(";", information.get().conf()));
                 }
             }
             actionApi.setActive(true);
