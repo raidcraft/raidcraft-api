@@ -75,7 +75,7 @@ public class AttributeTooltip extends Tooltip {
     }
 
     @Override
-    protected void updateLineWidth() {
+    protected void updateLineWidth(String... lines) {
 
         for (ItemAttribute attribute : attributes.values()) {
             int width = CustomItemUtil.getStringWidth(attribute.getItemLine());

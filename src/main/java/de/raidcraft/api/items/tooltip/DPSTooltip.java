@@ -44,8 +44,8 @@ public class DPSTooltip extends Tooltip {
     }
 
     @Override
-    protected void updateLineWidth() {
+    protected void updateLineWidth(String... lines) {
 
-        setWidth(CustomItemUtil.getStringWidth(getTooltip()[0]));
+        setWidth(CustomItemUtil.getStringWidth(lines[0]));
     }
 }

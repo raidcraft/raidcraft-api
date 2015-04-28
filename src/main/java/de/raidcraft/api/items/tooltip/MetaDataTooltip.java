@@ -23,7 +23,7 @@ public class MetaDataTooltip extends Tooltip {
     }
 
     @Override
-    protected void updateLineWidth() {
+    protected void updateLineWidth(String... tooltip) {
 
     }
 }

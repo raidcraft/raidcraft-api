@@ -17,7 +17,7 @@ public class NameTooltip extends Tooltip {
     }
 
     @Override
-    protected void updateLineWidth() {
+    protected void updateLineWidth(String... tooltip) {
 
 
     }

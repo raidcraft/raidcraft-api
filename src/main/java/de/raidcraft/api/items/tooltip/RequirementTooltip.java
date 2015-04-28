@@ -61,7 +61,7 @@ public class RequirementTooltip extends Tooltip {
     }
 
     @Override
-    protected void updateLineWidth() {
+    protected void updateLineWidth(String... tooltip) {
 
         for (RequiredItemAttachment requirement : requirements.values()) {
             int width = CustomItemUtil.getStringWidth(requirement.getItemText());
