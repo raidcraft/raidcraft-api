@@ -14,9 +14,9 @@ public class FixedMultilineTooltip extends Tooltip {
     }
 
     @Override
-    protected void updateLineWidth() {
+    protected void updateLineWidth(String... tooltip) {
 
-        for (String line : getTooltip()) {
+        for (String line : tooltip) {
             if (getWidth() < CustomItemUtil.getStringWidth(line)) {
                 setWidth(CustomItemUtil.getStringWidth(line));
             }

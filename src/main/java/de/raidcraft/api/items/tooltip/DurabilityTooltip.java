@@ -25,8 +25,9 @@ public class DurabilityTooltip extends Tooltip {
         } else if (durabilityInPercent < 0.20) {
             color = ChatColor.GOLD;
         }
-        setTooltip(color + "Haltbarkeit: " + durability + "/" + maxDurability);
-        updateLineWidth();
+        String tooltip = color + "Haltbarkeit: " + durability + "/" + maxDurability;
+        setTooltip(tooltip);
+        updateLineWidth(tooltip);
     }
 
     public int getDurability() {
@@ -40,9 +41,8 @@ public class DurabilityTooltip extends Tooltip {
     }
 
     @Override
-    protected void updateLineWidth() {
+    protected void updateLineWidth(String... tooltip) {
 
-        String[] tooltip = getTooltip();
         for (int i = 0; i < tooltip.length; i++) {
             if (tooltip[i].contains(LINE_SEPARATOR)) {
                 String[] split = tooltip[i].split(LINE_SEPARATOR);

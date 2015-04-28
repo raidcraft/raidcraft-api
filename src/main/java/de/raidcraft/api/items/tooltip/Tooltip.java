@@ -29,7 +29,11 @@ public abstract class Tooltip {
 
         if (width != this.width) {
             this.width = width;
-            updateLineWidth();
+            String[] tooltip = getTooltip();
+            for (int i = 0; i < tooltip.length; i++) {
+                tooltip[i] = tooltip[i].substring(16);
+            }
+            updateLineWidth(tooltip);
         }
     }
 
@@ -38,7 +42,7 @@ public abstract class Tooltip {
         return width;
     }
 
-    protected abstract void updateLineWidth();
+    protected abstract void updateLineWidth(String... tooltip);
 
     protected final void setTooltip(String... tooltip) {
 

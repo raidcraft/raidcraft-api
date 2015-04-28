@@ -14,8 +14,9 @@ public class EquipmentTypeTooltip extends SingleLineTooltip {
         super(TooltipSlot.EQUIPMENT_TYPE, text, color);
         this.color = color == null ? ChatColor.WHITE : color;
         this.text = text;
-        setTooltip(this.color + text);
-        updateLineWidth();
+        String tooltip = this.color + text;
+        setTooltip(tooltip);
+        updateLineWidth(tooltip);
     }
 
     public EquipmentTypeTooltip(String tooltip) {
@@ -27,6 +28,6 @@ public class EquipmentTypeTooltip extends SingleLineTooltip {
 
         this.color = color;
         setTooltip(color + text);
-        updateLineWidth();
+        updateLineWidth(color + text);
     }
 }

@@ -26,7 +26,7 @@ public class VariableMultilineTooltip extends Tooltip {
         updateLineWidth();
     }
 
-    public void updateLineWidth() {
+    public void updateLineWidth(String... tooltip) {
 
         List<String> output = new ArrayList<>();
         StringBuilder out = new StringBuilder();

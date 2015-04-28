@@ -16,7 +16,7 @@ public class SingleLineTooltip extends Tooltip {
         super(slot);
         this.color = color == null ? ChatColor.WHITE : color;
         setTooltip(this.color + text);
-        updateLineWidth();
+        updateLineWidth(this.color + text);
     }
 
     public SingleLineTooltip(TooltipSlot slot, String text) {
@@ -25,9 +25,8 @@ public class SingleLineTooltip extends Tooltip {
     }
 
     @Override
-    protected void updateLineWidth() {
+    protected void updateLineWidth(String... tooltip) {
 
-        String[] tooltip = getTooltip();
         for (int i = 0; i < tooltip.length; i++) {
             if (tooltip[i].contains(LINE_SEPARATOR)) {
                 String[] split = tooltip[i].split(LINE_SEPARATOR);

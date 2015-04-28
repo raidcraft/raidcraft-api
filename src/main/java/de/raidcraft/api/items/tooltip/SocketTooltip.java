@@ -29,6 +29,6 @@ public class SocketTooltip extends FixedMultilineTooltip {
             lines[i] = line;
         }
         setTooltip(lines);
-        updateLineWidth();
+        updateLineWidth(lines);
     }
 }
