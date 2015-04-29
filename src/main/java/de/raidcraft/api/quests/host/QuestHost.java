@@ -20,7 +20,7 @@ public interface QuestHost extends ConversationHost {
 
     public void interact(Player player);
 
-    public void spawn();
+    public boolean spawn();
 
     public void despawn();
 }
