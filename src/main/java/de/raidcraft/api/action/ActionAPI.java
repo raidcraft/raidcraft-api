@@ -200,7 +200,7 @@ public final class ActionAPI {
 
                 String name = config.getString("name", "Compass");
                 for (ItemStack itemStack : player.getInventory().getContents()) {
-                    if (itemStack.hasItemMeta() && itemStack.getItemMeta().getDisplayName().equals(name)) {
+                    if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().getDisplayName().equals(name)) {
                         player.getInventory().remove(itemStack);
                     }
                 }
