@@ -26,7 +26,7 @@ public abstract class AutoCompletionProvider {
         this.token = token;
         this.minLength = minLength;
         this.errorMessage = errorMessage;
-        this.AUTO_COMPLETE_PATTERN = Pattern.compile("(.*)" + (token == '?' ? "\\?" : token) + "\"([a-zA-ZüöäÜÖÄß\\s\\d]+)\"(.*)");
+        this.AUTO_COMPLETE_PATTERN = Pattern.compile("(.*)" + (token == '?' ? "\\?" : token) + "\"([a-zA-ZüöäÜÖÄß_\\s\\d]+)\"(.*)");
     }
 
     public AutoCompletionProvider(char token, String errorMessage) {
