@@ -81,7 +81,7 @@ public class Chat {
                 // check if the message starts directly with the item
                 // ?"itemName" foobar
                 if (Strings.isNullOrEmpty(matcher.group(1))) {
-                    msg = provider.autoComplete(player, msg, matcher.group(2));
+                    msg = provider.autoComplete(player, msg, matcher.group(2).replace("_", " "));
                     if (!Strings.isNullOrEmpty(matcher.group(3))) {
                         msg = matchAndReplaceItem(getMatchingProviders(matcher.group(3)), player, msg, matcher.group(3));
                     }
@@ -89,7 +89,7 @@ public class Chat {
                 }
                 // lets recursivly match the text before the current match
                 msg = matchAndReplaceItem(getMatchingProviders(matcher.group(1)), player, msg, matcher.group(1));
-                msg = provider.autoComplete(player, msg, matcher.group(2));
+                msg = provider.autoComplete(player, msg, matcher.group(2).replace("_", " "));
                 if (!Strings.isNullOrEmpty(matcher.group(3))) {
                     msg = matchAndReplaceItem(getMatchingProviders(matcher.group(3)), player, msg, matcher.group(3));
                 }

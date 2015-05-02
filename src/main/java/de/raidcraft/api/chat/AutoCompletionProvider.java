@@ -45,8 +45,11 @@ public abstract class AutoCompletionProvider {
         if (message != null && message.startsWith("\"")) {
             message = message.length() > 1 ? message.substring(1) : null;
         }
+        if (message != null) {
+            message = message.replace("_", " ");
+        }
         return getAutoCompleteList(player, message).stream()
-                .map(item -> token + "\"" + item + "\"")
+                .map(item -> token + "\"" + item.replace(" ", "_") + "\"")
                 .collect(Collectors.toList());
     }
 
