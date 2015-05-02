@@ -6,7 +6,9 @@ import lombok.Getter;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -39,16 +41,23 @@ public class Chat {
 
     public static FancyMessage replaceMatchingAutoCompleteItems(Player player, String message) {
 
-        FancyMessage msg = new FancyMessage("");
+        List<AutoCompletionProvider> matchingProviders = getMatchingProviders(message);
+        if (matchingProviders.isEmpty()) {
+            return new FancyMessage(message);
+        }
+        return matchAndReplaceItem(matchingProviders, player, new FancyMessage(""), message);
+    }
+
+    private static List<AutoCompletionProvider> getMatchingProviders(String message) {
+
+        List<AutoCompletionProvider> matchingProviders = new ArrayList<>();
         for (AutoCompletionProvider provider : autoCompletionProviders.values()) {
             Matcher matcher = provider.getAUTO_COMPLETE_PATTERN().matcher(message);
             if (matcher.matches()) {
-                msg = matchAndReplaceItem(provider, player, msg, message);
-            } else {
-                msg = msg.then(message);
+                matchingProviders.add(provider);
             }
         }
-        return msg;
+        return matchingProviders;
     }
 
     /**
@@ -64,28 +73,29 @@ public class Chat {
      *
      * @return same {@link mkremins.fanciful.FancyMessage} object with replaced items
      */
-    private static FancyMessage matchAndReplaceItem(AutoCompletionProvider provider, Player player, FancyMessage msg, String message) {
+    private static FancyMessage matchAndReplaceItem(List<AutoCompletionProvider> providers, Player player, FancyMessage msg, String message) {
 
-        Matcher matcher = provider.getAUTO_COMPLETE_PATTERN().matcher(message);
-        if (matcher.matches()) {
-            // check if the message starts directly with the item
-            // ?"itemName" foo bar
-            if (Strings.isNullOrEmpty(matcher.group(1))) {
+        for (AutoCompletionProvider provider : providers) {
+            Matcher matcher = provider.getAUTO_COMPLETE_PATTERN().matcher(message);
+            if (matcher.matches()) {
+                // check if the message starts directly with the item
+                // ?"itemName" foobar
+                if (Strings.isNullOrEmpty(matcher.group(1))) {
+                    msg = provider.autoComplete(player, msg, matcher.group(2));
+                    if (!Strings.isNullOrEmpty(matcher.group(3))) {
+                        msg = matchAndReplaceItem(getMatchingProviders(matcher.group(3)), player, msg, matcher.group(3));
+                    }
+                    return msg;
+                }
+                // lets recursivly match the text before the current match
+                msg = matchAndReplaceItem(getMatchingProviders(matcher.group(1)), player, msg, matcher.group(1));
                 msg = provider.autoComplete(player, msg, matcher.group(2));
                 if (!Strings.isNullOrEmpty(matcher.group(3))) {
-                    msg.then(matcher.group(3));
+                    msg = matchAndReplaceItem(getMatchingProviders(matcher.group(3)), player, msg, matcher.group(3));
                 }
                 return msg;
             }
-            // lets recursivly match the text before the current match
-            msg = matchAndReplaceItem(provider, player, msg, matcher.group(1));
-            msg = provider.autoComplete(player, msg, matcher.group(2));
-            if (!Strings.isNullOrEmpty(matcher.group(3))) {
-                msg.then(matcher.group(3));
-            }
-            return msg;
-        } else {
-            return msg.then(message);
         }
+        return msg.then(message);
     }
 }
