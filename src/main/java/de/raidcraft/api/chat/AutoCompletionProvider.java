@@ -42,6 +42,9 @@ public abstract class AutoCompletionProvider {
      */
     public final List<String> getAutoCompleteItems(Player player, @Nullable String message) {
 
+        if (message != null && message.startsWith("\"")) {
+            message = message.length() > 1 ? message.substring(1) : null;
+        }
         return getAutoCompleteList(player, message).stream()
                 .map(item -> token + "\"" + item + "\"")
                 .collect(Collectors.toList());
