@@ -10,6 +10,7 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -143,11 +144,16 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean test(T type) {
 
         ConfigurationSection args = getConfig().getConfigurationSection("args");
         if (args == null) args = getConfig().createSection("args");
-        return test(type, args);
+        boolean test = test(type, args);
+        if (!test && requirement instanceof Reasonable && type instanceof Player) {
+            ((Player) type).sendMessage(ChatColor.RED + ((Reasonable<T>) requirement).getLongReason(type, args));
+        }
+        return test;
     }
 
     @Override
