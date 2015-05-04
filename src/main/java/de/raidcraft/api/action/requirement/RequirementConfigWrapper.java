@@ -10,7 +10,6 @@ import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -24,13 +23,14 @@ import java.util.UUID;
  */
 @EqualsAndHashCode(of = {"requirement"})
 @Data
-class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirement<T>> {
+class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparable<Requirement<T>> {
 
     private static final String CHECKED_KEY = "checked";
     private static final String COUNT_KEY = "count";
 
     private final String id;
     private final Requirement<T> requirement;
+    private final Reasonable<T> reasonable;
     private final boolean persistant;
     private final int order;
     private final int requiredCount;
@@ -43,6 +43,11 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
 
         this.id = config.isSet("id") ? config.getString("id") : id;
         this.requirement = requirement;
+        if (requirement instanceof Reasonable) {
+            this.reasonable = (Reasonable<T>) requirement;
+        } else {
+            this.reasonable = null;
+        }
         this.persistant = config.getBoolean("persistant", false);
         this.order = config.getInt("order", 0);
         this.requiredCount = config.getInt("count", 0);
@@ -144,16 +149,11 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean test(T type) {
 
         ConfigurationSection args = getConfig().getConfigurationSection("args");
         if (args == null) args = getConfig().createSection("args");
-        boolean test = test(type, args);
-        if (!test && requirement instanceof Reasonable && type instanceof Player) {
-            ((Player) type).sendMessage(ChatColor.RED + ((Reasonable<T>) requirement).getLongReason(type, args));
-        }
-        return test;
+        return test(type, args);
     }
 
     @Override
@@ -181,6 +181,23 @@ class RequirementConfigWrapper<T> implements Requirement<T>, Comparable<Requirem
         }
         save();
         return successfullyChecked;
+    }
+
+    @Override
+    public String getReason(T entity) {
+
+        ConfigurationSection args = getConfig().getConfigurationSection("args");
+        if (args == null) args = getConfig().createSection("args");
+        return getReason(entity, args);
+    }
+
+    @Override
+    public String getReason(T entity, ConfigurationSection config) {
+
+        if (reasonable != null) {
+            return reasonable.getReason(entity, config);
+        }
+        return "Requirement has no defined reasons! " + ConfigUtil.getFileName(config);
     }
 
     @Override
