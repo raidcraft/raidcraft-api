@@ -7,7 +7,5 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public interface Reasonable<T> {
 
-    public String getShortReason(T entity, ConfigurationSection config);
-
-    public String getLongReason(T entity, ConfigurationSection config);
+    public String getReason(T entity, ConfigurationSection config);
 }
