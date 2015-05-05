@@ -564,7 +564,7 @@ public final class CustomItemUtil {
                             int durability = Integer.parseInt(matcher.group(1));
                             durability = durability < 1 ? 0 : durability;
                             int maxDurability = Integer.parseInt(matcher.group(2));
-                            maxDurability = durability > maxDurability ? durability : maxDurability;
+                            maxDurability = durability > maxDurability ? maxDurability : durability;
                             // set the new tooltip line
                             tooltip = new DurabilityTooltip(durability, maxDurability);
                         }
