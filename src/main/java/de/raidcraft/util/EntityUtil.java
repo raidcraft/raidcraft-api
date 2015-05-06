@@ -65,6 +65,23 @@ public class EntityUtil {
         return sb.toString();
     }
 
+    public static ChatColor getHealthColor(double health, double maxHealth) {
+
+        double healthInPercent = health / maxHealth;
+        if (healthInPercent < 0.20) {
+           return ChatColor.DARK_RED;
+        } else if (healthInPercent < 0.35) {
+            return ChatColor.RED;
+        } else if (healthInPercent < 0.50) {
+            return ChatColor.GOLD;
+        } else if (healthInPercent < 0.75) {
+            return ChatColor.YELLOW;
+        } else if (healthInPercent < 0.90) {
+            return ChatColor.DARK_GREEN;
+        }
+        return ChatColor.GREEN;
+    }
+
     public static String drawMobName(String name, int mobLevel, int playerLevel, boolean elite, boolean rare) {
 
         return drawMobName(name, mobLevel, getConColor(playerLevel, mobLevel), elite, rare);
@@ -77,19 +94,8 @@ public class EntityUtil {
 
     public static String drawHealthBar(double health, double maxHealth, ChatColor mobColor, boolean elite, boolean rare) {
 
-        ChatColor barColor = ChatColor.GREEN;
         double healthInPercent = health / maxHealth;
-        if (healthInPercent < 0.20) {
-            barColor = ChatColor.DARK_RED;
-        } else if (healthInPercent < 0.35) {
-            barColor = ChatColor.RED;
-        } else if (healthInPercent < 0.50) {
-            barColor = ChatColor.GOLD;
-        } else if (healthInPercent < 0.75) {
-            barColor = ChatColor.YELLOW;
-        } else if (healthInPercent < 0.90) {
-            barColor = ChatColor.DARK_GREEN;
-        }
+        ChatColor barColor = getHealthColor(health, maxHealth);
 
         StringBuilder healthBar = new StringBuilder();
 
