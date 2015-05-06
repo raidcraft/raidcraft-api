@@ -524,7 +524,7 @@ public final class CustomItemUtil {
                 i = multilineEnd;
             } else {
                 Tooltip tooltip = null;
-                currentSlot = TooltipSlot.values()[tooltipSlotId];
+                currentSlot = TooltipSlot.fromId(tooltipSlotId);
                 String line = lore.get(i);
                 switch (currentSlot) {
                     case META_ID:
