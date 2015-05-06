@@ -65,7 +65,9 @@ public class NPC_Manager {
 
     public void removeNPC(UUID npcID, String host) {
 
-        this.removeNPC(getNPC(npcID, host), host);
+        NPC npc = getNPC(npcID, host);
+        if (npc == null) return;
+        this.removeNPC(npc, host);
     }
 
     /**
