@@ -1,10 +1,16 @@
 package de.raidcraft.util;
 
 import com.sk89q.worldedit.blocks.BlockType;
+import me.botsko.prism.Prism;
+import me.botsko.prism.actionlibs.ActionsQuery;
+import me.botsko.prism.actionlibs.QueryParameters;
+import me.botsko.prism.actionlibs.QueryResult;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockIterator;
 
 import javax.annotation.Nullable;
@@ -187,5 +193,19 @@ public final class BlockUtil {
             }
         }
         return null;
+    }
+
+    public static boolean isPlayerPlacedBlock(Block block) {
+
+        QueryParameters params = new QueryParameters();
+        params.setSpecificBlockLocation(block.getLocation());
+        params.addActionType("block-place");
+        Plugin prism = Bukkit.getPluginManager().getPlugin("Prism");
+        if (prism != null) {
+            ActionsQuery query = new ActionsQuery((Prism) prism);
+            QueryResult result = query.lookup(params);
+            return !result.getActionResults().isEmpty();
+        }
+        return false;
     }
 }

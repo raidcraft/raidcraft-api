@@ -44,9 +44,7 @@ import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Statistic;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -58,8 +56,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Method;
@@ -69,7 +65,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -85,7 +80,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
     @Getter
     private LocalConfiguration config;
-    private final Map<Chunk, Set<PlayerPlacedBlock>> playerPlacedBlocks = new HashMap<>();
     private final Map<UUID, Integer> playerLogs = new HashMap<>();
     private AtomicBoolean started = new AtomicBoolean(false);
 
@@ -165,9 +159,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @Override
     public void disable() {
 
-        for (Set<PlayerPlacedBlock> set : playerPlacedBlocks.values()) {
-            getDatabase().save(set);
-        }
         for (UUID uuid : playerLogs.keySet()) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
@@ -236,48 +227,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TPlayerLog.class);
         classes.add(TPlayerLogStatistic.class);
         return classes;
-    }
-
-    public void setPlayerPlaced(Block block) {
-
-        if (!config.player_placed_block_worlds.contains(block.getWorld().getName())) {
-            return;
-        }
-        PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
-        if (!playerPlacedBlocks.containsKey(block.getChunk())) {
-            playerPlacedBlocks.put(block.getChunk(), new HashSet<PlayerPlacedBlock>());
-        }
-        playerPlacedBlocks.get(block.getChunk()).add(playerPlacedBlock);
-    }
-
-    public boolean isPlayerPlaced(Block block) {
-
-        if (!config.player_placed_block_worlds.contains(block.getWorld().getName())) {
-            return false;
-        }
-        PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
-        return playerPlacedBlocks.containsKey(block.getChunk()) && playerPlacedBlocks.get(block.getChunk()).contains(playerPlacedBlock);
-    }
-
-    public void removePlayerPlaced(Block block) {
-
-        if (!config.player_placed_block_worlds.contains(block.getWorld().getName())) {
-            return;
-        }
-        if (!playerPlacedBlocks.containsKey(block.getChunk())) {
-            return;
-        }
-        PlayerPlacedBlock playerPlacedBlock = new PlayerPlacedBlock(block);
-        if (playerPlacedBlocks.get(block.getChunk()).remove(playerPlacedBlock)) {
-            PlayerPlacedBlock unique = getDatabase().find(PlayerPlacedBlock.class).where()
-                    .eq("x", playerPlacedBlock.getX())
-                    .eq("y", playerPlacedBlock.getY())
-                    .eq("z", playerPlacedBlock.getZ())
-                    .eq("world", playerPlacedBlock.getWorld()).findUnique();
-            if (unique != null) {
-                getDatabase().delete(unique);
-            }
-        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -362,35 +311,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             }
             getDatabase().update(statistic);
         }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onChunkLoad(ChunkLoadEvent event) {
-
-        if (!config.player_placed_block_worlds.contains(event.getChunk().getWorld().getName())) {
-            return;
-        }
-        Chunk chunk = event.getChunk();
-        Set<PlayerPlacedBlock> set = getDatabase().find(PlayerPlacedBlock.class).where()
-                .eq("chunk_x", chunk.getX())
-                .eq("chunk_z", chunk.getZ()).findSet();
-        if (set == null) {
-            set = new HashSet<>();
-        }
-        playerPlacedBlocks.put(chunk, set);
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onChunkUnload(ChunkUnloadEvent event) {
-
-        if (!config.player_placed_block_worlds.contains(event.getChunk().getWorld().getName())) {
-            return;
-        }
-        Set<PlayerPlacedBlock> remove = playerPlacedBlocks.remove(event.getChunk());
-        if (remove == null || remove.isEmpty()) {
-            return;
-        }
-        getDatabase().save(remove);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)

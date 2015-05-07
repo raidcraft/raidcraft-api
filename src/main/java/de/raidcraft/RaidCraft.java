@@ -37,6 +37,7 @@ import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
+import de.raidcraft.util.BlockUtil;
 import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.ItemUtils;
@@ -313,19 +314,9 @@ public class RaidCraft implements Listener {
         metadatable.removeMetadata(key.getKey(), RaidCraft.getComponent(RaidCraftPlugin.class));
     }
 
-    public static void setPlayerPlacedBlock(Block block) {
-
-        RaidCraft.getComponent(RaidCraftPlugin.class).setPlayerPlaced(block);
-    }
-
     public static boolean isPlayerPlacedBlock(Block block) {
 
-        return RaidCraft.getComponent(RaidCraftPlugin.class).isPlayerPlaced(block);
-    }
-
-    public static void removePlayerPlacedBlock(Block block) {
-
-        RaidCraft.getComponent(RaidCraftPlugin.class).removePlayerPlaced(block);
+        return BlockUtil.isPlayerPlacedBlock(block);
     }
 
     public static EbeanServer getDatabase(Class<? extends BasePlugin> clazz) {
