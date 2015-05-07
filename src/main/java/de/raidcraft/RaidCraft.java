@@ -3,9 +3,6 @@ package de.raidcraft;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.SqlUpdate;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.flags.StateFlag;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
@@ -320,16 +317,6 @@ public class RaidCraft implements Listener {
     public static boolean isPlayerPlacedBlock(Block block) {
 
         return BlockUtil.isPlayerPlacedBlock(block);
-    }
-
-    public static boolean isPvPAllowed(Player player, Location location) {
-
-        Optional<WorldGuardPlugin> worldGuard = RaidCraft.getComponent(RaidCraftPlugin.class).getWorldGuard();
-        if (worldGuard.isPresent()) {
-            ApplicableRegionSet regions = worldGuard.get().getRegionManager(location.getWorld()).getApplicableRegions(location);
-            return regions.queryState(worldGuard.get().wrapPlayer(player), DefaultFlag.PVP) == StateFlag.State.ALLOW;
-        }
-        return true;
     }
 
     public static EbeanServer getDatabase(Class<? extends BasePlugin> clazz) {
