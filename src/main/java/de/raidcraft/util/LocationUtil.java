@@ -338,4 +338,9 @@ public final class LocationUtil {
 
         return new Vector(x, z, y);
     }
+
+    public static Vector getDirection(Location from, Location to) {
+
+        return to.toVector().subtract(from.toVector());
+    }
 }
