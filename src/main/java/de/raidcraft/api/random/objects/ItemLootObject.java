@@ -2,6 +2,7 @@ package de.raidcraft.api.random.objects;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.CustomItem;
+import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.random.Dropable;
 import de.raidcraft.api.random.GenericRDSValue;
 import de.raidcraft.api.random.Obtainable;
@@ -10,6 +11,8 @@ import de.raidcraft.api.random.RDSObjectCreator;
 import de.raidcraft.api.random.RDSObjectFactory;
 import de.raidcraft.api.random.Spawnable;
 import de.raidcraft.util.InventoryUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -27,24 +30,50 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
         @Override
         public RDSObject createInstance(ConfigurationSection config) {
 
-            return new ItemLootObject(config.getString("item"), config.getInt("amount", 1));
+            if (config.isSet("price")) {
+                return new ItemLootObject(config.getString("item"), config.getInt("amount", 1), config.getDouble("price"));
+            } else {
+                return new ItemLootObject(config.getString("item"), config.getInt("amount", 1));
+            }
         }
 
     }
+
+    @Getter
+    @Setter
+    private double price;
 
     public ItemLootObject(String item, int amount) {
 
         this(RaidCraft.getUnsafeItem(item, amount));
     }
 
+    public ItemLootObject(String item, int amount, double price) {
+
+        this(RaidCraft.getUnsafeItem(item, amount));
+        this.price = price;
+    }
+
     public ItemLootObject(ItemStack itemStack) {
 
+        this(itemStack, itemStack instanceof CustomItemStack ? ((CustomItemStack) itemStack).getItem().getSellPrice() : 0);
+    }
+
+    public ItemLootObject(ItemStack itemStack, double price) {
+
         super(itemStack);
+        this.price = price;
+    }
+
+    public ItemLootObject(CustomItem customItem, double price) {
+
+        super(customItem.createNewItem());
+        this.price = price;
     }
 
     public ItemLootObject(CustomItem customItem) {
 
-        super(customItem.createNewItem());
+        this(customItem, customItem.getSellPrice());
     }
 
     @Override
@@ -53,7 +82,7 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
         if (!getValue().isPresent()) {
             return new GenericRDSValue<>();
         }
-        return new ItemLootObject(getValue().get().clone());
+        return new ItemLootObject(getValue().get().clone(), price);
     }
 
     @Override
