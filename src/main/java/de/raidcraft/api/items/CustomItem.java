@@ -46,6 +46,8 @@ public interface CustomItem extends RequirementResolver<Player> {
 
     public boolean isBlockingUsage();
 
+    public boolean isLootable();
+
     public Tooltip getTooltip(TooltipSlot slot);
 
     public Map<TooltipSlot, Tooltip> getTooltips();
