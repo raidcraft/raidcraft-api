@@ -9,7 +9,6 @@ import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -28,8 +27,8 @@ public class FakeWither {
 
     // Metadata indices
     private static final int METADATA_FLAGS = 0;
-    private static final int METADATA_NAME = 10;        // 1.5.2 -> Change to 5
-    private static final int METADATA_SHOW_NAME = 11;   // 1.5.2 -> Change to 6
+    private static final int METADATA_NAME = 2;        // 1.5.2 -> Change to 5
+    private static final int METADATA_SHOW_NAME = 3;   // 1.5.2 -> Change to 6
 
     // Unique ID
     private int id = NEXT_ID++;
@@ -148,15 +147,14 @@ public class FakeWither {
 
     private void broadcastPacket(PacketContainer packet, boolean onlyNearby) {
 
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            // Must be within the range
-            if (!onlyNearby || player.getLocation().distanceSquared(location) < HEALTH_RANGE) {
-                try {
-                    manager.sendServerPacket(player, packet);
-                } catch (InvocationTargetException e) {
-                    Bukkit.getLogger().log(Level.WARNING, "Cannot send " + packet + " to " + player, e);
-                }
+        // Must be within the range
+        Bukkit.getServer().getOnlinePlayers().stream()
+                .filter(player -> !onlyNearby || player.getLocation().distanceSquared(location) < HEALTH_RANGE).forEach(player -> {
+            try {
+                manager.sendServerPacket(player, packet);
+            } catch (InvocationTargetException e) {
+                Bukkit.getLogger().log(Level.WARNING, "Cannot send " + packet + " to " + player, e);
             }
-        }
+        });
     }
 }
