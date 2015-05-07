@@ -3,6 +3,7 @@ package de.raidcraft;
 import com.avaje.ebean.SqlUpdate;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.NestedCommand;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.action.ActionCommand;
@@ -56,6 +57,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Method;
@@ -67,6 +69,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -82,6 +85,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     private LocalConfiguration config;
     private final Map<UUID, Integer> playerLogs = new HashMap<>();
     private AtomicBoolean started = new AtomicBoolean(false);
+    private WorldGuardPlugin worldGuardPlugin;
 
     @Override
     public void enable() {
@@ -137,9 +141,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Heartbeat(getLogger(), config.heartbeatTicks),
                     -1, config.heartbeatTicks);
         }
-        // lets run this last if any mc errors occur
-        // TODO: reimplement and find fix
-        // if (config.hideAttributes) attributeHider = new AttributeHider(this);
     }
 
     private void setupDatabase() {
@@ -181,6 +182,15 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 RaidCraft.callEvent(new PlayerSignInteractEvent(event));
             }
         }, this);
+    }
+
+    public Optional<WorldGuardPlugin> getWorldGuard() {
+
+        if (worldGuardPlugin == null) {
+            Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldGuard");
+            if (plugin != null) worldGuardPlugin = (WorldGuardPlugin) plugin;
+        }
+        return Optional.ofNullable(worldGuardPlugin);
     }
 
     public static class LocalConfiguration extends ConfigurationBase<RaidCraftPlugin> {
