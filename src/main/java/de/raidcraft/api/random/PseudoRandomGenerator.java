@@ -1,14 +1,22 @@
 package de.raidcraft.api.random;
 
+import lombok.Getter;
+
 /**
  * @author mdoering
  */
+@Getter
 public class PseudoRandomGenerator {
 
-    private final double baseChance;
+    private double baseChance;
     private int iteration = 1;
 
     public PseudoRandomGenerator(double chance) {
+
+        setChance(chance);
+    }
+
+    public void setChance(double chance) {
 
         if (chance > 1.0) chance = 2.0;
         if (chance <= 0) chance = 1.0;
