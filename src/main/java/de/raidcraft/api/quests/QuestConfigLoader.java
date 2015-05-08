@@ -1,5 +1,6 @@
 package de.raidcraft.api.quests;
 
+import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -7,13 +8,21 @@ import org.bukkit.configuration.ConfigurationSection;
  * For each type, e.g. host, conv, quest their is a different loader.
  * @author Silthus
  */
-public abstract class QuestConfigLoader {
+@Getter
+public abstract class QuestConfigLoader implements Comparable<QuestConfigLoader> {
 
+    private int priority = 1;
     private final String suffix;
 
     public QuestConfigLoader(String suffix) {
 
         this.suffix = ("." + suffix + ".yml").toLowerCase();
+    }
+
+    public QuestConfigLoader(String suffix, int priority) {
+
+        this(suffix);
+        this.priority = priority;
     }
 
     public String getSuffix() {
@@ -43,5 +52,11 @@ public abstract class QuestConfigLoader {
     public int hashCode() {
 
         return suffix.hashCode();
+    }
+
+    @Override
+    public int compareTo(QuestConfigLoader o) {
+
+        return Integer.compare(getPriority(), o.getPriority());
     }
 }
