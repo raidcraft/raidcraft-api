@@ -16,7 +16,9 @@ import de.raidcraft.api.items.Gem;
 import de.raidcraft.api.items.GemColor;
 import de.raidcraft.api.items.ItemAttribute;
 import de.raidcraft.api.items.ItemBindType;
+import de.raidcraft.api.items.ItemType;
 import de.raidcraft.api.items.Socket;
+import de.raidcraft.api.items.WeaponType;
 import de.raidcraft.api.items.tooltip.BindTooltip;
 import de.raidcraft.api.items.tooltip.DurabilityTooltip;
 import de.raidcraft.api.items.tooltip.EnchantmentTooltip;
@@ -105,6 +107,29 @@ public final class CustomItemUtil {
             out.append(h);
         }
         return out.toString();
+    }
+
+    public static ItemType getItemType(CustomItemStack itemStack) {
+
+        return itemStack.getItem().getType();
+    }
+
+    public static ArmorType getArmorType(CustomItemStack itemStack) {
+
+        CustomArmor armor = getArmor(itemStack);
+        if (armor != null) {
+            return armor.getArmorType();
+        }
+        return null;
+    }
+
+    public static WeaponType getWeaponType(CustomItemStack itemStack) {
+
+        CustomWeapon armor = getWeapon(itemStack);
+        if (armor != null) {
+            return armor.getWeaponType();
+        }
+        return null;
     }
 
     public static boolean isCustomItem(ItemStack itemStack) {
