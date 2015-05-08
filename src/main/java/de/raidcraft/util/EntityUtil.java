@@ -1,6 +1,6 @@
 package de.raidcraft.util;
 
-import lombok.NonNull;
+import de.raidcraft.RaidCraft;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -192,9 +192,13 @@ public class EntityUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static void registerEntity(String name, int id, @NonNull Class<?> customClass) {
+    public static void registerEntity(String name, int id, Class<?> customClass) {
 
         try {
+            if (customClass == null) {
+                RaidCraft.LOGGER.warning("NULL Custom Entity: " + name);
+                return;
+            }
             // we need to check if the class is a valid transistent entity
             // and because we dont want to break every version we are using reflection
             if (!ReflectionUtil.getNmsClass("net.minecraft.server", "EntityInsentient").isAssignableFrom(customClass)) {
