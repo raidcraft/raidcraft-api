@@ -39,13 +39,18 @@ public class Chat {
         return remove;
     }
 
-    public static FancyMessage replaceMatchingAutoCompleteItems(Player player, String message) {
+    public static FancyMessage replaceMatchingAutoCompleteItems(Player player, String message, FancyMessage fancyMessage) {
 
         List<AutoCompletionProvider> matchingProviders = getMatchingProviders(message);
         if (matchingProviders.isEmpty()) {
-            return new FancyMessage(message);
+            return fancyMessage.then(message);
         }
-        return matchAndReplaceItem(matchingProviders, player, new FancyMessage(""), message);
+        return matchAndReplaceItem(matchingProviders, player, fancyMessage, message);
+    }
+
+    public static FancyMessage replaceMatchingAutoCompleteItems(Player player, String message) {
+
+        return replaceMatchingAutoCompleteItems(player, message, new FancyMessage(""));
     }
 
     private static List<AutoCompletionProvider> getMatchingProviders(String message) {
