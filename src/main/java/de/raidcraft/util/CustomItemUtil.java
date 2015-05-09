@@ -19,6 +19,7 @@ import de.raidcraft.api.items.ItemBindType;
 import de.raidcraft.api.items.ItemType;
 import de.raidcraft.api.items.Socket;
 import de.raidcraft.api.items.WeaponType;
+import de.raidcraft.api.items.tooltip.AttributeTooltip;
 import de.raidcraft.api.items.tooltip.BindTooltip;
 import de.raidcraft.api.items.tooltip.DurabilityTooltip;
 import de.raidcraft.api.items.tooltip.EnchantmentTooltip;
@@ -48,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Silthus
@@ -462,8 +462,6 @@ public final class CustomItemUtil {
         }
     }
 
-    private static final Pattern DURABILITY_PATTERN = Pattern.compile("^Haltbarkeit: ([0-9]+)/([0-9]+)$");
-    private static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^([\\+-])([0-9]+) (\\w+).*$");
     private static final List<TooltipSlot> IGNORED_TOOLTIP_SLOTS = Arrays.asList(
             TooltipSlot.NAME,
             TooltipSlot.ARMOR,
@@ -570,12 +568,18 @@ public final class CustomItemUtil {
                         break;
                     case BIND_TYPE:
                         try {
-                            ItemBindType bindType = ItemBindType.fromString(line.substring(16));
-                            if (bindType != null) {
-                                if (bindType == ItemBindType.SOULBOUND) {
-                                    tooltip = new BindTooltip(bindType, UUIDUtil.getUuidFromPlayerId(decodeItemId(line)));
-                                } else {
-                                    tooltip = new BindTooltip(bindType, null);
+                            Matcher matcher = BindTooltip.BIND_TOOLTIP_PATTERN.matcher(line);
+                            if (matcher.matches()) {
+                                // group 1 = encoded player id (can be null if not soulbound)
+                                // group 3 = bind type
+                                // group 4 = player name
+                                ItemBindType bindType = ItemBindType.fromString(matcher.group(3));
+                                if (bindType != null) {
+                                    if (bindType == ItemBindType.SOULBOUND && matcher.group(1) != null) {
+                                        tooltip = new BindTooltip(bindType, UUIDUtil.getUuidFromPlayerId(decodeItemId(matcher.group(1))));
+                                    } else {
+                                        tooltip = new BindTooltip(bindType, null);
+                                    }
                                 }
                             }
                         } catch (CustomItemException e) {
@@ -584,7 +588,7 @@ public final class CustomItemUtil {
                         }
                         break;
                     case DURABILITY:
-                        Matcher matcher = DURABILITY_PATTERN.matcher(ChatColor.stripColor(line));
+                        Matcher matcher = DurabilityTooltip.DURABILITY_PATTERN.matcher(ChatColor.stripColor(line));
                         if (matcher.matches()) {
                             int durability = Integer.parseInt(matcher.group(1));
                             durability = durability < 1 ? 0 : durability;
@@ -627,7 +631,7 @@ public final class CustomItemUtil {
         Collection<ItemAttribute> attributes = new ArrayList<>();
         for (String line : lines) {
             line = ChatColor.stripColor(line).trim();
-            Matcher matcher = ATTRIBUTE_PATTERN.matcher(line);
+            Matcher matcher = AttributeTooltip.ATTRIBUTE_PATTERN.matcher(line);
             if (matcher.matches()) {
                 // positive or negative attribute + int amount
                 int value = Integer.parseInt(matcher.group(1) + matcher.group(2));

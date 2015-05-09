@@ -11,12 +11,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * @author Silthus
  */
 public class AttributeTooltip extends Tooltip {
+
+    public static final Pattern ATTRIBUTE_PATTERN = Pattern.compile("^([\\+-])([0-9]+) (\\w+).*$");
 
     private final Map<AttributeType, ItemAttribute> attributes = new HashMap<>();
 

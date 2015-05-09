@@ -5,11 +5,14 @@ import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.UUIDUtil;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * @author mdoering
  */
 public class BindTooltip extends SingleLineTooltip {
+
+    public static final Pattern BIND_TOOLTIP_PATTERN = Pattern.compile("^((§[0-9a-fA-F]){8})?§[0-9a-fA-F]([a-zA-Z\\s]+)\\w?\\(([a-zA-Z0-9]+)\\)?$");
 
     private ItemBindType bindType;
     private UUID owner;

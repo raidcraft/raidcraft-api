@@ -4,10 +4,14 @@ import de.raidcraft.util.CustomItemUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 
+import java.util.regex.Pattern;
+
 /**
  * @author Silthus
  */
 public class DurabilityTooltip extends Tooltip {
+
+    public static final Pattern DURABILITY_PATTERN = Pattern.compile("^Haltbarkeit: ([0-9]+)/([0-9]+)$");
 
     private int durability;
     private final int maxDurability;
