@@ -20,6 +20,11 @@ public enum InventorySlot {
         this.slot = slot;
     }
 
+    public int getSlot() {
+
+        return slot;
+    }
+
     public static InventorySlot fromSlot(int slot) {
 
         for (InventorySlot inventorySlot : values()) {
