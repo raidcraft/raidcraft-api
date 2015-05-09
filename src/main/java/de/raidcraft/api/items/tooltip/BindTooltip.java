@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  */
 public class BindTooltip extends SingleLineTooltip {
 
-    public static final Pattern BIND_TOOLTIP_PATTERN = Pattern.compile("^((§[0-9a-fA-F]){8})?§[0-9a-fA-F]([a-zA-Z\\s]+)\\w?\\(([a-zA-Z0-9]+)\\)?$");
+    public static final Pattern BIND_TOOLTIP_PATTERN = Pattern.compile("^((§[0-9a-fA-F]){8})?§[0-9a-fA-F]([a-zA-Z\\s\\w]+).*$");
 
     private ItemBindType bindType;
     private UUID owner;

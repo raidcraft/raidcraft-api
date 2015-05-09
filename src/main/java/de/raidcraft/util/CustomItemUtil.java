@@ -572,7 +572,6 @@ public final class CustomItemUtil {
                             if (matcher.matches()) {
                                 // group 1 = encoded player id (can be null if not soulbound)
                                 // group 3 = bind type
-                                // group 4 = player name
                                 ItemBindType bindType = ItemBindType.fromString(matcher.group(3));
                                 if (bindType != null) {
                                     if (bindType == ItemBindType.SOULBOUND && matcher.group(1) != null) {
