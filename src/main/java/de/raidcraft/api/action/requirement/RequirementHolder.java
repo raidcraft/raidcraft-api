@@ -12,6 +12,12 @@ public interface RequirementHolder<T> {
 
     public Collection<Requirement<?>> getRequirements();
 
+    public default boolean isMeetingAllRequirements(T entity) {
+
+        return getRequirements(entity.getClass()).stream()
+                .allMatch(requirement -> requirement.test(entity));
+    }
+
     /**
      * Gets all requirements and filters them to be applicable by the provided entity type.
      *
