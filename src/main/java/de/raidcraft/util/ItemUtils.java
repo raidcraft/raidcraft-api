@@ -124,6 +124,12 @@ public final class ItemUtils {
         GOLD_PICKAXE(Material.GOLD_PICKAXE, ItemType.TOOL, "Goldspitzhacke"),
         DIAMOND_PICKAXE(Material.DIAMOND_PICKAXE, ItemType.TOOL, "Diamantspitzhacke"),
 
+        WOODEN_HOE(Material.WOOD_HOE, ItemType.TOOL, "Holzhacke"),
+        STONE_HOE(Material.STONE_HOE, ItemType.TOOL, "Steinhacke"),
+        IRON_HOE(Material.IRON_HOE, ItemType.TOOL, "Eisenhacke"),
+        GOLD_HOE(Material.GOLD_HOE, ItemType.TOOL, "Goldhacke"),
+        DIAMOND_HOE(Material.DIAMOND_HOE, ItemType.TOOL, "Diamanthacke"),
+
         // blocks
         LOG(Material.LOG, ItemType.BLOCK, "Holz"),
         STONE(Material.STONE, ItemType.BLOCK, "Stein"),
