@@ -114,7 +114,7 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
     }
 
     @Override
-    public final Collection<RDSObject> getResult() {
+    public Collection<RDSObject> getResult() {
 
         // The return value, a list of hit objects
         List<RDSObject> result = new ArrayList<>();

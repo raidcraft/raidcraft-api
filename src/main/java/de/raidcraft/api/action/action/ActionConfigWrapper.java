@@ -1,8 +1,16 @@
 package de.raidcraft.api.action.action;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.api.action.requirement.RequirementException;
+import de.raidcraft.api.action.requirement.RequirementFactory;
+import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Silthus
@@ -13,11 +21,19 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
 
     private final Action<T> action;
     private final ConfigurationSection config;
+    private List<Requirement<?>> requirements = new ArrayList<>();
 
     protected ActionConfigWrapper(Action<T> action, ConfigurationSection config) {
 
         this.action = action;
         this.config = config;
+        try {
+            String id = ConfigUtil.getFileName(config).replace("/", ".").toLowerCase();
+            this.requirements = RaidCraft.getComponent(RequirementFactory.class)
+                    .createRequirements(id, config.getConfigurationSection("requirements"));
+        } catch (RequirementException e) {
+            e.printStackTrace();
+        }
     }
 
     public ConfigurationSection getConfig() {
@@ -32,8 +48,16 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         accept(type, getConfig());
     }
 
+    @SuppressWarnings("unchecked")
     public void accept(T type, ConfigurationSection config) {
 
+        if (!requirements.isEmpty()) {
+            boolean allMatch = requirements.stream()
+                    .filter(requirement -> requirement.matchesType(type.getClass()))
+                    .map(requirement -> (Requirement<T>) requirement)
+                    .allMatch(requirement -> requirement.test(type));
+            if (!allMatch) return;
+        }
         action.accept(type, config);
     }
 
