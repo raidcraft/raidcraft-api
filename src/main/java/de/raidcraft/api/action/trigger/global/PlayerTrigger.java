@@ -19,6 +19,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.HashSet;
@@ -31,7 +32,7 @@ public class PlayerTrigger extends Trigger implements Listener {
 
     public PlayerTrigger() {
 
-        super("player", "interact", "block.break", "block.place", "move", "craft", "death");
+        super("player", "interact", "block.break", "block.place", "move", "craft", "death", "join");
     }
 
     @Information(
@@ -200,6 +201,16 @@ public class PlayerTrigger extends Trigger implements Listener {
             }
             return block == null || block == Material.AIR || block == event.getBlock().getType();
         });
+    }
+
+    @Information(
+            value = "player.join",
+            desc = "Triggers when a player joined the server."
+    )
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onJoin(PlayerJoinEvent event) {
+
+        informListeners("join", event.getPlayer());
     }
 
     @Information(
