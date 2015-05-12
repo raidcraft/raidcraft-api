@@ -1,16 +1,20 @@
 package de.raidcraft.api.action.trigger;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * @author Silthus
@@ -54,14 +58,21 @@ public abstract class Trigger implements TriggerConfigGenerator {
 
         String identifier = getIdentifier() + "." + action;
         if (registeredListeners.containsKey(identifier)) {
-            new ArrayList<>(registeredListeners.get(identifier)).stream()
+            Stream<TriggerListenerConfigWrapper<T>> stream = new ArrayList<>(registeredListeners.get(identifier)).stream()
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
-                            // first lets check all predicates and if we can execute at all
-                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
-                            // then lets process the trigger
+                    // first lets check all predicates and if we can execute at all
+                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate));
+            stream.filter(wrapper -> wrapper.getTriggerDelay() > 0)
+                    .forEach(wrapper -> Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> {
+                        if (wrapper.getTriggerListener().processTrigger(triggeringEntity)) {
+                            wrapper.executeActions(triggeringEntity);
+                        }
+                    }, wrapper.getTriggerDelay()));
+            stream.filter(wrapper -> wrapper.getTriggerDelay() <= 0)
+                    // then lets process the trigger
                     .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity))
-                            // if we get true back we are ready for action processing
+                    // if we get true back we are ready for action processing
                     .forEach(wrapper -> wrapper.executeActions(triggeringEntity));
         }
     }

@@ -1,6 +1,7 @@
 package de.raidcraft.api.action.trigger;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionException;
@@ -8,9 +9,11 @@ import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.requirement.RequirementException;
 import de.raidcraft.api.action.requirement.RequirementFactory;
+import de.raidcraft.util.TimeUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -30,6 +33,8 @@ class TriggerListenerConfigWrapper<T> {
     private final TriggerListener<T> triggerListener;
     private final ConfigurationSection config;
     private final boolean executeOnce;
+    private final long triggerDelay;
+    private final long actionDelay;
     private Collection<Action<T>> actions = new ArrayList<>();
     private List<Requirement<T>> requirements = new ArrayList<>();
 
@@ -38,6 +43,8 @@ class TriggerListenerConfigWrapper<T> {
         this.triggerListener = triggerListener;
         this.config = config;
         this.executeOnce = config.getBoolean("execute-once", false);
+        this.triggerDelay = TimeUtil.secondsToTicks(config.getDouble("delay", 0));
+        this.actionDelay = TimeUtil.secondsToTicks(config.getDouble("action-delay", 0));
         try {
             this.actions = RaidCraft.getComponent(ActionFactory.class)
                     .createActions(config.getConfigurationSection("actions"), getTriggerListener().getTriggerEntityType());
@@ -68,13 +75,21 @@ class TriggerListenerConfigWrapper<T> {
 
     protected void executeActions(T triggeringEntity) {
 
-        actions.forEach(action -> action.accept(triggeringEntity));
-        if (isExecuteOnce()) {
-            // lets get the last requirement which will be the executed once requirement
-            // and set the checked key to false
-            Requirement<T> requirement = this.requirements.get(this.requirements.size() - 1);
-            requirement.setChecked(triggeringEntity, false);
-            requirement.save();
+        Runnable runnable = () -> {
+
+            actions.forEach(action -> action.accept(triggeringEntity));
+            if (isExecuteOnce()) {
+                // lets get the last requirement which will be the executed once requirement
+                // and set the checked key to false
+                Requirement<T> requirement = requirements.get(requirements.size() - 1);
+                requirement.setChecked(triggeringEntity, false);
+                requirement.save();
+            }
+        };
+        if (getActionDelay() > 0) {
+            Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), runnable, getActionDelay());
+        } else {
+            runnable.run();
         }
     }
 
