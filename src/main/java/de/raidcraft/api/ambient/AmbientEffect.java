@@ -34,9 +34,4 @@ public interface AmbientEffect {
     }
 
     public void run(Location location);
-
-    default void run(Location from, Location to) {
-        run(from);
-        run(to);
-    }
 }

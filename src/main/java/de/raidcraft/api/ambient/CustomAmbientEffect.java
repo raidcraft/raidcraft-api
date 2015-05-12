@@ -21,6 +21,9 @@ public class CustomAmbientEffect implements AmbientEffect {
     @Getter
     @Setter
     private LivingEntity target;
+    @Getter
+    @Setter
+    private Location locationTarget;
 
     protected CustomAmbientEffect(EffectManager effectManager, ConfigurationSection config) {
 
@@ -31,12 +34,6 @@ public class CustomAmbientEffect implements AmbientEffect {
     @Override
     public void run(Location location) {
 
-        effectManager.start(arguments.getString("class"), arguments, location, null, getEntity(), getTarget(), null);
-    }
-
-    @Override
-    public void run(Location from, Location to) {
-
-        effectManager.start(arguments.getString("class"), arguments, from, to, getEntity(), getTarget(), null);
+        effectManager.start(arguments.getString("class"), arguments, location, getLocationTarget(), getEntity(), getTarget(), null);
     }
 }
