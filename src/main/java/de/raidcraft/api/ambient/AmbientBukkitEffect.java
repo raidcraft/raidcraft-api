@@ -12,6 +12,8 @@ public class AmbientBukkitEffect extends AbstractAmbientEffect {
     private final Effect effectType;
     private final int data;
     private final int radius;
+    private final float speed;
+    private final int particleCount;
 
     protected AmbientBukkitEffect(ConfigurationSection config) {
 
@@ -19,13 +21,15 @@ public class AmbientBukkitEffect extends AbstractAmbientEffect {
         this.effectType = Effect.valueOf(config.getString("effect"));
         this.data = config.getInt("data", 1);
         this.radius = config.getInt("radius", 100);
+        this.speed = (float) config.getDouble("speed", 1.0);
+        this.particleCount = config.getInt("particle-count", 10);
     }
 
     @Override
     protected void runEffect(Location... locations) {
 
         for (Location location : locations) {
-            location.getWorld().playEffect(location, effectType, data, radius);
+            location.getWorld().spigot().playEffect(location, effectType, 1, data, 0, 0, 0, speed, particleCount, radius);
         }
     }
 

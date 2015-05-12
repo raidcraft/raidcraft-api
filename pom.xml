@@ -61,6 +61,11 @@
             <artifactId>prism</artifactId>
             <version>2.0.6</version>
         </dependency>
+        <dependency>
+            <groupId>de.slikey</groupId>
+            <artifactId>EffectLib</artifactId>
+            <version>3.4-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -80,6 +85,7 @@
                                 <includes>
                                     <include>org.projectlombok:lombok</include>
                                     <include>mkremins:fanciful</include>
+                                    <include>de.slikey:EffectLib</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

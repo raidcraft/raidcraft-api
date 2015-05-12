@@ -13,7 +13,8 @@ public interface AmbientEffect {
         PARTICLE,
         SOUND,
         BUKKIT,
-        FIREWORK;
+        FIREWORK,
+        CUSTOM;
 
         public static Type fromString(String name) {
 
@@ -33,4 +34,9 @@ public interface AmbientEffect {
     }
 
     public void run(Location location);
+
+    default void run(Location from, Location to) {
+        run(from);
+        run(to);
+    }
 }

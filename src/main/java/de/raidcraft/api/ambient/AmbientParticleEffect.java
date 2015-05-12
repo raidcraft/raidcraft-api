@@ -1,5 +1,6 @@
 package de.raidcraft.api.ambient;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -8,8 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class AmbientParticleEffect extends AbstractAmbientEffect {
 
-    private final ParticleEffect particleEffect;
-    private final float speed;
+    private final EnumWrappers.Particle particleEffect;
     private final int amount;
     private final float xOffset;
     private final float yOffset;
@@ -18,8 +18,7 @@ public class AmbientParticleEffect extends AbstractAmbientEffect {
     protected AmbientParticleEffect(ConfigurationSection config) {
 
         super(config);
-        this.particleEffect = ParticleEffect.fromName(config.getString("effect"));
-        this.speed = (float) config.getDouble("speed", 1.0);
+        this.particleEffect = EnumWrappers.Particle.valueOf(config.getString("effect"));
         this.amount = config.getInt("amount", 1);
         this.xOffset = (float) config.getDouble("x-offset", 0.25);
         this.yOffset = (float) config.getDouble("y-offset", 0.25);
@@ -30,7 +29,7 @@ public class AmbientParticleEffect extends AbstractAmbientEffect {
     public void runEffect(Location... locations) {
 
         for (Location location : locations) {
-            ParticleEffect.sendToLocation(particleEffect, location, xOffset, yOffset, zOffset, speed, amount);
+            ParticleEffect.sendToLocation(particleEffect, location, xOffset, yOffset, zOffset, amount);
         }
     }
 
@@ -39,7 +38,6 @@ public class AmbientParticleEffect extends AbstractAmbientEffect {
 
         return super.toString() + "{AmbientParticleEffect{" +
                 "particleEffect=" + particleEffect +
-                ", speed=" + speed +
                 ", amount=" + amount +
                 ", xOffset=" + xOffset +
                 ", yOffset=" + yOffset +

@@ -1,9 +1,10 @@
 package de.raidcraft.util;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityWeather;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ambient.ParticleEffect;
+import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -21,8 +22,7 @@ import java.util.List;
  */
 public class EffectUtil {
 
-    private static final byte LIGHTNING_BOLT_ENTITY_TYPE_ID = 1;
-    private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    private static final int LIGHTNING_BOLT_ENTITY_TYPE_ID = 1;
     private static final EffectUtil instance = new EffectUtil();
 
     public static void playSound(Location location, Sound sound, float volume, float pitch) {
@@ -49,12 +49,12 @@ public class EffectUtil {
 
     public static void fakeExplosion(Location location) {
 
-        ParticleEffect.sendToLocation(ParticleEffect.HUGE_EXPLOSION, location, 0.0F, 0.0F, 0.0F, 1.0F, 1);
+        ParticleEffect.sendToLocation(EnumWrappers.Particle.EXPLOSION_HUGE, location, 0.0F, 0.0F, 0.0F, 1);
     }
 
     public static void fakeWolfHearts(Location location) {
 
-        ParticleEffect.sendToLocation(ParticleEffect.HEART, location.add(0, 1, 0), 0.5F, 0F, 0.5F, 0.1F, 3);
+        ParticleEffect.sendToLocation(EnumWrappers.Particle.HEART, location.add(0, 1, 0), 0.5F, 0F, 0.5F, 3);
     }
 
     public static void playFirework(World world, Location location, FireworkEffect effect) {
@@ -95,22 +95,15 @@ public class EffectUtil {
 
     public static void strikeLightning(Location location, int radius) {
 
-        // TODO: FIX
-        /*Packet47SpawnGlobalEntity lightning = new Packet47SpawnGlobalEntity();
-        lightning.setX(location.getX());
-        lightning.setY(location.getY());
-        lightning.setZ(location.getZ());
-        lightning.setType(LIGHTNING_BOLT_ENTITY_TYPE_ID);
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (LocationUtil.isWithinRadius(player.getLocation(), location, radius)) {
-                try {
-                    ProtocolLibrary.getProtocolManager().sendServerPacket(player, lightning.getHandle());
-                    player.playSound(location, Sound.AMBIENCE_THUNDER, 10, 1);
-                } catch (InvocationTargetException e) {
-                    RaidCraft.LOGGER.warning(e.getMessage());
-                }
-            }
-        }*/
+        WrapperPlayServerSpawnEntityWeather wrapper = new WrapperPlayServerSpawnEntityWeather();
+        wrapper.setType(LIGHTNING_BOLT_ENTITY_TYPE_ID);
+        wrapper.setX(location.getBlockX());
+        wrapper.setY(location.getBlockY());
+        wrapper.setZ(location.getBlockZ());
+        Bukkit.getOnlinePlayers().stream().filter(player -> LocationUtil.isWithinRadius(player.getLocation(), location, radius)).forEach(player -> {
+            wrapper.sendPacket(player);
+            player.playSound(location, Sound.AMBIENCE_THUNDER, 10, 1);
+        });
     }
 
     /*
