@@ -33,22 +33,12 @@ public class Language {
     public static Language getLanguage(Player player) {
 
         try {
-            Object ep = getMethod("getHandle", player.getClass()).invoke(player, (Object[]) null);
-            Field f = ep.getClass().getDeclaredField("locale");
-            f.setAccessible(true);
-            return fromString((String) f.get(ep));
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchFieldException e) {
+            Object craftBukkitHandle = player.getClass().getDeclaredMethod("getHandle").invoke(player);
+            Field locale = craftBukkitHandle.getClass().getDeclaredField("locale");
+            locale.setAccessible(true);
+            return fromString((String) locale.get(craftBukkitHandle));
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException e) {
             return DEFAULT_LANGUAGE;
         }
-    }
-
-    private static Method getMethod(String name, Class<?> clazz) {
-
-        for (Method m : clazz.getDeclaredMethods()) {
-            if (m.getName().equals(name)) {
-                return m;
-            }
-        }
-        return null;
     }
 }
