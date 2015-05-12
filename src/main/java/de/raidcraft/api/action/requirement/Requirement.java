@@ -1,5 +1,6 @@
 package de.raidcraft.api.action.requirement;
 
+import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.ReflectionUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -11,6 +12,11 @@ import java.lang.reflect.Method;
  */
 @FunctionalInterface
 public interface Requirement<T> extends RequirementConfigGenerator {
+
+    public default String getIdentifier() {
+
+        return ActionAPI.getIdentifier(this);
+    }
 
     public default boolean test(T type) {
 

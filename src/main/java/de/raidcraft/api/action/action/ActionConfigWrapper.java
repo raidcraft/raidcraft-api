@@ -4,7 +4,6 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.requirement.RequirementException;
 import de.raidcraft.api.action.requirement.RequirementFactory;
-import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,9 +27,8 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         this.action = action;
         this.config = config;
         try {
-            String id = ConfigUtil.getFileName(config).replace("/", ".").toLowerCase();
             this.requirements = RaidCraft.getComponent(RequirementFactory.class)
-                    .createRequirements(id, config.getConfigurationSection("requirements"));
+                    .createRequirements(getIdentifier(), config.getConfigurationSection("requirements"));
         } catch (RequirementException e) {
             e.printStackTrace();
         }

@@ -3,12 +3,15 @@ package de.raidcraft.api.action;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.action.ActionException;
 import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.action.global.DoorAction;
 import de.raidcraft.api.action.action.global.SetBlockAction;
 import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.api.action.requirement.RequirementException;
 import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.trigger.Trigger;
+import de.raidcraft.api.action.trigger.TriggerFactory;
 import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.action.trigger.global.PlayerTrigger;
 import de.raidcraft.api.config.builder.ConfigBuilder;
@@ -34,6 +37,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -368,6 +373,31 @@ public final class ActionAPI {
             return ((Trigger) object).getIdentifier();
         }
         return "undefined";
+    }
+
+    public List<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) throws RequirementException {
+
+        return RequirementFactory.getInstance().createRequirements(id, requirements);
+    }
+
+    public <T> List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) throws RequirementException {
+
+        return RequirementFactory.getInstance().createRequirements(id, requirements, type);
+    }
+
+    public Collection<Action<?>> createActions(ConfigurationSection actions) throws ActionException {
+
+        return ActionFactory.getInstance().createActions(actions);
+    }
+
+    public <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) throws ActionException {
+
+        return ActionFactory.getInstance().createActions(actions, type);
+    }
+
+    public Collection<TriggerFactory> createTrigger(ConfigurationSection trigger) {
+
+        return TriggerManager.getInstance().createTriggerFactories(trigger);
     }
 
     public static ActionAPI register(BasePlugin plugin) {
