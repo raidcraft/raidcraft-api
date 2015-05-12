@@ -1,6 +1,7 @@
 package de.raidcraft.api.ambient;
 
-import de.slikey.effectlib.EffectLib;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.slikey.effectlib.EffectManager;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -9,7 +10,6 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public final class AmbientManager {
 
-    private static EffectLib effectLib;
     private static EffectManager effectManager;
 
     public static AmbientEffect getEffect(ConfigurationSection config) throws UnknownAmbientEffect {
@@ -35,9 +35,7 @@ public final class AmbientManager {
     public static EffectManager getEffectManager() {
 
         if (effectManager == null) {
-            effectLib = new EffectLib();
-            effectLib.onEnable();
-            effectManager = new EffectManager(effectLib);
+            effectManager = new EffectManager(RaidCraft.getComponent(RaidCraftPlugin.class));
         }
         return effectManager;
     }
