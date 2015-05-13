@@ -8,13 +8,14 @@ import java.util.stream.Collectors;
 /**
  * @author mdoering
  */
-public interface RequirementHolder<T> {
+public interface RequirementHolder {
 
     public Collection<Requirement<?>> getRequirements();
 
-    public default boolean isMeetingAllRequirements(T entity) {
+    public default <T> boolean isMeetingAllRequirements(T entity) {
 
-        return getRequirements(entity.getClass()).stream()
+        Collection<Requirement<T>> requirements = getRequirements(entity.getClass());
+        return requirements.stream()
                 .allMatch(requirement -> requirement.test(entity));
     }
 
@@ -26,7 +27,7 @@ public interface RequirementHolder<T> {
      * @return filtered list
      */
     @SuppressWarnings("unchecked")
-    public default Collection<Requirement<T>> getRequirements(Class<?> entityClazz) {
+    public default <T> Collection<Requirement<T>> getRequirements(Class<?> entityClazz) {
 
         return getRequirements().parallelStream()
                 .filter(requirement -> requirement.matchesType(entityClazz))
@@ -41,9 +42,10 @@ public interface RequirementHolder<T> {
      *
      * @return filtered list
      */
-    public default Collection<Requirement<T>> getRequirements(Class<?> entityClazz, Predicate<? super Requirement<T>> filter) {
+    public default <T> Collection<Requirement<T>> getRequirements(Class<T> entityClazz, Predicate<? super Requirement<T>> filter) {
 
-        return getRequirements(entityClazz).stream()
+        Collection<Requirement<T>> requirements = getRequirements(entityClazz);
+        return requirements.stream()
                 .filter(filter)
                 .collect(Collectors.toList());
     }

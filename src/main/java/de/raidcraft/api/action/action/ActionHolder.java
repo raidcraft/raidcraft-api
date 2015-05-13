@@ -1,5 +1,7 @@
 package de.raidcraft.api.action.action;
 
+import de.raidcraft.api.action.requirement.Requirement;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -8,36 +10,37 @@ import java.util.stream.Collectors;
 /**
  * @author mdoering
  */
-public interface ActionHolder<T> {
+public interface ActionHolder {
 
     public Collection<Action<?>> getActions();
 
     /**
-     * Gets all requirements and filters them to be applicable by the provided entity type.
+     * Gets all actions and filters them to be applicable by the provided entity type.
      *
      * @param entityClazz to filter for
      *
      * @return filtered list
      */
     @SuppressWarnings("unchecked")
-    public default Collection<Action<T>> getActions(Class<?> entityClazz) {
+    public default <T> Collection<Requirement<T>> getActions(Class<?> entityClazz) {
 
         return getActions().parallelStream()
-                .filter(action -> action.matchesType(entityClazz))
-                .map(action -> (Action<T>) action)
+                .filter(requirement -> requirement.matchesType(entityClazz))
+                .map(requirement -> (Requirement<T>) requirement)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
-     * Gets all requirements and applies the given filter to them before returning.
+     * Gets all actions and applies the given filter to them before returning.
      *
      * @param filter to apply
      *
      * @return filtered list
      */
-    public default Collection<Action<T>> getActions(Class<?> entityClazz, Predicate<? super Action<T>> filter) {
+    public default <T> Collection<Requirement<T>> getActions(Class<T> entityClazz, Predicate<? super Requirement<T>> filter) {
 
-        return getActions(entityClazz).stream()
+        Collection<Requirement<T>> requirements = getActions(entityClazz);
+        return requirements.stream()
                 .filter(filter)
                 .collect(Collectors.toList());
     }

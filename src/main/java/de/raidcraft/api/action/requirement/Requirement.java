@@ -1,17 +1,15 @@
 package de.raidcraft.api.action.requirement;
 
 import de.raidcraft.api.action.ActionAPI;
-import de.raidcraft.api.action.ReflectionUtil;
+import de.raidcraft.api.action.GenericType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-
-import java.lang.reflect.Method;
 
 /**
  * @author mdoering
  */
 @FunctionalInterface
-public interface Requirement<T> extends RequirementConfigGenerator {
+public interface Requirement<T> extends GenericType<T>, RequirementConfigGenerator {
 
     public default String getIdentifier() {
 
@@ -24,16 +22,6 @@ public interface Requirement<T> extends RequirementConfigGenerator {
     }
 
     public boolean test(T type, ConfigurationSection config);
-
-    public default boolean matchesType(Class<?> entity) {
-
-        for (Method method : getClass().getDeclaredMethods()) {
-            if (method.getName().equals("test")) {
-                return ReflectionUtil.isMatchingGenericMethodType(method, entity);
-            }
-        }
-        return false;
-    }
 
     public default boolean isChecked(T entity) {
 

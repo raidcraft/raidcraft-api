@@ -47,11 +47,11 @@ class TriggerListenerConfigWrapper<T> {
         this.actionDelay = TimeUtil.secondsToTicks(config.getDouble("action-delay", 0));
         try {
             this.actions = RaidCraft.getComponent(ActionFactory.class)
-                    .createActions(config.getConfigurationSection("actions"), getTriggerListener().getTriggerEntityType());
+                    .createActions(config.getConfigurationSection("actions"), getTriggerListener().getType().get());
             this.requirements = RaidCraft.getComponent(RequirementFactory.class)
                     .createRequirements(triggerListener.getListenerId(),
                             config.getConfigurationSection("requirements"),
-                            getTriggerListener().getTriggerEntityType());
+                            getTriggerListener().getType().get());
             if (isExecuteOnce()) {
                 // lets add our execute once requirement last
                 // this requirement will return false after is has been checked once
@@ -67,7 +67,7 @@ class TriggerListenerConfigWrapper<T> {
 
         ConfigurationSection args = config.getConfigurationSection("args");
         if (args == null) args = config.createSection("args");
-        return triggerListener.getTriggerEntityType().isInstance(triggeringEntity)
+        return triggerListener.matchesType(triggeringEntity.getClass())
                 && predicate.test(args)
                 && requirements.stream().allMatch(requirement -> requirement.test(triggeringEntity));
     }

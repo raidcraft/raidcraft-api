@@ -1,16 +1,21 @@
 package de.raidcraft.api.action.trigger;
 
+import de.raidcraft.api.action.GenericType;
+
 /**
  * @author Silthus
  */
-public interface TriggerListener<T> {
+public interface TriggerListener<T> extends GenericType<T> {
 
     public default String getListenerId() {
 
         return "GLOBAL";
     }
 
-    public Class<T> getTriggerEntityType();
+    public default Class<T> getTriggerEntityType() {
+
+        return getType().get();
+    }
 
     /**
      * Passes the entity to process the trigger. Should return true if processing was
