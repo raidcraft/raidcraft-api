@@ -110,8 +110,29 @@ public class ReflectionUtil {
      * @see {@link ParameterizedType#getActualTypeArguments()}
      */
     public static Type[] getParameterizedTypes(Object object) {
-        Type superclassType = object.getClass().getGenericSuperclass();
+
+        return getParameterizedTypes(object.getClass());
+    }
+
+    /**
+     * Returns an array of {@code Type} objects representing the actual type
+     * arguments to this object.
+     * If the returned value is null, then this object represents a non-parameterized
+     * object.
+     *
+     * @param aClass the {@code class} whose type arguments are needed.
+     * @return an array of {@code Type} objects representing the actual type
+     * 		arguments to this object.
+     *
+     * @see {@link Class#getGenericSuperclass()}
+     * @see {@link ParameterizedType#getActualTypeArguments()}
+     */
+    public static Type[] getParameterizedTypes(Class<?> aClass) {
+        Type superclassType = aClass.getGenericSuperclass();
         if (!ParameterizedType.class.isAssignableFrom(superclassType.getClass())) {
+            if (aClass != Object.class) {
+                return getParameterizedTypes(aClass.getSuperclass());
+            }
             return null;
         }
 
