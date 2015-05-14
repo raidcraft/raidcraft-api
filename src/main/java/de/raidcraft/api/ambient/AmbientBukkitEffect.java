@@ -29,7 +29,7 @@ public class AmbientBukkitEffect extends AbstractAmbientEffect {
     protected void runEffect(Location... locations) {
 
         for (Location location : locations) {
-            location.getWorld().spigot().playEffect(location, effectType, 1, data, 0, 0, 0, speed, particleCount, radius);
+            location.getWorld().playEffect(location, effectType, data, radius);
         }
     }
 
