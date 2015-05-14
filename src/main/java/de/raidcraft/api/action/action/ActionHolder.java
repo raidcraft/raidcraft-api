@@ -22,12 +22,12 @@ public interface ActionHolder {
      * @return filtered list
      */
     @SuppressWarnings("unchecked")
-    public default <T> Collection<Requirement<T>> getActions(Class<?> entityClazz) {
+    public default <T> Collection<Action<T>> getActions(Class<?> entityClazz) {
 
         return getActions().parallelStream()
                 .filter(requirement -> requirement.matchesType(entityClazz))
-                .map(requirement -> (Requirement<T>) requirement)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .map(requirement -> (Action<T>) requirement)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -37,9 +37,9 @@ public interface ActionHolder {
      *
      * @return filtered list
      */
-    public default <T> Collection<Requirement<T>> getActions(Class<T> entityClazz, Predicate<? super Requirement<T>> filter) {
+    public default <T> Collection<Action<T>> getActions(Class<T> entityClazz, Predicate<? super Action<T>> filter) {
 
-        Collection<Requirement<T>> requirements = getActions(entityClazz);
+        Collection<Action<T>> requirements = getActions(entityClazz);
         return requirements.stream()
                 .filter(filter)
                 .collect(Collectors.toList());
