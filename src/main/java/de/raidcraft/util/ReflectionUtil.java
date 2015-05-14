@@ -129,8 +129,8 @@ public class ReflectionUtil {
      */
     public static Type[] getParameterizedTypes(Class<?> aClass) {
         Type superclassType = aClass.getGenericSuperclass();
-        if (!ParameterizedType.class.isAssignableFrom(superclassType.getClass())) {
-            if (aClass != Object.class) {
+        if (superclassType == null || !ParameterizedType.class.isAssignableFrom(superclassType.getClass())) {
+            if (aClass.getSuperclass() != null && aClass != Object.class) {
                 return getParameterizedTypes(aClass.getSuperclass());
             }
             return null;
