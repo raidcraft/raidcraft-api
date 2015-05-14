@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -58,18 +58,18 @@ public abstract class Trigger implements TriggerConfigGenerator {
 
         String identifier = getIdentifier() + "." + action;
         if (registeredListeners.containsKey(identifier)) {
-            Stream<TriggerListenerConfigWrapper<T>> stream = new ArrayList<>(registeredListeners.get(identifier)).stream()
+            List<TriggerListenerConfigWrapper<T>> list = new ArrayList<>(registeredListeners.get(identifier)).stream()
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
-                    // first lets check all predicates and if we can execute at all
-                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate));
-            stream.filter(wrapper -> wrapper.getTriggerDelay() > 0)
+                            // first lets check all predicates and if we can execute at all
+                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate)).collect(Collectors.toList());
+            list.stream().filter(wrapper -> wrapper.getTriggerDelay() > 0)
                     .forEach(wrapper -> Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> {
                         if (wrapper.getTriggerListener().processTrigger(triggeringEntity)) {
                             wrapper.executeActions(triggeringEntity);
                         }
                     }, wrapper.getTriggerDelay()));
-            stream.filter(wrapper -> wrapper.getTriggerDelay() <= 0)
+            list.stream().filter(wrapper -> wrapper.getTriggerDelay() <= 0)
                     // then lets process the trigger
                     .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity))
                     // if we get true back we are ready for action processing
