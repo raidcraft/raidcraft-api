@@ -30,7 +30,9 @@ public class ReflectionUtil {
     /*
      *  Utility class with static access methods, no need for constructor.
      */
-    private ReflectionUtil() {}
+    private ReflectionUtil() {
+
+    }
 
     /**
      * {@link Type#toString()} value is the fully qualified class name prefixed
@@ -38,12 +40,14 @@ public class ReflectionUtil {
      * for {@link Class#forName(String)}.
      *
      * @param type the {@code Type} value whose class name is needed.
+     *
      * @return {@code String} class name of the invoked {@code type}.
      *
      * @see {@link ReflectionUtil#getClass()}
      */
     public static String getClassName(Type type) {
-        if (type==null) {
+
+        if (type == null) {
             return "";
         }
         String className = type.toString();
@@ -60,16 +64,17 @@ public class ReflectionUtil {
      * depending on its fully qualified name.
      *
      * @param type the {@code Type} whose {@code Class} is needed.
+     *
      * @return the {@code Class} object for the class with the specified name.
      *
      * @throws ClassNotFoundException if the class cannot be located.
-     *
      * @see {@link ReflectionUtil#getClassName(Type)}
      */
     public static Class<?> getClass(Type type)
             throws ClassNotFoundException {
+
         String className = getClassName(type);
-        if (className==null || className.isEmpty()) {
+        if (className == null || className.isEmpty()) {
             return null;
         }
         return Class.forName(className);
@@ -79,24 +84,25 @@ public class ReflectionUtil {
      * Creates a new instance of the class represented by this {@code Type} object.
      *
      * @param type the {@code Type} object whose its representing {@code Class} object
-     * 		will be instantiated.
+     *             will be instantiated.
+     *
      * @return a newly allocated instance of the class represented by
-     * 		the invoked {@code Type} object.
+     * the invoked {@code Type} object.
      *
      * @throws ClassNotFoundException if the class represented by this {@code Type} object
-     * 			cannot be located.
+     *                                cannot be located.
      * @throws InstantiationException if this {@code Type} represents an abstract class,
-     *             an interface, an array class, a primitive type, or void;
-     *             or if the class has no nullary constructor;
-     *             or if the instantiation fails for some other reason.
+     *                                an interface, an array class, a primitive type, or void;
+     *                                or if the class has no nullary constructor;
+     *                                or if the instantiation fails for some other reason.
      * @throws IllegalAccessException if the class or its nullary constructor is not accessible.
-     *
      * @see {@link Class#newInstance()}
      */
     public static Object newInstance(Type type)
             throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+
         Class<?> clazz = getClass(type);
-        if (clazz==null) {
+        if (clazz == null) {
             return null;
         }
         return clazz.newInstance();
@@ -109,8 +115,9 @@ public class ReflectionUtil {
      * object.
      *
      * @param object the {@code object} whose type arguments are needed.
+     *
      * @return an array of {@code Type} objects representing the actual type
-     * 		arguments to this object.
+     * arguments to this object.
      *
      * @see {@link Class#getGenericSuperclass()}
      * @see {@link ParameterizedType#getActualTypeArguments()}
@@ -122,7 +129,7 @@ public class ReflectionUtil {
             return null;
         }
 
-        return ((ParameterizedType)superclassType).getActualTypeArguments();
+        return ((ParameterizedType) superclassType).getActualTypeArguments();
     }
 
     /**
@@ -130,25 +137,27 @@ public class ReflectionUtil {
      * by the invoked {@code Class} object or not.
      *
      * @param clazz the {@code Class} object whose constructors are checked.
+     *
      * @return {@code true} if a {@code Constructor} object with no parameter types is specified.
+     *
      * @throws SecurityException If a security manager, <i>s</i> is present and any of the
-     *         following conditions is met:
-     *			<ul>
-     *             <li> invocation of
-     *             {@link SecurityManager#checkMemberAccess
-     *             s.checkMemberAccess(this, Member.PUBLIC)} denies
-     *             access to the constructor
-     *
-     *             <li> the caller's class loader is not the same as or an
-     *             ancestor of the class loader for the current class and
-     *             invocation of {@link SecurityManager#checkPackageAccess
-     *             s.checkPackageAccess()} denies access to the package
-     *             of this class
-     *         </ul>
-     *
+     *                           following conditions is met:
+     *                           <ul>
+     *                           <li> invocation of
+     *                           {@link SecurityManager#checkMemberAccess
+     *                           s.checkMemberAccess(this, Member.PUBLIC)} denies
+     *                           access to the constructor
+     *                           <p/>
+     *                           <li> the caller's class loader is not the same as or an
+     *                           ancestor of the class loader for the current class and
+     *                           invocation of {@link SecurityManager#checkPackageAccess
+     *                           s.checkPackageAccess()} denies access to the package
+     *                           of this class
+     *                           </ul>
      * @see {@link Class#getConstructor(Class...)}
      */
     public static boolean hasDefaultConstructor(Class<?> clazz) throws SecurityException {
+
         Class<?>[] empty = {};
         try {
             clazz.getConstructor(empty);
@@ -164,16 +173,18 @@ public class ReflectionUtil {
      * the invoked {@code Class<?> clazz} parameter.
      *
      * @param clazz the {@code Class} object whose declared fields to be
-     * 		checked for a certain field.
-     * @param name the field name as {@code String} to be
-     * 		compared with {@link Field#getName()}
+     *              checked for a certain field.
+     * @param name  the field name as {@code String} to be
+     *              compared with {@link Field#getName()}
+     *
      * @return the {@code Class} object representing the type of given field name.
      *
      * @see {@link Class#getDeclaredFields()}
      * @see {@link Field#getType()}
      */
     public static Class<?> getFieldClass(Class<?> clazz, String name) {
-        if (clazz==null || name==null || name.isEmpty()) {
+
+        if (clazz == null || name == null || name.isEmpty()) {
             return null;
         }
 
@@ -196,16 +207,18 @@ public class ReflectionUtil {
      * {@code String name} parameter inside the invoked {@code Class<?> clazz} parameter.
      *
      * @param clazz the {@code Class} object whose declared methods to be
-     * 		checked for the wanted method name.
-     * @param name the method name as {@code String} to be
-     * 		compared with {@link Method#getName()}
+     *              checked for the wanted method name.
+     * @param name  the method name as {@code String} to be
+     *              compared with {@link Method#getName()}
+     *
      * @return the {@code Class} object representing the return type of the given method name.
      *
      * @see {@link Class#getDeclaredMethods()}
      * @see {@link Method#getReturnType()}
      */
     public static Class<?> getMethodReturnType(Class<?> clazz, String name) {
-        if (clazz==null || name==null || name.isEmpty()) {
+
+        if (clazz == null || name == null || name.isEmpty()) {
             return null;
         }
 
@@ -228,26 +241,28 @@ public class ReflectionUtil {
      * to declare an enum constant in the given class.
      *
      * @param clazz the {@code Class} object of the enum type from which
-     * 		to return a constant.
-     * @param name the name of the constant to return.
+     *              to return a constant.
+     * @param name  the name of the constant to return.
+     *
      * @return the enum constant of the specified enum type with the
-     *      specified name.
+     * specified name.
      *
      * @throws IllegalArgumentException if the specified enum type has
-     *         no constant with the specified name, or the specified
-     *         class object does not represent an enum type.
-     *
+     *                                  no constant with the specified name, or the specified
+     *                                  class object does not represent an enum type.
      * @see {@link Enum#valueOf(Class, String)}
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static Object getEnumConstant(Class<?> clazz, String name) {
-        if (clazz==null || name==null || name.isEmpty()) {
+
+        if (clazz == null || name == null || name.isEmpty()) {
             return null;
         }
-        return Enum.valueOf((Class<Enum>)clazz, name);
+        return Enum.valueOf((Class<Enum>) clazz, name);
     }
 
     private static void extractTypeArguments(Map<Type, Type> typeMap, Class<?> clazz) {
+
         Type genericSuperclass = clazz.getGenericSuperclass();
         if (!(genericSuperclass instanceof ParameterizedType)) {
             return;
@@ -257,7 +272,7 @@ public class ReflectionUtil {
         Type[] typeParameter = ((Class<?>) parameterizedType.getRawType()).getTypeParameters();
         Type[] actualTypeArgument = parameterizedType.getActualTypeArguments();
         for (int i = 0; i < typeParameter.length; i++) {
-            if(typeMap.containsKey(actualTypeArgument[i])) {
+            if (typeMap.containsKey(actualTypeArgument[i])) {
                 actualTypeArgument[i] = typeMap.get(actualTypeArgument[i]);
             }
             typeMap.put(typeParameter[i], actualTypeArgument[i]);
@@ -265,6 +280,7 @@ public class ReflectionUtil {
     }
 
     public static Class<?> findSubClassParameterType(Object instance, Class<?> classOfInterest, int parameterIndex) {
+
         Map<Type, Type> typeMap = new HashMap<Type, Type>();
         Class<?> instanceClass = instance.getClass();
         while (classOfInterest != instanceClass.getSuperclass()) {
@@ -289,6 +305,7 @@ public class ReflectionUtil {
     }
 
     private static Class<?> browseNestedTypes(Object instance, TypeVariable<?> actualType) {
+
         Class<?> instanceClass = instance.getClass();
         List<Class<?>> nestedOuterTypes = new LinkedList<Class<?>>();
         for (
@@ -322,6 +339,7 @@ public class ReflectionUtil {
     }
 
     private static boolean isInnerClass(GenericDeclaration outerDeclaration, GenericDeclaration innerDeclaration) {
+
         if (!(outerDeclaration instanceof Class) || !(innerDeclaration instanceof Class)) {
             throw new IllegalArgumentException();
         }
