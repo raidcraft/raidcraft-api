@@ -18,13 +18,13 @@ public interface GenericType<T> {
             } catch (ClassNotFoundException ignored) {
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     public default boolean matchesType(Class<?> entity) {
 
         Optional<Class<T>> type = getType();
-        return type.isPresent() && type.get().isAssignableFrom(entity);
+        return entity != null && type.isPresent() && type.get().isAssignableFrom(entity);
     }
 
     public default boolean matchesType(Object object) {
