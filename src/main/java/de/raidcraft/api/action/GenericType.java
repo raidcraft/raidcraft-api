@@ -1,6 +1,7 @@
 package de.raidcraft.api.action;
 
-import java.lang.reflect.Type;
+import de.raidcraft.util.ReflectionUtil;
+
 import java.util.Optional;
 
 /**
@@ -11,14 +12,8 @@ public interface GenericType<T> {
     @SuppressWarnings("unchecked")
     public default Optional<Class<T>> getType() {
 
-        Type[] types = de.raidcraft.util.ReflectionUtil.getParameterizedTypes(this);
-        if (types != null && types.length > 0) {
-            try {
-                return Optional.ofNullable((Class<T>) de.raidcraft.util.ReflectionUtil.getClass(types[0]));
-            } catch (ClassNotFoundException ignored) {
-            }
-        }
-        return Optional.empty();
+        Class<T> type = (Class<T>) ReflectionUtil.findSubClassParameterType(this, GenericType.class, 0);
+        return Optional.ofNullable(type);
     }
 
     public default boolean matchesType(Class<?> entity) {
