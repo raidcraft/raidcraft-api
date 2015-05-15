@@ -7,9 +7,9 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public interface Config extends ConfigurationSection {
 
-    public void reload();
+    void reload();
 
-    public void load();
+    void load();
 
-    public void save();
+    void save();
 }

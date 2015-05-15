@@ -8,9 +8,9 @@ import org.bukkit.configuration.MemoryConfiguration;
  */
 public interface RevertableAction<T> extends Action<T> {
 
-    public void revert(T type, ConfigurationSection config);
+    void revert(T type, ConfigurationSection config);
 
-    public default void revert(T type) {
+    default void revert(T type) {
 
         accept(type, new MemoryConfiguration());
     }

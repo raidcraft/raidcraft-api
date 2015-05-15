@@ -3,12 +3,10 @@ package de.raidcraft.api.action.trigger;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.GlobalRequirement;
+import de.raidcraft.api.action.RequirementFactory;
 import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.action.action.ActionException;
-import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.requirement.Requirement;
-import de.raidcraft.api.action.requirement.RequirementException;
-import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.util.TimeUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +18,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -45,21 +44,13 @@ class TriggerListenerConfigWrapper<T> {
         this.executeOnce = config.getBoolean("execute-once", false);
         this.triggerDelay = TimeUtil.secondsToTicks(config.getDouble("delay", 0));
         this.actionDelay = TimeUtil.secondsToTicks(config.getDouble("action-delay", 0));
-        try {
-            this.actions = RaidCraft.getComponent(ActionFactory.class)
-                    .createActions(config.getConfigurationSection("actions"), getTriggerListener().getType().get());
-            this.requirements = RaidCraft.getComponent(RequirementFactory.class)
-                    .createRequirements(triggerListener.getListenerId(),
-                            config.getConfigurationSection("requirements"),
-                            getTriggerListener().getType().get());
-            if (isExecuteOnce()) {
-                // lets add our execute once requirement last
-                // this requirement will return false after is has been checked once
-                this.requirements.add(createExecuteOnceRequirement());
-            }
-        } catch (ActionException | RequirementException e) {
-            RaidCraft.LOGGER.warning(e.getMessage());
-            e.printStackTrace();
+        this.actions = ActionAPI.createActions(config.getConfigurationSection("actions"), triggerListener.getTriggerEntityType());
+        this.requirements = ActionAPI.createRequirements(triggerListener.getListenerId(), config.getConfigurationSection("requirements"), triggerListener.getTriggerEntityType());
+        if (isExecuteOnce()) {
+            // lets add our execute once requirement last
+            // this requirement will return false after is has been checked once
+            Optional<Requirement<T>> optional = createExecuteOnceRequirement();
+            if (optional.isPresent()) this.requirements.add(optional.get());
         }
     }
 
@@ -67,7 +58,7 @@ class TriggerListenerConfigWrapper<T> {
 
         ConfigurationSection args = config.getConfigurationSection("args");
         if (args == null) args = config.createSection("args");
-        return triggerListener.matchesType(triggeringEntity.getClass())
+        return triggerListener.getTriggerEntityType().isAssignableFrom(triggeringEntity.getClass())
                 && predicate.test(args)
                 && requirements.stream().allMatch(requirement -> requirement.test(triggeringEntity));
     }
@@ -93,19 +84,17 @@ class TriggerListenerConfigWrapper<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private Requirement<T> createExecuteOnceRequirement() {
+    private Optional<Requirement<T>> createExecuteOnceRequirement() {
 
-        try {
-            MemoryConfiguration configuration = new MemoryConfiguration();
-            configuration.set("persistant", true);
-            return  (Requirement<T>) RaidCraft.getComponent(RequirementFactory.class).create(
-                    triggerListener.getListenerId() + "." + ActionAPI.GlobalRequirements.EXECUTE_ONCE_TRIGGER.getId(),
-                    ActionAPI.GlobalRequirements.EXECUTE_ONCE_TRIGGER.getId(),
+        MemoryConfiguration configuration = new MemoryConfiguration();
+        configuration.set("persistant", true);
+        Optional<RequirementFactory<T>> factory = ActionAPI.getRequirementFactory(getTriggerListener().getTriggerEntityType());
+        if (factory.isPresent()) {
+            return factory.get().create(
+                    triggerListener.getListenerId() + "." + GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
+                    GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
                     configuration);
-        } catch (RequirementException e) {
-            e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 }

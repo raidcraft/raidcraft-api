@@ -8,26 +8,26 @@ import java.util.List;
 @Deprecated
 public interface RequirementResolver<T> {
 
-    public T getObject();
+    T getObject();
 
     /**
      * Gets a list of all attached requirements.
      *
      * @return attached requirements
      */
-    public List<Requirement<T>> getRequirements();
+    List<Requirement<T>> getRequirements();
 
     /**
      * Checks if the resolver is meeting all attached requirements.
      *
      * @return true if all requirements are met
      */
-    public boolean isMeetingAllRequirements(T object);
+    boolean isMeetingAllRequirements(T object);
 
     /**
      * Gets a reason why this resolver cannot be unlocked.
      *
      * @return reason why unlock is not possible
      */
-    public String getResolveReason(T object);
+    String getResolveReason(T object);
 }

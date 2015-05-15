@@ -8,15 +8,15 @@ import org.bukkit.entity.Player;
  */
 public interface ConversationHost {
 
-    public String getName();
+    String getName();
 
-    public Location getLocation();
+    Location getLocation();
 
-    public String getUniqueId();
+    String getUniqueId();
 
-    public String getDefaultConversationName();
+    String getDefaultConversationName();
 
-    public void setConversation(Player player, String conversation);
+    void setConversation(Player player, String conversation);
 
-    public String getConversation(Player player);
+    String getConversation(Player player);
 }

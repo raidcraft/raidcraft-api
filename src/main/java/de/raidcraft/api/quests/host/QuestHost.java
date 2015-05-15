@@ -8,19 +8,19 @@ import org.bukkit.entity.Player;
  */
 public interface QuestHost extends ConversationHost {
 
-    public String getId();
+    String getId();
 
-    public String getName();
+    String getName();
 
-    public String getType();
+    String getType();
 
-    public String getBasePath();
+    String getBasePath();
 
-    public String getFriendlyName();
+    String getFriendlyName();
 
-    public void interact(Player player);
+    void interact(Player player);
 
-    public boolean spawn();
+    boolean spawn();
 
-    public void despawn();
+    void despawn();
 }

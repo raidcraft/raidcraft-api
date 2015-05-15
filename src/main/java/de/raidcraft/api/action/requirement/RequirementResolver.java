@@ -9,15 +9,15 @@ import java.util.List;
  */
 public interface RequirementResolver<T> {
 
-    public List<Requirement<T>> getRequirements();
+    List<Requirement<T>> getRequirements();
 
-    public default boolean isMeetingAllRequirements(T object) {
+    default boolean isMeetingAllRequirements(T object) {
 
         return getRequirements().stream().allMatch(requirement -> requirement.test(object));
     }
 
     @SuppressWarnings("unchecked")
-    public default String getResolveReason(T object) {
+    default String getResolveReason(T object) {
 
         for (Requirement<T> requirement : getRequirements()) {
             if (!requirement.test(object)) {

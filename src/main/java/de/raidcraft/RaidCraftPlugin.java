@@ -6,12 +6,13 @@ import com.sk89q.minecraft.util.commands.NestedCommand;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
+import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.ActionCommand;
-import de.raidcraft.api.action.action.ActionFactory;
-import de.raidcraft.api.action.requirement.RequirementFactory;
+import de.raidcraft.api.action.GlobalAction;
+import de.raidcraft.api.action.GlobalRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
-import de.raidcraft.api.action.trigger.TriggerManager;
+import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
 import de.raidcraft.api.ambient.AmbientManager;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
@@ -104,9 +105,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
         // inizialize action API
-        RequirementFactory.getInstance();
-        ActionFactory.getInstance();
-        TriggerManager.getInstance();
+        registerActionAPI();
 
         // register random objects
         RDS.registerObject(new ItemLootObject.ItemLootFactory());
@@ -143,6 +142,18 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Heartbeat(getLogger(), config.heartbeatTicks),
                     -1, config.heartbeatTicks);
         }
+    }
+
+    private void registerActionAPI() {
+
+        ActionAPI actionAPI = ActionAPI.register(this).global();
+        for (GlobalAction action : GlobalAction.values()) {
+            actionAPI.action(action.getId(), action.getAction());
+        }
+        for (GlobalRequirement requirement : GlobalRequirement.values()) {
+            actionAPI.requirement(requirement.getId(), requirement.getRequirement());
+        }
+        actionAPI.trigger(new GlobalPlayerTrigger());
     }
 
     private void setupDatabase() {

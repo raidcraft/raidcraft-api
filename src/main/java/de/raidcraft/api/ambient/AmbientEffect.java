@@ -8,7 +8,7 @@ import org.bukkit.Location;
  */
 public interface AmbientEffect {
 
-    public enum Type {
+    enum Type {
 
         PARTICLE,
         SOUND,
@@ -22,7 +22,7 @@ public interface AmbientEffect {
         }
     }
 
-    public enum Shape {
+    enum Shape {
 
         POINT,
         CIRCLE;
@@ -33,5 +33,5 @@ public interface AmbientEffect {
         }
     }
 
-    public void run(Location location);
+    void run(Location location);
 }

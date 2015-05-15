@@ -5,11 +5,11 @@ package de.raidcraft.api.config;
  */
 public interface KeyValueMap {
 
-    public String getDataKey();
+    String getDataKey();
 
-    public void setDataKey(String dataKey);
+    void setDataKey(String dataKey);
 
-    public String getDataValue();
+    String getDataValue();
 
-    public void setDataValue(String dataValue);
+    void setDataValue(String dataValue);
 }

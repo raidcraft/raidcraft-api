@@ -7,9 +7,9 @@ import java.util.Collection;
  */
 public interface AttributeHolder {
 
-    public Collection<ItemAttribute> getAttributes();
+    Collection<ItemAttribute> getAttributes();
 
-    public void addAttribute(ItemAttribute attribute);
+    void addAttribute(ItemAttribute attribute);
 
-    public ItemAttribute removeAttribute(AttributeType attribute);
+    ItemAttribute removeAttribute(AttributeType attribute);
 }

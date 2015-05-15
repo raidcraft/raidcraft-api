@@ -5,11 +5,11 @@ package de.raidcraft.api.items;
  */
 public interface CustomWeapon extends CustomEquipment {
 
-    public WeaponType getWeaponType();
+    WeaponType getWeaponType();
 
-    public double getSwingTime();
+    double getSwingTime();
 
-    public int getMinDamage();
+    int getMinDamage();
 
-    public int getMaxDamage();
+    int getMaxDamage();
 }

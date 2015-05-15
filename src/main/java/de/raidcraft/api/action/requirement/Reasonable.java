@@ -8,10 +8,10 @@ import org.bukkit.configuration.MemoryConfiguration;
  */
 public interface Reasonable<T> {
 
-    public default String getReason(T entity) {
+    default String getReason(T entity) {
 
         return getReason(entity, new MemoryConfiguration());
     }
 
-    public String getReason(T entity, ConfigurationSection config);
+    String getReason(T entity, ConfigurationSection config);
 }

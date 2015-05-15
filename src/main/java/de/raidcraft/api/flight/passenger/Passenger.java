@@ -8,30 +8,30 @@ import org.bukkit.entity.LivingEntity;
  */
 public interface Passenger<T extends LivingEntity> {
 
-    public String getName();
+    String getName();
 
-    public T getEntity();
+    T getEntity();
 
     /**
      * Assigns the passenger a flight.
      *
      * @param flight to set
      */
-    public void setFlight(Flight flight);
+    void setFlight(Flight flight);
 
     /**
      * Gets the active flight of the player. Can be null if player !isFlying().
      *
      * @return active flight or null if !isFlying()
      */
-    public Flight getFlight();
+    Flight getFlight();
 
     /**
      * Checks if the passenger has an active flight.
      *
      * @return false if flight is null
      */
-    public boolean hasFlight();
+    boolean hasFlight();
 
     /**
      * Checks if the player is currently on a flight.
@@ -39,12 +39,12 @@ public interface Passenger<T extends LivingEntity> {
      *
      * @return true if player is in an active flight
      */
-    public boolean isFlying();
+    boolean isFlying();
 
     /**
      * Sends a message to the passenger if it is an entity that can receive messages.
      *
      * @param message to send
      */
-    public void sendMessage(String message);
+    void sendMessage(String message);
 }

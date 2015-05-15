@@ -1,5 +1,7 @@
 package de.raidcraft.api.action.trigger;
 
+import de.raidcraft.api.action.TriggerFactory;
+
 import java.util.Collection;
 
 /**
@@ -7,5 +9,5 @@ import java.util.Collection;
  */
 public interface TriggerHolder {
 
-    public Collection<TriggerFactory> getTrigger();
+    Collection<TriggerFactory> getTrigger();
 }

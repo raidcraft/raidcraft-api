@@ -13,5 +13,5 @@ public interface Obtainable {
      *
      * @param player to add object to
      */
-    public void addTo(Player player);
+    void addTo(Player player);
 }

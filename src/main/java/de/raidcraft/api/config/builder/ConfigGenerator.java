@@ -12,7 +12,7 @@ public interface ConfigGenerator {
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Information {
+    @interface Information {
 
         String value();
 

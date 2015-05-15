@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 @Deprecated
 public interface Serializable {
 
-    public String serialize();
+    String serialize();
 
-    public ItemStack deserialize(String serializedData);
+    ItemStack deserialize(String serializedData);
 }

@@ -5,7 +5,7 @@ package de.raidcraft.api.items;
  */
 public interface CustomEquipment extends CustomItem, AttributeHolder {
 
-    public EquipmentSlot getEquipmentSlot();
+    EquipmentSlot getEquipmentSlot();
 
-    public int getMaxDurability();
+    int getMaxDurability();
 }

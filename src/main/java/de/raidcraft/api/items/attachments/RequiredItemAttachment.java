@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
  */
 public interface RequiredItemAttachment extends ItemAttachment {
 
-    public String getName();
+    String getName();
 
-    public boolean isRequirementMet(Player player);
+    boolean isRequirementMet(Player player);
 
-    public String getItemText();
+    String getItemText();
 
-    public String getErrorMessage();
+    String getErrorMessage();
 }

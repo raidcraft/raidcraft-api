@@ -14,35 +14,35 @@ public interface PersistentInventory {
      *
      * @return unique database ID
      */
-    public int getId();
+    int getId();
 
     /**
      * Gets the current title of the inventory.
      *
      * @return inventory title
      */
-    public String getTitle();
+    String getTitle();
 
     /**
      * Sets a new title for the inventory, closing and opening the inventory.
      *
      * @param title to set
      */
-    public void setTitle(String title);
+    void setTitle(String title);
 
     /**
      * Return the backpack inventory.
      *
      * @return backpack inventory
      */
-    public Inventory getInventory();
+    Inventory getInventory();
 
     /**
      * Sets the bukkit inventory reference.
      *
      * @param inventory to set
      */
-    public void setInventory(Inventory inventory);
+    void setInventory(Inventory inventory);
 
     /**
      * Opens the inventory for given player.
@@ -50,7 +50,7 @@ public interface PersistentInventory {
      *
      * @param player Inventory owner
      */
-    public void open(Player player);
+    void open(Player player);
 
     /**
      * Opens the inventory for given player.
@@ -60,14 +60,14 @@ public interface PersistentInventory {
      * @param player   Inventory owner
      * @param newTitle Inventory title
      */
-    public void open(Player player, String newTitle);
+    void open(Player player, String newTitle);
 
     /**
      * Closes the inventory of the player and saves it to the database.
      *
      * @param player to close inventory for
      */
-    public void close(Player player);
+    void close(Player player);
 
     /**
      * Closes the inventory of the given player.
@@ -75,12 +75,12 @@ public interface PersistentInventory {
      * @param player to close inventory for
      * @param save   true if inventory should be saved
      */
-    public void close(Player player, boolean save);
+    void close(Player player, boolean save);
 
     /**
      * Closes all open inventories saving them to the database.
      */
-    public void closeAll();
+    void closeAll();
 
     /**
      * Close if inventory is opened by a player.
@@ -88,7 +88,7 @@ public interface PersistentInventory {
      *
      * @param save true if changes should be saved
      */
-    public void closeAll(boolean save);
+    void closeAll(boolean save);
 
     /**
      * Creates a new bukkit inventory with the given title and size.
@@ -98,15 +98,15 @@ public interface PersistentInventory {
      *
      * @return created inventory
      */
-    public Inventory createNewInventory(String title, int size);
+    Inventory createNewInventory(String title, int size);
 
     /**
      * By calling this method the database entries of this inventory will be updated.
      */
-    public void save();
+    void save();
 
     /**
      * Removes inventory from database
      */
-    public void delete();
+    void delete();
 }

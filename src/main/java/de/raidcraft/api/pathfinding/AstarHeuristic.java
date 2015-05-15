@@ -31,6 +31,6 @@ public interface AstarHeuristic {
     /**
      * Estimate the cost between the node and the target.
      */
-    public double getCost(GraphNode node, GraphNode target);
+    double getCost(GraphNode node, GraphNode target);
 
 }

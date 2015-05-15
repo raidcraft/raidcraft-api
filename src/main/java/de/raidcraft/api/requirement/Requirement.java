@@ -6,15 +6,15 @@ package de.raidcraft.api.requirement;
 @Deprecated
 public interface Requirement<T> {
 
-    public String getName();
+    String getName();
 
-    public String getDescription();
+    String getDescription();
 
-    public RequirementResolver<T> getResolver();
+    RequirementResolver<T> getResolver();
 
-    public boolean isMet(T object);
+    boolean isMet(T object);
 
-    public String getShortReason();
+    String getShortReason();
 
-    public String getLongReason();
+    String getLongReason();
 }

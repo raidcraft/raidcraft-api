@@ -28,9 +28,9 @@ import java.util.Set;
 /**
  * @author Silthus
  */
-public class PlayerTrigger extends Trigger implements Listener {
+public class GlobalPlayerTrigger extends Trigger implements Listener {
 
-    public PlayerTrigger() {
+    public GlobalPlayerTrigger() {
 
         super("player", "interact", "block.break", "block.place", "move", "craft", "death", "join");
     }

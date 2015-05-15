@@ -7,5 +7,5 @@ import org.bukkit.entity.Player;
  */
 public interface ItemAttachmentProvider {
 
-    public ItemAttachment getItemAttachment(Player player, String attachmentName) throws ItemAttachmentException;
+    ItemAttachment getItemAttachment(Player player, String attachmentName) throws ItemAttachmentException;
 }

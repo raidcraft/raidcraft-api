@@ -14,7 +14,7 @@ public interface RDSObjectFactory {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
-    public @interface Name {
+    @interface Name {
 
         String value();
     }

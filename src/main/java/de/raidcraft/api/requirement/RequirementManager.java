@@ -2,6 +2,7 @@ package de.raidcraft.api.requirement;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.api.action.RequirementFactory;
 import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.StringUtils;
 import org.bukkit.Bukkit;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @deprecated see {@link de.raidcraft.api.action.requirement.RequirementFactory}
+ * @deprecated see {@link RequirementFactory}
  */
 @Deprecated
 public final class RequirementManager {

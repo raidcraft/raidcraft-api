@@ -7,9 +7,9 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public interface MobProvider {
 
-    public void registerMob(String id, ConfigurationSection data);
+    void registerMob(String id, ConfigurationSection data);
 
-    public void registerMobGroup(String id, ConfigurationSection data);
+    void registerMobGroup(String id, ConfigurationSection data);
 
-    public String getFriendlyName(String id);
+    String getFriendlyName(String id);
 }

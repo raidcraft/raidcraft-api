@@ -12,11 +12,11 @@ import java.util.List;
  */
 public interface AttachableCustomItem extends CustomItem {
 
-    public void addAttachment(ConfiguredAttachment attachment);
+    void addAttachment(ConfiguredAttachment attachment);
 
-    public List<ItemAttachment> getAttachments(Player player) throws ItemAttachmentException;
+    List<ItemAttachment> getAttachments(Player player) throws ItemAttachmentException;
 
-    public void apply(Player player, CustomItemStack itemStack, boolean loadOnly) throws CustomItemException;
+    void apply(Player player, CustomItemStack itemStack, boolean loadOnly) throws CustomItemException;
 
-    public void remove(Player player, CustomItemStack itemStack) throws CustomItemException;
+    void remove(Player player, CustomItemStack itemStack) throws CustomItemException;
 }

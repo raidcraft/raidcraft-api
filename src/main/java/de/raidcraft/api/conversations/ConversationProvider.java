@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
  */
 public interface ConversationProvider {
 
-    public void registerConversation(ConfigurationSection configuration, String name);
+    void registerConversation(ConfigurationSection configuration, String name);
 
-    public void triggerConversation(Player player, ConversationHost conversationHost);
+    void triggerConversation(Player player, ConversationHost conversationHost);
 }

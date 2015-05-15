@@ -1,5 +1,6 @@
 package de.raidcraft.api.action.action;
 
+import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.requirement.Requirement;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public interface ActionHolder {
 
-    public Collection<Action<?>> getActions();
+    Collection<Action<?>> getActions();
 
     /**
      * Gets all actions and filters them to be applicable by the provided entity type.
@@ -22,11 +23,11 @@ public interface ActionHolder {
      * @return filtered list
      */
     @SuppressWarnings("unchecked")
-    public default <T> Collection<Action<T>> getActions(Class<?> entityClazz) {
+    default <T> Collection<Action<T>> getActions(Class<?> entityClazz) {
 
         return getActions().parallelStream()
-                .filter(requirement -> requirement.matchesType(entityClazz))
-                .map(requirement -> (Action<T>) requirement)
+                .filter(action -> ActionAPI.matchesType(action, entityClazz))
+                .map(action -> (Action<T>) action)
                 .collect(Collectors.toList());
     }
 
@@ -37,10 +38,10 @@ public interface ActionHolder {
      *
      * @return filtered list
      */
-    public default <T> Collection<Action<T>> getActions(Class<T> entityClazz, Predicate<? super Action<T>> filter) {
+    default <T> Collection<Action<T>> getActions(Class<T> entityClazz, Predicate<? super Action<T>> filter) {
 
-        Collection<Action<T>> requirements = getActions(entityClazz);
-        return requirements.stream()
+        Collection<Action<T>> actions = getActions(entityClazz);
+        return actions.stream()
                 .filter(filter)
                 .collect(Collectors.toList());
     }

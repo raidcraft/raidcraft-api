@@ -1,9 +1,9 @@
-package de.raidcraft.api.action.trigger;
+package de.raidcraft.api.action;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
-import de.raidcraft.api.Component;
-import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.trigger.Trigger;
+import de.raidcraft.api.action.trigger.TriggerListener;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
@@ -22,22 +22,12 @@ import java.util.stream.Collectors;
 /**
  * @author Silthus
  */
-public final class TriggerManager implements Component {
-
-    private static final TriggerManager INSTANCE = new TriggerManager();
-
-    @NonNull
-    public static TriggerManager getInstance() {
-
-        return INSTANCE;
-    }
+public final class TriggerManager {
 
     private final Map<String, Trigger> registeredTrigger = new CaseInsensitiveMap<>();
 
-    private TriggerManager() {
+    protected TriggerManager() {
 
-        RaidCraft.registerComponent(TriggerManager.class, this);
-        ActionAPI.registerGlobalTrigger(this);
     }
 
     public TriggerManager registerGlobalTrigger(@NonNull Trigger trigger) {
@@ -133,7 +123,7 @@ public final class TriggerManager implements Component {
         List<TriggerFactory> list = new ArrayList<>();
         if (trigger != null) {
             list = trigger.getKeys(false).stream()
-                    .map(key -> TriggerManager.getInstance().getTrigger(trigger.getString(key + ".type"), trigger.getConfigurationSection(key)))
+                    .map(key -> getTrigger(trigger.getString(key + ".type"), trigger.getConfigurationSection(key)))
                     .collect(Collectors.toList());
         }
         return list;

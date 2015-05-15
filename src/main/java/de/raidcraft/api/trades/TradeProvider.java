@@ -7,7 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public interface TradeProvider {
 
-    public void registerTradeSet(String tradeSetName, ConfigurationSection tradeSetConfig);
+    void registerTradeSet(String tradeSetName, ConfigurationSection tradeSetConfig);
 
-    public boolean tradeSetExists(String tradeSetName);
+    boolean tradeSetExists(String tradeSetName);
 }

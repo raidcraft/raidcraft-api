@@ -1,9 +1,12 @@
-package de.raidcraft.api.action.requirement;
+package de.raidcraft.api.action;
 
 import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.action.requirement.Reasonable;
+import de.raidcraft.api.action.requirement.ReasonableRequirement;
+import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.config.ConfigurationBase;
@@ -29,6 +32,7 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
     private static final String COUNT_KEY = "count";
 
     private final String id;
+    private final Class<T> type;
     private final Requirement<T> requirement;
     private final Reasonable<T> reasonable;
     private final boolean persistant;
@@ -39,10 +43,11 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
     private final ConfigurationSection config;
     private final Map<UUID, Map<String, String>> mappings = new HashMap<>();
 
-    protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config) {
+    protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config, Class<T> type) {
 
         this.id = config.isSet("id") ? config.getString("id") : id;
         this.requirement = requirement;
+        this.type = type;
         if (requirement instanceof Reasonable) {
             this.reasonable = (Reasonable<T>) requirement;
         } else {

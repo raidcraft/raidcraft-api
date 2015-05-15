@@ -5,9 +5,9 @@ package de.raidcraft.api.items;
  */
 public interface Gem extends AttributeHolder {
 
-    public int getId();
+    int getId();
 
-    public String getName();
+    String getName();
 
-    public GemColor getColor();
+    GemColor getColor();
 }

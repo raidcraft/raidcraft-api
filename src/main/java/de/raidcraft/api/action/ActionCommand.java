@@ -6,11 +6,8 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.action.action.ActionFactory;
 import de.raidcraft.api.action.requirement.Requirement;
-import de.raidcraft.api.action.requirement.RequirementFactory;
 import de.raidcraft.api.action.trigger.Trigger;
-import de.raidcraft.api.action.trigger.TriggerManager;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.PastebinPoster;
@@ -39,7 +36,7 @@ public class ActionCommand {
 
         StringBuilder sb = new StringBuilder();
         sb.append("########### ACTIONS ###########\n");
-        ActionFactory.getInstance().getActions().entrySet().forEach(
+        ActionAPI.getActions().entrySet().forEach(
                 entry -> {
                     Action<?> action = entry.getValue();
                     sb.append(entry.getKey());
@@ -56,7 +53,7 @@ public class ActionCommand {
                 }
         );
         sb.append("\n\n########### REQUIREMENTS ###########\n");
-        RequirementFactory.getInstance().getRequirements().entrySet().forEach(
+        ActionAPI.getRequirements().entrySet().forEach(
                 entry -> {
                     Requirement<?> requirement = entry.getValue();
                     sb.append(entry.getKey());
@@ -73,7 +70,7 @@ public class ActionCommand {
                 }
         );
         sb.append("\n\n########### TRIGGER ###########\n");
-        TriggerManager.getInstance().getTrigger().entrySet().forEach(
+        ActionAPI.getTrigger().entrySet().forEach(
                 entry -> {
                     Trigger trigger = entry.getValue();
                     sb.append(entry.getKey());

@@ -21,14 +21,14 @@ public interface Aircraft<T> {
      *
      * @return bukkit entity or null if non bukkit entity
      */
-    public Entity getBukkitEntity();
+    Entity getBukkitEntity();
 
     /**
      * Gets entity that is the aircraft if it was spawned.
      *
      * @return null if {@link #spawn(org.bukkit.Location)} was not called
      */
-    public T getEntity();
+    T getEntity();
 
     /**
      * Checks if the aircraft reached the given waypoint.
@@ -37,7 +37,7 @@ public interface Aircraft<T> {
      *
      * @return true if aircraft is near the waypoint
      */
-    public boolean hasReachedWaypoint(Waypoint waypoint);
+    boolean hasReachedWaypoint(Waypoint waypoint);
 
     /**
      * Checks if the aircraft reached the given waypoint.
@@ -47,21 +47,21 @@ public interface Aircraft<T> {
      *
      * @return true if aircraft is near the waypoint
      */
-    public boolean hasReachedWaypoint(Waypoint waypoint, int radius);
+    boolean hasReachedWaypoint(Waypoint waypoint, int radius);
 
     /**
      * Gets the current location of the aircraft.
      *
      * @return null if aircraft was not spawned
      */
-    public Location getCurrentLocation();
+    Location getCurrentLocation();
 
     /**
      * Checks if the entity was spawned.
      *
      * @return true if entity exists and was spawned
      */
-    public boolean isSpawned();
+    boolean isSpawned();
 
     /**
      * Moves the aircraft to the given waypoint
@@ -69,29 +69,29 @@ public interface Aircraft<T> {
      * @param flight   that is moving the aircraft
      * @param waypoint to move to
      */
-    public void move(Flight flight, Waypoint waypoint);
+    void move(Flight flight, Waypoint waypoint);
 
     /**
      * Starts the navigation and sets up all important variables.
      */
-    public void startNavigation(Flight flight);
+    void startNavigation(Flight flight);
 
     /**
      * Stops the movement of the aircraft.
      */
-    public void stopNavigation(Flight flight);
+    void stopNavigation(Flight flight);
 
     /**
      * Spawns the aircraft allowing it to take off and to accept passengers.
      *
      * @return spanwed aircraft
      */
-    public T spawn(Location location);
+    T spawn(Location location);
 
     /**
      * Despawns the entity after landing or aborting the flight.
      */
-    public void despawn();
+    void despawn();
 
     /**
      * Checks if the aircraft is flying and {@link #takeoff(de.raidcraft.api.flight.flight.Flight)}
@@ -99,18 +99,18 @@ public interface Aircraft<T> {
      *
      * @return true if aircraft is flying
      */
-    public boolean isFlying();
+    boolean isFlying();
 
     /**
      * Sets the aircraft as flying.
      *
      * @param flying mode
      */
-    public void setFlying(boolean flying);
+    void setFlying(boolean flying);
 
-    public BukkitTask getAircraftMoverTask();
+    BukkitTask getAircraftMoverTask();
 
-    public void setAircraftMoverTask(BukkitTask aircraftMoverTask);
+    void setAircraftMoverTask(BukkitTask aircraftMoverTask);
 
     /**
      * Will switch the aircraft into flying mode and strap on all the seatbelts for passengers on the aircraft.
@@ -120,7 +120,7 @@ public interface Aircraft<T> {
      *
      * @param flight that triggered the takeoff
      */
-    public default void takeoff(final Flight flight) {
+    default void takeoff(final Flight flight) {
 
         if (!isFlying()) {
             setFlying(true);
@@ -163,7 +163,7 @@ public interface Aircraft<T> {
      *
      * @param flight that triggered the abort
      */
-    public default void abortFlight(Flight flight) {
+    default void abortFlight(Flight flight) {
 
         if (isFlying()) {
             setFlying(false);
@@ -180,7 +180,7 @@ public interface Aircraft<T> {
      *
      * @param flight that triggered the landing
      */
-    public default void land(Flight flight) {
+    default void land(Flight flight) {
 
         if (isFlying()) {
             setFlying(false);
@@ -194,10 +194,10 @@ public interface Aircraft<T> {
     /**
      * Mounts all attached passengers onto the aircraft.
      */
-    public void mountPassenger(Flight flight);
+    void mountPassenger(Flight flight);
 
     /**
      * Unmounts all passengers from the aircraft.
      */
-    public void unmountPassenger(Flight flight);
+    void unmountPassenger(Flight flight);
 }

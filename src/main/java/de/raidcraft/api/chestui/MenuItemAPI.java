@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
  */
 interface MenuItemAPI {
 
-    public ItemStack getItem();
+    ItemStack getItem();
 
-    public void trigger(Player player);
+    void trigger(Player player);
 }

@@ -19,5 +19,5 @@ public interface PlayerStatisticProvider {
      * @param player to get value for
      * @return value of the statistic for the player
      */
-    public int getStatisticValue(Player player);
+    int getStatisticValue(Player player);
 }

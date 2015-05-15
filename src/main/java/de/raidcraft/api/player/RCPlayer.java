@@ -14,41 +14,41 @@ import java.util.List;
  */
 public interface RCPlayer {
 
-    public <T extends PlayerComponent> T getComponent(Class<T> clazz);
+    <T extends PlayerComponent> T getComponent(Class<T> clazz);
 
-    public String getUserName();
+    String getUserName();
 
-    public String getDisplayName();
+    String getDisplayName();
 
-    public Player getBukkitPlayer();
+    Player getBukkitPlayer();
 
-    public boolean isOp();
+    boolean isOp();
 
-    public boolean hasPermission(String permission);
+    boolean hasPermission(String permission);
 
-    public String getWorld();
+    String getWorld();
 
-    public boolean isInWorld(String world);
+    boolean isInWorld(String world);
 
-    public void sendMessage(String... messages);
+    void sendMessage(String... messages);
 
-    public boolean isOnline();
+    boolean isOnline();
 
-    public WorldVector getLocation();
+    WorldVector getLocation();
 
-    public void teleport(WorldVector vector);
+    void teleport(WorldVector vector);
 
-    public RCPlayer getTargetPlayer() throws InvalidTargetException;
+    RCPlayer getTargetPlayer() throws InvalidTargetException;
 
-    public LivingEntity getTarget() throws InvalidTargetException;
+    LivingEntity getTarget() throws InvalidTargetException;
 
-    public List<LivingEntity> getNearbyEntities(int radius);
+    List<LivingEntity> getNearbyEntities(int radius);
 
-    public BlockWorldVector getTargetBlock();
+    BlockWorldVector getTargetBlock();
 
-    public int getItemInHand();
+    int getItemInHand();
 
-    public boolean hasMoved(Location location);
+    boolean hasMoved(Location location);
 
-    public void destroy();
+    void destroy();
 }

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
  */
 public interface ItemSelectorListener {
 
-    public void cancel(Player player);
+    void cancel(Player player);
 
-    public void accept(Player player, int itemSlot);
+    void accept(Player player, int itemSlot);
 }

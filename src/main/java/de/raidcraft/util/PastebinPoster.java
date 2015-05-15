@@ -38,11 +38,11 @@ public class PastebinPoster {
         thread.start();
     }
 
-    public static interface PasteCallback {
+    public interface PasteCallback {
 
-        public void handleSuccess(String url);
+        void handleSuccess(String url);
 
-        public void handleError(String err);
+        void handleError(String err);
     }
 
     private static class PasteProcessor implements Runnable {

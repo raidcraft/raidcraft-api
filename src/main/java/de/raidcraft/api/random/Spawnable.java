@@ -14,5 +14,5 @@ public interface Spawnable {
      *
      * @param location to spawn object at
      */
-    public void spawn(Location location);
+    void spawn(Location location);
 }

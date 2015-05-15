@@ -7,5 +7,5 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public interface Loadable {
 
-    public void load(ConfigurationSection config);
+    void load(ConfigurationSection config);
 }

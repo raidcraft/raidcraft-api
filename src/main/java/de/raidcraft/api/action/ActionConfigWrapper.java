@@ -1,9 +1,8 @@
-package de.raidcraft.api.action.action;
+package de.raidcraft.api.action;
 
-import de.raidcraft.RaidCraft;
+import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.action.RevertableAction;
 import de.raidcraft.api.action.requirement.Requirement;
-import de.raidcraft.api.action.requirement.RequirementException;
-import de.raidcraft.api.action.requirement.RequirementFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,20 +17,17 @@ import java.util.List;
 @Data
 class ActionConfigWrapper<T> implements RevertableAction<T> {
 
+    private final Class<T> type;
     private final Action<T> action;
     private final ConfigurationSection config;
-    private List<Requirement<?>> requirements = new ArrayList<>();
+    private List<Requirement<T>> requirements = new ArrayList<>();
 
-    protected ActionConfigWrapper(Action<T> action, ConfigurationSection config) {
+    protected ActionConfigWrapper(Action<T> action, ConfigurationSection config, Class<T> type) {
 
+        this.type = type;
         this.action = action;
         this.config = config;
-        try {
-            this.requirements = RaidCraft.getComponent(RequirementFactory.class)
-                    .createRequirements(getIdentifier(), config.getConfigurationSection("requirements"));
-        } catch (RequirementException e) {
-            e.printStackTrace();
-        }
+        this.requirements = ActionAPI.createRequirements(getIdentifier(), config.getConfigurationSection("requirements"), type);
     }
 
     public ConfigurationSection getConfig() {
@@ -46,13 +42,10 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         accept(type, getConfig());
     }
 
-    @SuppressWarnings("unchecked")
     public void accept(T type, ConfigurationSection config) {
 
         if (!requirements.isEmpty()) {
             boolean allMatch = requirements.stream()
-                    .filter(requirement -> requirement.matchesType(type.getClass()))
-                    .map(requirement -> (Requirement<T>) requirement)
                     .allMatch(requirement -> requirement.test(type));
             if (!allMatch) return;
         }

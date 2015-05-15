@@ -8,5 +8,5 @@ import org.bukkit.entity.Player;
  */
 public interface UseableCustomItem extends AttachableCustomItem {
 
-    public void use(Player player, CustomItemStack itemStack) throws ItemAttachmentException;
+    void use(Player player, CustomItemStack itemStack) throws ItemAttachmentException;
 }

@@ -12,12 +12,12 @@ public interface Dropable {
     /**
      * Gets the {@link org.bukkit.inventory.ItemStack} that will represent the dropped object.
      */
-    public ItemStack getItemStack();
+    ItemStack getItemStack();
 
     /**
      * Picks up the dropped item and adds it to the player.
      *
      * @param player to add drop to
      */
-    public void pickup(Player player);
+    void pickup(Player player);
 }

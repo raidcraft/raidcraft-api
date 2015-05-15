@@ -10,7 +10,7 @@ import org.bukkit.configuration.MemoryConfiguration;
  */
 public interface RequirementConfigGenerator extends ActionAPIConfigGenerator {
 
-    public default ConfigurationSection createConfigSection() {
+    default ConfigurationSection createConfigSection() {
 
         MemoryConfiguration config = new MemoryConfiguration();
         config.set("type", ActionAPI.getIdentifier(this));

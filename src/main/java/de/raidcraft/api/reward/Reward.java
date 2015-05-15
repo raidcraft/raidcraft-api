@@ -5,9 +5,9 @@ package de.raidcraft.api.reward;
  */
 public interface Reward<T> {
 
-    public String getName();
+    String getName();
 
-    public String getDescription();
+    String getDescription();
 
-    public void reward(T object);
+    void reward(T object);
 }

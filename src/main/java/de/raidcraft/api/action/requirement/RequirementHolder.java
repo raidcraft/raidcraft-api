@@ -1,5 +1,7 @@
 package de.raidcraft.api.action.requirement;
 
+import de.raidcraft.api.action.ActionAPI;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -10,9 +12,9 @@ import java.util.stream.Collectors;
  */
 public interface RequirementHolder {
 
-    public Collection<Requirement<?>> getRequirements();
+    Collection<Requirement<?>> getRequirements();
 
-    public default <T> boolean isMeetingAllRequirements(T entity) {
+    default <T> boolean isMeetingAllRequirements(T entity) {
 
         Collection<Requirement<T>> requirements = getRequirements(entity.getClass());
         return requirements.stream()
@@ -27,10 +29,10 @@ public interface RequirementHolder {
      * @return filtered list
      */
     @SuppressWarnings("unchecked")
-    public default <T> Collection<Requirement<T>> getRequirements(Class<?> entityClazz) {
+    default <T> Collection<Requirement<T>> getRequirements(Class<?> entityClazz) {
 
         return getRequirements().parallelStream()
-                .filter(requirement -> requirement.matchesType(entityClazz))
+                .filter(requirement -> ActionAPI.matchesType(requirement, entityClazz))
                 .map(requirement -> (Requirement<T>) requirement)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -42,7 +44,7 @@ public interface RequirementHolder {
      *
      * @return filtered list
      */
-    public default <T> Collection<Requirement<T>> getRequirements(Class<T> entityClazz, Predicate<? super Requirement<T>> filter) {
+    default <T> Collection<Requirement<T>> getRequirements(Class<T> entityClazz, Predicate<? super Requirement<T>> filter) {
 
         Collection<Requirement<T>> requirements = getRequirements(entityClazz);
         return requirements.stream()

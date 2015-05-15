@@ -43,7 +43,7 @@ public interface IGraphSearch {
      *
      * @return the route as a list of nodes
      */
-    public LinkedList<GraphNode> search(int startID, int targetID);
+    LinkedList<GraphNode> search(int startID, int targetID);
 
     /**
      * Search for a route from node startID and ends at targetID. <br>
@@ -58,7 +58,7 @@ public interface IGraphSearch {
      *
      * @return the route as a list of nodes
      */
-    public LinkedList<GraphNode> search(int startID, int targetID, boolean remember);
+    LinkedList<GraphNode> search(int startID, int targetID, boolean remember);
 
 
     /**
@@ -66,7 +66,7 @@ public interface IGraphSearch {
      *
      * @return edges examined or array size 0 if none found
      */
-    public GraphEdge[] getExaminedEdges();
+    GraphEdge[] getExaminedEdges();
 
     /**
      * Get all the edges examined during the search. <br>
@@ -78,7 +78,7 @@ public interface IGraphSearch {
      *
      * @return edges examined or array size 0 if none found
      */
-    public <T> T[] getExaminedEdges(T[] array);
+    <T> T[] getExaminedEdges(T[] array);
 
     /**
      * Get the path found as an array of GraphNode(s) in start to end
@@ -86,7 +86,7 @@ public interface IGraphSearch {
      *
      * @return path found or array size 0 if none found
      */
-    public GraphNode[] getRoute();
+    GraphNode[] getRoute();
 
     /**
      * Get the path found as an array of T(s) in start to end
@@ -99,6 +99,6 @@ public interface IGraphSearch {
      *
      * @return path found or array size 0 if none found
      */
-    public <T> T[] getRoute(T[] array);
+    <T> T[] getRoute(T[] array);
 
 }

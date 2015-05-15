@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
  */
 public interface ItemAttachment {
 
-    public void loadAttachment(ConfigurationSection data);
+    void loadAttachment(ConfigurationSection data);
 
-    public void applyAttachment(Player player) throws CustomItemException;
+    void applyAttachment(Player player) throws CustomItemException;
 
-    public void removeAttachment(Player player) throws CustomItemException;
+    void removeAttachment(Player player) throws CustomItemException;
 }

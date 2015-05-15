@@ -13,46 +13,46 @@ import java.util.Map;
  */
 public interface CustomItem extends RequirementResolver<Player> {
 
-    public static final int NAMED_CUSTOM_ITEM_ID = 0;
-    public static final int DYNAMIC_CUSTOM_ITEM_ID = 10;
+    int NAMED_CUSTOM_ITEM_ID = 0;
+    int DYNAMIC_CUSTOM_ITEM_ID = 10;
 
-    public int getId();
+    int getId();
 
-    public String getEncodedId();
+    String getEncodedId();
 
-    public int getMinecraftId();
+    int getMinecraftId();
 
-    public short getMinecraftDataValue();
+    short getMinecraftDataValue();
 
-    public String getName();
+    String getName();
 
-    public String getLore();
+    String getLore();
 
-    public void setItemLevel(int itemLevel);
+    void setItemLevel(int itemLevel);
 
-    public int getItemLevel();
+    int getItemLevel();
 
-    public boolean isEnchantmentEffect();
+    boolean isEnchantmentEffect();
 
-    public ItemType getType();
+    ItemType getType();
 
-    public ItemBindType getBindType();
+    ItemBindType getBindType();
 
-    public ItemQuality getQuality();
+    ItemQuality getQuality();
 
-    public int getMaxStackSize();
+    int getMaxStackSize();
 
-    public double getSellPrice();
+    double getSellPrice();
 
-    public boolean isBlockingUsage();
+    boolean isBlockingUsage();
 
-    public boolean isLootable();
+    boolean isLootable();
 
-    public Tooltip getTooltip(TooltipSlot slot);
+    Tooltip getTooltip(TooltipSlot slot);
 
-    public Map<TooltipSlot, Tooltip> getTooltips();
+    Map<TooltipSlot, Tooltip> getTooltips();
 
-    public boolean matches(ItemStack itemStack);
+    boolean matches(ItemStack itemStack);
 
-    public CustomItemStack createNewItem();
+    CustomItemStack createNewItem();
 }

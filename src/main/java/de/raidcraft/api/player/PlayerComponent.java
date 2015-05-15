@@ -13,5 +13,5 @@ package de.raidcraft.api.player;
  */
 public interface PlayerComponent {
 
-    public RCPlayer getPlayer();
+    RCPlayer getPlayer();
 }

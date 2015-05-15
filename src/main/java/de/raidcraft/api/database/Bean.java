@@ -5,5 +5,5 @@ package de.raidcraft.api.database;
  */
 public interface Bean {
 
-    public int getId();
+    int getId();
 }

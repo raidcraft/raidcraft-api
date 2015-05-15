@@ -1,5 +1,6 @@
-package de.raidcraft.api.action.trigger;
+package de.raidcraft.api.action;
 
+import de.raidcraft.api.action.trigger.TriggerListener;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
