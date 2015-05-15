@@ -80,7 +80,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>true</minimizeJar>
                             <artifactSet>
                                 <includes>
                                     <include>org.projectlombok:lombok</include>
