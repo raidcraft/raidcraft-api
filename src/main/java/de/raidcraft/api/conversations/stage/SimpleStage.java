@@ -101,7 +101,7 @@ public class SimpleStage implements Stage {
         int i;
         for (i = 0; i < answers.size(); i++) {
             getConversation().sendMessage(new FancyMessage(i + 1 + ": ").color(ChatColor.AQUA)
-                    .then(answers.get(i).getText()).color(answers.get(i).getColor())
+                    .then(answers.get(i).getMessage())
                     .command("/conversations answer " + (i + 1)));
         }
         if (this.answers.size() > 1) {

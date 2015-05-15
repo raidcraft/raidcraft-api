@@ -1,8 +1,11 @@
 package de.raidcraft.api.conversations.answer;
 
+import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionHolder;
 import de.raidcraft.api.conversations.conversation.Conversation;
+import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 /**
  * @author mdoering
@@ -16,21 +19,38 @@ public interface Answer extends ActionHolder {
      *
      * @return displayed answer
      */
-    String getText();
+    FancyMessage getMessage();
 
     /**
-     * Gets the color that should format the text.
+     * Sets the text of the answer.
      *
-     * @return color of the text, default: {@link ChatColor#YELLOW}
+     * @param text to display
+     * @return this answer
      */
-    ChatColor getColor();
+    Answer text(String text);
 
     /**
      * Sets the given ChatColor as text color of this answer.
      *
      * @param color to set
      */
-    void setColor(ChatColor color);
+    Answer color(ChatColor color);
+
+    /**
+     * Adds a Conversation action to this answer that is executed when the answer is chosen.
+     *
+     * @param conversationAction to add
+     * @return this answer
+     */
+    Answer addConversationAction(Action<Conversation> conversationAction);
+
+    /**
+     * Adds a Player action to this answer that is executed when the answer is chosen.
+     *
+     * @param playerAction to add
+     * @return this answer
+     */
+    Answer addPlayerAction(Action<Player> playerAction);
 
     /**
      * Executes all actions of this answer for the given conversation.

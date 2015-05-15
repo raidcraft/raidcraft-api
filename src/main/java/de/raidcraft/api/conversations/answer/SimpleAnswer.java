@@ -3,6 +3,7 @@ package de.raidcraft.api.conversations.answer;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import lombok.Data;
+import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -15,8 +16,9 @@ import java.util.List;
 @Data
 public class SimpleAnswer implements Answer {
 
-    private final String text;
     private final List<Action<?>> actions;
+    private FancyMessage message;
+    private String text;
     private ChatColor color;
 
     public SimpleAnswer(String text, List<Action<?>> actions) {
@@ -28,6 +30,36 @@ public class SimpleAnswer implements Answer {
     public SimpleAnswer(String text) {
 
         this(text, null);
+    }
+
+    @Override
+    public Answer text(String text) {
+
+        this.text = text;
+        this.message = new FancyMessage(getText()).color(getColor());
+        return this;
+    }
+
+    @Override
+    public Answer color(ChatColor color) {
+
+        this.color = color;
+        text(getText());
+        return this;
+    }
+
+    @Override
+    public Answer addConversationAction(Action<Conversation> conversationAction) {
+
+        actions.add(conversationAction);
+        return this;
+    }
+
+    @Override
+    public Answer addPlayerAction(Action<Player> playerAction) {
+
+        actions.add(playerAction);
+        return this;
     }
 
     @Override

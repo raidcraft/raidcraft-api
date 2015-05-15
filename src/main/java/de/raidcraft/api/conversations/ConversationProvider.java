@@ -22,9 +22,7 @@ public interface ConversationProvider {
 
     Optional<StageTemplate> getStageTemplate(String identifier, ConversationTemplate conversationTemplate, ConfigurationSection config);
 
-    void loadConversation(String name, ConfigurationSection config);
-
-    void registerConversation(ConfigurationSection configuration, String name);
+    void loadConversation(String identifier, ConfigurationSection config);
 
     void triggerConversation(Player player, ConversationHost conversationHost);
 }

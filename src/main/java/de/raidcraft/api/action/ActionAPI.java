@@ -155,7 +155,12 @@ public final class ActionAPI {
         this.plugin = plugin;
     }
 
+
+    /**
+     * @deprecated use {@link #action(Action, Class)} or {@link #action(Action)}
+     */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public <T> ActionAPI action(@NonNull String identifier, @NonNull Action<T> action, Class<T> type) {
 
         ActionFactory<T> factory;
@@ -173,12 +178,21 @@ public final class ActionAPI {
         return this;
     }
 
+
+    /**
+     * @deprecated use {@link #action(Action, Class)} or {@link #action(Action)}
+     */
+    @Deprecated
     public ActionAPI action(@NonNull String identifier, @NonNull Action<Player> action) {
 
         return action(identifier, action, Player.class);
     }
 
+    /**
+     * @deprecated use {@link #requirement(Requirement, Class)} or {@link #requirement(Requirement)}
+     */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public <T> ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<T> requirement, Class<T> type) {
 
         RequirementFactory<T> factory;
@@ -196,6 +210,10 @@ public final class ActionAPI {
         return this;
     }
 
+    /**
+     * @deprecated use {@link #requirement(Requirement, Class)} or {@link #requirement(Requirement)}
+     */
+    @Deprecated
     public ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<Player> requirement) {
 
         return requirement(identifier, requirement, Player.class);

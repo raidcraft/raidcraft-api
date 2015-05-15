@@ -39,7 +39,7 @@ public class ConfiguredStageTemplate implements StageTemplate {
         this.answers = loadAnswers(config.getConfigurationSection("answers"));
     }
 
-    private List<Answer> loadAnswers(ConfigurationSection config) {
+    protected List<Answer> loadAnswers(ConfigurationSection config) {
 
         List<Answer> answers = new ArrayList<>();
         if (config == null) return answers;
