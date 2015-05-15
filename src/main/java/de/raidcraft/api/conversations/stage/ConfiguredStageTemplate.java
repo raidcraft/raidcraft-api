@@ -28,11 +28,13 @@ public class ConfiguredStageTemplate implements StageTemplate {
     private final List<Requirement<?>> requirements;
     private final List<Action<?>> actions;
     private final List<Answer> answers;
+    protected final ConfigurationSection config;
 
     public ConfiguredStageTemplate(String identifier, ConversationTemplate conversationTemplate, ConfigurationSection config) {
 
         this.identifier = identifier;
         this.conversationTemplate = conversationTemplate;
+        this.config = config;
         this.text = config.getString("text") == null ? Optional.empty() : Optional.of(config.getString("text").split("\\|"));
         this.requirements = ActionAPI.createRequirements(getConversationTemplate().getIdentifier() + "." + identifier, config.getConfigurationSection("requirements"));
         this.actions = ActionAPI.createActions(config.getConfigurationSection("actions"));

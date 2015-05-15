@@ -2,10 +2,12 @@ package de.raidcraft.api.conversations;
 
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.answer.ConfiguredAnswer;
+import de.raidcraft.api.conversations.answer.SimpleAnswer;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.api.conversations.stage.ConfiguredStageTemplate;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
+import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Map;
@@ -57,6 +59,18 @@ public class Conversations {
             return Optional.empty();
         }
         return provider.getAnswer(stageTemplate, config);
+    }
+
+    public static Answer getAnswer(String text) {
+
+        if (provider == null) return new SimpleAnswer(text);
+        return provider.getAnswer(text);
+    }
+
+    public static Answer getAnswer(FancyMessage message) {
+
+        if (provider == null) return new SimpleAnswer(message);
+        return provider.getAnswer(message);
     }
 
     public static void registerStage(String type, Class<? extends StageTemplate> stage) {

@@ -1,9 +1,11 @@
 package de.raidcraft.api.conversations.conversation;
 
+import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import mkremins.fanciful.FancyMessage;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +13,7 @@ import java.util.Optional;
 /**
  * @author mdoering
  */
-public interface Conversation<T> {
+public interface Conversation<T> extends ConfigurationSection {
 
     /**
      * Gets the unique identifier of the conversation.
@@ -67,6 +69,19 @@ public interface Conversation<T> {
     Conversation<T> setCurrentStage(Stage stage);
 
     /**
+     * Changes the conversation to the given stage.
+     *
+     * @param stage to  change to
+     * @return current conversation
+     */
+    default Conversation<T> changeToStage(Stage stage) {
+
+        setCurrentStage(stage);
+        triggerCurrentStage();
+        return this;
+    }
+
+    /**
      * Gets a list of all stages attached to this conversation.
      *
      * @return list of stages
@@ -91,12 +106,57 @@ public interface Conversation<T> {
     Conversation<T> addStage(Stage stage);
 
     /**
+     * Answers the conversation with the given text. Tries to find a valid answer
+     * and executes all actions of the answer if it was found.
+     *
+     * @param answer to process
+     * @return executed answer
+     */
+    default Optional<Answer> answer(String answer) {
+
+        return answer(answer, true);
+    }
+
+    /**
+     * Answers the conversation with the given text. Tries to find a valid answer
+     * and executes all actions of the answer if it was found and executeActions is true.
+     *
+     * @param answer to process
+     * @param executeActions true if actions should be processed
+     * @return executed answer
+     */
+    Optional<Answer> answer(String answer, boolean executeActions);
+
+    /**
+     * @see Stage#changePage(int)
+     */
+    boolean changePage(int page);
+
+    /**
      * Starts this conversation by setting the current {@link Stage} to the {@link StageTemplate#START_STAGE} and calling
      * {@link this#triggerCurrentStage()}.
+     * If the conversation was saved it will restart at the last active stage.
      *
-     * @return true if the conversation started, false if not stage was found
+     * @return true if the conversation started, false if no stage was found
      */
     boolean start();
+
+    /**
+     * Ends the current conversation returning the stage the conversation ended at.
+     * Will be an empty optional if conversation was not started and not active stage is present.
+     *
+     * @param reason why the conversation ended
+     * @return last active stage if conversation was started, otherwise an empty optional
+     */
+    Optional<Stage> end(ConversationEndReason reason);
+
+    /**
+     * Aborts the current conversation saving the progress if {@link ConversationTemplate#isPersistant()} is true.
+     *
+     * @param reason why the conversation was aborted
+     * @return last active stage of the conversation
+     */
+    Optional<Stage> abort(ConversationEndReason reason);
 
     /**
      * Sends the given conversation to the entity listening to this conversation.
@@ -113,4 +173,10 @@ public interface Conversation<T> {
      * @return this conversation
      */
     Conversation<T> sendMessage(FancyMessage... lines);
+
+    /**
+     * Saves the current conversation to a persistant storage.
+     * Saved conversations can be resumed when the conversation is started again.
+     */
+    void save();
 }

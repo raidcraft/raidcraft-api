@@ -1,12 +1,18 @@
 package de.raidcraft.api.conversations.conversation;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.config.DataMap;
+import de.raidcraft.api.conversations.answer.Answer;
+import de.raidcraft.api.conversations.events.RCConversationAbortedEvent;
+import de.raidcraft.api.conversations.events.RCConversationEndedEvent;
 import de.raidcraft.api.conversations.events.RCStartConversationEvent;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.bukkit.configuration.MemoryConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +23,8 @@ import java.util.Optional;
  * @author mdoering
  */
 @Data
-public abstract class AbstractConversation<T> implements Conversation<T> {
+@EqualsAndHashCode(callSuper = false)
+public abstract class AbstractConversation<T> extends DataMap implements Conversation<T> {
 
     private final T entity;
     private final ConversationTemplate template;
@@ -27,10 +34,13 @@ public abstract class AbstractConversation<T> implements Conversation<T> {
 
     public AbstractConversation(T entity, ConversationTemplate conversationTemplate, ConversationHost conversationHost) {
 
+        super(new MemoryConfiguration());
         this.entity = entity;
         this.template = conversationTemplate;
         this.host = conversationHost;
     }
+
+    protected abstract void load();
 
     @Override
     public List<Stage> getStages() {
@@ -62,6 +72,27 @@ public abstract class AbstractConversation<T> implements Conversation<T> {
     }
 
     @Override
+    public Optional<Answer> answer(String answer, boolean executeActions) {
+
+        Optional<Stage> currentStage = getCurrentStage();
+        if (currentStage.isPresent()) {
+            Optional<Answer> optional = currentStage.get().getAnswer(answer);
+            if (optional.isPresent() && executeActions) {
+                optional.get().executeActions(this);
+            }
+            return optional;
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean changePage(int page) {
+
+        Optional<Stage> currentStage = getCurrentStage();
+        return currentStage.isPresent() && currentStage.get().changePage(page);
+    }
+
+    @Override
     public boolean triggerCurrentStage() {
 
         Optional<Stage> currentStage = getCurrentStage();
@@ -81,7 +112,9 @@ public abstract class AbstractConversation<T> implements Conversation<T> {
     @Override
     public final boolean start() {
 
-        Optional<Stage> stage = getStage(StageTemplate.START_STAGE);
+        if (getTemplate().isPersistant()) load();
+        Optional<Stage> stage = getCurrentStage();
+        if (!stage.isPresent()) stage = getStage(StageTemplate.START_STAGE);
         if (stage.isPresent()) {
             RCStartConversationEvent event = new RCStartConversationEvent(this);
             RaidCraft.callEvent(event);
@@ -90,5 +123,28 @@ public abstract class AbstractConversation<T> implements Conversation<T> {
             return triggerCurrentStage();
         }
         return false;
+    }
+
+    @Override
+    public Optional<Stage> end(ConversationEndReason reason) {
+
+        Optional<Stage> currentStage = getCurrentStage();
+        if (!currentStage.isPresent()) {
+            return Optional.empty();
+        }
+        RaidCraft.callEvent(new RCConversationEndedEvent(this, reason));
+        return currentStage;
+    }
+
+    @Override
+    public Optional<Stage> abort(ConversationEndReason reason) {
+
+        Optional<Stage> currentStage = getCurrentStage();
+        if (!currentStage.isPresent()) {
+            return Optional.empty();
+        }
+        if (getTemplate().isPersistant()) save();
+        RaidCraft.callEvent(new RCConversationAbortedEvent(this, reason));
+        return currentStage;
     }
 }

@@ -7,6 +7,8 @@ import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 /**
  * @author mdoering
  */
@@ -15,11 +17,23 @@ public interface Answer extends ActionHolder {
     String DEFAULT_ANSWER_TEMPLATE = "default";
 
     /**
+     * Gets an optional formatted message that will be clickable.
+     *
+     * @return displayed answer
+     */
+    default Optional<FancyMessage> getMessage() {
+
+        return Optional.empty();
+    }
+
+    Answer message(FancyMessage message);
+
+    /**
      * Gets the text displayed as answer.
      *
      * @return displayed answer
      */
-    FancyMessage getMessage();
+    String getText();
 
     /**
      * Sets the text of the answer.
@@ -28,6 +42,13 @@ public interface Answer extends ActionHolder {
      * @return this answer
      */
     Answer text(String text);
+
+    /**
+     * Gets the chat color the answer should be displayed with.
+     *
+     * @return color of the answer
+     */
+    ChatColor getColor();
 
     /**
      * Sets the given ChatColor as text color of this answer.

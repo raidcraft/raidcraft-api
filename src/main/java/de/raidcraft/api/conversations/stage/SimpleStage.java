@@ -100,9 +100,15 @@ public class SimpleStage implements Stage {
         List<Answer> answers = this.answers.get(currentPage);
         int i;
         for (i = 0; i < answers.size(); i++) {
-            getConversation().sendMessage(new FancyMessage(i + 1 + ": ").color(ChatColor.AQUA)
-                    .then(answers.get(i).getMessage())
-                    .command("/conversations answer " + (i + 1)));
+            Answer answer = answers.get(i);
+            FancyMessage message;
+            if (answer.getMessage().isPresent()) {
+                message = answer.getMessage().get();
+            } else {
+                message = new FancyMessage(i + 1 + ": ").color(ChatColor.AQUA)
+                        .then(answer.getText()).color(answer.getColor());
+            }
+            getConversation().sendMessage(message.command("/conversations answer " + (i + 1)));
         }
         if (this.answers.size() > 1) {
             if (currentPage > 1) {

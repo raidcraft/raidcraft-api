@@ -12,7 +12,6 @@ import org.bukkit.configuration.ConfigurationSection;
 @EqualsAndHashCode(callSuper = true)
 public class ConfiguredAnswer extends SimpleAnswer {
 
-
     public ConfiguredAnswer(ConfigurationSection config) {
 
         super(config.getString("text"), ActionAPI.createActions(config.getConfigurationSection("actions")));

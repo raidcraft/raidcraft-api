@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mdoering
@@ -17,7 +18,7 @@ import java.util.List;
 public class SimpleAnswer implements Answer {
 
     private final List<Action<?>> actions;
-    private FancyMessage message;
+    private Optional<FancyMessage> message = Optional.empty();
     private String text;
     private ChatColor color;
 
@@ -32,11 +33,28 @@ public class SimpleAnswer implements Answer {
         this(text, null);
     }
 
+    public SimpleAnswer(FancyMessage message, List<Action<?>> actions) {
+
+        this.message = Optional.of(message);
+        this.actions = actions == null ? new ArrayList<>() : actions;
+    }
+
+    public SimpleAnswer(FancyMessage message) {
+
+        this(message, null);
+    }
+
+    @Override
+    public Answer message(FancyMessage message) {
+
+        this.message = Optional.of(message);
+        return this;
+    }
+
     @Override
     public Answer text(String text) {
 
         this.text = text;
-        this.message = new FancyMessage(getText()).color(getColor());
         return this;
     }
 
@@ -44,7 +62,6 @@ public class SimpleAnswer implements Answer {
     public Answer color(ChatColor color) {
 
         this.color = color;
-        text(getText());
         return this;
     }
 

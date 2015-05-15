@@ -22,7 +22,7 @@ public interface Stage extends ActionHolder {
      *
      * @return template of the stage
      */
-    de.raidcraft.api.conversations.stage.StageTemplate getTemplate();
+    StageTemplate getTemplate();
 
     /**
      * Gets the conversation that is attached to this stage.
@@ -60,7 +60,7 @@ public interface Stage extends ActionHolder {
      *
      * @return the current stage
      */
-    de.raidcraft.api.conversations.stage.Stage clearAnswers();
+    Stage clearAnswers();
 
     /**
      * Adds the given answer to the stage.
@@ -68,7 +68,7 @@ public interface Stage extends ActionHolder {
      * @param answer to add
      * @return this stage
      */
-    de.raidcraft.api.conversations.stage.Stage addAnswer(Answer answer);
+    Stage addAnswer(Answer answer);
 
     /**
      * Changes the current page to the given page index.
@@ -84,7 +84,7 @@ public interface Stage extends ActionHolder {
      *
      * @return triggered stage
      */
-    de.raidcraft.api.conversations.stage.Stage trigger();
+    Stage trigger();
 
     /**
      * Triggers this stage displaying the text and executing all actions.

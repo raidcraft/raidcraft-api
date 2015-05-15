@@ -7,11 +7,14 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author mdoering
  */
 public interface ConversationHost {
+
+    UUID getUniqueId();
 
     /**
      * Gets the default conversation of this conversation host. If no default
@@ -38,7 +41,7 @@ public interface ConversationHost {
      * @param player to get {@link Conversation} for
      * @return optional saved conversation or default conversation
      */
-    Optional<Conversation> getConversation(@NonNull Player player);
+    Optional<Conversation<Player>> getConversation(@NonNull Player player);
 
     /**
      * Sets the given {@link Conversation} for the player. The

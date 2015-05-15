@@ -29,6 +29,14 @@ public interface ConversationTemplate extends RequirementHolder {
     int getPriority();
 
     /**
+     * If the conversation is persistant, the current state of the conversation will be saved
+     * when the conversation is aborted.
+     *
+     * @return true if conversation will save if it is aborted
+     */
+    boolean isPersistant();
+
+    /**
      * Gets all stages registered in this conversation template.
      *
      * @return registered stages
@@ -53,7 +61,7 @@ public interface ConversationTemplate extends RequirementHolder {
      * @param host that started the conversation
      * @return started conversation
      */
-    Conversation createConversation(Player player, ConversationHost host);
+    Conversation<Player> createConversation(Player player, ConversationHost host);
 
     /**
      * Starts this conversation for the given player.
@@ -62,9 +70,9 @@ public interface ConversationTemplate extends RequirementHolder {
      * @param host that is hosting this conversation
      * @return started conversation
      */
-    default Conversation startConversation(Player player, ConversationHost host) {
+    default Conversation<Player> startConversation(Player player, ConversationHost host) {
 
-        Conversation conversation = createConversation(player, host);
+        Conversation<Player> conversation = createConversation(player, host);
         conversation.start();
         return conversation;
     }
