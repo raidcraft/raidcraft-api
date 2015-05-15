@@ -77,12 +77,30 @@ public final class ActionAPI {
         return ((RequirementFactory<T>) factory).createRequirements(id, requirements);
     }
 
+    public static List<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) {
+
+        List<Requirement<?>> list = new ArrayList<>();
+        for (RequirementFactory<?> requirementFactory : requirementFactories.values()) {
+            list.addAll(requirementFactory.createRequirements(id, requirements));
+        }
+        return list;
+    }
+
     @SuppressWarnings("unchecked")
     public static  <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
 
         ActionFactory<?> factory = actionFactories.get(type);
         if (factory == null) return new ArrayList<>();
         return ((ActionFactory<T>) factory).createActions(actions);
+    }
+
+    public static List<Action<?>> createActions(ConfigurationSection actions) {
+
+        List<Action<?>> list = new ArrayList<>();
+        for (ActionFactory<?> factory : actionFactories.values()) {
+            list.addAll(factory.createActions(actions));
+        }
+        return list;
     }
 
     public static Collection<TriggerFactory> createTrigger(ConfigurationSection trigger) {

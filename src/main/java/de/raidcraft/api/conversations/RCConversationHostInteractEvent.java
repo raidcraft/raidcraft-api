@@ -1,5 +1,6 @@
 package de.raidcraft.api.conversations;
 
+import de.raidcraft.api.conversations.host.ConversationHost;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;

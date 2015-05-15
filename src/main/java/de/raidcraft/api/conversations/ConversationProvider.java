@@ -1,12 +1,28 @@
 package de.raidcraft.api.conversations;
 
+import de.raidcraft.api.conversations.answer.Answer;
+import de.raidcraft.api.conversations.conversation.ConversationTemplate;
+import de.raidcraft.api.conversations.host.ConversationHost;
+import de.raidcraft.api.conversations.stage.StageTemplate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 /**
- * @author Philip Urban
+ * @author mdoering
  */
 public interface ConversationProvider {
+
+    void registerAnswer(String type, Class<? extends Answer> answer);
+
+    Optional<Answer> getAnswer(StageTemplate stageTemplate, ConfigurationSection config);
+
+    void registerStage(String type, Class<? extends StageTemplate> stage);
+
+    Optional<StageTemplate> getStageTemplate(String identifier, ConversationTemplate conversationTemplate, ConfigurationSection config);
+
+    void loadConversation(String name, ConfigurationSection config);
 
     void registerConversation(ConfigurationSection configuration, String name);
 
