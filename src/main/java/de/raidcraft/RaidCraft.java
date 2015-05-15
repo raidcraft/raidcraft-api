@@ -6,9 +6,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
-import de.raidcraft.api.action.ActionFactory;
-import de.raidcraft.api.action.RequirementFactory;
-import de.raidcraft.api.action.TriggerManager;
+import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
@@ -479,9 +477,9 @@ public class RaidCraft implements Listener {
         deactiveUpdate.setParameter("server", Bukkit.getServerName());
         deactiveUpdate.execute();
 
-        trackActionApi("action", ActionFactory.getInstance().getActions());
-        trackActionApi("requirement", RequirementFactory.getInstance().getRequirements());
-        trackActionApi("trigger", TriggerManager.getInstance().getTrigger());
+        trackActionApi("action", ActionAPI.getActions());
+        trackActionApi("requirement", ActionAPI.getRequirements());
+        trackActionApi("trigger", ActionAPI.getTrigger());
     }
 
     public static <T extends ConfigGenerator> void trackActionApi(String type, Map<String, T> map) {
