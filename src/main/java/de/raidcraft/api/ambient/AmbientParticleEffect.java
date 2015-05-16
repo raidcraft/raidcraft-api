@@ -18,7 +18,7 @@ public class AmbientParticleEffect extends AbstractAmbientEffect {
     protected AmbientParticleEffect(ConfigurationSection config) {
 
         super(config);
-        this.particleEffect = EnumWrappers.Particle.valueOf(config.getString("effect"));
+        this.particleEffect = EnumWrappers.Particle.valueOf(config.getString("effect").toUpperCase());
         this.amount = config.getInt("amount", 1);
         this.xOffset = (float) config.getDouble("x-offset", 0.25);
         this.yOffset = (float) config.getDouble("y-offset", 0.25);
