@@ -38,6 +38,7 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
     private final Requirement<T> requirement;
     private final Reasonable<T> reasonable;
     private final boolean persistant;
+    private final boolean negate;
     private final int order;
     private final int requiredCount;
     private final String countText;
@@ -59,6 +60,7 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
             this.reasonable = null;
         }
         this.persistant = config.getBoolean("persistant", false);
+        this.negate = config.getBoolean("negate", false);
         this.order = config.getInt("order", 0);
         this.requiredCount = config.getInt("count", 0);
         this.countText = config.getString("count-text");
@@ -181,7 +183,11 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
 
         if (isPersistant() && isMapped(entity, CHECKED_KEY)) return successfullyChecked;
 
-        successfullyChecked = requirement.test(entity, config);
+        if (negate) {
+            successfullyChecked = !requirement.test(entity, config);
+        } else {
+            successfullyChecked = requirement.test(entity, config);
+        }
 
         if (isCounting()) {
             if (successfullyChecked) setMapping(entity, COUNT_KEY, getCount(entity) + 1);
