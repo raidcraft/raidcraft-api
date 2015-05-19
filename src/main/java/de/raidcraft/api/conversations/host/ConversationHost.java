@@ -35,13 +35,13 @@ public interface ConversationHost {
     List<ConversationTemplate> getDefaultConversations();
 
     /**
-     * Gets the saved {@link Conversation} for the player or the
+     * Gets the saved {@link ConversationTemplate} for the player or the
      * default conversation if no saved Conversation exists.
      *
-     * @param player to get {@link Conversation} for
+     * @param player to get {@link ConversationTemplate} for
      * @return optional saved conversation or default conversation
      */
-    Optional<Conversation<Player>> getConversation(@NonNull Player player);
+    Optional<ConversationTemplate> getConversation(@NonNull Player player);
 
     /**
      * Sets the given {@link Conversation} for the player. The

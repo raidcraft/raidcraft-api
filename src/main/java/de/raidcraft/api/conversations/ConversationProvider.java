@@ -31,4 +31,6 @@ public interface ConversationProvider {
     void loadConversation(String identifier, ConfigurationSection config);
 
     Optional<Conversation<Player>> startConversation(Player player, ConversationHost conversationHost);
+
+    Optional<Conversation<Player>> getActiveConversation(Player player);
 }

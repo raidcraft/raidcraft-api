@@ -1,6 +1,7 @@
 package de.raidcraft.api.conversations.conversation;
 
 import de.raidcraft.api.action.requirement.RequirementHolder;
+import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import org.bukkit.entity.Player;
@@ -64,7 +65,9 @@ public interface ConversationTemplate extends RequirementHolder {
     Conversation<Player> createConversation(Player player, ConversationHost host);
 
     /**
-     * Starts this conversation for the given player.
+     * Starts this conversation for the given player caching the active conversation
+     * in {@link Conversations#ACTIVE_CONVERSATIONS}. If the player already has an
+     * active conversation the conversation will be aborted with the {@link ConversationEndReason#START_NEW_CONVERSATION}.
      *
      * @param player to start conversation for
      * @param host that is hosting this conversation
@@ -72,8 +75,17 @@ public interface ConversationTemplate extends RequirementHolder {
      */
     default Conversation<Player> startConversation(Player player, ConversationHost host) {
 
-        Conversation<Player> conversation = createConversation(player, host);
-        conversation.start();
-        return conversation;
+        if (Conversations.ACTIVE_CONVERSATIONS.containsKey(player.getUniqueId())) {
+            Conversation<Player> playerConversation = Conversations.ACTIVE_CONVERSATIONS.get(player.getUniqueId());
+            if (!playerConversation.getTemplate().equals(this)) {
+                Conversations.ACTIVE_CONVERSATIONS.remove(player.getUniqueId()).abort(ConversationEndReason.START_NEW_CONVERSATION);
+            }
+            return playerConversation;
+        } else {
+            Conversation<Player> conversation = createConversation(player, host);
+            conversation.start();
+            Conversations.ACTIVE_CONVERSATIONS.put(player.getUniqueId(), conversation);
+            return conversation;
+        }
     }
 }

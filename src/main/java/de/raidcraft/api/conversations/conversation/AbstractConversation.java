@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.config.DataMap;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.events.RCConversationAbortedEvent;
+import de.raidcraft.api.conversations.events.RCConversationChangedStageEvent;
 import de.raidcraft.api.conversations.events.RCConversationEndedEvent;
 import de.raidcraft.api.conversations.events.RCStartConversationEvent;
 import de.raidcraft.api.conversations.host.ConversationHost;
@@ -61,6 +62,16 @@ public abstract class AbstractConversation<T> extends DataMap implements Convers
     public Conversation<T> setCurrentStage(Stage stage) {
 
         this.currentStage = stage;
+        return this;
+    }
+
+    @Override
+    public Conversation<T> changeToStage(Stage stage) {
+
+        Optional<Stage> currentStage = getCurrentStage();
+        setCurrentStage(stage);
+        triggerCurrentStage();
+        RaidCraft.callEvent(new RCConversationChangedStageEvent(this, currentStage, stage));
         return this;
     }
 

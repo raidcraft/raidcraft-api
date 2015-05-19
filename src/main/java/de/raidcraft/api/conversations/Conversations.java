@@ -3,20 +3,26 @@ package de.raidcraft.api.conversations;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.answer.ConfiguredAnswer;
 import de.raidcraft.api.conversations.answer.SimpleAnswer;
+import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.api.conversations.stage.ConfiguredStageTemplate;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author mdoering
  */
 public class Conversations {
+
+    public static final Map<UUID, Conversation<Player>> ACTIVE_CONVERSATIONS = new HashMap<>();
 
     private static ConversationProvider provider;
     private static Map<String, Class<? extends Answer>> queuedAnswers = new CaseInsensitiveMap<>();

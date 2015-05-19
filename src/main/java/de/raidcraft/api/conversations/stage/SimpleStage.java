@@ -1,8 +1,10 @@
 package de.raidcraft.api.conversations.stage;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
+import de.raidcraft.api.conversations.events.RCConversationStageTriggeredEvent;
 import lombok.Data;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
@@ -94,7 +96,11 @@ public class SimpleStage implements Stage {
         if (getText().isPresent()) {
             getConversation().sendMessage(getText().get());
         }
-        if (this.answers.isEmpty()) return this;
+        RCConversationStageTriggeredEvent event = new RCConversationStageTriggeredEvent(getConversation(), this);
+        if (this.answers.isEmpty()) {
+            RaidCraft.callEvent(event);
+            return this;
+        }
         while (currentPage >= this.answers.size()) currentPage--;
 
         List<Answer> answers = this.answers.get(currentPage);
@@ -123,6 +129,7 @@ public class SimpleStage implements Stage {
                         .command("/conversations page " + (currentPage + 1)));
             }
         }
+        RaidCraft.callEvent(event);
         return this;
     }
 

@@ -74,12 +74,7 @@ public interface Conversation<T> extends ConfigurationSection {
      * @param stage to  change to
      * @return current conversation
      */
-    default Conversation<T> changeToStage(Stage stage) {
-
-        setCurrentStage(stage);
-        triggerCurrentStage();
-        return this;
-    }
+    Conversation<T> changeToStage(Stage stage);
 
     /**
      * Gets a list of all stages attached to this conversation.
@@ -131,6 +126,8 @@ public interface Conversation<T> extends ConfigurationSection {
      * @see Stage#changePage(int)
      */
     boolean changePage(int page);
+
+    void setGlobal(String key, Object value);
 
     /**
      * Starts this conversation by setting the current {@link Stage} to the {@link StageTemplate#START_STAGE} and calling

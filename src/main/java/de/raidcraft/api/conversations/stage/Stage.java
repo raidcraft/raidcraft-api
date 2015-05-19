@@ -92,5 +92,5 @@ public interface Stage extends ActionHolder {
      * @param executeActions if false no actions will be executed
      * @return triggered stage
      */
-    de.raidcraft.api.conversations.stage.Stage trigger(boolean executeActions);
+    Stage trigger(boolean executeActions);
 }
