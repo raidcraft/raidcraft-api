@@ -1,11 +1,8 @@
 package de.raidcraft.api.conversations;
 
 import de.raidcraft.api.conversations.answer.Answer;
-import de.raidcraft.api.conversations.answer.ConfiguredAnswer;
-import de.raidcraft.api.conversations.answer.SimpleAnswer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
-import de.raidcraft.api.conversations.stage.ConfiguredStageTemplate;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import mkremins.fanciful.FancyMessage;
@@ -34,8 +31,6 @@ public class Conversations {
     public static void enable(ConversationProvider provider) {
 
         Conversations.provider = provider;
-        provider.registerStage(StageTemplate.DEFAULT_STAGE_TEMPLATE, ConfiguredStageTemplate.class);
-        provider.registerAnswer(Answer.DEFAULT_ANSWER_TEMPLATE, ConfiguredAnswer.class);
 
         queuedAnswers.entrySet().forEach(entry -> provider.registerAnswer(entry.getKey(), entry.getValue()));
         queuedAnswers.clear();
@@ -69,13 +64,11 @@ public class Conversations {
 
     public static Answer getAnswer(String text) {
 
-        if (provider == null) return new SimpleAnswer(text);
         return provider.getAnswer(text);
     }
 
     public static Answer getAnswer(FancyMessage message) {
 
-        if (provider == null) return new SimpleAnswer(message);
         return provider.getAnswer(message);
     }
 

@@ -1,4 +1,4 @@
-package de.raidcraft.api.conversations;
+package de.raidcraft.api.conversations.events;
 
 import de.raidcraft.api.conversations.host.ConversationHost;
 import lombok.Getter;
