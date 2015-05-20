@@ -13,6 +13,7 @@ import de.raidcraft.api.action.GlobalRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
+import de.raidcraft.api.action.trigger.global.TimerTrigger;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.MultiComment;
@@ -152,6 +153,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             actionAPI.requirement(requirement.getId(), requirement.getRequirement());
         }
         actionAPI.trigger(new GlobalPlayerTrigger());
+        actionAPI.trigger(new TimerTrigger());
     }
 
     private void setupDatabase() {

@@ -6,9 +6,11 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.util.TimeUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,7 +29,19 @@ public class Timer extends BukkitRunnable {
 
     public static Timer startTimer(Player player, ConfigurationSection config) {
 
-        Timer timer = new Timer(player, config);
+        Timer timer;
+        if (config.isSet("type")) {
+            switch (config.getString("type")) {
+                case "interval":
+                    timer = new IntervalTimer(player, config);
+                    break;
+                default:
+                    timer = new Timer(player, config);
+                    break;
+            }
+        } else {
+            timer = new Timer(player, config);
+        }
         timer.start();
         return timer;
     }
@@ -88,13 +102,13 @@ public class Timer extends BukkitRunnable {
     private final Collection<Action<Player>> endActions;
     private final Collection<Action<Player>> cancelActions;
     private long startTime;
-    private double time;
+    private double duration;
 
     private Timer(Player player, ConfigurationSection config) {
 
         this.id = config.getString("id");
         this.player = player;
-        this.time = config.getDouble("time");
+        this.duration = config.getDouble("time");
         this.endActions = ActionAPI.createActions(config.getConfigurationSection("end-actions"), Player.class);
         this.cancelActions = ActionAPI.createActions(config.getConfigurationSection("cancel-actions"), Player.class);
     }
@@ -110,23 +124,23 @@ public class Timer extends BukkitRunnable {
     public void addTime(double time) {
 
         if (startTime > 0) {
-            double current = getTime();
+            double current = getDuration();
             long passedTimed = startTime - System.currentTimeMillis();
-            long newTime = TimeUtil.secondsToMillis(getTime() + time) - passedTimed;
-            setTime(newTime);
+            long newTime = TimeUtil.secondsToMillis(getDuration() + time) - passedTimed;
+            setDuration(newTime);
             reset();
-            setTime(current + time);
+            setDuration(current + time);
         } else {
-            setTime(getTime() + time);
+            setDuration(getDuration() + time);
             reset();
         }
     }
 
     public void addTemporaryTime(double time) {
 
-        double current = getTime();
+        double current = getDuration();
         addTime(time);
-        setTime(current);
+        setDuration(current);
     }
 
     public void reset() {
@@ -137,13 +151,18 @@ public class Timer extends BukkitRunnable {
 
     public void start() {
 
-        if (getTime() <= 0) return;
+        if (getDuration() <= 0) return;
         if (!ACTIVE_TIMERS.containsKey(player.getUniqueId())) {
             ACTIVE_TIMERS.put(player.getUniqueId(), new HashMap<>());
         }
-        runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), TimeUtil.secondsToTicks(getTime()));
+        startTask();
         startTime = System.currentTimeMillis();
         ACTIVE_TIMERS.get(player.getUniqueId()).put(getId(), this);
+    }
+
+    protected void startTask() {
+
+        runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), TimeUtil.secondsToTicks(getDuration()));
     }
 
     @Override
@@ -161,5 +180,44 @@ public class Timer extends BukkitRunnable {
         removeTimer(this);
         if (!player.isOnline()) return;
         endActions.forEach(playerAction -> playerAction.accept(player));
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class IntervalTimer extends Timer {
+
+        private long delay;
+        private long interval;
+        private BukkitTask cancelTask;
+
+        private IntervalTimer(Player player, ConfigurationSection config) {
+
+            super(player, config);
+            this.delay = config.getLong("delay", 1);
+            this.interval = config.getLong("interval", 1);
+        }
+
+        @Override
+        public void run() {
+
+            RaidCraft.callEvent(new RCTimerTickEvent(this));
+            super.run();
+        }
+
+        @Override
+        protected void startTask() {
+
+            RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
+            runTaskTimer(plugin, getDelay(), getInterval());
+            cancelTask = Bukkit.getScheduler().runTaskLater(plugin, this::cancel, TimeUtil.secondsToTicks(getDuration()));
+        }
+
+        @Override
+        public synchronized void cancel() throws IllegalStateException {
+
+            super.cancel();
+            cancelTask.cancel();
+            cancelTask = null;
+        }
     }
 }
