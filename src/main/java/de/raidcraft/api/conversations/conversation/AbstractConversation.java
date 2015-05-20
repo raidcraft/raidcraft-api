@@ -121,7 +121,7 @@ public abstract class AbstractConversation<T> extends DataMap implements Convers
     }
 
     @Override
-    public final boolean start() {
+    public boolean start() {
 
         if (getTemplate().isPersistant()) load();
         Optional<Stage> stage = getCurrentStage();

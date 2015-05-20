@@ -33,4 +33,10 @@ public interface ConversationProvider {
     Optional<Conversation<Player>> startConversation(Player player, ConversationHost conversationHost);
 
     Optional<Conversation<Player>> getActiveConversation(Player player);
+
+    Optional<Conversation<Player>> addActiveConversation(Conversation<Player> conversation);
+
+    Optional<Conversation<Player>> removeActiveConversation(Player player);
+
+    boolean hasActiveConversation(Player player);
 }

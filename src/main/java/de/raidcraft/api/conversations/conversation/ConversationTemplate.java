@@ -73,19 +73,5 @@ public interface ConversationTemplate extends RequirementHolder {
      * @param host that is hosting this conversation
      * @return started conversation
      */
-    default Conversation<Player> startConversation(Player player, ConversationHost host) {
-
-        if (Conversations.ACTIVE_CONVERSATIONS.containsKey(player.getUniqueId())) {
-            Conversation<Player> playerConversation = Conversations.ACTIVE_CONVERSATIONS.get(player.getUniqueId());
-            if (!playerConversation.getTemplate().equals(this)) {
-                Conversations.ACTIVE_CONVERSATIONS.remove(player.getUniqueId()).abort(ConversationEndReason.START_NEW_CONVERSATION);
-            }
-            return playerConversation;
-        } else {
-            Conversation<Player> conversation = createConversation(player, host);
-            conversation.start();
-            Conversations.ACTIVE_CONVERSATIONS.put(player.getUniqueId(), conversation);
-            return conversation;
-        }
-    }
+    Conversation<Player> startConversation(Player player, ConversationHost host);
 }

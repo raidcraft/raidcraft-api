@@ -3,23 +3,20 @@ package de.raidcraft.api.conversations;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
+import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * @author mdoering
  */
 public class Conversations {
-
-    public static final Map<UUID, Conversation<Player>> ACTIVE_CONVERSATIONS = new HashMap<>();
 
     private static ConversationProvider provider;
     private static Map<String, Class<? extends Answer>> queuedAnswers = new CaseInsensitiveMap<>();
@@ -96,5 +93,35 @@ public class Conversations {
         } else {
             provider.loadConversation(name, config);
         }
+    }
+
+    public static Optional<Conversation<Player>> startConversation(Player player, ConversationHost conversationHost) {
+
+        if (provider == null) return Optional.empty();
+        return provider.startConversation(player, conversationHost);
+    }
+
+    public static Optional<Conversation<Player>> addActiveConversation(Conversation<Player> conversation) {
+
+        if (provider == null) return Optional.empty();
+        return provider.addActiveConversation(conversation);
+    }
+
+    public static boolean hasActiveConversation(Player player) {
+
+        if (provider == null) return false;
+        return provider.hasActiveConversation(player);
+    }
+
+    public static Optional<Conversation<Player>> getActiveConversation(Player player) {
+
+        if (provider == null) return Optional.empty();
+        return provider.getActiveConversation(player);
+    }
+
+    public static Optional<Conversation<Player>> removeActiveConversation(Player player) {
+
+        if (provider == null) return Optional.empty();
+        return provider.removeActiveConversation(player);
     }
 }
