@@ -2,6 +2,8 @@ package de.raidcraft.api.conversations.answer;
 
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionHolder;
+import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.api.action.requirement.RequirementHolder;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
@@ -12,7 +14,7 @@ import java.util.Optional;
 /**
  * @author mdoering
  */
-public interface Answer extends ActionHolder {
+public interface Answer extends ActionHolder, RequirementHolder {
 
     String DEFAULT_ANSWER_TEMPLATE = "default";
 
@@ -56,6 +58,22 @@ public interface Answer extends ActionHolder {
      * @param color to set
      */
     Answer color(ChatColor color);
+
+    /**
+     * Adds a Conversation requirement to this answer that is checked before actions are executed.
+     *
+     * @param conversationRequirement to add
+     * @return this answer
+     */
+    Answer addConversationRequirement(Requirement<Conversation> conversationRequirement);
+
+    /**
+     * Adds a Player action to this answer that is executed before actions are executed.
+     *
+     * @param playerRequirement to add
+     * @return this answer
+     */
+    Answer addPlayerRequirement(Requirement<Player> playerRequirement);
 
     /**
      * Adds a Conversation action to this answer that is executed when the answer is chosen.

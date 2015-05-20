@@ -3,14 +3,27 @@ package de.raidcraft.api.conversations.actions;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.stage.Stage;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 
 import java.util.Optional;
 
 /**
  * @author mdoering
  */
+@RequiredArgsConstructor
 public class ChangeStageAction implements Action<Conversation> {
+
+    private final String stage;
+
+    @Override
+    public void accept(Conversation type) {
+
+        MemoryConfiguration config = new MemoryConfiguration();
+        config.set("stage", stage);
+        accept(type, config);
+    }
 
     @Override
     @Information(
