@@ -38,8 +38,7 @@ public class Timer extends BukkitRunnable {
         if (!activeTimer.isPresent()) {
             return false;
         }
-        activeTimer.get().cancel();
-        activeTimer.get().start();
+        activeTimer.get().reset();
         return true;
     }
 
@@ -86,9 +85,10 @@ public class Timer extends BukkitRunnable {
     }
     private final String id;
     private final Player player;
-    private final double time;
     private final Collection<Action<Player>> endActions;
     private final Collection<Action<Player>> cancelActions;
+    private long startTime;
+    private double time;
 
     private Timer(Player player, ConfigurationSection config) {
 
@@ -107,12 +107,42 @@ public class Timer extends BukkitRunnable {
         return id;
     }
 
+    public void addTime(double time) {
+
+        if (startTime > 0) {
+            double current = getTime();
+            long passedTimed = startTime - System.currentTimeMillis();
+            long newTime = TimeUtil.secondsToMillis(getTime() + time) - passedTimed;
+            setTime(newTime);
+            reset();
+            setTime(current + time);
+        } else {
+            setTime(getTime() + time);
+            reset();
+        }
+    }
+
+    public void addTemporaryTime(double time) {
+
+        double current = getTime();
+        addTime(time);
+        setTime(current);
+    }
+
+    public void reset() {
+
+        cancel();
+        start();
+    }
+
     public void start() {
 
+        if (getTime() <= 0) return;
         if (!ACTIVE_TIMERS.containsKey(player.getUniqueId())) {
             ACTIVE_TIMERS.put(player.getUniqueId(), new HashMap<>());
         }
         runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), TimeUtil.secondsToTicks(getTime()));
+        startTime = System.currentTimeMillis();
         ACTIVE_TIMERS.get(player.getUniqueId()).put(getId(), this);
     }
 
