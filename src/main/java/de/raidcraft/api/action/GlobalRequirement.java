@@ -95,7 +95,8 @@ public enum GlobalRequirement {
             }
             return false;
         }
-    });
+    }),
+    TIMER_ACTIVE("timer.active", (type, config) -> Timer.isActive(type, config.getString("id")));
 
     private final String id;
     private final Requirement<Player> requirement;
