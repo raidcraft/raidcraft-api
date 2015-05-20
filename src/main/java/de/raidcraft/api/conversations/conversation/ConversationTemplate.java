@@ -14,6 +14,8 @@ import java.util.Optional;
  */
 public interface ConversationTemplate extends RequirementHolder {
 
+    String DEFAULT_CONVERSATION_TEMPLATE = "default";
+
     /**
      * Gets the unique identifier of the conversation.
      *

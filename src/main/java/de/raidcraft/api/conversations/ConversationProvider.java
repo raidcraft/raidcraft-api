@@ -28,6 +28,10 @@ public interface ConversationProvider {
 
     Optional<StageTemplate> getStageTemplate(String identifier, ConversationTemplate conversationTemplate, ConfigurationSection config);
 
+    void registerConversationTemplate(String type, Class<? extends ConversationTemplate> conversationTemplate);
+
+    Optional<ConversationTemplate> getConversationTemplate(String identifier, ConfigurationSection config);
+
     void loadConversation(String identifier, ConfigurationSection config);
 
     Optional<Conversation<Player>> startConversation(Player player, ConversationHost conversationHost);

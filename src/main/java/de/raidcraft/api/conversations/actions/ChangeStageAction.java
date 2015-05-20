@@ -17,6 +17,11 @@ public class ChangeStageAction implements Action<Conversation> {
 
     private final String stage;
 
+    public ChangeStageAction() {
+
+        stage = null;
+    }
+
     @Override
     public void accept(Conversation type) {
 

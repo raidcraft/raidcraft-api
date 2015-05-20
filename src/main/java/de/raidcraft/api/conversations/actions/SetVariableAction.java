@@ -16,6 +16,13 @@ public class SetVariableAction implements Action<Conversation> {
     private final Object value;
     private final boolean local;
 
+    public SetVariableAction() {
+
+        variable = null;
+        value = null;
+        local = true;
+    }
+
     @Override
     public void accept(Conversation type) {
 
