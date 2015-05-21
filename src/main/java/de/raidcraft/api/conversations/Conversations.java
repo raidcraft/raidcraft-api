@@ -104,7 +104,7 @@ public class Conversations {
     public static Optional<Conversation<Player>> addActiveConversation(Conversation<Player> conversation) {
 
         if (provider == null) return Optional.empty();
-        return provider.addActiveConversation(conversation);
+        return provider.setActiveConversation(conversation);
     }
 
     public static boolean hasActiveConversation(Player player) {

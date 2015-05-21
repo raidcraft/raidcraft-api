@@ -3,6 +3,7 @@ package de.raidcraft.api.conversations.host;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import lombok.NonNull;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -15,6 +16,14 @@ import java.util.UUID;
 public interface ConversationHost {
 
     UUID getUniqueId();
+
+    /**
+     * Gets the current location of the conversation host.
+     * Usually the conversation will abort if the player is too far aways from the host.
+     *
+     * @return host location
+     */
+    Location getLocation();
 
     /**
      * Gets the default conversation of this conversation host. If no default
