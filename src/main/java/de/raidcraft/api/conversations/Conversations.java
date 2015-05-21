@@ -3,6 +3,7 @@ package de.raidcraft.api.conversations;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
+import de.raidcraft.api.conversations.conversation.ConversationVariable;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
@@ -159,5 +160,52 @@ public class Conversations {
 
         if (provider == null) return Optional.empty();
         return provider.removeActiveConversation(player);
+    }
+
+    /**
+     * Registers the given conversation template with the {@link ConversationProvider}. Registered
+     * conversation templates allow the setting if custom variables at the beginning of a conversation.
+     *  @param type name of the conversation template
+     * @param conversationTemplate type to register
+     */
+    public static void registerConversationTemplate(String type, Class<? extends ConversationTemplate> conversationTemplate) {
+
+        provider.registerConversationTemplate(type, conversationTemplate);
+    }
+
+    /**
+     * Registers the given variable for all conversation replacements.
+     * Registered variables will be replaced when the conversation text is written.
+     *  @param name of the variable
+     * @param variable to register
+     */
+    public static void registerConversationVariable(String name, ConversationVariable variable) {
+
+        provider.registerConversationVariable(name, variable);
+    }
+
+    /**
+     * Gets the given {@link ConversationTemplate} if one with the identifier is registered, otherwise an
+     * empty {@link Optional} will be returned.
+     * ConversationTemplates can be used to set dynamic variables at the beginning of a {@link Conversation}.
+     * If no type is set the {@link ConversationTemplate#DEFAULT_CONVERSATION_TEMPLATE} will be used.
+     *
+     * @param identifier of the conversation template
+     * @param config to create template from
+     * @return optional conversation template
+     */
+    public static Optional<ConversationTemplate> getConversationTemplate(String identifier, ConfigurationSection config) {
+
+        return provider.getConversationTemplate(identifier, config);
+    }
+
+    /**
+     * Gets all registered conversation variables.
+     *
+     * @return registered variables
+     */
+    public static Map<String, ConversationVariable> getConversationVariables() {
+
+        return provider.getConversationVariables();
     }
 }

@@ -3,12 +3,14 @@ package de.raidcraft.api.conversations;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
+import de.raidcraft.api.conversations.conversation.ConversationVariable;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -93,6 +95,22 @@ public interface ConversationProvider {
      * @return optional conversation template
      */
     Optional<ConversationTemplate> getConversationTemplate(String identifier, ConfigurationSection config);
+
+    /**
+     * Registers the given variable for all conversation replacements.
+     * Registered variables will be replaced when the conversation text is written.
+     *
+     * @param name of the variable
+     * @param variable to register
+     */
+    void registerConversationVariable(String name, ConversationVariable variable);
+
+    /**
+     * Gets all registered conversation variables.
+     *
+     * @return registered variables
+     */
+    Map<String, ConversationVariable> getConversationVariables();
 
     /**
      * Loads the {@link ConversationTemplate} from the given config with the given identifier.
