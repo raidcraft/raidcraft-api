@@ -68,7 +68,7 @@ public interface ConversationTemplate extends RequirementHolder {
 
     /**
      * Starts this conversation for the given player caching the active conversation
-     * in {@link Conversations#addActiveConversation(Conversation)}. If the player already has an
+     * in {@link Conversations#setActiveConversation(Conversation)}. If the player already has an
      * active conversation the conversation will be aborted with the {@link ConversationEndReason#START_NEW_CONVERSATION}.
      *
      * @param player to start conversation for
