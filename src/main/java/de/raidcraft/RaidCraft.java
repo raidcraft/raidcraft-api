@@ -10,7 +10,7 @@ import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
-import de.raidcraft.api.conversations.ConversationProvider;
+import de.raidcraft.api.conversations.legacy.ConversationProvider;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.api.economy.Economy;
