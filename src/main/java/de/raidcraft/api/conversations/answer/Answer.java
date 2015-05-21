@@ -17,6 +17,9 @@ import java.util.Optional;
 public interface Answer extends ActionHolder, RequirementHolder {
 
     String DEFAULT_ANSWER_TEMPLATE = "default";
+    String ANSWER_INPUT_TYPE = "input";
+
+    String getType();
 
     /**
      * Gets an optional formatted message that will be clickable.
@@ -97,4 +100,12 @@ public interface Answer extends ActionHolder, RequirementHolder {
      * @param conversation to execute actions for
      */
     void executeActions(Conversation conversation);
+
+    /**
+     * Processes the player input and takes actions accordingly.
+     *
+     * @param conversation to process
+     * @param input to process
+     */
+    void processInput(Conversation conversation, String input);
 }
