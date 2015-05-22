@@ -11,6 +11,7 @@ import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -118,15 +119,6 @@ public class Conversations {
     }
 
     /**
-     * @see ConversationProvider#startConversation(Player, ConversationHost)
-     */
-    public static Optional<Conversation<Player>> startConversation(Player player, ConversationHost conversationHost) {
-
-        if (provider == null) return Optional.empty();
-        return provider.startConversation(player, conversationHost);
-    }
-
-    /**
      * @see ConversationProvider#setActiveConversation(Conversation)
      */
     public static Optional<Conversation<Player>> setActiveConversation(Conversation<Player> conversation) {
@@ -196,7 +188,7 @@ public class Conversations {
      */
     public static Optional<ConversationTemplate> getConversationTemplate(String identifier, ConfigurationSection config) {
 
-        return provider.getConversationTemplate(identifier, config);
+        return provider.createConversationTemplate(identifier, config);
     }
 
     /**
@@ -207,5 +199,43 @@ public class Conversations {
     public static Map<String, ConversationVariable> getConversationVariables() {
 
         return provider.getConversationVariables();
+    }
+
+    /**
+     * @see ConversationProvider#registerConversationHost(Class, Class)
+     */
+    public static <T> void registerConversationHost(Class<T> type, Class<? extends ConversationHost<T>> host) {
+
+        provider.registerConversationHost(type, host);
+    }
+
+    public static <T> Optional<ConversationHost<T>> createConversationHost(T type, ConfigurationSection config) {
+
+        return provider.createConversationHost(type, config);
+    }
+
+    public static Optional<ConversationTemplate> getLoadedConversationTemplate(String identifier) {
+
+        return provider.getLoadedConversationTemplate(identifier);
+    }
+
+    public static List<ConversationTemplate> findConversationTemplate(String identifier) {
+
+        return provider.findConversationTemplate(identifier);
+    }
+
+    public static <T> Optional<ConversationHost<T>> getConversationHost(T type) {
+
+        return provider.getConversationHost(type);
+    }
+
+    public static Optional<Conversation<Player>> startConversation(Player player, ConversationHost<?> conversationHost) {
+
+        return provider.startConversation(player, conversationHost);
+    }
+
+    public static Optional<ConversationTemplate> createConversationTemplate(String identifier, ConfigurationSection config) {
+
+        return provider.createConversationTemplate(identifier, config);
     }
 }

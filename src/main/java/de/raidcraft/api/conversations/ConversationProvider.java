@@ -10,6 +10,7 @@ import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -94,7 +95,39 @@ public interface ConversationProvider {
      * @param config to create template from
      * @return optional conversation template
      */
-    Optional<ConversationTemplate> getConversationTemplate(String identifier, ConfigurationSection config);
+    Optional<ConversationTemplate> createConversationTemplate(String identifier, ConfigurationSection config);
+
+    /**
+     * Registers the given conversation host for the given type. The registered conversation host
+     * must have a constructor that takes {@link Class<T>} as the first parameter and a {@link ConfigurationSection}
+     * as the second parameter.
+     *
+     * @param type to register
+     * @param host class to register
+     * @param <T> type of the conversation host
+     */
+    <T> void registerConversationHost(Class<T> type, Class<? extends ConversationHost<T>> host);
+
+    /**
+     * Gets a registered {@link ConversationHost} for the given type. A new host will be instantiated.
+     * If no registered host for the type is found an empty {@link Optional} will be returned.
+     *
+     * @param type to get host for
+     * @param config to load host with
+     * @param <T> type of the host
+     * @return optional conversation host
+     */
+    <T> Optional<ConversationHost<T>> createConversationHost(T type, ConfigurationSection config);
+
+    /**
+     * Gets a loaded and cached {@link ConversationHost} that has already been created with
+     * {@link #createConversationHost(Object, ConfigurationSection)}.
+     *
+     * @param type to get
+     * @param <T> of the host
+     * @return cached host
+     */
+    <T> Optional<ConversationHost<T>> getConversationHost(T type);
 
     /**
      * Registers the given variable for all conversation replacements.
@@ -114,7 +147,7 @@ public interface ConversationProvider {
 
     /**
      * Loads the {@link ConversationTemplate} from the given config with the given identifier.
-     * Conversations need to be loaded from disk in order to be available in {@link #getConversationTemplate(String, ConfigurationSection)}.
+     * Conversations need to be loaded from disk in order to be available in {@link #createConversationTemplate(String, ConfigurationSection)}.
      * If the template is already registered the registered template will be returned and no new template will be loaded.
      *
      * @param identifier of the template
@@ -122,6 +155,26 @@ public interface ConversationProvider {
      * @return loaded conversation template or empty {@link Optional} if template was not found
      */
     Optional<ConversationTemplate> loadConversation(String identifier, ConfigurationSection config);
+
+    /**
+     * Gets a registered and loaded {@link ConversationTemplate} with the given identifier.
+     * If no ConversationTemplate with the identifier is found an empty {@link Optional} will be returned.
+     *
+     * @param identifier to get conversation template for
+     * @return optional {@link ConversationTemplate}
+     */
+    Optional<ConversationTemplate> getLoadedConversationTemplate(String identifier);
+
+    /**
+     * Tries to find the given {@link ConversationTemplate} based on its identifier.
+     * It will look thru the loaded conversation templates and will try to find a matching template that
+     * ends with the identifier.
+     * Will find all matching templates
+     *
+     * @param identifier to find template for
+     * @return list of matching templates or empty list if none found
+     */
+    List<ConversationTemplate> findConversationTemplate(String identifier);
 
     /**
      * Starts the {@link ConversationHost#getConversation(Player)} for the player. This will usually be the
@@ -134,7 +187,7 @@ public interface ConversationProvider {
      * @param conversationHost that started the conversation
      * @return started conversation or an empty optional if the host has no conversations to start
      */
-    Optional<Conversation<Player>> startConversation(Player player, ConversationHost conversationHost);
+    Optional<Conversation<Player>> startConversation(Player player, ConversationHost<?> conversationHost);
 
     /**
      * Gets an active conversation for the player if any are found.

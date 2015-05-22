@@ -13,9 +13,11 @@ import java.util.UUID;
 /**
  * @author mdoering
  */
-public interface ConversationHost {
+public interface ConversationHost<T> {
 
     UUID getUniqueId();
+
+    T getType();
 
     /**
      * Gets the current location of the conversation host.
@@ -46,6 +48,8 @@ public interface ConversationHost {
     /**
      * Gets the saved {@link ConversationTemplate} for the player or the
      * default conversation if no saved Conversation exists.
+     * The retrieved conversation will be based on the priority of the conversation where a
+     * saved player conversation is always of higher priority than the default conversations.
      *
      * @param player to get {@link ConversationTemplate} for
      * @return optional saved conversation or default conversation
@@ -53,29 +57,48 @@ public interface ConversationHost {
     Optional<ConversationTemplate> getConversation(@NonNull Player player);
 
     /**
+     * Gets a list of all saved player conversations registered with this host.
+     *
+     * @param player to get conversations for
+     * @return list of all saved conversations
+     */
+    List<ConversationTemplate> getPlayerConversations(@NonNull Player player);
+
+    /**
      * Sets the given {@link Conversation} for the player. The
-     * Conversation will persist until it is unset.
+     * Conversation will persist until {@link #unsetConversation(Player, ConversationTemplate)} is called.
      *
      * @param player to set persistant conversation for
      * @param conversation to set
      */
-    void setConversation(@NonNull Player player, @NonNull ConversationTemplate conversation);
+    default void setConversation(@NonNull Player player, @NonNull ConversationTemplate conversation) {
+
+        setConversation(player.getUniqueId(), conversation);
+    }
 
     /**
-     * Sets the given {@link Conversation} for the player.
-     * If persist is set to false the Conversation will be removed after it was finished once.
+     * Sets the given {@link Conversation} for the player. The
+     * Conversation will persist until {@link #unsetConversation(Player, ConversationTemplate)} is called.
      *
-     * @param player to set conversation for
+     * @param player to set persistant conversation for
      * @param conversation to set
-     * @param persistant false if conversation should be unset after it completed once
      */
-    void setConversation(@NonNull Player player, @NonNull ConversationTemplate conversation, boolean persistant);
+    void setConversation(@NonNull UUID player, @NonNull ConversationTemplate conversation);
 
     /**
-     * Unsets the current conversation for the player. Will set the conversation to the default conversation.
+     * Unsets the given conversation for the player. Will set the conversation to the default conversation.
      *
      * @param player to unset conversation for
-     * @return optional conversation if a conversation was removed
+     * @param conversation to remove
+     * @return true if the conversation was found and removed
      */
-    Optional<ConversationTemplate> unsetConversation(@NonNull Player player);
+    boolean unsetConversation(@NonNull Player player, @NonNull ConversationTemplate conversation);
+
+    /**
+     * Gets the conversation from {@link #getConversation(Player)} and calls {@link ConversationTemplate#startConversation(Player, ConversationHost)}.
+     *
+     * @param player to start conversation for
+     * @return started conversation
+     */
+    Optional<Conversation<Player>> startConversation(Player player);
 }

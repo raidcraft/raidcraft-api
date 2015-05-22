@@ -14,7 +14,10 @@ public enum ConversationEndReason {
     DEATH("Du bist gestorben."),
     START_NEW_CONVERSATION("Es wurde eine neue Unterhaltung begonnen."),
     ENDED("Unterhaltung beendet."),
-    CUSTOM("Custom Conversation End Reason not defined!");
+    CUSTOM("Custom Conversation End Reason not defined!"),
+    PLAYER_ABORT("Die Unterhaltung wurde abgerochen."),
+    PLAYER_QUIT("Die Unterhaltung wurde abgebrochen da Du das Spiel verlassen hast."),
+    PLAYER_CHANGED_WORLD("Die Unterhaltung wurde abgebrochen da Du die Welt gewechselt hast.");
 
     @Getter
     @Setter

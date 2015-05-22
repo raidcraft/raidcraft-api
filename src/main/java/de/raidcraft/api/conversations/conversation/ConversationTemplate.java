@@ -4,6 +4,7 @@ import de.raidcraft.api.action.requirement.RequirementHolder;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.StageTemplate;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Optional;
 /**
  * @author mdoering
  */
-public interface ConversationTemplate extends RequirementHolder {
+public interface ConversationTemplate extends RequirementHolder, Comparable<ConversationTemplate> {
 
     String DEFAULT_CONVERSATION_TEMPLATE = "default";
 
@@ -38,6 +39,14 @@ public interface ConversationTemplate extends RequirementHolder {
      * @return true if conversation will save if it is aborted
      */
     boolean isPersistant();
+
+    /**
+     * Gets the {@link ConfigurationSection} that defines special host settings that are defined in
+     * the {@link ConversationTemplate}.
+     *
+     * @return host setting
+     */
+    ConfigurationSection getHostSettings();
 
     /**
      * Gets all stages registered in this conversation template.
