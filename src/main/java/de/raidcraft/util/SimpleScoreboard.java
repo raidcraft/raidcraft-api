@@ -99,7 +99,6 @@ public class SimpleScoreboard {
             if (text.length() > 32)
                 team.setSuffix(iterator.next());
             if (!teamStringEntry.getValue().getEntry().equals(result)) {
-                teamStringEntry.getValue().
             }
         });
     }
@@ -120,9 +119,6 @@ public class SimpleScoreboard {
             }
             Score score = obj.getScore(player.getName());
             score.setScore(index);
-            if (entry.getValue() != null) {
-                updaters.put(entry.getValue(),
-            }
             index -= 1;
         }
 
