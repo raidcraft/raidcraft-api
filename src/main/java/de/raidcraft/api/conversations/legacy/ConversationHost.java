@@ -1,4 +1,4 @@
-package de.raidcraft.api.conversations;
+package de.raidcraft.api.conversations.legacy;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

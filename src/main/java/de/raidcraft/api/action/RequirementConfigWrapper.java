@@ -4,6 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Reasonable;
 import de.raidcraft.api.action.requirement.ReasonableRequirement;
 import de.raidcraft.api.action.requirement.Requirement;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -42,8 +44,11 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
     private final String countText;
     private final boolean optional;
     private final ConfigurationSection config;
+    private final List<Action<T>> successActions;
+    private final List<Action<T>> failureActions;
     private final Map<UUID, Map<String, String>> mappings = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config, Class<T> type) {
 
         this.id = config.isSet("id") ? config.getString("id") : id;
@@ -60,6 +65,14 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
         this.requiredCount = config.getInt("count", 0);
         this.countText = config.getString("count-text");
         this.optional = config.getBoolean("optional", false);
+        this.successActions = ActionAPI.createActions(config.getConfigurationSection("success")).stream()
+                .filter(action -> ActionAPI.matchesType(action, getType()))
+                .map(action -> (Action<T>) action)
+                .collect(Collectors.toList());
+        this.failureActions = ActionAPI.createActions(config.getConfigurationSection("failure")).stream()
+                .filter(action -> ActionAPI.matchesType(action, getType()))
+                .map(action -> (Action<T>) action)
+                .collect(Collectors.toList());
         this.config = config;
     }
 
@@ -191,6 +204,11 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
             }
         }
         save();
+        if (successfullyChecked) {
+            successActions.forEach(tAction -> tAction.accept(entity));
+        } else {
+            failureActions.forEach(tAction -> tAction.accept(entity));
+        }
         return successfullyChecked;
     }
 

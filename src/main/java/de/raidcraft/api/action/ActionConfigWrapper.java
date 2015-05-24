@@ -1,10 +1,14 @@
 package de.raidcraft.api.action;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.RevertableAction;
 import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.util.TimeUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
     private final Class<T> type;
     private final Action<T> action;
     private final ConfigurationSection config;
+    private final double delay;
     private List<Requirement<T>> requirements = new ArrayList<>();
 
     protected ActionConfigWrapper(Action<T> action, ConfigurationSection config, Class<T> type) {
@@ -27,6 +32,7 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         this.type = type;
         this.action = action;
         this.config = config;
+        this.delay = config.getDouble("delay", 0);
         this.requirements = ActionAPI.createRequirements(getIdentifier(), config.getConfigurationSection("requirements"), type);
     }
 
@@ -44,12 +50,19 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
 
     public void accept(T type, ConfigurationSection config) {
 
-        if (!requirements.isEmpty()) {
-            boolean allMatch = requirements.stream()
-                    .allMatch(requirement -> requirement.test(type));
-            if (!allMatch) return;
+        Runnable runnable = () -> {
+            if (!requirements.isEmpty()) {
+                boolean allMatch = requirements.stream()
+                        .allMatch(requirement -> requirement.test(type));
+                if (!allMatch) return;
+            }
+            action.accept(type, config);
+        };
+        if (delay > 0) {
+            Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), runnable, TimeUtil.secondsToTicks(delay));
+        } else {
+            runnable.run();
         }
-        action.accept(type, config);
     }
 
     @Override

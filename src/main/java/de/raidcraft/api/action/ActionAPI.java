@@ -77,12 +77,30 @@ public final class ActionAPI {
         return ((RequirementFactory<T>) factory).createRequirements(id, requirements);
     }
 
+    public static List<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) {
+
+        List<Requirement<?>> list = new ArrayList<>();
+        for (RequirementFactory<?> requirementFactory : requirementFactories.values()) {
+            list.addAll(requirementFactory.createRequirements(id, requirements));
+        }
+        return list;
+    }
+
     @SuppressWarnings("unchecked")
     public static  <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
 
         ActionFactory<?> factory = actionFactories.get(type);
         if (factory == null) return new ArrayList<>();
         return ((ActionFactory<T>) factory).createActions(actions);
+    }
+
+    public static List<Action<?>> createActions(ConfigurationSection actions) {
+
+        List<Action<?>> list = new ArrayList<>();
+        for (ActionFactory<?> factory : actionFactories.values()) {
+            list.addAll(factory.createActions(actions));
+        }
+        return list;
     }
 
     public static Collection<TriggerFactory> createTrigger(ConfigurationSection trigger) {
@@ -137,7 +155,12 @@ public final class ActionAPI {
         this.plugin = plugin;
     }
 
+
+    /**
+     * @deprecated use {@link #action(Action, Class)} or {@link #action(Action)}
+     */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public <T> ActionAPI action(@NonNull String identifier, @NonNull Action<T> action, Class<T> type) {
 
         ActionFactory<T> factory;
@@ -155,12 +178,21 @@ public final class ActionAPI {
         return this;
     }
 
+
+    /**
+     * @deprecated use {@link #action(Action, Class)} or {@link #action(Action)}
+     */
+    @Deprecated
     public ActionAPI action(@NonNull String identifier, @NonNull Action<Player> action) {
 
         return action(identifier, action, Player.class);
     }
 
+    /**
+     * @deprecated use {@link #requirement(Requirement, Class)} or {@link #requirement(Requirement)}
+     */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public <T> ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<T> requirement, Class<T> type) {
 
         RequirementFactory<T> factory;
@@ -178,6 +210,10 @@ public final class ActionAPI {
         return this;
     }
 
+    /**
+     * @deprecated use {@link #requirement(Requirement, Class)} or {@link #requirement(Requirement)}
+     */
+    @Deprecated
     public ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<Player> requirement) {
 
         return requirement(identifier, requirement, Player.class);

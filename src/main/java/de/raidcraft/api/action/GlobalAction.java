@@ -212,7 +212,20 @@ public enum GlobalAction {
 
             player.teleport(ConfigUtil.getLocationFromConfig(config, player));
         }
-    });
+    }),
+    START_TIMER("timer.start", Timer::startTimer),
+    ADD_TIMER_TIME("timer.add", (type, config) -> {
+        Optional<Timer> timer = Timer.getActiveTimer(type, config.getString("id"));
+        if (timer.isPresent()) {
+            if (config.getBoolean("temporary", false)) {
+                timer.get().addTemporaryTime(config.getDouble("time"));
+            } else {
+                timer.get().addTime(config.getDouble("time"));
+            }
+        }
+    }),
+    ABORT_TIMER("timer.cancel", (type, config) -> Timer.cancelTimer(type, config.getString("id"))),
+    RESET_TIMER("timer.reset", (type, config) -> Timer.resetTimer(type, config.getString("id")));
 
     private final String id;
     private final Action<Player> action;

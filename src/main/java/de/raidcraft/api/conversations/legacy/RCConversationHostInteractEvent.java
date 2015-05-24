@@ -1,4 +1,4 @@
-package de.raidcraft.api.conversations;
+package de.raidcraft.api.conversations.legacy;
 
 import lombok.Getter;
 import lombok.Setter;

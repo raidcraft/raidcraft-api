@@ -13,6 +13,7 @@ import de.raidcraft.api.action.GlobalRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
+import de.raidcraft.api.ambient.AmbientManager;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.MultiComment;
@@ -44,6 +45,7 @@ import de.raidcraft.tables.TPlugin_;
 import de.raidcraft.tables.TRcPlayer;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
+import de.slikey.effectlib.effect.AtomEffect;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
@@ -254,6 +256,11 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
 
         createPlayerLog(event.getPlayer());
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            AtomEffect atomEffect = new AtomEffect(AmbientManager.getEffectManager());
+            atomEffect.setEntity(event.getPlayer());
+            atomEffect.run();
+        }, 100);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)

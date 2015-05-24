@@ -1,6 +1,6 @@
 package de.raidcraft.api.quests.host;
 
-import de.raidcraft.api.conversations.ConversationHost;
+import de.raidcraft.api.conversations.legacy.ConversationHost;
 import org.bukkit.entity.Player;
 
 /**

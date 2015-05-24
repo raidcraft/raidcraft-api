@@ -1,5 +1,6 @@
-package de.raidcraft.api.conversations;
+package de.raidcraft.api.conversations.events;
 
+import de.raidcraft.api.conversations.host.ConversationHost;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -12,18 +13,16 @@ import org.bukkit.event.HandlerList;
  */
 @Getter
 @Setter
-public class RCPlayerStartConversationEvent extends Event implements Cancellable {
+public class RCConversationHostInteractEvent extends Event implements Cancellable {
 
     private final Player player;
     private ConversationHost host;
-    private String conversation;
     private boolean cancelled;
 
-    public RCPlayerStartConversationEvent(Player player, ConversationHost host, String conversation) {
+    public RCConversationHostInteractEvent(Player player, ConversationHost host) {
 
         this.player = player;
         this.host = host;
-        this.conversation = conversation;
     }
 
     //<-- Handler -->//

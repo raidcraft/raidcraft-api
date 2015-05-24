@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -27,6 +28,10 @@ public interface CustomItem extends RequirementResolver<Player> {
     String getName();
 
     String getLore();
+
+    Set<ItemCategory> getCategories();
+
+    void addCategory(ItemCategory category);
 
     void setItemLevel(int itemLevel);
 
