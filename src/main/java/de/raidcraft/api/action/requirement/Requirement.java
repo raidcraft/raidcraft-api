@@ -4,6 +4,8 @@ import de.raidcraft.api.action.ActionAPI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
+import java.util.Optional;
+
 /**
  * @author mdoering
  */
@@ -29,6 +31,16 @@ public interface Requirement<T> extends RequirementConfigGenerator {
 
     default void setChecked(T entity, boolean checked) {
 
+    }
+
+    default Optional<String> getDescription(T entity) {
+
+        return getDescription(entity, new MemoryConfiguration());
+    }
+
+    default Optional<String> getDescription(T entity, ConfigurationSection config) {
+
+        return Optional.empty();
     }
 
     default boolean isOrdered() {

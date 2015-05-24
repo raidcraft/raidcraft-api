@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,7 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
     private final int order;
     private final int requiredCount;
     private final String countText;
+    private final String description;
     private final boolean optional;
     private final ConfigurationSection config;
     private final List<Action<T>> successActions;
@@ -64,6 +66,7 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
         this.order = config.getInt("order", 0);
         this.requiredCount = config.getInt("count", 0);
         this.countText = config.getString("count-text");
+        this.description = config.getString("description");
         this.optional = config.getBoolean("optional", false);
         this.successActions = ActionAPI.createActions(config.getConfigurationSection("success")).stream()
                 .filter(action -> ActionAPI.matchesType(action, getType()))
@@ -227,6 +230,24 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
             return reasonable.getReason(entity, config);
         }
         return "Requirement has no defined reasons! " + ConfigUtil.getFileName(config);
+    }
+
+    @Override
+    public Optional<String> getDescription(T entity) {
+
+        ConfigurationSection args = getConfig().getConfigurationSection("args");
+        if (args == null) args = getConfig().createSection("args");
+        return getDescription(entity, args);
+    }
+
+    @Override
+    public Optional<String> getDescription(T entity, ConfigurationSection config) {
+
+        Optional<String> description = requirement.getDescription(entity, config);
+        if (description.isPresent()) {
+            return description;
+        }
+        return Optional.ofNullable(this.description);
     }
 
     @Override
