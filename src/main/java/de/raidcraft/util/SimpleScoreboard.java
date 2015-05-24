@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -97,6 +98,10 @@ public class SimpleScoreboard {
             obj.getScore(player.getName()).setScore(score);
             index -= 1;
         }
+
+        Objective objective = scoreboard.registerNewObjective("health", "health");
+        objective.setDisplayName(ChatColor.DARK_RED + "" + ChatColor.BOLD + "❤");
+        objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
     }
 
     public SimpleScoreboard reset() {
