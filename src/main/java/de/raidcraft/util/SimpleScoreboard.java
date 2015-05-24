@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -23,10 +24,16 @@ import java.util.Map;
  */
 public class SimpleScoreboard {
 
+    public interface UpdateScore {
+
+        String update();
+    }
+
     private Scoreboard scoreboard;
 
     private String title;
-    private Map<String, Integer> scores;
+    private Map<String, UpdateScore> scores;
+    private Map<UpdateScore, Map.Entry<Team, Score>> updaters;
     private List<Team> teams;
 
     public SimpleScoreboard(String title) {
@@ -35,6 +42,7 @@ public class SimpleScoreboard {
         this.title = title;
         this.scores = Maps.newLinkedHashMap();
         this.teams = Lists.newArrayList();
+        this.updaters = Maps.newHashMap();
     }
 
     public SimpleScoreboard blankLine() {
@@ -45,15 +53,14 @@ public class SimpleScoreboard {
 
     public SimpleScoreboard add(String text) {
 
-        add(text, null);
-        return this;
+        return add(text, null);
     }
 
-    public SimpleScoreboard add(String text, Integer score) {
+    public SimpleScoreboard add(String text, UpdateScore updateScore) {
 
         Preconditions.checkArgument(text.length() < 48, "text cannot be over 48 characters in length");
         text = fixDuplicates(text);
-        scores.put(text, score);
+        scores.put(text, updateScore);
         return this;
     }
 
@@ -68,7 +75,7 @@ public class SimpleScoreboard {
 
     private Map.Entry<Team, String> createTeam(String text) {
 
-        String result = "";
+        String result;
         if (text.length() <= 16)
             return new AbstractMap.SimpleEntry<>(null, text);
         Team team = scoreboard.registerNewTeam("text-" + scoreboard.getTeams().size());
@@ -81,6 +88,22 @@ public class SimpleScoreboard {
         return new AbstractMap.SimpleEntry<>(team, result);
     }
 
+    public void update() {
+
+        updaters.forEach((updateScore, teamStringEntry) -> {
+            String text = updateScore.update();
+            Iterator<String> iterator = Splitter.fixedLength(16).split(text).iterator();
+            Team team = teamStringEntry.getKey();
+            team.setPrefix(iterator.next());
+            String result = iterator.next();
+            if (text.length() > 32)
+                team.setSuffix(iterator.next());
+            if (!teamStringEntry.getValue().getEntry().equals(result)) {
+                teamStringEntry.getValue().
+            }
+        });
+    }
+
     public void build() {
 
         Objective obj = scoreboard.registerNewObjective((title.length() > 16 ? title.substring(0, 15) : title), "dummy");
@@ -89,13 +112,17 @@ public class SimpleScoreboard {
 
         int index = scores.size();
 
-        for (Map.Entry<String, Integer> text : scores.entrySet()) {
-            Map.Entry<Team, String> team = createTeam(text.getKey());
-            Integer score = text.getValue() != null ? text.getValue() : index;
+        for (Map.Entry<String, UpdateScore> entry : scores.entrySet()) {
+            Map.Entry<Team, String> team = createTeam(entry.getKey());
             OfflinePlayer player = Bukkit.getOfflinePlayer(team.getValue());
-            if (team.getKey() != null)
+            if (team.getKey() != null) {
                 team.getKey().addPlayer(player);
-            obj.getScore(player.getName()).setScore(score);
+            }
+            Score score = obj.getScore(player.getName());
+            score.setScore(index);
+            if (entry.getValue() != null) {
+                updaters.put(entry.getValue(),
+            }
             index -= 1;
         }
 
