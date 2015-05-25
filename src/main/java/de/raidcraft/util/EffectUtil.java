@@ -1,6 +1,5 @@
 package de.raidcraft.util;
 
-import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityWeather;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ambient.ParticleEffect;
@@ -95,13 +94,10 @@ public class EffectUtil {
 
     public static void strikeLightning(Location location, int radius) {
 
-        WrapperPlayServerSpawnEntityWeather wrapper = new WrapperPlayServerSpawnEntityWeather();
-        wrapper.setType(LIGHTNING_BOLT_ENTITY_TYPE_ID);
-        wrapper.setX(location.getBlockX());
-        wrapper.setY(location.getBlockY());
-        wrapper.setZ(location.getBlockZ());
+        if (location != null && location.getWorld() != null) {
+            location.getWorld().strikeLightningEffect(location);
+        }
         Bukkit.getOnlinePlayers().stream().filter(player -> LocationUtil.isWithinRadius(player.getLocation(), location, radius)).forEach(player -> {
-            wrapper.sendPacket(player);
             player.playSound(location, Sound.AMBIENCE_THUNDER, 10, 1);
         });
     }
