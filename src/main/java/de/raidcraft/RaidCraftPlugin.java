@@ -173,7 +173,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @Override
     public void disable() {
 
-        for (UUID uuid : playerLogs.keySet()) {
+        for (UUID uuid : new ArrayList<>(playerLogs.keySet())) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
                 completePlayerLog(player);
