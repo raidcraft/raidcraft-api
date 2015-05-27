@@ -70,6 +70,15 @@ public class NPC_Manager {
         this.removeNPC(npc, host);
     }
 
+    public void removeAllNPCs(String host) {
+
+        if(register.get(host) == null) return;
+
+        for(NPC npc : register.get(host).sorted()) {
+            removeNPC(npc, host);
+        }
+    }
+
     /**
      * Worked not for non persist NPC's
      */
