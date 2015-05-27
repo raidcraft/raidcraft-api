@@ -1,6 +1,8 @@
 package de.raidcraft.util;
 
 import com.sk89q.worldedit.blocks.BlockType;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import me.botsko.prism.Prism;
 import me.botsko.prism.actionlibs.ActionsQuery;
 import me.botsko.prism.actionlibs.QueryParameters;
@@ -197,6 +199,9 @@ public final class BlockUtil {
 
     public static boolean isPlayerPlacedBlock(Block block) {
 
+        if (!RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().checkPlayerBlockPlacement) {
+            return false;
+        }
         QueryParameters params = new QueryParameters();
         params.setSpecificBlockLocation(block.getLocation());
         params.addActionType("block-place");

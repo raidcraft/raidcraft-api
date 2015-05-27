@@ -213,6 +213,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             super(plugin, "config.yml");
         }
 
+        @Setting("check-player-block-placement")
+        public boolean checkPlayerBlockPlacement = false;
         @Setting("player-placed-block-worlds")
         public List<String> player_placed_block_worlds = new ArrayList<>();
         @Setting("server-start-delay")
