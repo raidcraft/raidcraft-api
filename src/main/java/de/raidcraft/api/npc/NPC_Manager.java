@@ -60,7 +60,8 @@ public class NPC_Manager {
             trait.onRemove();
         }
         npc.getOwningRegistry().deregister(npc);
-        store(host);
+        if(stores.containsKey(host))
+            store(host);
     }
 
     public void removeNPC(UUID npcID, String host) {
@@ -72,10 +73,14 @@ public class NPC_Manager {
 
     public void removeAllNPCs(String host) {
 
-        if(register.get(host) == null) return;
-
-        for(NPC npc : register.get(host).sorted()) {
-            removeNPC(npc, host);
+        if(register.containsKey(host)) {
+            for (NPC npc : register.get(host).sorted()) {
+                removeNPC(npc, host);
+            }
+        } else if(nonPersistentRegistry.containsKey(host)) {
+            for (NPC npc : nonPersistentRegistry.get(host).sorted()) {
+                removeNPC(npc, host);
+            }
         }
     }
 
@@ -229,6 +234,8 @@ public class NPC_Manager {
     }
 
     public void store(String host) {
+
+        if(!stores.containsKey(host)) return;
 
         for (NPC npc : this.register.get(host)) {
             this.stores.get(host).store(npc);
