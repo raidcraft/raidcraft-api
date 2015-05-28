@@ -410,6 +410,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @EventHandler(ignoreCancelled = true)
     public void onChunkLoad(ChunkLoadEvent event) {
 
+        if (!getConfig().checkPlayerBlockPlacement) return;
         Chunk chunk = event.getChunk();
         QueryParameters params = new QueryParameters();
         for (int x = 0; x < 16; x++) {
@@ -441,6 +442,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @EventHandler(ignoreCancelled = true)
     public void onChunkUnload(ChunkUnloadEvent event) {
 
+        if (!getConfig().checkPlayerBlockPlacement) return;
         BlockUtil.clearPlayerPlacedBlocksForChunk(event.getChunk());
     }
 
