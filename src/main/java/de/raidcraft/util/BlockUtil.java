@@ -3,20 +3,17 @@ package de.raidcraft.util;
 import com.sk89q.worldedit.blocks.BlockType;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
-import me.botsko.prism.Prism;
-import me.botsko.prism.actionlibs.ActionsQuery;
-import me.botsko.prism.actionlibs.QueryParameters;
-import me.botsko.prism.actionlibs.QueryResult;
-import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BlockIterator;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -197,20 +194,32 @@ public final class BlockUtil {
         return null;
     }
 
+    private static Map<ChunkLocation, Set<BlockLocation>> PLAYER_PLACED_BLOCKS = new HashMap<>();
+
+    public static void addPlayerPlacedBlock(Block block) {
+
+        addPlayerPlacedBlock(block.getChunk(), new BlockLocation(block));
+    }
+
+    public static void addPlayerPlacedBlock(Chunk chunk, BlockLocation location) {
+
+        ChunkLocation chunkLocation = new ChunkLocation(chunk);
+        if (!PLAYER_PLACED_BLOCKS.containsKey(chunkLocation)) {
+            PLAYER_PLACED_BLOCKS.put(chunkLocation, new HashSet<>());
+        }
+        PLAYER_PLACED_BLOCKS.get(chunkLocation).add(location);
+    }
+
+    public static void clearPlayerPlacedBlocksForChunk(Chunk chunk) {
+
+        PLAYER_PLACED_BLOCKS.remove(new ChunkLocation(chunk));
+    }
+
     public static boolean isPlayerPlacedBlock(Block block) {
 
         if (!RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().checkPlayerBlockPlacement) {
             return false;
         }
-        QueryParameters params = new QueryParameters();
-        params.setSpecificBlockLocation(block.getLocation());
-        params.addActionType("block-place");
-        Plugin prism = Bukkit.getPluginManager().getPlugin("Prism");
-        if (prism != null) {
-            ActionsQuery query = new ActionsQuery((Prism) prism);
-            QueryResult result = query.lookup(params);
-            return !result.getActionResults().isEmpty();
-        }
-        return false;
+        return PLAYER_PLACED_BLOCKS.getOrDefault(new ChunkLocation(block.getChunk()), new HashSet<>()).contains(new BlockLocation(block));
     }
 }
