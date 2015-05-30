@@ -182,6 +182,11 @@ public class NPC_Manager {
         return getNonPersistentNpcRegistry(host).createNPC(EntityType.PLAYER, name);
     }
 
+    public NPC createNonPersistNpc(String name, String host, EntityType type) {
+
+        return getNonPersistentNpcRegistry(host).createNPC(type, name);
+    }
+
     public NPCRegistry getNonPersistentNpcRegistry(String host) {
 
         if (!nonPersistentRegistry.containsKey(host)) {
@@ -203,6 +208,15 @@ public class NPC_Manager {
     public NPC spawnNonPersistNpc(Location loc, String name, String host) {
 
         NPC npc = this.createNonPersistNpc(name, host);
+        npc.addTrait(CurrentLocation.class);
+        npc.getTrait(CurrentLocation.class).setLocation(loc);
+        npc.spawn(loc);
+        return npc;
+    }
+
+    public NPC spawnNonPersistNpc(Location loc, String name, String host, EntityType entityType) {
+
+        NPC npc = this.createNonPersistNpc(name, host, entityType);
         npc.addTrait(CurrentLocation.class);
         npc.getTrait(CurrentLocation.class).setLocation(loc);
         npc.spawn(loc);
