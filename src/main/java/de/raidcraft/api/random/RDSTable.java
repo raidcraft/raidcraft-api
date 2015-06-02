@@ -32,6 +32,11 @@ public interface RDSTable extends RDSObject {
      */
     Collection<RDSObject> getContents();
 
+    /**
+     * Clears all contents of the {@link RDSTable}.
+     */
+    void clearContents();
+
     RDSTable addEntry(RDSObject object);
 
     RDSTable addEntry(RDSObject object, double probability);

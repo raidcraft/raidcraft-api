@@ -57,6 +57,12 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
     }
 
     @Override
+    public void clearContents() {
+
+        contents.clear();
+    }
+
+    @Override
     public RDSTable addEntry(RDSObject object) {
 
         this.contents.add(object);
