@@ -14,6 +14,7 @@ import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,6 +35,7 @@ class TriggerListenerConfigWrapper<T> {
     private final boolean executeOnce;
     private final long triggerDelay;
     private final long actionDelay;
+    private final List<String> worlds = new ArrayList<>();
     private Collection<Action<T>> actions = new ArrayList<>();
     private List<Requirement<T>> requirements = new ArrayList<>();
 
@@ -44,6 +46,7 @@ class TriggerListenerConfigWrapper<T> {
         this.executeOnce = config.getBoolean("execute-once", false);
         this.triggerDelay = TimeUtil.secondsToTicks(config.getDouble("delay", 0));
         this.actionDelay = TimeUtil.secondsToTicks(config.getDouble("action-delay", 0));
+        this.worlds.addAll(config.getStringList("worlds"));
         this.actions = ActionAPI.createActions(config.getConfigurationSection("actions"), triggerListener.getTriggerEntityType());
         this.requirements = ActionAPI.createRequirements(triggerListener.getListenerId(), config.getConfigurationSection("requirements"), triggerListener.getTriggerEntityType());
         if (isExecuteOnce()) {
@@ -56,6 +59,16 @@ class TriggerListenerConfigWrapper<T> {
 
     protected boolean test(T triggeringEntity, Predicate<ConfigurationSection> predicate) {
 
+        if (!worlds.isEmpty()) {
+            if (triggeringEntity instanceof Player) {
+                String worldName = ((Player) triggeringEntity).getWorld().getName();
+                if (!worlds.contains(worldName)) {
+                    return false;
+                }
+            } else {
+                if (Bukkit.getWorlds().stream().filter(world -> worlds.contains(world.getName())).count() < 1) return false;
+            }
+        }
         ConfigurationSection args = config.getConfigurationSection("args");
         if (args == null) args = config.createSection("args");
         return triggerListener.getTriggerEntityType().isAssignableFrom(triggeringEntity.getClass())
