@@ -7,14 +7,14 @@ import org.bukkit.event.player.PlayerEvent;
 /**
  * @author Silthus
  */
-public class PlayerChangeProfessionEvent extends PlayerEvent {
+public class RCPlayerChangedProfessionEvent extends PlayerEvent {
 
     private static final HandlerList HANDLER = new HandlerList();
 
     private final String newProfession;
     private final int professionLevel;
 
-    public PlayerChangeProfessionEvent(Player player, String newProfession, int professionLevel) {
+    public RCPlayerChangedProfessionEvent(Player player, String newProfession, int professionLevel) {
 
         super(player);
         this.newProfession = newProfession;
