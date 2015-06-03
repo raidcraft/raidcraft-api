@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -217,5 +218,14 @@ public class EntityUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isBehind(LivingEntity source, LivingEntity target) {
+
+        //get each player's direction
+        Vector attackerDirection = source.getLocation().getDirection();
+        Vector victimDirection = target.getLocation().getDirection();
+        //determine if the dot product between the vectors is greater than 0
+        return attackerDirection.dot(victimDirection) > 0;
     }
 }
