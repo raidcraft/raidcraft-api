@@ -56,6 +56,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -92,8 +93,8 @@ public class CustomHeadCreator implements IHeadCreator {
             }
         }
         if (!foundDomain) {
-            List<String> domains = Arrays.asList(whitelistedDomains);
-            domains.add(uri.getHost());
+            List<String> domains = new ArrayList<>(Arrays.asList(whitelistedDomains));
+            domains.add(domain);
             ReflectionUtil.set(YggdrasilMinecraftSessionService.class,
                     "WHITELISTED_DOMAINS", domains.toArray(new String[domains.size()]));
         }
