@@ -77,6 +77,13 @@ public class CustomHeadCreator implements IHeadCreator {
         }
         String[] whitelistedDomains = ReflectionUtil.get(YggdrasilMinecraftSessionService.class, String[].class, "WHITELISTED_DOMAINS");
         String domain = uri.getHost();
+
+        if (domain == null) {
+            throw new IllegalArgumentException("Invalid URL '" + url + "'");
+        }
+
+        RaidCraft.LOGGER.info("Trying to inject custom skin url: " + url + " -> host: " + domain);
+
         boolean foundDomain = false;
         for (String whitelistedDomain : whitelistedDomains) {
             if (domain.endsWith(whitelistedDomain)) {
