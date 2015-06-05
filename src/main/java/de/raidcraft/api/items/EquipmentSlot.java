@@ -96,6 +96,22 @@ public enum EquipmentSlot {
         }
     }
 
+    public static EquipmentSlot fromArmorSlotIndex(int index) {
+
+        switch (index) {
+            case 0:
+                return HEAD;
+            case 1:
+                return CHEST;
+            case 2:
+                return LEGS;
+            case 3:
+                return FEET;
+            default:
+                return UNDEFINED;
+        }
+    }
+
     public static EquipmentSlot fromGermanName(String name) {
 
         name = name.toLowerCase();
