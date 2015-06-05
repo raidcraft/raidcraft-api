@@ -187,7 +187,10 @@ public enum GlobalAction {
 
             String name = config.getString("name", "Compass");
             for (ItemStack itemStack : player.getInventory().getContents()) {
-                if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().getDisplayName().equals(name)) {
+                if (itemStack != null
+                        && itemStack.hasItemMeta()
+                        && itemStack.getItemMeta().getDisplayName() != null
+                        && name.equals(itemStack.getItemMeta().getDisplayName())) {
                     player.getInventory().remove(itemStack);
                 }
             }
