@@ -54,7 +54,7 @@ public class CustomHeadApi {
 
         IHeadCreator creator = new CustomHeadCreator();
         try {
-            ItemStack headItem = creator.createItemStack("foo.org");
+            ItemStack headItem = creator.createItemStack("http://dl.raid-craft.de/test.png");
             if (headItem == null) {
                 log("Something went wrong, using the fallback head creator. No custom heads available :(");
                 log("Send the above message to the author of the plugin.");
