@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -147,7 +148,7 @@ public class ReflectionUtil {
      *                           {@link SecurityManager#checkMemberAccess
      *                           s.checkMemberAccess(this, Member.PUBLIC)} denies
      *                           access to the constructor
-     *                           <p/>
+     *                           <p>
      *                           <li> the caller's class loader is not the same as or an
      *                           ancestor of the class loader for the current class and
      *                           invocation of {@link SecurityManager#checkPackageAccess
@@ -332,7 +333,7 @@ public class ReflectionUtil {
                         actualType = (TypeVariable<?>) entry.getValue();
                     }
                 }
-            } catch (NoSuchFieldException e) { /* this should never happen */ } catch (IllegalAccessException e) { /* this might happen */}
+            } catch (NoSuchFieldException | IllegalAccessException e) { /* this should never happen */ }
 
         }
         throw new IllegalArgumentException();
@@ -383,5 +384,125 @@ public class ReflectionUtil {
             e.printStackTrace();
         }
         return o;
+    }
+
+    public static <T> T get(Class<?> sourceClass, Class<T> fieldClass, String fieldName) {
+
+        return get(sourceClass, fieldClass, null, fieldName);
+    }
+
+    public static <T> T get(Object instance, Class<T> fieldClass, String fieldName) {
+
+        return get(instance.getClass(), fieldClass, instance, fieldName);
+    }
+
+    public static <T> T get(Class<?> sourceClass, Class<T> fieldClass, Object instance, String fieldName) {
+
+        try {
+            Field field = sourceClass.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+
+            boolean accessible = modifiersField.isAccessible();
+            if (!accessible) {
+                modifiersField.setAccessible(true);
+            }
+
+            try {
+                return fieldClass.cast(field.get(instance));
+            } finally {
+                if (!accessible) {
+                    modifiersField.setAccessible(false);
+                }
+            }
+        } catch (IllegalArgumentException | ClassCastException | SecurityException | NoSuchFieldException | IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static boolean set(Object instance, String fieldName, Object value) {
+
+        return set(instance.getClass(), instance, fieldName, value);
+    }
+
+    public static boolean set(Class<?> sourceClass, String fieldName, Object value) {
+
+        return set(sourceClass, null, fieldName, value);
+    }
+
+    public static boolean set(Class<?> sourceClass, Object instance, String fieldName, Object value) {
+
+        try {
+            Field field = sourceClass.getDeclaredField(fieldName);
+            boolean accessible = field.isAccessible();
+
+            //field.setAccessible(true);
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+
+            int modifiers = modifiersField.getModifiers();
+            boolean isFinal = (modifiers & Modifier.FINAL) == Modifier.FINAL;
+
+            if (!accessible) {
+                field.setAccessible(true);
+            }
+            if (isFinal) {
+                modifiersField.setAccessible(true);
+                modifiersField.setInt(field, modifiers & ~Modifier.FINAL);
+            }
+            try {
+                field.set(instance, value);
+            } finally {
+                if (isFinal) {
+                    modifiersField.setInt(field, modifiers | Modifier.FINAL);
+                }
+                if (!accessible) {
+                    field.setAccessible(false);
+                }
+            }
+
+            return true;
+        } catch (IllegalArgumentException | SecurityException | NoSuchFieldException | IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public static boolean set(Object instance, Field field, Object value) {
+
+        try {
+            boolean accessible = field.isAccessible();
+
+            //field.setAccessible(true);
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+
+            int modifiers = modifiersField.getModifiers();
+            boolean isFinal = (modifiers & Modifier.FINAL) == Modifier.FINAL;
+
+            if (!accessible) {
+                field.setAccessible(true);
+            }
+            if (isFinal) {
+                modifiersField.setAccessible(true);
+                modifiersField.setInt(field, modifiers & ~Modifier.FINAL);
+            }
+            try {
+                field.set(instance, value);
+            } finally {
+                if (isFinal) {
+                    modifiersField.setInt(field, modifiers | Modifier.FINAL);
+                }
+                if (!accessible) {
+                    field.setAccessible(false);
+                }
+            }
+
+            return true;
+        } catch (IllegalArgumentException | NoSuchFieldException | IllegalAccessException | SecurityException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 }
