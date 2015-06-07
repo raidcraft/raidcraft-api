@@ -42,6 +42,7 @@ import de.raidcraft.tables.TPlayerLog;
 import de.raidcraft.tables.TPlayerLogStatistic;
 import de.raidcraft.tables.TPlugin_;
 import de.raidcraft.tables.TRcPlayer;
+import de.raidcraft.util.BlockUtil;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
 import lombok.Getter;
@@ -52,6 +53,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -275,6 +277,14 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         completePlayerLog(event.getPlayer());
         createPlayerLog(event.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerPlacedBlock(BlockPlaceEvent event) {
+
+        if (getConfig().checkPlayerBlockPlacement) {
+            BlockUtil.addPlayerPlacedBlock(event.getBlock());
+        }
     }
 
     private void createPlayerLog(Player player) {
