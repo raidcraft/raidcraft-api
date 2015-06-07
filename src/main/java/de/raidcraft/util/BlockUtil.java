@@ -3,7 +3,7 @@ package de.raidcraft.util;
 import com.sk89q.worldedit.blocks.BlockType;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
-import org.bukkit.Chunk;
+import de.raidcraft.tables.PlayerPlacedBlock;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -11,9 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -194,25 +192,12 @@ public final class BlockUtil {
         return null;
     }
 
-    private static Map<ChunkLocation, Set<BlockLocation>> PLAYER_PLACED_BLOCKS = new HashMap<>();
-
     public static void addPlayerPlacedBlock(Block block) {
 
-        addPlayerPlacedBlock(block.getChunk(), new BlockLocation(block));
-    }
-
-    public static void addPlayerPlacedBlock(Chunk chunk, BlockLocation location) {
-
-        ChunkLocation chunkLocation = new ChunkLocation(chunk);
-        if (!PLAYER_PLACED_BLOCKS.containsKey(chunkLocation)) {
-            PLAYER_PLACED_BLOCKS.put(chunkLocation, new HashSet<>());
+        if (!RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().checkPlayerBlockPlacement || isPlayerPlacedBlock(block)) {
+            return;
         }
-        PLAYER_PLACED_BLOCKS.get(chunkLocation).add(location);
-    }
-
-    public static void clearPlayerPlacedBlocksForChunk(Chunk chunk) {
-
-        PLAYER_PLACED_BLOCKS.remove(new ChunkLocation(chunk));
+        RaidCraft.getDatabase(RaidCraftPlugin.class).save(new PlayerPlacedBlock(block));
     }
 
     public static boolean isPlayerPlacedBlock(Block block) {
@@ -220,6 +205,6 @@ public final class BlockUtil {
         if (!RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().checkPlayerBlockPlacement) {
             return false;
         }
-        return PLAYER_PLACED_BLOCKS.getOrDefault(new ChunkLocation(block.getChunk()), new HashSet<>()).contains(new BlockLocation(block));
+        return PlayerPlacedBlock.isPlayerPlaced(block);
     }
 }

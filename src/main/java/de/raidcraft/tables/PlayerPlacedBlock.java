@@ -1,23 +1,49 @@
 package de.raidcraft.tables;
 
-import de.raidcraft.api.database.Bean;
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.util.ChunkLocation;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.block.Block;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Silthus
  */
 @Entity
 @Table(name = "rc_player_placed_blocks")
-public class PlayerPlacedBlock implements Bean {
+@Getter
+@Setter
+public class PlayerPlacedBlock {
+
+    public static boolean isPlayerPlaced(Block block) {
+
+        return RaidCraft.getDatabase(RaidCraftPlugin.class).find(PlayerPlacedBlock.class).where()
+                .eq("world", block.getWorld().getUID())
+                .eq("x", block.getX())
+                .eq("y", block.getY())
+                .eq("z", block.getZ()).findUnique() != null;
+    }
+
+    public static List<PlayerPlacedBlock> getPlayerPlacedBlocks(ChunkLocation chunkLocation) {
+
+        return RaidCraft.getDatabase(RaidCraftPlugin.class).find(PlayerPlacedBlock.class).where()
+                .eq("world", chunkLocation.getWorld())
+                .eq("chunk_x", chunkLocation.getX())
+                .eq("chunk_z", chunkLocation.getZ())
+                .findList();
+    }
 
     @Id
     private int id;
-    private String world;
+    private UUID world;
     private int chunkX;
     private int chunkZ;
     private int x;
@@ -31,10 +57,10 @@ public class PlayerPlacedBlock implements Bean {
 
     public PlayerPlacedBlock(Block block) {
 
-        this(block.getWorld().getName(), block.getChunk().getX(), block.getChunk().getZ(), block.getX(), block.getY(), block.getZ());
+        this(block.getWorld().getUID(), block.getChunk().getX(), block.getChunk().getZ(), block.getX(), block.getY(), block.getZ());
     }
 
-    public PlayerPlacedBlock(String world, int chunkX, int chunkZ, int x, int y, int z) {
+    public PlayerPlacedBlock(UUID world, int chunkX, int chunkZ, int x, int y, int z) {
 
         this.world = world;
         this.chunkX = chunkX;
@@ -43,106 +69,5 @@ public class PlayerPlacedBlock implements Bean {
         this.y = y;
         this.z = z;
         this.timestamp = new Timestamp(System.currentTimeMillis());
-    }
-
-    public int getId() {
-
-        return id;
-    }
-
-    public void setId(int id) {
-
-        this.id = id;
-    }
-
-    public String getWorld() {
-
-        return world;
-    }
-
-    public void setWorld(String world) {
-
-        this.world = world;
-    }
-
-    public int getChunkX() {
-
-        return chunkX;
-    }
-
-    public void setChunkX(int chunkX) {
-
-        this.chunkX = chunkX;
-    }
-
-    public int getChunkZ() {
-
-        return chunkZ;
-    }
-
-    public void setChunkZ(int chunkZ) {
-
-        this.chunkZ = chunkZ;
-    }
-
-    public int getX() {
-
-        return x;
-    }
-
-    public void setX(int x) {
-
-        this.x = x;
-    }
-
-    public int getY() {
-
-        return y;
-    }
-
-    public void setY(int y) {
-
-        this.y = y;
-    }
-
-    public int getZ() {
-
-        return z;
-    }
-
-    public void setZ(int z) {
-
-        this.z = z;
-    }
-
-    public Timestamp getTimestamp() {
-
-        return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-
-        this.timestamp = timestamp;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PlayerPlacedBlock that = (PlayerPlacedBlock) o;
-
-        return x == that.x && y == that.y && z == that.z && world.equals(that.world);
-    }
-
-    @Override
-    public int hashCode() {
-
-        int result = world.hashCode();
-        result = 31 * result + x;
-        result = 31 * result + y;
-        result = 31 * result + z;
-        return result;
     }
 }

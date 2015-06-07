@@ -43,22 +43,12 @@ import de.raidcraft.tables.TPlayerLog;
 import de.raidcraft.tables.TPlayerLogStatistic;
 import de.raidcraft.tables.TPlugin_;
 import de.raidcraft.tables.TRcPlayer;
-import de.raidcraft.util.BlockLocation;
-import de.raidcraft.util.BlockUtil;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
 import de.slikey.effectlib.effect.AtomEffect;
 import lombok.Getter;
-import me.botsko.prism.Prism;
-import me.botsko.prism.actionlibs.ActionsQuery;
-import me.botsko.prism.actionlibs.QueryParameters;
-import me.botsko.prism.actionlibs.QueryResult;
-import me.botsko.prism.actions.Handler;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.Statistic;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -70,8 +60,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.plugin.Plugin;
 
 import javax.persistence.PersistenceException;
@@ -405,45 +393,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         player.setFirstJoined(currentTime);
         player.setLastJoined(currentTime);
         getDatabase().save(player);
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onChunkLoad(ChunkLoadEvent event) {
-
-        if (!getConfig().checkPlayerBlockPlacement) return;
-        Chunk chunk = event.getChunk();
-        QueryParameters params = new QueryParameters();
-        for (int x = 0; x < 16; x++) {
-            for (int y = 0; y < 256; y++) {
-                for (int z = 0; z < 16; z++) {
-                    Block block = chunk.getBlock(x, y, z);
-                    if (block.getType() != Material.AIR) {
-                        params.addSpecificBlockLocation(block.getLocation());
-                    }
-                }
-            }
-        }
-        params.addActionType("block-place");
-        Plugin prism = Bukkit.getPluginManager().getPlugin("Prism");
-        if (prism != null) {
-            ActionsQuery query = new ActionsQuery((Prism) prism);
-            QueryResult result = query.lookup(params);
-            for (Handler handler : result.getActionResults()) {
-                BlockUtil.addPlayerPlacedBlock(chunk, new BlockLocation(
-                        (int) handler.getX(),
-                        (int) handler.getY(),
-                        (int) handler.getZ(),
-                        event.getWorld().getUID())
-                );
-            }
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onChunkUnload(ChunkUnloadEvent event) {
-
-        if (!getConfig().checkPlayerBlockPlacement) return;
-        BlockUtil.clearPlayerPlacedBlocksForChunk(event.getChunk());
     }
 
     /**
