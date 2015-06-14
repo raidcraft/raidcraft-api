@@ -124,7 +124,9 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
         try {
             onAbortFlight();
             getAircraft().abortFlight(this);
-            getPassenger().getEntity().teleport(getStartLocation());
+            Location improvedLocation = getStartLocation().clone();
+            improvedLocation.add(0,4,0); // add some high to prevent glitching
+            getPassenger().getEntity().teleport(improvedLocation);
         } catch (FlightException e) {
             getPassenger().sendMessage(ChatColor.RED + e.getMessage());
             e.printStackTrace();
