@@ -1,13 +1,9 @@
 package de.raidcraft.api.storage;
 
+import de.raidcraft.util.SerializationUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,27 +23,17 @@ public class InventoryStorage extends PersistantObjectStorage<ItemStack[]> {
     @Override
     public int storeObject(ItemStack[] items) {
 
-        HashMap<Integer, Integer> map = new HashMap<>();
+        HashMap<String, Object> map = new HashMap<>();
         for (int i = 0; i < items.length; i++) {
             ItemStack item = items[i];
             if (item != null && item.getType() != Material.AIR) {
-                map.put(i, itemStorage.storeObject(item));
+                map.put(i + "", itemStorage.storeObject(item));
             } else {
-                map.put(i, null);
+                map.put(i + "", itemStorage.storeObject(new ItemStack(Material.AIR)));
             }
         }
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            ObjectOutputStream stream = new ObjectOutputStream(outputStream);
-            stream.writeObject(map);
-            int store = store(outputStream.toString("UTF-8"));
-            stream.close();
-            outputStream.close();
-            return store;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return -1;
+        String bytes = SerializationUtil.toByteStream(map);
+        return store(bytes);
     }
 
     @Override
@@ -80,19 +66,16 @@ public class InventoryStorage extends PersistantObjectStorage<ItemStack[]> {
         return itemStacks;
     }
 
-    @SuppressWarnings("unchecked")
     private Map<Integer, Integer> deserializeInventoryMap(String bytes) {
 
-        try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes.getBytes());
-            ObjectInputStream stream = new ObjectInputStream(inputStream);
-            Map<Integer, Integer> map = (Map<Integer, Integer>) stream.readObject();
-            inputStream.close();
-            stream.close();
-            return map;
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        Map<Integer, Integer> inventoryMap = new HashMap<>();
+        // key is an int that holds the slot id and the object is also an int with the storage id
+        Map<String, Object> slotStorageIdMap = SerializationUtil.mapFromByteStream(bytes);
+        for (Map.Entry<String, Object> entry : slotStorageIdMap.entrySet()) {
+            int slot = Integer.parseInt(entry.getKey());
+            int storageId = (int) entry.getValue();
+            inventoryMap.put(slot, storageId);
         }
-        return new HashMap<>();
+        return inventoryMap;
     }
 }

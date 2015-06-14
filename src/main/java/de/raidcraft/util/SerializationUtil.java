@@ -109,19 +109,10 @@ public class SerializationUtil {
         return ConfigurationSerialization.deserializeObject(map);
     }
 
-    /**
-     * Serializes a {@link ConfigurationSerializable} into a savable byte stream for usage in databases and so on.
-     *
-     * @param serializable object that should be serialized
-     *
-     * @return string of bytes containing the serialized map of the input
-     */
-    public static String toByteStream(ConfigurationSerializable serializable) {
+    public static String toByteStream(Map<String, Object> map) {
 
         // create streams
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            Map<String, Object> map = serialize(serializable);
-
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             // write map
             oos.writeObject(map);
@@ -135,6 +126,18 @@ public class SerializationUtil {
         return null;
     }
 
+    /**
+     * Serializes a {@link ConfigurationSerializable} into a savable byte stream for usage in databases and so on.
+     *
+     * @param serializable object that should be serialized
+     *
+     * @return string of bytes containing the serialized map of the input
+     */
+    public static String toByteStream(ConfigurationSerializable serializable) {
+
+        return toByteStream(serialize(serializable));
+    }
+
     public static String toByteStream(ItemMeta meta) {
 
         // workaround for not serializable meta
@@ -143,6 +146,21 @@ public class SerializationUtil {
         }
 
         return toByteStream((ConfigurationSerializable) meta);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> mapFromByteStream(String hex) {
+
+        // create streams
+        byte[] bytes = new HexBinaryAdapter().unmarshal(hex);
+
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes)) {
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (Map<String, Object>) ois.readObject();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -155,17 +173,7 @@ public class SerializationUtil {
     @SuppressWarnings("unchecked")
     public static ConfigurationSerializable fromByteStream(String hex) {
 
-        // create streams
-        byte[] bytes = new HexBinaryAdapter().unmarshal(hex);
-
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes)) {
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            Map<String, Object> map = (Map<String, Object>) ois.readObject();
-            return deserialize(map);
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return deserialize(mapFromByteStream(hex));
     }
 
     public static ConfigurationSerializable fromByteStream(String hex, Material type) {
