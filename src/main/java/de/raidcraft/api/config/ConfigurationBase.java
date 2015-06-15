@@ -78,7 +78,6 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         if (!isSet(key)) {
             set(key, def);
-            save();
         }
         if (def instanceof Integer) return (V) (Integer) getOverrideInt(key, (Integer) def);
         if (def instanceof Double) return (V) (Double) getOverrideDouble(key, (Double) def);
@@ -378,7 +377,6 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         if (!isSet(path)) {
             set(path, def);
-            save();
         } else {
             return super.getInt(path, def);
         }
@@ -391,7 +389,6 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         if (def == null) return super.getString(path, null);
         if (!isSet(path)) {
             set(path, def);
-            save();
         } else {
             return super.getString(path, def);
         }
@@ -403,7 +400,6 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         if (!isSet(path)) {
             set(path, def);
-            save();
         } else {
             return super.getBoolean(path, def);
         }
@@ -415,7 +411,6 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         if (!isSet(path)) {
             set(path, def);
-            save();
         } else {
             return super.getDouble(path, def);
         }
@@ -427,7 +422,6 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         if (!isSet(path)) {
             set(path, def);
-            save();
         } else {
             return super.getLong(path, def);
         }
