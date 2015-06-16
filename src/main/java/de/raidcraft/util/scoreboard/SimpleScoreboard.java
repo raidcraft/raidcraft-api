@@ -58,6 +58,12 @@ public class SimpleScoreboard {
         return blankLine(highestIndex + 1);
     }
 
+    public SimpleScoreboard removeLine(int line) {
+
+        scores.remove(line);
+        return this;
+    }
+
     public SimpleScoreboard line(int line, String text) {
 
         if (line > highestIndex) highestIndex = line;
