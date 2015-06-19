@@ -100,13 +100,13 @@ public enum EquipmentSlot {
 
         switch (index) {
             case 0:
-                return HEAD;
-            case 1:
-                return CHEST;
-            case 2:
-                return LEGS;
-            case 3:
                 return FEET;
+            case 1:
+                return LEGS;
+            case 2:
+                return CHEST;
+            case 3:
+                return HEAD;
             default:
                 return UNDEFINED;
         }
