@@ -257,9 +257,9 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         return translationProvider;
     }
 
-    private boolean setupPermissions() {
+    protected boolean setupPermissions() {
 
-        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
         if (permissionProvider != null) {
             permission = permissionProvider.getProvider();
         }
