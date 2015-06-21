@@ -78,7 +78,7 @@ public class RDS {
         table.setProbability(config.getDouble("probability", 1));
         table.setCount(config.getInt("count", 1));
         registeredTables.get(plugin.getName()).put(name, table);
-        plugin.getLogger().info("Registered loot table (" + table.getClass().getTypeName() + "): " + name);
+        plugin.getLogger().info("Registered loot table (" + table.getClass().getSimpleName() + "): " + name);
     }
 
     public static void unregisterTable(BasePlugin plugin, String name) {
