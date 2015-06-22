@@ -30,6 +30,30 @@ import java.util.Optional;
 @Getter
 public enum GlobalAction {
 
+    PLAYER_FREEZE("player.freeze", new Action<Player>() {
+        @Override
+        @Information(
+                value = "player.freeze",
+                desc = "Freezes the given player in place making him unable to move. Needs to be disabled with player.unfreeze"
+        )
+        public void accept(Player player, ConfigurationSection config) {
+
+            player.setWalkSpeed(0F);
+            player.setFlySpeed(0F);
+        }
+    }),
+    PLAYER_UNFREEZE("player.unfreeze", new Action<Player>() {
+        @Override
+        @Information(
+                value = "player.unfreeze",
+                desc = "Unfreezes the player resetting his walk and fly speed to the default values"
+        )
+        public void accept(Player player, ConfigurationSection config) {
+
+            player.setWalkSpeed(DEFAULT_WALK_SPEED);
+            player.setFlySpeed(DEFAULT_FLY_SPEED);
+        }
+    }),
     GIVE_ITEM("player.give.item", new Action<Player>() {
         @Override
         @Information(
@@ -229,6 +253,9 @@ public enum GlobalAction {
     }),
     ABORT_TIMER("timer.cancel", (type, config) -> Timer.cancelTimer(type, config.getString("id"))),
     RESET_TIMER("timer.reset", (type, config) -> Timer.resetTimer(type, config.getString("id")));
+
+    private static final float DEFAULT_WALK_SPEED = 0.1F;
+    private static final float DEFAULT_FLY_SPEED = 0.05F;
 
     private final String id;
     private final Action<Player> action;
