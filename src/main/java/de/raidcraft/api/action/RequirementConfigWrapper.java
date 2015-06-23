@@ -79,25 +79,7 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
         this.config = config;
     }
 
-    private int getIntMapping(T entity, String key) {
-
-        String mapping = getMapping(entity, key);
-        return mapping == null ? 0 : Integer.parseInt(mapping);
-    }
-
-    private boolean getBoolMapping(T entity, String key) {
-
-        String mapping = getMapping(entity, key);
-        return mapping != null && Boolean.parseBoolean(mapping);
-    }
-
-    private double getDoubleMapping(T entity, String key) {
-
-        String mapping = getMapping(entity, key);
-        return mapping == null ? 0.0 : Double.parseDouble(mapping);
-    }
-
-    private String getMapping(T entity, String key) {
+    public String getMapping(T entity, String key) {
 
         if (entity instanceof Player) {
             return mappings.getOrDefault(((Player) entity).getUniqueId(), new HashMap<>()).getOrDefault(key, null);
@@ -111,29 +93,6 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
             mappings.put(uuid, new HashMap<>());
         }
         mappings.get(uuid).put(key, value);
-    }
-
-    private void setMapping(T entity, String key, String value) {
-
-        if (entity instanceof Player) {
-            UUID uniqueId = ((Player) entity).getUniqueId();
-            setMapping(uniqueId, key, value);
-        }
-    }
-
-    private void setMapping(T entity, String key, int value) {
-
-        setMapping(entity, key, Integer.toString(value));
-    }
-
-    private void setMapping(T entity, String key, boolean value) {
-
-        setMapping(entity, key, Boolean.toString(value));
-    }
-
-    public boolean isMapped(T entity, String key) {
-
-        return getMapping(entity, key) != null;
     }
 
     public boolean isChecked(T entity) {
