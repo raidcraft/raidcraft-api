@@ -15,6 +15,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -32,6 +34,26 @@ public enum GlobalRequirement {
         public boolean test(Player type, ConfigurationSection config) {
 
             return !isChecked(type);
+        }
+    }),
+    COOLDOWN("cooldown", new Requirement<Player>() {
+        @Override
+        @Information(
+                value = "cooldown",
+                desc = "When this requirement is checked the first time it will be true. Then for the duration of the cooldown " +
+                        "it will be false and when a check occurs after the cooldown expired the requirement will be true again.",
+                conf = "cooldown: in seconds"
+        )
+        public boolean test(Player player, ConfigurationSection config) {
+
+            if (isMapped(player, "last_activation")) {
+                Timestamp lastActivation = Timestamp.valueOf(getMapping(player, "last_activation"));
+                if (lastActivation.toInstant().plusSeconds(config.getLong("cooldown")).isAfter(Instant.now())) {
+                    return false;
+                }
+            }
+            setMapping(player, "last_activation", Timestamp.from(Instant.now()).toString());
+            return true;
         }
     }),
     PLAYER_LOCATION("player.location", new Requirement<Player>() {

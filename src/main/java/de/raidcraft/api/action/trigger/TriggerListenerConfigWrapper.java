@@ -33,6 +33,7 @@ class TriggerListenerConfigWrapper<T> {
     private final TriggerListener<T> triggerListener;
     private final ConfigurationSection config;
     private final boolean executeOnce;
+    private final long cooldown;
     private final long triggerDelay;
     private final long actionDelay;
     private final List<String> worlds = new ArrayList<>();
@@ -44,6 +45,7 @@ class TriggerListenerConfigWrapper<T> {
         this.triggerListener = triggerListener;
         this.config = config;
         this.executeOnce = config.getBoolean("execute-once", false);
+        this.cooldown = TimeUtil.secondsToTicks(config.getDouble("cooldown", 0));
         this.triggerDelay = TimeUtil.secondsToTicks(config.getDouble("delay", 0));
         this.actionDelay = TimeUtil.secondsToTicks(config.getDouble("action-delay", 0));
         this.worlds.addAll(config.getStringList("worlds"));
@@ -54,6 +56,9 @@ class TriggerListenerConfigWrapper<T> {
             // this requirement will return false after is has been checked once
             Optional<Requirement<T>> optional = createExecuteOnceRequirement();
             if (optional.isPresent()) this.requirements.add(optional.get());
+        } else if (cooldown > 0) {
+            Optional<Requirement<T>> cooldownRequirement = createCooldownRequirement(cooldown);
+            if (cooldownRequirement.isPresent()) this.requirements.add(cooldownRequirement.get());
         }
     }
 
@@ -106,6 +111,21 @@ class TriggerListenerConfigWrapper<T> {
             return factory.get().create(
                     triggerListener.getListenerId() + "." + GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
                     GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
+                    configuration);
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Requirement<T>> createCooldownRequirement(double cooldown) {
+
+        MemoryConfiguration configuration = new MemoryConfiguration();
+        configuration.set("args.cooldown", cooldown);
+        configuration.set("persistant", true);
+        Optional<RequirementFactory<T>> factory = ActionAPI.getRequirementFactory(getTriggerListener().getTriggerEntityType());
+        if (factory.isPresent()) {
+            return factory.get().create(
+                    triggerListener.getListenerId() + "." + GlobalRequirement.COOLDOWN.getId(),
+                    GlobalRequirement.COOLDOWN.getId(),
                     configuration);
         }
         return Optional.empty();
