@@ -1,6 +1,7 @@
 package de.raidcraft.api.action;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.action.requirement.ContextualRequirement;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.quests.QuestProvider;
@@ -29,14 +30,14 @@ public enum GlobalRequirement {
     IS_SNEAKING("player.sneaking", (Player player, ConfigurationSection config) -> player.isSneaking()),
     IS_ALIVE("player.alive", (Player player, ConfigurationSection config) -> !player.isDead()),
     DUMMY("dummy", (Player player, ConfigurationSection config) -> true),
-    EXECUTE_ONCE_TRIGGER("execute-once-trigger", new Requirement<Player>() {
+    EXECUTE_ONCE_TRIGGER("execute-once-trigger", new ContextualRequirement<Player>() {
         @Override
-        public boolean test(Player type, ConfigurationSection config) {
+        public boolean test(Player type, RequirementConfigWrapper<Player> context, ConfigurationSection config) {
 
-            return !isChecked(type);
+            return !context.isChecked(type);
         }
     }),
-    COOLDOWN("cooldown", new Requirement<Player>() {
+    COOLDOWN("cooldown", new ContextualRequirement<Player>() {
         @Override
         @Information(
                 value = "cooldown",
@@ -44,15 +45,15 @@ public enum GlobalRequirement {
                         "it will be false and when a check occurs after the cooldown expired the requirement will be true again.",
                 conf = "cooldown: in seconds"
         )
-        public boolean test(Player player, ConfigurationSection config) {
+        public boolean test(Player player, RequirementConfigWrapper<Player> context, ConfigurationSection config) {
 
-            if (isMapped(player, "last_activation")) {
-                Timestamp lastActivation = Timestamp.valueOf(getMapping(player, "last_activation"));
+            if (context.isMapped(player, "last_activation")) {
+                Timestamp lastActivation = Timestamp.valueOf(context.getMapping(player, "last_activation"));
                 if (lastActivation.toInstant().plusSeconds(config.getLong("cooldown")).isAfter(Instant.now())) {
                     return false;
                 }
             }
-            setMapping(player, "last_activation", Timestamp.from(Instant.now()).toString());
+            context.setMapping(player, "last_activation", Timestamp.from(Instant.now()).toString());
             return true;
         }
     }),
