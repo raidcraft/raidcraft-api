@@ -80,6 +80,12 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         this.config = config;
     }
 
+    @Override
+    public void addAction(Action<T> action) {
+
+        successActions.add(action);
+    }
+
     public int getIntMapping(T entity, String key) {
 
         String mapping = getMapping(entity, key);

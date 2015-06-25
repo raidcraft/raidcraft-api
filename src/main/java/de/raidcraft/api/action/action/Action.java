@@ -1,6 +1,7 @@
 package de.raidcraft.api.action.action;
 
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.flow.FlowExpression;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -8,7 +9,7 @@ import org.bukkit.configuration.MemoryConfiguration;
  * @author Silthus
  */
 @FunctionalInterface
-public interface Action<T> extends ActionConfigGenerator {
+public interface Action<T> extends ActionConfigGenerator, FlowExpression {
 
     default String getIdentifier() {
 

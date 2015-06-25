@@ -1,6 +1,8 @@
 package de.raidcraft.api.action.requirement;
 
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.flow.FlowExpression;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -10,7 +12,7 @@ import java.util.Optional;
  * @author mdoering
  */
 @FunctionalInterface
-public interface Requirement<T> extends RequirementConfigGenerator {
+public interface Requirement<T> extends RequirementConfigGenerator, FlowExpression {
 
     default String getIdentifier() {
 
@@ -23,6 +25,11 @@ public interface Requirement<T> extends RequirementConfigGenerator {
     }
 
     boolean test(T type, ConfigurationSection config);
+
+    default void addAction(Action<T> action) {
+
+        throw new UnsupportedOperationException();
+    }
 
     default Optional<String> getDescription(T entity) {
 

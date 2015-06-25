@@ -1,5 +1,6 @@
 package de.raidcraft.api.action;
 
+import de.raidcraft.api.action.flow.FlowExpression;
 import de.raidcraft.api.action.trigger.TriggerListener;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +17,7 @@ import java.util.Set;
 @ToString(of = {"identifier"})
 @EqualsAndHashCode(of = {"identifier"})
 @Data
-public class TriggerFactory {
+public class TriggerFactory implements FlowExpression {
 
     private final TriggerManager manager;
     private final String identifier;
