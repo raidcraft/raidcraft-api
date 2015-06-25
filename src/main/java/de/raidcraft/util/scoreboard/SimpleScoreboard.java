@@ -113,7 +113,7 @@ public class SimpleScoreboard {
             Map.Entry<Team, String> team = createTeam(text);
             String value = team.getValue();
             if (team.getKey() != null) {
-                team.getKey().addEntry(value);
+                team.getKey().addPlayer(Bukkit.getOfflinePlayer(value));
             }
             objective.getScore(value).setScore(i);
         }
@@ -138,7 +138,7 @@ public class SimpleScoreboard {
                 Map.Entry<Team, String> team = createTeam(text);
                 String value = team.getValue();
                 if (team.getKey() != null) {
-                    team.getKey().addEntry(value);
+                    team.getKey().addPlayer(Bukkit.getOfflinePlayer(value));
                 }
                 objective.getScore(value).setScore(i);
                 player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScore(value).setScore(i);
