@@ -107,16 +107,16 @@ public final class Flow {
                             continue;
                         }
                         if (flowExpression instanceof ActionAPIType) {
-                            i++;
                             ActionAPIType expression = (ActionAPIType) flowExpression;
                             FlowConfiguration configuration = expression.getConfiguration();
                             switch (expression.getFlowType()) {
                                 case TRIGGER:
                                     if (!applicableRequirements.isEmpty()) {
                                         for (ActionAPIType requirement : applicableRequirements) {
-                                            configuration.set("requirements.flow-" + i, requirement.getConfiguration());
+                                            configuration.set("requirements.flow-" + i++, requirement.getConfiguration());
                                         }
                                     }
+                                    applicableRequirements.clear();
                                     TriggerFactory trigger = ActionAPI.createTrigger(id, configuration);
                                     activeTrigger = trigger;
                                     triggerFactories.add(trigger);
@@ -125,8 +125,14 @@ public final class Flow {
                                     break;
                                 case ACTION:
                                     if (activeTrigger != null) {
+                                        String actionId = "actions.flow-" + i;
                                         configuration.set("delay", delay);
-                                        activeTrigger.getConfig().set("actions.flow-" + i, configuration);
+                                        if (!applicableRequirements.isEmpty()) {
+                                            for (ActionAPIType requirement : applicableRequirements) {
+                                                configuration.set(actionId + ".requirements.flow-" + i++, requirement.getConfiguration());
+                                            }
+                                        }
+                                        activeTrigger.getConfig().set(actionId, configuration);
                                     }
                                     break;
                                 case REQUIREMENT:
