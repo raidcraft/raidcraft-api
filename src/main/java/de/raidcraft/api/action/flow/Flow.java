@@ -35,8 +35,9 @@ public final class Flow {
             if (config.isList(key)) {
                 try {
                     List<FlowExpression> flowExpressions = parse(config.getStringList(key));
-                    // this is the current active action that requirements and such will be attached to
-                    Action<T> activeAction = null;
+                    // we are gonna add all requirements to this list until an action is added
+                    // then when a requirement is added again the list will be reset
+                    boolean resetRequirements = false;
                     List<Requirement<T>> applicableRequirements = new ArrayList<>();
                     for (FlowExpression flowExpression : flowExpressions) {
                         if (flowExpression instanceof FlowDelay) {
@@ -53,11 +54,10 @@ public final class Flow {
                                     if (!action.isPresent()) {
                                         throw new FlowException("Could not find action of type " + expression.getTypeId());
                                     }
-                                    activeAction = action.get();
-                                    actions.add(activeAction);
+                                    actions.add(action.get());
                                     if (!applicableRequirements.isEmpty()) {
-                                        applicableRequirements.forEach(activeAction::addRequirement);
-                                        applicableRequirements.clear();
+                                        applicableRequirements.forEach(action.get()::addRequirement);
+                                        resetRequirements = true;
                                     }
                                     break;
                                 case REQUIREMENT:
@@ -68,6 +68,8 @@ public final class Flow {
                                     if (!requirement.isPresent()) {
                                         throw new FlowException("Could not find requirement of type " + expression.getTypeId());
                                     }
+                                    // not sure if we want to reset or not, needs to be discussed
+                                    // if (resetRequirements) applicableRequirements.clear();
                                     applicableRequirements.add(requirement.get());
                                     break;
                             }
