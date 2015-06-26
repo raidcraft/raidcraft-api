@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.GlobalRequirement;
+import de.raidcraft.api.action.RequirementConfigWrapper;
 import de.raidcraft.api.action.RequirementFactory;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
@@ -91,8 +92,10 @@ class TriggerListenerConfigWrapper<T> {
                 // lets get the last requirement which will be the executed once requirement
                 // and set the checked key to false
                 Requirement<T> requirement = requirements.get(requirements.size() - 1);
-                requirement.setChecked(triggeringEntity, false);
-                requirement.save();
+                if (requirement instanceof RequirementConfigWrapper) {
+                    ((RequirementConfigWrapper<T>)requirement).setChecked(triggeringEntity, false);
+                    requirement.save();
+                }
             }
         };
         if (getActionDelay() > 0) {

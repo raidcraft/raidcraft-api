@@ -2,6 +2,7 @@ package de.raidcraft.api.action.flow;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.TriggerFactory;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.flow.parsers.ActionTypeParser;
 import de.raidcraft.api.action.flow.types.ActionAPIType;
@@ -30,13 +31,12 @@ public final class Flow {
         Set<String> keys = config.getKeys(false);
         if (keys == null) return actions;
 
-        long delay = 0;
         for (String key : keys) {
             if (config.isList(key)) {
                 try {
+                    long delay = 0;
                     List<FlowExpression> flowExpressions = parse(config.getStringList(key));
                     // we are gonna add all requirements to this list until an action is added
-                    // then when a requirement is added again the list will be reset
                     boolean resetRequirements = false;
                     List<Requirement<T>> applicableRequirements = new ArrayList<>();
                     for (FlowExpression flowExpression : flowExpressions) {
@@ -82,6 +82,66 @@ public final class Flow {
             }
         }
         return actions;
+    }
+
+    public static List<TriggerFactory> parseTrigger(ConfigurationSection config) {
+
+        List<TriggerFactory> triggerFactories = new ArrayList<>();
+        Set<String> keys = config.getKeys(false);
+        if (keys == null) return triggerFactories;
+
+        int i = 0;
+        for (String key : keys) {
+            if (config.isList(key)) {
+                try {
+                    long delay = 0;
+                    String id = ConfigUtil.getFileName(config).replace("/", ".") + key;
+                    List<FlowExpression> flowExpressions = parse(config.getStringList(key));
+                    // we are gonna add all requirements to this list until an action is added
+                    List<ActionAPIType> applicableRequirements = new ArrayList<>();
+                    TriggerFactory activeTrigger = null;
+
+                    for (FlowExpression flowExpression : flowExpressions) {
+                        if (flowExpression instanceof FlowDelay) {
+                            delay += ((FlowDelay) flowExpression).getDelay();
+                            continue;
+                        }
+                        if (flowExpression instanceof ActionAPIType) {
+                            i++;
+                            ActionAPIType expression = (ActionAPIType) flowExpression;
+                            FlowConfiguration configuration = expression.getConfiguration();
+                            switch (expression.getFlowType()) {
+                                case TRIGGER:
+                                    if (!applicableRequirements.isEmpty()) {
+                                        for (ActionAPIType requirement : applicableRequirements) {
+                                            configuration.set("requirements.flow-" + i, requirement.getConfiguration());
+                                        }
+                                    }
+                                    TriggerFactory trigger = ActionAPI.createTrigger(id, configuration);
+                                    activeTrigger = trigger;
+                                    triggerFactories.add(trigger);
+                                    // reset the delay when a new trigger starts
+                                    delay = 0;
+                                    break;
+                                case ACTION:
+                                    if (activeTrigger != null) {
+                                        configuration.set("delay", delay);
+                                        activeTrigger.getConfig().set("actions.flow-" + i, configuration);
+                                    }
+                                    break;
+                                case REQUIREMENT:
+                                    applicableRequirements.add(expression);
+                                    break;
+                            }
+                        }
+                    }
+                } catch (FlowException e) {
+                    RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+        return triggerFactories;
     }
 
     public static List<FlowExpression> parse(List<String> lines) throws FlowException {

@@ -82,6 +82,15 @@ public final class ActionAPI {
         return ((RequirementFactory<T>) requirementFactory).create(id, requirement, config);
     }
 
+    public static Optional<? extends Requirement<?>> createRequirement(String id, String requirement, ConfigurationSection config) {
+
+        for (RequirementFactory<?> factory : requirementFactories.values()) {
+            Optional<? extends Requirement<?>> optional = factory.create(id, requirement, config);
+            if (optional.isPresent()) return optional;
+        }
+        return Optional.empty();
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) {
 

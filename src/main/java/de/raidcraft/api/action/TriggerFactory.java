@@ -32,7 +32,6 @@ public class TriggerFactory {
 
     public void registerListener(@NonNull TriggerListener<?> listener) {
 
-        // if (registeredListeners.contains(listener)) return;
         getManager().registerListener(listener, getIdentifier(), getConfig());
         registeredListeners.add(listener);
     }
