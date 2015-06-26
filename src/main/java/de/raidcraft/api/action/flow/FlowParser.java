@@ -15,26 +15,26 @@ public abstract class FlowParser {
 
     private final Pattern pattern;
     private Matcher matcher;
-    private String currentLine;
+    private String input;
     private Class<?> type;
 
     public boolean accept(String line) {
 
         matcher = pattern.matcher(line);
         if (matcher.matches()) {
-            currentLine = line;
+            input = line;
             return true;
-        } else if (currentLine != null) {
+        } else if (input != null) {
 
         }
         matcher = null;
-        currentLine = null;
+        input = null;
         return false;
     }
 
     public <T> FlowExpression parse(Class<T> type) throws FlowException {
 
-        if (getCurrentLine() == null) {
+        if (getInput() == null) {
             throw new FlowException("Parser did not match, make sure to call accept(String) " +
                     "first and only call parse if true was returned!");
         }

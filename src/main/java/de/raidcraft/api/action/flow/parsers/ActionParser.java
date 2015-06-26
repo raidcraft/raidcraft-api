@@ -13,7 +13,7 @@ public class ActionParser extends FlowParser {
 
     public ActionParser() {
 
-        super(Pattern.compile("^!([a-zA-Z_\\-\\.]+)\\(?(.*)\\)?(.*)$"));
+        super(Pattern.compile("^\\^([a-zA-Z_\\-\\.]+)\\(?(.*)\\)?(.*)$"));
     }
 
     @Override
