@@ -24,6 +24,11 @@ public final class TimeUtil {
         return secondsToMinutes(millisToSeconds(millis));
     }
 
+    public static long minutesToTicks(long minutes) {
+
+        return secondsToTicks(minutes * 60.0);
+    }
+
     public static double ticksToSeconds(long ticks) {
 
         return ((int) (((double) ticks / 20.0) * 100.0)) / 100.0;
@@ -56,5 +61,25 @@ public final class TimeUtil {
         } else {
             return (((int) (seconds * 100)) / 100.0) + "s";
         }
+    }
+
+    /**
+     * Parses a given input string to ticks.
+     * 10min or 10m -> 10 * 60 * 20
+     * 5s -> 5 * 20
+     * 10 -> 10 ticks
+     *
+     * @param input to parse
+     * @return ticks
+     */
+    public static long parseTimeAsTicks(String input) {
+
+        if (input.endsWith("m") || input.endsWith("min")) {
+            return minutesToTicks(Long.parseLong(input.replace("m", "").replace("min", "min")));
+        }
+        if (input.endsWith("s")) {
+            return secondsToTicks(Long.parseLong(input.replace("s", "")));
+        }
+        return Long.parseLong(input);
     }
 }

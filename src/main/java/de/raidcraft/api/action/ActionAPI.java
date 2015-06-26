@@ -50,6 +50,11 @@ public final class ActionAPI {
         return "undefined";
     }
 
+    public static Optional<ConfigGenerator.Information> getInformation(String identifier) {
+
+        return ConfigBuilder.getInformation(identifier);
+    }
+
     public static Map<String, Action<?>> getActions() {
 
         Map<String, Action<?>> actions = new HashMap<>();
@@ -70,6 +75,14 @@ public final class ActionAPI {
     }
 
     @SuppressWarnings("unchecked")
+    public static <T> Optional<Requirement<T>> createRequirement(String id, String requirement, ConfigurationSection config, Class<T> type) {
+
+        RequirementFactory<?> requirementFactory = requirementFactories.get(type);
+        if (requirementFactory == null) return Optional.empty();
+        return ((RequirementFactory<T>) requirementFactory).create(id, requirement, config);
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T> List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) {
 
         RequirementFactory<?> factory = requirementFactories.get(type);
@@ -87,6 +100,14 @@ public final class ActionAPI {
     }
 
     @SuppressWarnings("unchecked")
+    public static <T> Optional<Action<T>> createAction(String identifier, ConfigurationSection config, Class<?> type) {
+
+        ActionFactory<?> actionFactory = actionFactories.get(type);
+        if (actionFactory == null) return Optional.empty();
+        return ((ActionFactory<T>) actionFactory).create(identifier, config);
+    }
+
+    @SuppressWarnings("unchecked")
     public static  <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
 
         ActionFactory<?> factory = actionFactories.get(type);
@@ -101,6 +122,11 @@ public final class ActionAPI {
             list.addAll(factory.createActions(actions));
         }
         return list;
+    }
+
+    public static TriggerFactory createTrigger(String identifier, ConfigurationSection config) {
+
+        return triggerManager.createTrigger(identifier, config);
     }
 
     public static Collection<TriggerFactory> createTrigger(ConfigurationSection trigger) {

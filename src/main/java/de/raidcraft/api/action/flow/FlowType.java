@@ -7,9 +7,11 @@ import java.util.Optional;
  */
 public enum FlowType {
 
-    ACTION('!'),
+    ACTION('^'),
     REQUIREMENT('?'),
-    TRIGGER('@');
+    TRIGGER('@'),
+    DELAY('~'),
+    ANSWER(':');
 
     private final char triggerChar;
 

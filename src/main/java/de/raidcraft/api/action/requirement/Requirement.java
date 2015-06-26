@@ -2,7 +2,6 @@ package de.raidcraft.api.action.requirement;
 
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.action.flow.FlowExpression;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -12,7 +11,7 @@ import java.util.Optional;
  * @author mdoering
  */
 @FunctionalInterface
-public interface Requirement<T> extends RequirementConfigGenerator, FlowExpression {
+public interface Requirement<T> extends RequirementConfigGenerator {
 
     default String getIdentifier() {
 

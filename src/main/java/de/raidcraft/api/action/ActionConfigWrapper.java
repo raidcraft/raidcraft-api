@@ -24,7 +24,7 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
     private final Class<T> type;
     private final Action<T> action;
     private final ConfigurationSection config;
-    private final double delay;
+    private final long delay;
     private List<Requirement<T>> requirements = new ArrayList<>();
 
     protected ActionConfigWrapper(Action<T> action, ConfigurationSection config, Class<T> type) {
@@ -32,7 +32,7 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         this.type = type;
         this.action = action;
         this.config = config;
-        this.delay = config.getDouble("delay", 0);
+        this.delay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         this.requirements = ActionAPI.createRequirements(getIdentifier(), config.getConfigurationSection("requirements"), type);
     }
 
@@ -41,6 +41,12 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         ConfigurationSection args = this.config.getConfigurationSection("args");
         if (args == null) args = this.config.createSection("args");
         return args;
+    }
+
+    @Override
+    public void addRequirement(Requirement<T> requirement) {
+
+        requirements.add(requirement);
     }
 
     public void accept(T type) {
@@ -59,7 +65,7 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
             action.accept(type, config);
         };
         if (delay > 0) {
-            Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), runnable, TimeUtil.secondsToTicks(delay));
+            Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), runnable, delay);
         } else {
             runnable.run();
         }

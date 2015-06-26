@@ -2,7 +2,6 @@ package de.raidcraft.api.action.flow.parsers;
 
 import de.raidcraft.api.action.flow.FlowConfiguration;
 import de.raidcraft.api.action.flow.FlowException;
-import de.raidcraft.api.action.flow.FlowExpression;
 import de.raidcraft.api.action.flow.FlowParser;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 
@@ -22,12 +21,12 @@ public class ConfigParser extends FlowParser {
 
     public ConfigParser(ConfigGenerator.Information configInformation) {
 
-        super(Pattern.compile("^((([a-zA-Z\\d\\-_\\.<>]+):)?(.+))$"));
+        super(Pattern.compile("^[^@\\^:?~]((([a-zA-Z\\d\\-_\\.<>]+):)?(.+))$"));
         this.configInformation = configInformation;
     }
 
     @Override
-    protected FlowExpression parse() throws FlowException {
+    protected FlowConfiguration parse() throws FlowException {
 
         FlowConfiguration config = new FlowConfiguration();
         String input = getInput();
@@ -48,7 +47,8 @@ public class ConfigParser extends FlowParser {
             input = remainingInput;
         }
         if (input != null) {
-            config = extractKeyValuePairs(config, input, 0);
+            FlowConfiguration argsConfig = extractKeyValuePairs(new FlowConfiguration(), input, 0);
+            config.set("args", argsConfig);
         }
         return config;
     }

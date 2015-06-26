@@ -3,116 +3,96 @@ package de.raidcraft.api.action.flow;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.flow.parsers.ActionTypeParser;
+import de.raidcraft.api.action.flow.types.ActionAPIType;
+import de.raidcraft.api.action.flow.types.FlowDelay;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.util.ConfigUtil;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author mdoering
  */
 public final class Flow {
 
-    private static final List<FlowParser> parsers = new ArrayList<>();
+    private static final FlowParser[] parsers = {
+            new ActionTypeParser()
+    };
 
-    @SuppressWarnings("unchecked")
-    public static <T> List<Requirement<T>> parseRequirements(ConfigurationSection config, Class<T> type) {
-
-        List<Requirement<T>> requirements = new ArrayList<>();
-
-        config.getKeys(false).stream()
-                // if the node is a list we're gonna flow away :)
-                .filter(config::isList)
-                .forEach(key -> {
-                    try {
-                        List<FlowExpression> expressions = parse(config.getStringList(key), type);
-
-                        for (int i = 0; i < expressions.size(); i++) {
-                            FlowExpression flowExpression = expressions.get(i);
-                            if (i == 0 && (!(flowExpression instanceof Requirement) || ActionAPI.matchesType((Requirement<?>) flowExpression, type))) {
-                                throw new FlowException("Error when parsing flow requirements! " +
-                                        "The first flow statement must be a requirement inside a requirement block!");
-                            }
-                            if (flowExpression instanceof Requirement) {
-                                if (ActionAPI.matchesType((Requirement<?>) flowExpression, type)) {
-                                    requirements.add((Requirement<T>) flowExpression);
-                                }
-                            }
-                        }
-                    } catch (FlowException e) {
-                        RaidCraft.LOGGER.warning(e.getMessage() + " in " + ConfigUtil.getFileName(config));
-                        e.printStackTrace();
-                    }
-                });
-
-        return requirements;
-    }
-
-    @SuppressWarnings("unchecked")
     public static <T> List<Action<T>> parseActions(ConfigurationSection config, Class<T> type) {
 
         List<Action<T>> actions = new ArrayList<>();
+        Set<String> keys = config.getKeys(false);
+        if (keys == null) return actions;
 
-        config.getKeys(false).stream()
-                // if the node is a list we're gonna flow away :)
-                .filter(config::isList)
-                .forEach(key -> {
-                    try {
-                        List<FlowExpression> expressions = parse(config.getStringList(key), type);
-
-                        for (int i = 0; i < expressions.size(); i++) {
-                            FlowExpression flowExpression = expressions.get(i);
-                            if (i == 0 && (!(flowExpression instanceof Action) || ActionAPI.matchesType((Action<?>) flowExpression, type))) {
-                                throw new FlowException("Error when parsing flow actions! " +
-                                        "The first flow statement must be an action inside an action block!");
-                            }
-                            if (flowExpression instanceof Action) {
-                                if (ActionAPI.matchesType((Action<?>) flowExpression, type)) {
-                                    actions.add((Action<T>) flowExpression);
-                                }
+        long delay = 0;
+        for (String key : keys) {
+            if (config.isList(key)) {
+                try {
+                    List<FlowExpression> flowExpressions = parse(config.getStringList(key));
+                    // this is the current active action that requirements and such will be attached to
+                    Action<T> activeAction = null;
+                    List<Requirement<T>> applicableRequirements = new ArrayList<>();
+                    for (FlowExpression flowExpression : flowExpressions) {
+                        if (flowExpression instanceof FlowDelay) {
+                            delay += ((FlowDelay) flowExpression).getDelay();
+                            continue;
+                        }
+                        if (flowExpression instanceof ActionAPIType) {
+                            ActionAPIType expression = (ActionAPIType) flowExpression;
+                            switch (expression.getFlowType()) {
+                                case ACTION:
+                                    FlowConfiguration configuration = expression.getConfiguration();
+                                    configuration.set("delay", delay);
+                                    Optional<Action<T>> action = ActionAPI.createAction(expression.getId(), configuration, type);
+                                    if (!action.isPresent()) {
+                                        throw new FlowException("Could not find action of type " + expression.getTypeId());
+                                    }
+                                    activeAction = action.get();
+                                    actions.add(activeAction);
+                                    if (!applicableRequirements.isEmpty()) {
+                                        applicableRequirements.forEach(activeAction::addRequirement);
+                                        applicableRequirements.clear();
+                                    }
+                                    break;
+                                case REQUIREMENT:
+                                    Optional<Requirement<T>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key,
+                                            expression.getTypeId(),
+                                            expression.getConfiguration(),
+                                            type);
+                                    if (!requirement.isPresent()) {
+                                        throw new FlowException("Could not find requirement of type " + expression.getTypeId());
+                                    }
+                                    applicableRequirements.add(requirement.get());
+                                    break;
                             }
                         }
-                    } catch (FlowException e) {
-                        RaidCraft.LOGGER.warning(e.getMessage() + " in " + ConfigUtil.getFileName(config));
-                        e.printStackTrace();
                     }
-                });
-
-        return actions;
-    }
-
-    public static <T> List<FlowExpression> parse(List<String> lines, Class<T> type) throws FlowException {
-
-        List<FlowExpression> expressions = new ArrayList<>();
-
-        Iterator<String> iterator = lines.iterator();
-        while (iterator.hasNext()) {
-            for (FlowParser parser : parsers) {
-                while (iterator.hasNext()) {
-                    if (parser.accept(iterator.next())) {
-                        expressions.add(parser.parse(type));
-                    } else {
-                        parser.close();
-                        break;
-                    }
+                } catch (FlowException e) {
+                    RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
-
-        return expressions;
+        return actions;
     }
 
-    public static <T> Optional<FlowExpression> parse(String line, Class<T> type) throws FlowException {
+    public static List<FlowExpression> parse(List<String> lines) throws FlowException {
 
-        for (FlowParser parser : parsers) {
-            if (parser.accept(line)) {
-                return Optional.of(parser.parse(type));
+        List<FlowExpression> expressions = new ArrayList<>();
+
+        for (String line : lines) {
+            for (FlowParser parser : parsers) {
+                if (parser.accept(line)) {
+                    expressions.add(parser.parse());
+                }
             }
         }
-        return Optional.empty();
+        return expressions;
     }
 }

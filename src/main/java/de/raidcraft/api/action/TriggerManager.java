@@ -108,7 +108,7 @@ public final class TriggerManager {
         registeredTrigger.values().forEach(trigger -> trigger.unregisterListener(listener));
     }
 
-    public TriggerFactory getTrigger(@NonNull String identifier, @NonNull ConfigurationSection config) {
+    public TriggerFactory createTrigger(@NonNull String identifier, @NonNull ConfigurationSection config) {
 
         return new TriggerFactory(this, identifier, config);
     }
@@ -123,7 +123,7 @@ public final class TriggerManager {
         List<TriggerFactory> list = new ArrayList<>();
         if (trigger != null) {
             list = trigger.getKeys(false).stream()
-                    .map(key -> getTrigger(trigger.getString(key + ".type"), trigger.getConfigurationSection(key)))
+                    .map(key -> createTrigger(trigger.getString(key + ".type"), trigger.getConfigurationSection(key)))
                     .collect(Collectors.toList());
         }
         return list;

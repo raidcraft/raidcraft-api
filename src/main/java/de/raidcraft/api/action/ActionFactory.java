@@ -2,6 +2,7 @@ package de.raidcraft.api.action;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.ConfigUtil;
@@ -101,7 +102,12 @@ public final class ActionFactory<T> {
         if (actions == null) {
             return list;
         }
+        // lets parse our flow actions and add them
+        list.addAll(Flow.parseActions(actions, getType()));
+
         for (String key : actions.getKeys(false)) {
+            // lists are handled by the flow parser
+            if (actions.isList(key)) continue;
             Optional<Action<T>> optional = create(actions.getString(key + ".type"), actions.getConfigurationSection(key));
             if (optional.isPresent()) {
                 list.add(optional.get());
