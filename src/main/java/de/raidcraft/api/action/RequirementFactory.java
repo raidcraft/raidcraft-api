@@ -1,6 +1,7 @@
 package de.raidcraft.api.action;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
@@ -96,7 +97,12 @@ public final class RequirementFactory<T> {
         if (requirements == null) {
             return list;
         }
+        // lets parse via flow first and continue if the key is a list
+        list.addAll(Flow.parseRequirements(requirements, getType()));
+
         for (String key : requirements.getKeys(false)) {
+            // handled by flow
+            if (requirements.isList(key)) continue;
             Optional<Requirement<T>> optional = create(id + "." + key, requirements.getString(key + ".type"), requirements.getConfigurationSection(key));
             if (optional.isPresent()) {
                 list.add(optional.get());

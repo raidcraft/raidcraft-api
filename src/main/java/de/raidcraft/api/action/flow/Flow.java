@@ -150,6 +150,59 @@ public final class Flow {
         return triggerFactories;
     }
 
+    public static <T> List<Requirement<T>> parseRequirements(ConfigurationSection config, Class<T> type) {
+
+        List<Requirement<T>> requirements = new ArrayList<>();
+        Set<String> keys = config.getKeys(false);
+        if (keys == null) return requirements;
+
+        int i = 0;
+        for (String key : keys) {
+            if (config.isList(key)) {
+                try {
+                    long delay = 0;
+                    List<FlowExpression> flowExpressions = parse(config.getStringList(key));
+                    Requirement<T> activeRequirement = null;
+                    for (FlowExpression flowExpression : flowExpressions) {
+                        if (flowExpression instanceof FlowDelay) {
+                            delay += ((FlowDelay) flowExpression).getDelay();
+                            continue;
+                        }
+                        if (flowExpression instanceof ActionAPIType) {
+                            ActionAPIType expression = (ActionAPIType) flowExpression;
+                            FlowConfiguration configuration = expression.getConfiguration();
+                            switch (expression.getFlowType()) {
+                                case ACTION:
+                                    if (activeRequirement == null) continue;
+                                    configuration.set("delay", delay);
+                                    Optional<Action<T>> action = ActionAPI.createAction(expression.getTypeId(), configuration, type);
+                                    if (!action.isPresent()) {
+                                        throw new FlowException("Could not find action of type " + expression.getTypeId());
+                                    }
+                                    activeRequirement.addAction(action.get());
+                                case REQUIREMENT:
+                                    Optional<Requirement<T>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key,
+                                            expression.getTypeId(),
+                                            expression.getConfiguration(),
+                                            type);
+                                    if (!requirement.isPresent()) {
+                                        throw new FlowException("Could not find requirement of type " + expression.getTypeId());
+                                    }
+                                    requirements.add(requirement.get());
+                                    activeRequirement = requirement.get();
+                                    break;
+                            }
+                        }
+                    }
+                } catch (FlowException e) {
+                    RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+        return requirements;
+    }
+
     public static List<FlowExpression> parse(List<String> lines) throws FlowException {
 
         List<FlowExpression> expressions = new ArrayList<>();
