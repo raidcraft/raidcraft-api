@@ -60,8 +60,8 @@ public enum GlobalAction {
                 value = "player.give.item",
                 desc = "Gives the player the item or drops it if inventory is full.",
                 conf = {
-                        "amount: [1]",
-                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>"
+                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
+                        "amount: [1]"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
@@ -81,8 +81,8 @@ public enum GlobalAction {
                 value = "player.remove.item",
                 desc = "Removes the item from the player, will also search in the quest inventory if it is a quest item.",
                 conf = {
-                        "amount: [1]",
-                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>"
+                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
+                        "amount: [1]"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
@@ -183,11 +183,11 @@ public enum GlobalAction {
                 value = "player.give.compass",
                 desc = "Gives the player a compass that points to the given location and names it.",
                 conf = {
-                        "name: [Compass]",
-                        "world: [current]",
                         "x",
                         "y",
                         "z",
+                        "world: [current]",
+                        "name: [Compass]"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
@@ -227,10 +227,10 @@ public enum GlobalAction {
                 value = "teleport.location",
                 desc = "Teleports the player to the given location.",
                 conf = {
-                        "world: [current]",
                         "x",
                         "y",
                         "z",
+                        "world: [current]",
                         "yaw",
                         "pitch"
                 }
