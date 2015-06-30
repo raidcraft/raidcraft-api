@@ -109,12 +109,12 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             value = "player.block.break",
             desc = "Listens for block breaking and optionally at the defined location.",
             conf = {
-                    "blocks: List of blocks to listen for (overrides a single block)",
-                    "block: DIRT",
-                    "world: [current]",
                     "x",
                     "y",
-                    "z"
+                    "z",
+                    "world: [current]",
+                    "block: DIRT",
+                    "blocks: List of blocks to listen for (overrides a single block)"
             }
     )
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -158,12 +158,12 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             value = "player.block.place",
             desc = "Listens for block placing and optionally at the defined location.",
             conf = {
-                    "blocks: List of blocks to listen for (overrides a single block)",
-                    "block: DIRT",
-                    "world: [current]",
                     "x",
                     "y",
-                    "z"
+                    "z",
+                    "world: [current]",
+                    "block: DIRT",
+                    "blocks: List of blocks to listen for (overrides a single block)"
             }
     )
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -217,10 +217,10 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             value = "player.move",
             desc = "Triggers if the player is at or in a radius of the given location.",
             conf = {
-                    "world: [current]",
                     "x",
                     "y",
                     "z",
+                    "world: [current]",
                     "radius: [0]"
             }
     )

@@ -19,7 +19,7 @@ public class ActionTypeParser extends FlowParser {
 
     public ActionTypeParser() {
 
-        super(Pattern.compile("^([\\^@\\?:~])([a-zA-Z\\-\\._\\d]+)([( ]?.*)$"));
+        super(Pattern.compile("^([\\^@\\?~])([a-zA-Z\\-\\._\\d]+)([( ]?.*)$"));
         // #0 	@trigger(blubb: aaaa) world,1,2,3
         // #1	@
         // #2	trigger
