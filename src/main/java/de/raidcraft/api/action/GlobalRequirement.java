@@ -8,6 +8,7 @@ import de.raidcraft.api.quests.QuestProvider;
 import de.raidcraft.api.quests.Quests;
 import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.LocationUtil;
+import de.raidcraft.util.TimeUtil;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,13 +44,15 @@ public enum GlobalRequirement {
                 value = "cooldown",
                 desc = "When this requirement is checked the first time it will be true. Then for the duration of the cooldown " +
                         "it will be false and when a check occurs after the cooldown expired the requirement will be true again.",
-                conf = "cooldown: in seconds"
+                conf = "cooldown: <[1y]{200d][11h][3m][20s][10]>"
         )
         public boolean test(Player player, RequirementConfigWrapper<Player> context, ConfigurationSection config) {
 
             if (context.isMapped(player, "last_activation")) {
                 Timestamp lastActivation = Timestamp.valueOf(context.getMapping(player, "last_activation"));
-                if (lastActivation.toInstant().plusSeconds(config.getLong("cooldown")).isAfter(Instant.now())) {
+                long cooldown = config.isLong("cooldown") ? config.getLong("cooldown") : TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
+                cooldown = TimeUtil.ticksToMillis(cooldown);
+                if (lastActivation.toInstant().plusMillis(cooldown).isAfter(Instant.now())) {
                     return false;
                 }
             }

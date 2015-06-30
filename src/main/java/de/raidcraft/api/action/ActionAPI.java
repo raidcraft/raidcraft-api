@@ -325,7 +325,7 @@ public final class ActionAPI {
             return Optional.empty();
         }
 
-        public static <T> Optional<Requirement<T>> createCooldownRequirement(String id, double cooldown, Class<T> type) {
+        public static <T> Optional<Requirement<T>> createCooldownRequirement(String id, long cooldown, Class<T> type) {
 
             MemoryConfiguration configuration = new MemoryConfiguration();
             configuration.set("args.cooldown", cooldown);
