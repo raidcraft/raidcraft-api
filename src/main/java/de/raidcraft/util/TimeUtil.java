@@ -115,19 +115,19 @@ public final class TimeUtil {
             ticks += yearsToTicks(Long.parseLong(matcher.group(2)));
         }
         if (!Objects.isNull(matcher.group(4))) {
-            ticks += daysToTicks(Long.parseLong(matcher.group(2)));
+            ticks += daysToTicks(Long.parseLong(matcher.group(4)));
         }
         if (!Objects.isNull(matcher.group(6))) {
-            ticks += hoursToTicks(Long.parseLong(matcher.group(2)));
+            ticks += hoursToTicks(Long.parseLong(matcher.group(6)));
         }
         if (!Objects.isNull(matcher.group(8))) {
-            ticks += minutesToTicks(Long.parseLong(matcher.group(2)));
+            ticks += minutesToTicks(Long.parseLong(matcher.group(8)));
         }
         if (!Objects.isNull(matcher.group(10))) {
-            ticks += secondsToTicks(Long.parseLong(matcher.group(2)));
+            ticks += secondsToTicks(Long.parseLong(matcher.group(10)));
         }
         if (!Objects.isNull(matcher.group(11))) {
-            ticks += Long.parseLong(matcher.group(2));
+            ticks += Long.parseLong(matcher.group(11));
         }
         return ticks;
     }
