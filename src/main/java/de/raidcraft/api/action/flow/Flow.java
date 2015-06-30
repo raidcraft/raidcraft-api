@@ -35,6 +35,7 @@ public final class Flow {
     public static <T> List<Action<T>> parseActions(ConfigurationSection config, Class<T> type) {
 
         List<Action<T>> actions = new ArrayList<>();
+        if (config == null) return actions;
         Set<String> keys = config.getKeys(false);
         if (keys == null) return actions;
 
@@ -94,6 +95,7 @@ public final class Flow {
     public static List<TriggerFactory> parseTrigger(ConfigurationSection config) {
 
         List<TriggerFactory> triggerFactories = new ArrayList<>();
+        if (config == null) return triggerFactories;
         Set<String> keys = config.getKeys(false);
         if (keys == null) return triggerFactories;
 
@@ -160,6 +162,7 @@ public final class Flow {
     public static <T> List<Requirement<T>> parseRequirements(ConfigurationSection config, Class<T> type) {
 
         List<Requirement<T>> requirements = new ArrayList<>();
+        if (config == null) return requirements;
         Set<String> keys = config.getKeys(false);
         if (keys == null) return requirements;
 
@@ -215,6 +218,7 @@ public final class Flow {
     public static List<Answer> parseAnswers(StageTemplate template, ConfigurationSection config) {
 
         List<Answer> answers = new ArrayList<>();
+        if (config == null) return answers;
         Set<String> keys = config.getKeys(false);
         if (keys == null) return answers;
 
