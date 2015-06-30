@@ -63,6 +63,15 @@ public interface Answer extends ActionHolder, RequirementHolder {
     Answer color(ChatColor color);
 
     /**
+     * Trys to add the given requirement to the answer. If the requirement is not a conversation or
+     * player requirement it will not be added and silently fail.
+     *
+     * @param requirement to add to the answer
+     * @return this answer
+     */
+    Answer addRequirement(Requirement<?> requirement);
+
+    /**
      * Adds a Conversation requirement to this answer that is checked before actions are executed.
      *
      * @param conversationRequirement to add
@@ -77,6 +86,16 @@ public interface Answer extends ActionHolder, RequirementHolder {
      * @return this answer
      */
     Answer addPlayerRequirement(Requirement<Player> playerRequirement);
+
+    /**
+     * Adds an action to the answer that will be executed when the answer is chosen.
+     * The action will only be added if it is a conversation or player action, otherwise
+     * it will silently fail.
+     *
+     * @param action to add
+     * @return this answer
+     */
+    Answer addAction(Action<?> action);
 
     /**
      * Adds a Conversation action to this answer that is executed when the answer is chosen.

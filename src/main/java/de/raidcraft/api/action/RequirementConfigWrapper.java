@@ -5,6 +5,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.requirement.ContextualRequirement;
 import de.raidcraft.api.action.requirement.Reasonable;
 import de.raidcraft.api.action.requirement.ReasonableRequirement;
 import de.raidcraft.api.action.requirement.Requirement;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
  */
 @EqualsAndHashCode(of = {"requirement"})
 @Data
-class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparable<Requirement<T>> {
+public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparable<Requirement<T>> {
 
     private static final String CHECKED_KEY = "checked";
     private static final String COUNT_KEY = "count";
@@ -79,12 +80,44 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
         this.config = config;
     }
 
+    @Override
+    public void addAction(Action<T> action) {
+
+        successActions.add(action);
+    }
+
+    public int getIntMapping(T entity, String key) {
+
+        String mapping = getMapping(entity, key);
+        return mapping == null ? 0 : Integer.parseInt(mapping);
+    }
+
+    public boolean getBoolMapping(T entity, String key) {
+
+        String mapping = getMapping(entity, key);
+        return mapping != null && Boolean.parseBoolean(mapping);
+    }
+
+    public double getDoubleMapping(T entity, String key) {
+
+        String mapping = getMapping(entity, key);
+        return mapping == null ? 0.0 : Double.parseDouble(mapping);
+    }
+
     public String getMapping(T entity, String key) {
 
         if (entity instanceof Player) {
             return mappings.getOrDefault(((Player) entity).getUniqueId(), new HashMap<>()).getOrDefault(key, null);
         }
         return null;
+    }
+
+    public void setMapping(T entity, String key, String value) {
+
+        if (entity instanceof Player) {
+            UUID uniqueId = ((Player) entity).getUniqueId();
+            setMapping(uniqueId, key, value);
+        }
     }
 
     public void setMapping(UUID uuid, String key, String value) {
@@ -103,6 +136,21 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
     public void setChecked(T entity, boolean checked) {
 
         setMapping(entity, CHECKED_KEY, checked);
+    }
+
+    public void setMapping(T entity, String key, int value) {
+
+        setMapping(entity, key, Integer.toString(value));
+    }
+
+    public void setMapping(T entity, String key, boolean value) {
+
+        setMapping(entity, key, Boolean.toString(value));
+    }
+
+    public boolean isMapped(T entity, String key) {
+
+        return getMapping(entity, key) != null;
     }
 
     public boolean isOrdered() {
@@ -146,9 +194,17 @@ class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparabl
         if (isPersistant() && isMapped(entity, CHECKED_KEY)) return successfullyChecked;
 
         if (negate) {
-            successfullyChecked = !requirement.test(entity, config);
+            if (requirement instanceof ContextualRequirement) {
+                successfullyChecked = !((ContextualRequirement<T>) requirement).test(entity, this, config);
+            } else {
+                successfullyChecked = !requirement.test(entity, config);
+            }
         } else {
-            successfullyChecked = requirement.test(entity, config);
+            if (requirement instanceof ContextualRequirement) {
+                successfullyChecked = ((ContextualRequirement<T>) requirement).test(entity, this, config);
+            } else {
+                successfullyChecked = requirement.test(entity, config);
+            }
         }
 
         if (isCounting()) {

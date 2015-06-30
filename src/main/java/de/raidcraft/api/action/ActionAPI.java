@@ -8,6 +8,7 @@ import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -50,6 +51,11 @@ public final class ActionAPI {
         return "undefined";
     }
 
+    public static Optional<ConfigGenerator.Information> getInformation(String identifier) {
+
+        return ConfigBuilder.getInformation(identifier);
+    }
+
     public static Map<String, Action<?>> getActions() {
 
         Map<String, Action<?>> actions = new HashMap<>();
@@ -70,6 +76,23 @@ public final class ActionAPI {
     }
 
     @SuppressWarnings("unchecked")
+    public static <T> Optional<Requirement<T>> createRequirement(String id, String requirement, ConfigurationSection config, Class<T> type) {
+
+        RequirementFactory<?> requirementFactory = requirementFactories.get(type);
+        if (requirementFactory == null) return Optional.empty();
+        return ((RequirementFactory<T>) requirementFactory).create(id, requirement, config);
+    }
+
+    public static Optional<? extends Requirement<?>> createRequirement(String id, String requirement, ConfigurationSection config) {
+
+        for (RequirementFactory<?> factory : requirementFactories.values()) {
+            Optional<? extends Requirement<?>> optional = factory.create(id, requirement, config);
+            if (optional.isPresent()) return optional;
+        }
+        return Optional.empty();
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T> List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) {
 
         RequirementFactory<?> factory = requirementFactories.get(type);
@@ -87,6 +110,14 @@ public final class ActionAPI {
     }
 
     @SuppressWarnings("unchecked")
+    public static <T> Optional<Action<T>> createAction(String identifier, ConfigurationSection config, Class<?> type) {
+
+        ActionFactory<?> actionFactory = actionFactories.get(type);
+        if (actionFactory == null) return Optional.empty();
+        return ((ActionFactory<T>) actionFactory).create(identifier, config);
+    }
+
+    @SuppressWarnings("unchecked")
     public static  <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
 
         ActionFactory<?> factory = actionFactories.get(type);
@@ -101,6 +132,11 @@ public final class ActionAPI {
             list.addAll(factory.createActions(actions));
         }
         return list;
+    }
+
+    public static TriggerFactory createTrigger(String identifier, ConfigurationSection config) {
+
+        return triggerManager.createTrigger(identifier, config);
     }
 
     public static Collection<TriggerFactory> createTrigger(ConfigurationSection trigger) {
@@ -271,5 +307,37 @@ public final class ActionAPI {
 
         global = false;
         return this;
+    }
+
+    public static class Helper {
+
+        public static <T> Optional<Requirement<T>> createExecuteOnceRequirement(String id, Class<T> type) {
+
+            MemoryConfiguration configuration = new MemoryConfiguration();
+            configuration.set("persistant", true);
+            Optional<RequirementFactory<T>> factory = ActionAPI.getRequirementFactory(type);
+            if (factory.isPresent()) {
+                return factory.get().create(
+                        id + "." + GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
+                        GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
+                        configuration);
+            }
+            return Optional.empty();
+        }
+
+        public static <T> Optional<Requirement<T>> createCooldownRequirement(String id, long cooldown, Class<T> type) {
+
+            MemoryConfiguration configuration = new MemoryConfiguration();
+            configuration.set("args.cooldown", cooldown);
+            configuration.set("persistant", true);
+            Optional<RequirementFactory<T>> factory = ActionAPI.getRequirementFactory(type);
+            if (factory.isPresent()) {
+                return factory.get().create(
+                        id + "." + GlobalRequirement.COOLDOWN.getId(),
+                        GlobalRequirement.COOLDOWN.getId(),
+                        configuration);
+            }
+            return Optional.empty();
+        }
     }
 }

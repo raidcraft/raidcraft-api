@@ -13,6 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Silthus
@@ -24,7 +25,9 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
     private final Class<T> type;
     private final Action<T> action;
     private final ConfigurationSection config;
-    private final double delay;
+    private final long delay;
+    private final long cooldown;
+    private final boolean executeOnce;
     private List<Requirement<T>> requirements = new ArrayList<>();
 
     protected ActionConfigWrapper(Action<T> action, ConfigurationSection config, Class<T> type) {
@@ -32,8 +35,24 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         this.type = type;
         this.action = action;
         this.config = config;
-        this.delay = config.getDouble("delay", 0);
+        this.delay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
+        this.cooldown = TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
+        this.executeOnce = config.getBoolean("execute-once", false);
         this.requirements = ActionAPI.createRequirements(getIdentifier(), config.getConfigurationSection("requirements"), type);
+        if (isExecuteOnce()) {
+            // lets add our execute once requirement last
+            // this requirement will return false after is has been checked once
+            Optional<Requirement<T>> optional = ActionAPI.Helper.createExecuteOnceRequirement(
+                    getIdentifier(),
+                    getType());
+            if (optional.isPresent()) this.requirements.add(optional.get());
+        } else if (cooldown > 0) {
+            Optional<Requirement<T>> cooldownRequirement = ActionAPI.Helper.createCooldownRequirement(
+                    getIdentifier(),
+                    cooldown,
+                    getType());
+            if (cooldownRequirement.isPresent()) this.requirements.add(cooldownRequirement.get());
+        }
     }
 
     public ConfigurationSection getConfig() {
@@ -41,6 +60,12 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         ConfigurationSection args = this.config.getConfigurationSection("args");
         if (args == null) args = this.config.createSection("args");
         return args;
+    }
+
+    @Override
+    public void addRequirement(Requirement<T> requirement) {
+
+        requirements.add(requirement);
     }
 
     public void accept(T type) {
@@ -57,9 +82,16 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
                 if (!allMatch) return;
             }
             action.accept(type, config);
+            if (isExecuteOnce()) {
+                Requirement<T> executeOnce = requirements.get(requirements.size() - 1);
+                if (executeOnce instanceof RequirementConfigWrapper) {
+                    ((RequirementConfigWrapper<T>)executeOnce).setChecked(type, false);
+                    executeOnce.save();
+                }
+            }
         };
         if (delay > 0) {
-            Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), runnable, TimeUtil.secondsToTicks(delay));
+            Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), runnable, delay);
         } else {
             runnable.run();
         }
@@ -69,6 +101,13 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
     public void revert(T type) {
 
         revert(type, getConfig());
+        if (isExecuteOnce()) {
+            Requirement<T> executeOnce = requirements.get(requirements.size() - 1);
+            if (executeOnce instanceof RequirementConfigWrapper) {
+                ((RequirementConfigWrapper<T>)executeOnce).setChecked(type, true);
+                executeOnce.save();
+            }
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package de.raidcraft.api.action;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.action.trigger.TriggerListener;
 import de.raidcraft.api.config.builder.ConfigBuilder;
@@ -17,7 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * @author Silthus
@@ -93,7 +94,7 @@ public final class TriggerManager {
         RaidCraft.LOGGER.info("removed all trigger of: " + plugin.getName());
     }
 
-    public <T> void registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier, @NonNull ConfigurationSection config) {
+    public <T> Optional<Trigger> registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier, @NonNull ConfigurationSection config) {
 
         String id = triggerIdentifier.toLowerCase();
         // we need to check partial names because actions are not listed in the map
@@ -101,6 +102,7 @@ public final class TriggerManager {
         if (trigger != null) {
             trigger.registerListener(listener, id, config);
         }
+        return Optional.ofNullable(trigger);
     }
 
     public <T> void unregisterListener(@NonNull TriggerListener<T> listener) {
@@ -108,7 +110,7 @@ public final class TriggerManager {
         registeredTrigger.values().forEach(trigger -> trigger.unregisterListener(listener));
     }
 
-    public TriggerFactory getTrigger(@NonNull String identifier, @NonNull ConfigurationSection config) {
+    public TriggerFactory createTrigger(@NonNull String identifier, @NonNull ConfigurationSection config) {
 
         return new TriggerFactory(this, identifier, config);
     }
@@ -121,10 +123,15 @@ public final class TriggerManager {
     public Collection<TriggerFactory> createTriggerFactories(ConfigurationSection trigger) {
 
         List<TriggerFactory> list = new ArrayList<>();
+        // parse our flow trigger
+        list.addAll(Flow.parseTrigger(trigger));
+
         if (trigger != null) {
-            list = trigger.getKeys(false).stream()
-                    .map(key -> getTrigger(trigger.getString(key + ".type"), trigger.getConfigurationSection(key)))
-                    .collect(Collectors.toList());
+            for (String key : trigger.getKeys(false)) {
+                // handle via flow api
+                if (trigger.isList(key)) continue;
+                list.add(createTrigger(trigger.getString(key + ".type"), trigger.getConfigurationSection(key)));
+            }
         }
         return list;
     }
