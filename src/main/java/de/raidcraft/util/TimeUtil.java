@@ -1,5 +1,9 @@
 package de.raidcraft.util;
 
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @author Silthus
  */
@@ -22,6 +26,21 @@ public final class TimeUtil {
     public static double millisToMinutes(long millis) {
 
         return secondsToMinutes(millisToSeconds(millis));
+    }
+
+    public static long yearsToTicks(long years) {
+
+        return daysToTicks(years * 365L);
+    }
+
+    public static long daysToTicks(long days) {
+
+        return hoursToTicks(days * 24L);
+    }
+
+    public static long hoursToTicks(long hours) {
+
+        return minutesToTicks(hours * 60L);
     }
 
     public static long minutesToTicks(long minutes) {
@@ -63,6 +82,20 @@ public final class TimeUtil {
         }
     }
 
+    private static final Pattern TIME_PATTERN = Pattern.compile("^(([\\d]+)y)?(([\\d]+)d)?(([\\d]+)h)?(([\\d]+)m)?(([\\d]+)s)?([\\d]+)?$");
+    // #0 	1y10d2h33m2s1
+    // #1	1y
+    // #2	1 -> years
+    // #3	10d
+    // #4	10 -> days
+    // #5	2h
+    // #6	2 -> hours
+    // #7	33m
+    // #8	33 -> minutes
+    // #9	2s
+    // #10	2 -> seconds
+    // #11	1 -> ticks
+
     /**
      * Parses a given input string to ticks.
      * 10min or 10m -> 10 * 60 * 20
@@ -74,12 +107,28 @@ public final class TimeUtil {
      */
     public static long parseTimeAsTicks(String input) {
 
-        if (input.endsWith("m") || input.endsWith("min")) {
-            return minutesToTicks(Long.parseLong(input.replace("m", "").replace("min", "min")));
+        if (Objects.isNull(input)) return 0;
+        Matcher matcher = TIME_PATTERN.matcher(input);
+        if (!matcher.matches()) return 0;
+        long ticks = 0;
+        if (!Objects.isNull(matcher.group(2))) {
+            ticks += yearsToTicks(Long.parseLong(matcher.group(2)));
         }
-        if (input.endsWith("s")) {
-            return secondsToTicks(Long.parseLong(input.replace("s", "")));
+        if (!Objects.isNull(matcher.group(4))) {
+            ticks += daysToTicks(Long.parseLong(matcher.group(2)));
         }
-        return Long.parseLong(input);
+        if (!Objects.isNull(matcher.group(6))) {
+            ticks += hoursToTicks(Long.parseLong(matcher.group(2)));
+        }
+        if (!Objects.isNull(matcher.group(8))) {
+            ticks += minutesToTicks(Long.parseLong(matcher.group(2)));
+        }
+        if (!Objects.isNull(matcher.group(10))) {
+            ticks += secondsToTicks(Long.parseLong(matcher.group(2)));
+        }
+        if (!Objects.isNull(matcher.group(11))) {
+            ticks += Long.parseLong(matcher.group(2));
+        }
+        return ticks;
     }
 }

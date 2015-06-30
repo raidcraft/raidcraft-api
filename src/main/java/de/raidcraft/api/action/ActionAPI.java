@@ -8,6 +8,7 @@ import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -306,5 +307,37 @@ public final class ActionAPI {
 
         global = false;
         return this;
+    }
+
+    public static class Helper {
+
+        public static <T> Optional<Requirement<T>> createExecuteOnceRequirement(String id, Class<T> type) {
+
+            MemoryConfiguration configuration = new MemoryConfiguration();
+            configuration.set("persistant", true);
+            Optional<RequirementFactory<T>> factory = ActionAPI.getRequirementFactory(type);
+            if (factory.isPresent()) {
+                return factory.get().create(
+                        id + "." + GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
+                        GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
+                        configuration);
+            }
+            return Optional.empty();
+        }
+
+        public static <T> Optional<Requirement<T>> createCooldownRequirement(String id, double cooldown, Class<T> type) {
+
+            MemoryConfiguration configuration = new MemoryConfiguration();
+            configuration.set("args.cooldown", cooldown);
+            configuration.set("persistant", true);
+            Optional<RequirementFactory<T>> factory = ActionAPI.getRequirementFactory(type);
+            if (factory.isPresent()) {
+                return factory.get().create(
+                        id + "." + GlobalRequirement.COOLDOWN.getId(),
+                        GlobalRequirement.COOLDOWN.getId(),
+                        configuration);
+            }
+            return Optional.empty();
+        }
     }
 }
