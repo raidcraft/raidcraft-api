@@ -60,26 +60,6 @@ public enum GlobalRequirement {
             return true;
         }
     }),
-    COOLDOWN("cooldown", new Requirement<Player>() {
-        @Override
-        @Information(
-                value = "cooldown",
-                desc = "When this requirement is checked the first time it will be true. Then for the duration of the cooldown " +
-                        "it will be false and when a check occurs after the cooldown expired the requirement will be true again.",
-                conf = "cooldown: in seconds"
-        )
-        public boolean test(Player player, ConfigurationSection config) {
-
-            if (isMapped(player, "last_activation")) {
-                Timestamp lastActivation = Timestamp.valueOf(getMapping(player, "last_activation"));
-                if (lastActivation.toInstant().plusSeconds(config.getLong("cooldown")).isAfter(Instant.now())) {
-                    return false;
-                }
-            }
-            setMapping(player, "last_activation", Timestamp.from(Instant.now()).toString());
-            return true;
-        }
-    }),
     PLAYER_LOCATION("player.location", new Requirement<Player>() {
         @Override
         @Information(
