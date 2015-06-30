@@ -19,17 +19,17 @@ public class ActionTypeParser extends FlowParser {
 
     public ActionTypeParser() {
 
-        super(Pattern.compile("^([\\^@\\?:~])([\"a-zA-Z\\-\\._\\d]+)([( ]?.*)$"));
+        super(Pattern.compile("^([\\^@\\?:~])([a-zA-Z\\-\\._\\d]+)([( ]?.*)$"));
+        // #0 	@trigger(blubb: aaaa) world,1,2,3
+        // #1	@
+        // #2	trigger
+        // #3	(blubb: aaaa) world,1,2,3
     }
 
     @Override
     protected ActionAPIType parse() throws FlowException {
 
         // first we need to find out the flow type from group 1
-        // #0 	@trigger(blubb: aaaa) world,1,2,3
-        // #1	@
-        // #2	trigger
-        // #3	(blubb: aaaa) world,1,2,3
         String typeSymbol = getMatcher().group(1);
         Optional<FlowType> flowType = FlowType.fromString(typeSymbol);
         if (!flowType.isPresent()) {

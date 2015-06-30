@@ -29,6 +29,38 @@ public interface ConversationProvider {
     void registerAnswer(String type, Class<? extends Answer> answer);
 
     /**
+     * Generates a list of answers from the given {@link ConfigurationSection}.
+     * The config section can also contain {@link de.raidcraft.api.action.flow.Flow} statements as they will be parsed also.
+     * The ConfigurationSection should be a subsection like the following example:
+     * <code>
+     *     flow:
+     *       - :"Flow Answer"
+     *       - ^action-after-answer
+     *       - ?requirement1-for-answer
+     *       - :"Flow Input Answer"->flow-input-var1
+     *       - ^action-with-input action-conf:%%
+     *     '1':
+     *       text: "Block Answer"
+     *       requirements:
+     *         ...
+     *       actions:
+     *         ...
+     *     '2':
+     *       text: "Block Input Answer"
+     *       var: block-input-var
+     *       requirements:
+     *         ...
+     *       actions:
+     *         ...
+     * </code>
+     *
+     * @param template to create answers for
+     * @param config to create answers from
+     * @return list of created answers
+     */
+    List<Answer> createAnswers(StageTemplate template, ConfigurationSection config);
+
+    /**
      * Gets a registered answer for the given config section and stage template.
      * Will return an empty optional if not answer with that type is found.
      * If no type is set the {@link Answer#DEFAULT_ANSWER_TEMPLATE} will be used.

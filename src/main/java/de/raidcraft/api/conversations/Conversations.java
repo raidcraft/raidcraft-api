@@ -11,6 +11,7 @@ import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,6 +55,17 @@ public class Conversations {
         } else {
             provider.registerAnswer(type, answer);
         }
+    }
+
+    /**
+     * @see ConversationProvider#createAnswers(StageTemplate, ConfigurationSection)
+     */
+    public static List<Answer> createAnswers(StageTemplate template, ConfigurationSection config) {
+
+        if (provider == null) {
+            return new ArrayList<>();
+        }
+        return provider.createAnswers(template, config);
     }
 
     /**
