@@ -193,11 +193,11 @@ public final class ActionAPI {
 
 
     /**
-     * @deprecated use {@link #action(Action, Class)} or {@link #action(Action)}
+     * @deprecated use {@link #action(Action, Class, String[])} or {@link #action(Action, String[])}
      */
     @SuppressWarnings("unchecked")
     @Deprecated
-    public <T> ActionAPI action(@NonNull String identifier, @NonNull Action<T> action, Class<T> type) {
+    public <T> ActionAPI action(@NonNull String identifier, @NonNull Action<T> action, Class<T> type, String... aliases) {
 
         ActionFactory<T> factory;
         if (!actionFactories.containsKey(type)) {
@@ -208,28 +208,34 @@ public final class ActionAPI {
         }
         if (global) {
             factory.registerGlobalAction(identifier, action);
+            for (String alias : aliases) {
+                factory.addAlias(identifier, alias);
+            }
         } else {
             factory.registerAction(plugin, identifier, action);
+            for (String alias : aliases) {
+                factory.addAlias(plugin, identifier, alias);
+            }
         }
         return this;
     }
 
 
     /**
-     * @deprecated use {@link #action(Action, Class)} or {@link #action(Action)}
+     * @deprecated use {@link #action(Action, Class, String[])} or {@link #action(Action, String[])}
      */
     @Deprecated
-    public ActionAPI action(@NonNull String identifier, @NonNull Action<Player> action) {
+    public ActionAPI action(@NonNull String identifier, @NonNull Action<Player> action, String... aliases) {
 
-        return action(identifier, action, Player.class);
+        return action(identifier, action, Player.class, aliases);
     }
 
     /**
-     * @deprecated use {@link #requirement(Requirement, Class)} or {@link #requirement(Requirement)}
+     * @deprecated use {@link #requirement(Requirement, Class, String[])} or {@link #requirement(Requirement, String[])}
      */
     @SuppressWarnings("unchecked")
     @Deprecated
-    public <T> ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<T> requirement, Class<T> type) {
+    public <T> ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<T> requirement, Class<T> type, String... aliases) {
 
         RequirementFactory<T> factory;
         if (!requirementFactories.containsKey(type)) {
@@ -240,19 +246,25 @@ public final class ActionAPI {
         }
         if (global) {
             factory.registerGlobalRequirement(identifier, requirement);
+            for (String alias : aliases) {
+                factory.addAlias(identifier, alias);
+            }
         } else {
             factory.registerRequirement(plugin, identifier, requirement);
+            for (String alias : aliases) {
+                factory.addAlias(plugin, identifier, alias);
+            }
         }
         return this;
     }
 
     /**
-     * @deprecated use {@link #requirement(Requirement, Class)} or {@link #requirement(Requirement)}
+     * @deprecated use {@link #requirement(Requirement, Class, String[])} or {@link #requirement(Requirement, String[])}
      */
     @Deprecated
-    public ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<Player> requirement) {
+    public ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<Player> requirement, String... aliases) {
 
-        return requirement(identifier, requirement, Player.class);
+        return requirement(identifier, requirement, Player.class, aliases);
     }
 
     public ActionAPI trigger(@NonNull Trigger trigger) {
@@ -265,12 +277,12 @@ public final class ActionAPI {
         return this;
     }
 
-    public ActionAPI action(@NonNull Action<Player> requirement) {
+    public ActionAPI action(@NonNull Action<Player> action, String... aliases) {
 
-        return action(requirement, Player.class);
+        return action(action, Player.class, aliases);
     }
 
-    public <T> ActionAPI action(@NonNull Action<T> action, Class<T> type) {
+    public <T> ActionAPI action(@NonNull Action<T> action, Class<T> type, String... aliases) {
 
         Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(action);
         if (!information.isPresent()) {
@@ -278,15 +290,15 @@ public final class ActionAPI {
             return this;
         }
         String identifier = information.get().value();
-        return action(identifier, action, type);
+        return action(identifier, action, type, aliases);
     }
 
-    public ActionAPI requirement(@NonNull Requirement<Player> requirement) {
+    public ActionAPI requirement(@NonNull Requirement<Player> requirement, String... aliases) {
 
-        return requirement(requirement, Player.class);
+        return requirement(requirement, Player.class, aliases);
     }
 
-    public <T> ActionAPI requirement(@NonNull Requirement<T> requirement, Class<T> type) {
+    public <T> ActionAPI requirement(@NonNull Requirement<T> requirement, Class<T> type, String... aliases) {
 
         Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(requirement);
         if (!information.isPresent()) {
@@ -294,7 +306,7 @@ public final class ActionAPI {
             return this;
         }
         String identifier = information.get().value();
-        return requirement(identifier, requirement, type);
+        return requirement(identifier, requirement, type, aliases);
     }
 
     public ActionAPI global() {

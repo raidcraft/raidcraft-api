@@ -1,6 +1,7 @@
 package de.raidcraft.api.action;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.config.builder.ConfigBuilder;
@@ -24,10 +25,23 @@ public final class ActionFactory<T> {
     @Getter
     private final Class<T> type;
     private final Map<String, Action<T>> actions = new CaseInsensitiveMap<>();
+    // key -> alias, value -> action identifier
+    private final Map<String, String> actionAliases = new CaseInsensitiveMap<>();
 
     protected ActionFactory(Class<T> type) {
 
         this.type = type;
+    }
+
+    public ActionFactory addAlias(String action, String alias) {
+
+        actionAliases.put(alias, action);
+        return this;
+    }
+
+    public ActionFactory addAlias(BasePlugin plugin, String action, String alias) {
+
+        return addAlias(plugin.getName().toLowerCase() + "." + action, alias);
     }
 
     public ActionFactory registerGlobalAction(@NonNull String identifier, @NonNull Action<T> action) {
@@ -90,8 +104,13 @@ public final class ActionFactory<T> {
     public Optional<Action<T>> create(@NonNull String identifier, @NonNull ConfigurationSection config) {
 
         if (!actions.containsKey(identifier)) {
-            RaidCraft.LOGGER.warning("unknown action: " + identifier + " in " + ConfigUtil.getFileName(config));
-            return Optional.empty();
+            // lets see if we find a matching alias
+            if (actionAliases.containsKey(identifier) && actions.containsKey(actionAliases.get(identifier))) {
+                identifier = actionAliases.get(identifier);
+            } else {
+                RaidCraft.LOGGER.warning("unknown action: " + identifier + " in " + ConfigUtil.getFileName(config));
+                return Optional.empty();
+            }
         }
         return Optional.of(new ActionConfigWrapper<>(actions.get(identifier), config, getType()));
     }

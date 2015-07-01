@@ -1,6 +1,7 @@
 package de.raidcraft.api.action;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.config.builder.ConfigBuilder;
@@ -25,10 +26,23 @@ public final class RequirementFactory<T> {
     @Getter
     private final Class<T> type;
     private final Map<String, Requirement<T>> requirements = new CaseInsensitiveMap<>();
+    // key -> alias, value -> requirement identifier
+    private final Map<String, String> requirementAliases = new CaseInsensitiveMap<>();
 
     protected RequirementFactory(Class<T> type) {
 
         this.type = type;
+    }
+
+    public RequirementFactory addAlias(String requirement, String alias) {
+
+        requirementAliases.put(alias, requirement);
+        return this;
+    }
+
+    public RequirementFactory addAlias(BasePlugin plugin, String requirement, String alias) {
+
+        return addAlias(plugin.getName().toLowerCase() + "." + requirement, alias);
     }
 
     public RequirementFactory registerGlobalRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
@@ -83,8 +97,13 @@ public final class RequirementFactory<T> {
     public Optional<Requirement<T>> create(String id, @NonNull String requirement, @NonNull ConfigurationSection config) {
 
         if (!requirements.containsKey(requirement)) {
-            RaidCraft.LOGGER.warning("unknown requirement: " + requirement + " in " + ConfigUtil.getFileName(config));
-            return Optional.empty();
+            // lets see if we find a matching alias
+            if (requirementAliases.containsKey(id) && requirements.containsKey(requirementAliases.get(id))) {
+                id = requirementAliases.get(id);
+            } else {
+                RaidCraft.LOGGER.warning("unknown requirement: " + requirement + " in " + ConfigUtil.getFileName(config));
+                return Optional.empty();
+            }
         }
         RequirementConfigWrapper<T> wrapper = new RequirementConfigWrapper<>(id, requirements.get(requirement), config, getType());
         wrapper.load();
