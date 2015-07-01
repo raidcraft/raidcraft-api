@@ -236,11 +236,6 @@ public class Conversations {
         return provider.findConversationTemplate(identifier);
     }
 
-    public static <T> Optional<ConversationHost<T>> getConversationHost(T type) {
-
-        return provider.getConversationHost(type);
-    }
-
     public static Optional<ConversationHost<?>> getConversationHost(String id) {
 
         return provider.getConversationHost(id);
