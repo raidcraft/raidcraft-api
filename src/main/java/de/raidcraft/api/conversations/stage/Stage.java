@@ -1,5 +1,6 @@
 package de.raidcraft.api.conversations.stage;
 
+import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionHolder;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
@@ -38,6 +39,11 @@ public interface Stage extends ActionHolder {
 
         return getTemplate().getText();
     }
+
+    /**
+     * @see StageTemplate#getRandomActions()
+     */
+    List<Action<?>> getRandomActions();
 
     /**
      * Gets the answer based on the players input. If no answer is found

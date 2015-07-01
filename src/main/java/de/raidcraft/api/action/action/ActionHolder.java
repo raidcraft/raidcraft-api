@@ -1,10 +1,9 @@
 package de.raidcraft.api.action.action;
 
 import de.raidcraft.api.action.ActionAPI;
-import de.raidcraft.api.action.requirement.Requirement;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -22,13 +21,9 @@ public interface ActionHolder {
      *
      * @return filtered list
      */
-    @SuppressWarnings("unchecked")
     default <T> Collection<Action<T>> getActions(Class<?> entityClazz) {
 
-        return getActions().parallelStream()
-                .filter(action -> ActionAPI.matchesType(action, entityClazz))
-                .map(action -> (Action<T>) action)
-                .collect(Collectors.toList());
+        return getFilteredActions(getActions(), entityClazz);
     }
 
     /**
@@ -43,6 +38,15 @@ public interface ActionHolder {
         Collection<Action<T>> actions = getActions(entityClazz);
         return actions.stream()
                 .filter(filter)
+                .collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T> List<Action<T>> getFilteredActions(Collection<Action<?>> actions, Class<?> entityClazz) {
+
+        return actions.stream()
+                .filter(action -> ActionAPI.matchesType(action, entityClazz))
+                .map(action -> (Action<T>) action)
                 .collect(Collectors.toList());
     }
 }

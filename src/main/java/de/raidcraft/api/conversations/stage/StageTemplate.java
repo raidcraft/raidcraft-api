@@ -1,5 +1,6 @@
 package de.raidcraft.api.conversations.stage;
 
+import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionHolder;
 import de.raidcraft.api.action.requirement.RequirementHolder;
 import de.raidcraft.api.conversations.answer.Answer;
@@ -46,6 +47,14 @@ public interface StageTemplate extends RequirementHolder, ActionHolder {
      * @return ordered list of answers
      */
     List<Answer> getAnswers();
+
+    /**
+     * Gets a list of random actions to execute. Random actions can be used to display a
+     * randomized text to the player when the stage is executed.
+     *
+     * @return list of random actions
+     */
+    List<Action<?>> getRandomActions();
 
     Stage create(Conversation conversation);
 }
