@@ -176,6 +176,31 @@ public enum GlobalAction {
             }
         }
     }),
+    TEXT("text", new Action<Player>() {
+        @Override
+        @Information(
+                value = "text",
+                desc = "Sends the given text to the player prepended by the given NPC name.",
+                conf = {
+                        "text: <First line.|Second line.>",
+                        "npc: name"
+                }
+        )
+        public void accept(Player player, ConfigurationSection config) {
+
+            String[] text = config.getString("text").split("\\|");
+            for (String line : text) {
+                if (config.isSet("npc")) {
+                    player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD
+                            + config.getString("npc") + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + ": "
+                            + ChatColor.AQUA + line
+                    );
+                } else {
+                    player.sendMessage(ChatColor.AQUA + line);
+                }
+            }
+        }
+    }),
     TOGGLE_DOOR("door.toggle", new DoorAction()),
     GIVE_COMPASS("player.give.compass", new Action<Player>() {
         @Override
