@@ -245,6 +245,31 @@ public enum GlobalAction {
             }
         }
     }),
+    PLAYER_HEAL("player.heal", new Action<Player>() {
+        @Override
+        @Information(
+                value = "player.heal",
+                desc = "Heals the player by the given amount or to max.",
+                conf = {
+                        "amount: defaults to max",
+                        "from-max: false"
+                }
+        )
+        public void accept(Player player, ConfigurationSection config) {
+
+            if (!config.isSet("amount")) {
+                player.setHealth(player.getMaxHealth());
+                return;
+            }
+            double amount;
+            if (config.getBoolean("from-max")) {
+                amount = player.getHealth() + player.getMaxHealth() * config.getDouble("amount");
+            } else {
+                amount = player.getHealth() + config.getDouble("amount");
+            }
+            player.setHealth(amount);
+        }
+    }),
     SET_BLOCK("block.set", new SetBlockAction()),
     TELEPORT_COORDS("teleport.location", new Action<Player>() {
         @Override
