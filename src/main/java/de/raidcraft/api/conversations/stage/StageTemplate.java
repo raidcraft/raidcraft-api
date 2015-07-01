@@ -56,5 +56,13 @@ public interface StageTemplate extends RequirementHolder, ActionHolder {
      */
     List<Action<?>> getRandomActions();
 
+    /**
+     * Whether or not this stage will auto display its answers. If answers are not
+     * automatically shown, the action answers.show must be called.
+     *
+     * @return true if answers are shown automatically
+     */
+    boolean isAutoShowingAnswers();
+
     Stage create(Conversation conversation);
 }

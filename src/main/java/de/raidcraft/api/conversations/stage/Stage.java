@@ -77,6 +77,13 @@ public interface Stage extends ActionHolder {
     Stage addAnswer(Answer answer);
 
     /**
+     * Shows all possible answers in the chat.
+     *
+     * @return this stage
+     */
+    Stage showAnswers();
+
+    /**
      * Changes the current page to the given page index.
      * If the page does not exist the next existing page will be set.
      *
