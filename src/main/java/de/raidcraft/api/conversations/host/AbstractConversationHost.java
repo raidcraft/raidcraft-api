@@ -102,6 +102,10 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     @Override
     public Optional<Conversation<Player>> startConversation(Player player, String conversation) {
 
-        Conversations.createConversationTemplate()
+        Optional<ConversationTemplate> template = Conversations.getConversationTemplate(conversation);
+        if (!template.isPresent()) {
+            return Optional.empty();
+        }
+        return Optional.of(template.get().startConversation(player, this));
     }
 }
