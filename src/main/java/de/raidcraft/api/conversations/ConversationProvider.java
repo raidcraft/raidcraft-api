@@ -144,22 +144,22 @@ public interface ConversationProvider {
      * Gets a registered {@link ConversationHost} for the given type. A new host will be instantiated.
      * If no registered host for the type is found an empty {@link Optional} will be returned.
      *
+     * @param identifier of the host
      * @param type to get host for
      * @param config to load host with
      * @param <T> type of the host
      * @return optional conversation host
      */
-    <T> Optional<ConversationHost<T>> createConversationHost(T type, ConfigurationSection config);
+    <T> Optional<ConversationHost<T>> createConversationHost(String identifier, T type, ConfigurationSection config);
 
     /**
      * Gets a loaded and cached {@link ConversationHost} that has already been created with
-     * {@link #createConversationHost(Object, ConfigurationSection)}.
+     * {@link #createConversationHost(String, Object, ConfigurationSection)}.
      *
-     * @param type to get
-     * @param <T> of the host
+     * @param id if the host
      * @return cached host
      */
-    <T> Optional<ConversationHost<T>> getConversationHost(T type);
+    Optional<ConversationHost<?>> getConversationHost(String id);
 
     /**
      * Registers the given variable for all conversation replacements.

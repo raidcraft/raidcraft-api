@@ -1,5 +1,6 @@
 package de.raidcraft.api.conversations.host;
 
+import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import lombok.Data;
@@ -96,5 +97,11 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
             return Optional.of(conversation.get().startConversation(player, this));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<Conversation<Player>> startConversation(Player player, String conversation) {
+
+        Conversations.createConversationTemplate()
     }
 }

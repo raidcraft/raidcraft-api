@@ -101,4 +101,13 @@ public interface ConversationHost<T> {
      * @return started conversation
      */
     Optional<Conversation<Player>> startConversation(Player player);
+
+    /**
+     * Starts the given {@link Conversation} for the given {@link Player}
+     *
+     * @param player to start conversation for
+     * @param conversation to start
+     * @return started conversation
+     */
+    Optional<Conversation<Player>> startConversation(Player player, String conversation);
 }

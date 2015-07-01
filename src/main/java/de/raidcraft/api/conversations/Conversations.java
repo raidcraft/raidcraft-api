@@ -198,7 +198,7 @@ public class Conversations {
      * @param config to create template from
      * @return optional conversation template
      */
-    public static Optional<ConversationTemplate> getConversationTemplate(String identifier, ConfigurationSection config) {
+    public static Optional<ConversationTemplate> createConversationTemplate(String identifier, ConfigurationSection config) {
 
         return provider.createConversationTemplate(identifier, config);
     }
@@ -221,12 +221,12 @@ public class Conversations {
         provider.registerConversationHost(type, host);
     }
 
-    public static <T> Optional<ConversationHost<T>> createConversationHost(T type, ConfigurationSection config) {
+    public static <T> Optional<ConversationHost<T>> createConversationHost(String identifier, T type, ConfigurationSection config) {
 
-        return provider.createConversationHost(type, config);
+        return provider.createConversationHost(identifier, type, config);
     }
 
-    public static Optional<ConversationTemplate> getLoadedConversationTemplate(String identifier) {
+    public static Optional<ConversationTemplate> getConversationTemplate(String identifier) {
 
         return provider.getLoadedConversationTemplate(identifier);
     }
@@ -241,13 +241,13 @@ public class Conversations {
         return provider.getConversationHost(type);
     }
 
+    public static Optional<ConversationHost<?>> getConversationHost(String id) {
+
+        return provider.getConversationHost(id);
+    }
+
     public static Optional<Conversation<Player>> startConversation(Player player, ConversationHost<?> conversationHost) {
 
         return provider.startConversation(player, conversationHost);
-    }
-
-    public static Optional<ConversationTemplate> createConversationTemplate(String identifier, ConfigurationSection config) {
-
-        return provider.createConversationTemplate(identifier, config);
     }
 }
