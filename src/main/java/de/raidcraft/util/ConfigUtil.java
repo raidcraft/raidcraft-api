@@ -65,6 +65,14 @@ public class ConfigUtil {
                 String value = replacePathReference(section.getString(key), basePath);
                 value = replaceRefrences(basePath, value);
                 section.set(key, value);
+            } else if (section.isList(key)) {
+                List<String> stringList = section.getStringList(key);
+                List<String> newList = new ArrayList<>();
+                for (String item : stringList) {
+                    item = replaceRefrences(basePath, item);
+                    newList.add(item);
+                }
+                section.set(key, newList);
             }
         }
         return section;
