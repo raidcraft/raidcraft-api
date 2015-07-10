@@ -79,7 +79,12 @@ public class RDSRandom {
      */
     public static int getIntValue(int min, int max) {
 
-        return random.nextInt(max) + min;
+        return random.nextInt((max - min) + 1) + min;
+    }
+
+    public static int getIntNegativePositiveValue(int min, int max) {
+
+        return -min + (int) (Math.random() * ((max - (-min)) + 1));
     }
 
     /**
