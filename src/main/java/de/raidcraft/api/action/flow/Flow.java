@@ -58,7 +58,7 @@ public final class Flow {
                                 case ACTION:
                                     FlowConfiguration configuration = expression.getConfiguration();
                                     configuration.set("delay", delay);
-                                    Optional<Action<T>> action = ActionAPI.createAction(expression.getId(), configuration, type);
+                                    Optional<Action<T>> action = ActionAPI.createAction(expression.getTypeId(), configuration, type);
                                     if (!action.isPresent()) {
                                         throw new FlowException("Could not find action of type " + expression.getTypeId());
                                     }
