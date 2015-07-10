@@ -49,6 +49,7 @@ public final class BlockUtil {
         TRANSPARENT_BLOCKS.add(Material.SIGN_POST);
         TRANSPARENT_BLOCKS.add(Material.VINE);
         TRANSPARENT_BLOCKS.add(Material.PUMPKIN_STEM);
+        TRANSPARENT_BLOCKS.add(Material.CARPET);
     }
 
     public static Set<Block> replaceNonSolidSurfaceBlocks(Block source, Material material, int width, int length, int height, boolean replaceAir) {
