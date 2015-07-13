@@ -131,14 +131,13 @@ public interface ConversationProvider {
 
     /**
      * Registers the given conversation host for the given type. The registered conversation host
-     * must have a constructor that takes {@link Class<T>} as the first parameter and a {@link ConfigurationSection}
+     * must have a constructor that takes {@link Class} as the first parameter and a {@link ConfigurationSection}
      * as the second parameter.
      *
      * @param type to register
      * @param host class to register
-     * @param <T> type of the conversation host
      */
-    <T> void registerConversationHost(Class<T> type, Class<? extends ConversationHost<T>> host);
+    void registerConversationHost(Class<?> type, Class<? extends ConversationHost<?>> host);
 
     /**
      * Gets a registered {@link ConversationHost} for the given type. A new host will be instantiated.
@@ -160,6 +159,25 @@ public interface ConversationProvider {
      * @return cached host
      */
     Optional<ConversationHost<?>> getConversationHost(String id);
+
+    /**
+     * Tries to get a cached conversation host for the given host type.
+     *
+     * @param host to get conversation host for
+     * @param <T> type of the host
+     * @return optional cached host
+     */
+    <T> Optional<ConversationHost<T>> getConversationHost(T host);
+
+    /**
+     * Tries to get a cached conversation host and if none exists, tries to create a new conversation host.
+     *
+     * @param host to get or create
+     * @param config to create host from
+     * @param <T> type of the host
+     * @return optional created or cached host
+     */
+    <T> Optional<ConversationHost<T>> getOrCreateConversationHost(T host, ConfigurationSection config);
 
     /**
      * Registers the given variable for all conversation replacements.

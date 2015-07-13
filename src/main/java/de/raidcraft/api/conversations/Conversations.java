@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,6 +26,9 @@ public class Conversations {
     private static Map<String, Class<? extends Answer>> queuedAnswers = new CaseInsensitiveMap<>();
     private static Map<String, Class<? extends StageTemplate>> queuedStages = new CaseInsensitiveMap<>();
     private static Map<String, ConfigurationSection> queuedConversations = new CaseInsensitiveMap<>();
+    private static Map<String, Class<? extends ConversationTemplate>> queuedConversationTemplates = new CaseInsensitiveMap<>();
+    private static Map<String, ConversationVariable> queuedVariables = new CaseInsensitiveMap<>();
+    private static Map<Class<?>, Class<? extends ConversationHost<?>>> queuedHosts = new HashMap<>();
 
     private Conversations() {}
 
@@ -38,6 +42,11 @@ public class Conversations {
         queuedStages.clear();
         queuedConversations.entrySet().forEach(entry -> provider.loadConversation(entry.getKey(), entry.getValue()));
         queuedConversations.clear();
+        queuedConversationTemplates.entrySet().forEach(entry -> provider.registerConversationTemplate(entry.getKey(), entry.getValue()));
+        queuedConversationTemplates.clear();
+        queuedVariables.entrySet().forEach(entry -> provider.registerConversationVariable(entry.getKey(), entry.getValue()));
+        queuedVariables.clear();
+        queuedHosts.entrySet().forEach(entry -> provider.registerConversationHost(entry.getKey(), entry.getValue()));
     }
 
     public static void disable(ConversationProvider provider) {
@@ -174,7 +183,11 @@ public class Conversations {
      */
     public static void registerConversationTemplate(String type, Class<? extends ConversationTemplate> conversationTemplate) {
 
-        provider.registerConversationTemplate(type, conversationTemplate);
+        if (provider == null) {
+            queuedConversationTemplates.put(type, conversationTemplate);
+        } else {
+            provider.registerConversationTemplate(type, conversationTemplate);
+        }
     }
 
     /**
@@ -185,7 +198,11 @@ public class Conversations {
      */
     public static void registerConversationVariable(String name, ConversationVariable variable) {
 
-        provider.registerConversationVariable(name, variable);
+        if (provider == null) {
+            queuedVariables.put(name, variable);
+        } else {
+            provider.registerConversationVariable(name, variable);
+        }
     }
 
     /**
@@ -200,6 +217,7 @@ public class Conversations {
      */
     public static Optional<ConversationTemplate> createConversationTemplate(String identifier, ConfigurationSection config) {
 
+        if (provider == null) return Optional.empty();
         return provider.createConversationTemplate(identifier, config);
     }
 
@@ -210,6 +228,7 @@ public class Conversations {
      */
     public static Map<String, ConversationVariable> getConversationVariables() {
 
+        if (provider == null) return new HashMap<>();
         return provider.getConversationVariables();
     }
 
@@ -218,31 +237,52 @@ public class Conversations {
      */
     public static <T> void registerConversationHost(Class<T> type, Class<? extends ConversationHost<T>> host) {
 
-        provider.registerConversationHost(type, host);
+        if (provider == null) {
+            queuedHosts.put(type, host);
+        } else {
+            provider.registerConversationHost(type, host);
+        }
     }
 
     public static <T> Optional<ConversationHost<T>> createConversationHost(String identifier, T type, ConfigurationSection config) {
 
+        if (provider == null) return Optional.empty();
         return provider.createConversationHost(identifier, type, config);
     }
 
     public static Optional<ConversationTemplate> getConversationTemplate(String identifier) {
 
+        if (provider == null) return Optional.empty();
         return provider.getLoadedConversationTemplate(identifier);
     }
 
     public static List<ConversationTemplate> findConversationTemplate(String identifier) {
 
+        if (provider == null) return new ArrayList<>();
         return provider.findConversationTemplate(identifier);
     }
 
     public static Optional<ConversationHost<?>> getConversationHost(String id) {
 
+        if (provider == null) return Optional.empty();
         return provider.getConversationHost(id);
+    }
+
+    public static <T> Optional<ConversationHost<T>> getConversationHost(T host) {
+
+        if (provider == null) return Optional.empty();
+        return provider.getConversationHost(host);
+    }
+
+    public static <T> Optional<ConversationHost<T>> getOrCreateConversationHost(T host, ConfigurationSection config) {
+
+        if (provider == null) return Optional.empty();
+        return provider.getOrCreateConversationHost(host, config);
     }
 
     public static Optional<Conversation<Player>> startConversation(Player player, ConversationHost<?> conversationHost) {
 
+        if (provider == null) return Optional.empty();
         return provider.startConversation(player, conversationHost);
     }
 }
