@@ -6,6 +6,7 @@ import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -27,7 +28,19 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     private final List<ConversationTemplate> defaultConversations = new ArrayList<>();
     private final Map<UUID, List<ConversationTemplate>> playerConversations = new HashMap<>();
 
-    protected void addDefaultConversation(ConversationTemplate conversationTemplate) {
+    @Override
+    public void load(ConfigurationSection config) {
+
+        if (config.isSet("default-conv")) {
+            Optional<ConversationTemplate> template = Conversations.getConversationTemplate(config.getString("default-conv"));
+            if (template.isPresent()) {
+                addDefaultConversation(template.get());
+            }
+        }
+    }
+
+    @Override
+    public void addDefaultConversation(ConversationTemplate conversationTemplate) {
 
         defaultConversations.add(conversationTemplate);
         defaultConversations.sort(ConversationTemplate::compareTo);

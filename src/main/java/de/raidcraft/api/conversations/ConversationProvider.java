@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author mdoering
@@ -139,6 +140,11 @@ public interface ConversationProvider {
      * @param factory to register
      */
     void registerHostFactory(String identifier, ConversationHostFactory<?> factory);
+
+    default Optional<ConversationHost<?>> createConversationHost(ConfigurationSection config) {
+
+        return createConversationHost(UUID.randomUUID().toString(), config);
+    }
 
     /**
      * Creates a {@link ConversationHost} from the given type at the given location.

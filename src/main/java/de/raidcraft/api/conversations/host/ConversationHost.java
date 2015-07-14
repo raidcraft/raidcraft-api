@@ -21,7 +21,7 @@ public interface ConversationHost<T> {
     T getType();
 
     /**
-     * Loads additional information from the "args" section of the configuration.
+     * Loads additional information from the configuration if present.
      * This could be equipment, or sign positioning, etc.
      *
      * @param config to load from
@@ -35,6 +35,14 @@ public interface ConversationHost<T> {
      * @return host location
      */
     Location getLocation();
+
+    /**
+     * Adds the given conversation to the list of default conversations of this host.
+     * All conversations of this host will be sorted using {@link ConversationTemplate#compareTo(Object)}.
+     *
+     * @param conversationTemplate to add as default conversation
+     */
+    void addDefaultConversation(ConversationTemplate conversationTemplate);
 
     /**
      * Gets the default conversation of this conversation host. If no default
