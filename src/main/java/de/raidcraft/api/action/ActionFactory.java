@@ -6,7 +6,6 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
-import de.raidcraft.util.ConfigUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
@@ -114,7 +113,7 @@ public final class ActionFactory<T> {
             if (actionAliases.containsKey(identifier) && actions.containsKey(actionAliases.get(identifier))) {
                 identifier = actionAliases.get(identifier);
             } else {
-                RaidCraft.LOGGER.warning("unknown action: " + identifier + " in " + ConfigUtil.getFileName(config));
+                ActionAPI.UNKNOWN_ACTIONS.add(identifier);
                 return Optional.empty();
             }
         }

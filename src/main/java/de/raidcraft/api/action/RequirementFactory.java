@@ -6,7 +6,6 @@ import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.util.CaseInsensitiveMap;
-import de.raidcraft.util.ConfigUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -94,6 +94,11 @@ public final class RequirementFactory<T> {
         return requirements.values().contains(requirement);
     }
 
+    public boolean contains(String actionId) {
+
+        return requirements.keySet().contains(actionId) || requirementAliases.values().stream().collect(Collectors.toList()).contains(actionId);
+    }
+
     public Optional<Requirement<T>> create(String id, @NonNull String requirement, @NonNull ConfigurationSection config) {
 
         if (!requirements.containsKey(requirement)) {
@@ -101,7 +106,7 @@ public final class RequirementFactory<T> {
             if (requirementAliases.containsKey(id) && requirements.containsKey(requirementAliases.get(id))) {
                 id = requirementAliases.get(id);
             } else {
-                RaidCraft.LOGGER.warning("unknown requirement: " + requirement + " in " + ConfigUtil.getFileName(config));
+                ActionAPI.UNKNOWN_REQUIREMENTS.add(requirement);
                 return Optional.empty();
             }
         }

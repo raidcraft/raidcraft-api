@@ -2,7 +2,6 @@ package de.raidcraft.api.action;
 
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.action.action.ActionException;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.config.builder.ConfigBuilder;
@@ -17,14 +16,19 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author mdoering
  */
 public final class ActionAPI {
+
+    public static final Set<String> UNKNOWN_ACTIONS = new HashSet<>();
+    public static final Set<String> UNKNOWN_REQUIREMENTS = new HashSet<>();
 
     private static final Map<Class<?>, ActionFactory<?>> actionFactories = new HashMap<>();
     private static final Map<Class<?>, RequirementFactory<?>> requirementFactories = new HashMap<>();
@@ -76,6 +80,26 @@ public final class ActionAPI {
     public static Map<String, Trigger> getTrigger() {
 
         return new HashMap<>(triggerManager.getTrigger());
+    }
+
+    public static boolean isAction(String identifier) {
+
+        for (ActionFactory<?> factory : actionFactories.values()) {
+            if (factory.contains(identifier)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isRequirement(String identifier) {
+
+        for (RequirementFactory<?> factory : requirementFactories.values()) {
+            if (factory.contains(identifier)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
