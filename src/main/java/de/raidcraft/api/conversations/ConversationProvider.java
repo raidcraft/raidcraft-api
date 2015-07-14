@@ -5,8 +5,10 @@ import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.api.conversations.conversation.ConversationVariable;
 import de.raidcraft.api.conversations.host.ConversationHost;
+import de.raidcraft.api.conversations.host.ConversationHostFactory;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import mkremins.fanciful.FancyMessage;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -130,30 +132,47 @@ public interface ConversationProvider {
     Optional<ConversationTemplate> createConversationTemplate(String identifier, ConfigurationSection config);
 
     /**
-     * Registers the given conversation host for the given type. The registered conversation host
-     * must have a constructor that takes {@link Class} as the first parameter and a {@link ConfigurationSection}
-     * as the second parameter.
+     * Registers the host factory with the {@link ConversationProvider} allowing {@link ConversationHost}s to be created.
+     * {@link ConversationHostFactory}s can be factories for signs, npcs, etc.
      *
-     * @param type to register
-     * @param host class to register
+     * @param identifier of the factory
+     * @param factory to register
      */
-    void registerConversationHost(Class<?> type, Class<? extends ConversationHost<?>> host);
+    void registerHostFactory(String identifier, ConversationHostFactory<?> factory);
 
     /**
-     * Gets a registered {@link ConversationHost} for the given type. A new host will be instantiated.
-     * If no registered host for the type is found an empty {@link Optional} will be returned.
+     * Creates a {@link ConversationHost} from the given type at the given location.
      *
      * @param identifier of the host
-     * @param type to get host for
-     * @param config to load host with
-     * @param <T> type of the host
-     * @return optional conversation host
+     * @param type of the host
+     * @param location to create host at
+     * @return created {@link ConversationHost}
      */
-    <T> Optional<ConversationHost<T>> createConversationHost(String identifier, T type, ConfigurationSection config);
+    Optional<ConversationHost<?>> createConversationHost(String identifier, String type, Location location);
+
+    /**
+     * Creates a new conversation host from the given config. The config needs to define the type of the host.
+     * If no registered host for the type is found an empty {@link Optional} will be returned.
+     *
+     * @param identifier of the created host
+     * @param config to create host from
+     * @return optional host
+     */
+    Optional<ConversationHost<?>> createConversationHost(String identifier, ConfigurationSection config);
+
+    /**
+     * Creates a new {@link ConversationHost} from the given type.
+     *
+     * @param host to create ConversationHost from
+     * @param config to create host from
+     * @param <T> type of the host
+     * @return optional host
+     */
+    <T> Optional<ConversationHost<T>> createConversationHost(T host, ConfigurationSection config);
 
     /**
      * Gets a loaded and cached {@link ConversationHost} that has already been created with
-     * {@link #createConversationHost(String, Object, ConfigurationSection)}.
+     * {@link #createConversationHost(String, ConfigurationSection)}.
      *
      * @param id if the host
      * @return cached host

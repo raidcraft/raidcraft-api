@@ -4,6 +4,7 @@ import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import lombok.NonNull;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -18,6 +19,14 @@ public interface ConversationHost<T> {
     UUID getUniqueId();
 
     T getType();
+
+    /**
+     * Loads additional information from the "args" section of the configuration.
+     * This could be equipment, or sign positioning, etc.
+     *
+     * @param config to load from
+     */
+    void load(ConfigurationSection config);
 
     /**
      * Gets the current location of the conversation host.

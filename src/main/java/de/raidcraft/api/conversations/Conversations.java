@@ -5,9 +5,11 @@ import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.api.conversations.conversation.ConversationVariable;
 import de.raidcraft.api.conversations.host.ConversationHost;
+import de.raidcraft.api.conversations.host.ConversationHostFactory;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import mkremins.fanciful.FancyMessage;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -28,7 +30,7 @@ public class Conversations {
     private static Map<String, ConfigurationSection> queuedConversations = new CaseInsensitiveMap<>();
     private static Map<String, Class<? extends ConversationTemplate>> queuedConversationTemplates = new CaseInsensitiveMap<>();
     private static Map<String, ConversationVariable> queuedVariables = new CaseInsensitiveMap<>();
-    private static Map<Class<?>, Class<? extends ConversationHost<?>>> queuedHosts = new HashMap<>();
+    private static Map<String, ConversationHostFactory<?>> queuedHostFactories = new HashMap<>();
 
     private Conversations() {}
 
@@ -46,7 +48,7 @@ public class Conversations {
         queuedConversationTemplates.clear();
         queuedVariables.entrySet().forEach(entry -> provider.registerConversationVariable(entry.getKey(), entry.getValue()));
         queuedVariables.clear();
-        queuedHosts.entrySet().forEach(entry -> provider.registerConversationHost(entry.getKey(), entry.getValue()));
+        queuedHostFactories.entrySet().forEach(entry -> provider.registerHostFactory(entry.getKey(), entry.getValue()));
     }
 
     public static void disable(ConversationProvider provider) {
@@ -233,21 +235,15 @@ public class Conversations {
     }
 
     /**
-     * @see ConversationProvider#registerConversationHost(Class, Class)
+     * @see ConversationProvider#registerHostFactory(String, ConversationHostFactory)
      */
-    public static <T> void registerConversationHost(Class<T> type, Class<? extends ConversationHost<T>> host) {
+    public static <T> void registerHostFactory(String identifier, ConversationHostFactory<T> factory) {
 
         if (provider == null) {
-            queuedHosts.put(type, host);
+            queuedHostFactories.put(identifier, factory);
         } else {
-            provider.registerConversationHost(type, host);
+            provider.registerHostFactory(identifier, factory);
         }
-    }
-
-    public static <T> Optional<ConversationHost<T>> createConversationHost(String identifier, T type, ConfigurationSection config) {
-
-        if (provider == null) return Optional.empty();
-        return provider.createConversationHost(identifier, type, config);
     }
 
     public static Optional<ConversationTemplate> getConversationTemplate(String identifier) {
@@ -284,5 +280,23 @@ public class Conversations {
 
         if (provider == null) return Optional.empty();
         return provider.startConversation(player, conversationHost);
+    }
+
+    public static Optional<ConversationHost<?>> createConversationHost(String identifier, String type, Location location) {
+
+        if (provider == null) return Optional.empty();
+        return provider.createConversationHost(identifier, type, location);
+    }
+
+    public static Optional<ConversationHost<?>> createConversationHost(String identifier, ConfigurationSection config) {
+
+        if (provider == null) return Optional.empty();
+        return provider.createConversationHost(identifier, config);
+    }
+
+    public static <T> Optional<ConversationHost<T>> createConversationHost(T host, ConfigurationSection config) {
+
+        if (provider == null) return Optional.empty();
+        return provider.createConversationHost(host, config);
     }
 }
