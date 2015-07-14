@@ -201,6 +201,42 @@ public enum GlobalAction {
             }
         }
     }),
+    TEXT_PLAYER("text.player", new Action<Player>() {
+        @Override
+        @Information(
+                value = "text.player",
+                desc = "Sends the given text to the player prepended by the player name.",
+                conf = {
+                        "text: <First line.|Second line.>"
+                }
+        )
+        public void accept(Player player, ConfigurationSection config) {
+
+            String[] text = config.getString("text").split("\\|");
+            for (String line : text) {
+                player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN
+                        + player.getName() + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + ": "
+                        + ChatColor.AQUA + line);
+            }
+        }
+    }),
+    TEXT_INFO("text.info", new Action<Player>() {
+        @Override
+        @Information(
+                value = "text.info",
+                desc = "Sends the given text to the player formatted in DARK AQUA.",
+                conf = {
+                        "text: <First line.|Second line.>"
+                }
+        )
+        public void accept(Player player, ConfigurationSection config) {
+
+            String[] text = config.getString("text").split("\\|");
+            for (String line : text) {
+                player.sendMessage(ChatColor.DARK_AQUA + line);
+            }
+        }
+    }),
     TOGGLE_DOOR("door.toggle", new DoorAction()),
     GIVE_COMPASS("player.give.compass", new Action<Player>() {
         @Override
