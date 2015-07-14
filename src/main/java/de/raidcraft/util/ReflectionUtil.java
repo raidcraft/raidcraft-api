@@ -1,5 +1,6 @@
 package de.raidcraft.util;
 
+import org.apache.commons.lang.ClassUtils;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.Field;
@@ -234,6 +235,44 @@ public class ReflectionUtil {
         }
 
         return returnType;
+    }
+
+    public static Method getMethod(Object object, String methodName, Object... args) throws NoSuchMethodException {
+
+        Class[] argsClasses = new Class[args.length];
+        for (int i = 0; i < args.length; i++) {
+            argsClasses[i] = args[i].getClass();
+        }
+        Method finalMethod = null;
+        for (Method method : object.getClass().getDeclaredMethods()) {
+            if (method.getName().equalsIgnoreCase(methodName)) {
+                boolean match = true;
+                for (int i = 0; i < argsClasses.length; i++) {
+                    if (method.getParameterTypes()[i].isPrimitive()) {
+                        Class<?> aClass = ClassUtils.primitiveToWrapper(method.getParameterTypes()[i]);
+                        if (aClass.isAssignableFrom(argsClasses[i])) {
+                            continue;
+                        } else {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (!method.getParameterTypes()[i].isAssignableFrom(argsClasses[i])) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) {
+                    finalMethod = method;
+                    break;
+                }
+            }
+        }
+        if (finalMethod == null) {
+            throw new NoSuchMethodException(
+                    "No method signature found for " + methodName + " in " + object.getClass().getCanonicalName());
+        }
+        return finalMethod;
     }
 
     /**

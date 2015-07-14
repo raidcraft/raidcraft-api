@@ -2,6 +2,7 @@ package de.raidcraft.api.conversations.stage;
 
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionHolder;
+import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 
@@ -12,6 +13,11 @@ import java.util.Optional;
  * @author mdoering
  */
 public interface Stage extends ActionHolder {
+
+    static Stage of(Conversation conversation, String text, Answer... answers) {
+
+        return Conversations.createStage(conversation, text, answers);
+    }
 
     default String getIdentifier() {
 

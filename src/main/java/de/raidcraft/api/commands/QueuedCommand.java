@@ -2,7 +2,7 @@ package de.raidcraft.api.commands;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
-import org.apache.commons.lang.ClassUtils;
+import de.raidcraft.util.ReflectionUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -23,38 +23,7 @@ public class QueuedCommand {
 
         this.sender = sender;
         this.object = object;
-        Class[] argsClasses = new Class[args.length];
-        for (int i = 0; i < args.length; i++) {
-            argsClasses[i] = args[i].getClass();
-        }
-        for (Method method : object.getClass().getDeclaredMethods()) {
-            if (method.getName().equalsIgnoreCase(methodName)) {
-                boolean match = true;
-                for (int i = 0; i < argsClasses.length; i++) {
-                    if (method.getParameterTypes()[i].isPrimitive()) {
-                        Class<?> aClass = ClassUtils.primitiveToWrapper(method.getParameterTypes()[i]);
-                        if (aClass.isAssignableFrom(argsClasses[i])) {
-                            continue;
-                        } else {
-                            match = false;
-                            break;
-                        }
-                    }
-                    if (!method.getParameterTypes()[i].isAssignableFrom(argsClasses[i])) {
-                        match = false;
-                        break;
-                    }
-                }
-                if (match) {
-                    this.method = method;
-                    break;
-                }
-            }
-        }
-        if (this.method == null) {
-            throw new NoSuchMethodException(
-                    "No method signature found for " + methodName + " in " + object.getClass().getCanonicalName());
-        }
+        this.method = ReflectionUtil.getMethod(object, methodName, args);
         this.args = args;
         RaidCraft.getComponent(RaidCraftPlugin.class).queueCommand(this);
         if (!(this instanceof QueuedCaptchaCommand)) {

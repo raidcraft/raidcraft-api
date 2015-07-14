@@ -1,11 +1,13 @@
 package de.raidcraft.api.conversations;
 
+import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.api.conversations.conversation.ConversationVariable;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.host.ConversationHostFactory;
+import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import mkremins.fanciful.FancyMessage;
@@ -298,5 +300,15 @@ public class Conversations {
 
         if (provider == null) return Optional.empty();
         return provider.createConversationHost(host, config);
+    }
+
+    public static Stage createStage(Conversation conversation, String text, Answer... answers) {
+
+        return provider.createStage(conversation, text, answers);
+    }
+
+    public static Answer createAnswer(String text, Action... actions) {
+
+        return provider.createAnswer(text, actions);
     }
 }

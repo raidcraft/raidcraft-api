@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -89,6 +90,11 @@ public final class ActionFactory<T> {
     public boolean contains(Action action) {
 
         return actions.values().contains(action);
+    }
+
+    public boolean contains(String actionId) {
+
+        return actions.keySet().contains(actionId) || actionAliases.values().stream().collect(Collectors.toList()).contains(actionId);
     }
 
     public Optional<String> getActionIdentifier(Action action) {

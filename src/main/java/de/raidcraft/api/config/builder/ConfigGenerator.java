@@ -19,5 +19,7 @@ public interface ConfigGenerator {
         String desc();
 
         String[] conf() default {};
+
+        String[] aliases() default {};
     }
 }

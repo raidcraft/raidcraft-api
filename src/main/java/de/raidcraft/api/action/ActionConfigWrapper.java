@@ -62,6 +62,18 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         return args;
     }
 
+    public Action<T> with(String key, Object value) {
+
+        config.set(key, value);
+        return this;
+    }
+
+    public Action<T> withArgs(String key, Object value) {
+
+        getConfig().set(key, value);
+        return this;
+    }
+
     @Override
     public void addRequirement(Requirement<T> requirement) {
 

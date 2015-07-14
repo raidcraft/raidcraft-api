@@ -1,11 +1,13 @@
 package de.raidcraft.api.conversations;
 
+import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.api.conversations.conversation.ConversationVariable;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.host.ConversationHostFactory;
+import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.Location;
@@ -297,4 +299,8 @@ public interface ConversationProvider {
      * @return true if player has an active conversation
      */
     boolean hasActiveConversation(Player player);
+
+    Stage createStage(Conversation conversation, String text, Answer... answers);
+
+    Answer createAnswer(String text, Action... actions);
 }

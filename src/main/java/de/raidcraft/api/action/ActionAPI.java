@@ -2,15 +2,18 @@ package de.raidcraft.api.action;
 
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.action.ActionException;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import lombok.NonNull;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -115,6 +118,29 @@ public final class ActionAPI {
         ActionFactory<?> actionFactory = actionFactories.get(type);
         if (actionFactory == null) return Optional.empty();
         return ((ActionFactory<T>) actionFactory).create(identifier, config);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Action<?>> T createAction(Class<T> actionClass) {
+
+        ConfigGenerator.Information information = null;
+        for (Method method : actionClass.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
+                information = method.getAnnotation(ConfigGenerator.Information.class);
+            }
+        }
+        if (information == null) {
+            throw new UnsupportedOperationException(actionClass.getCanonicalName() + " has not @Information annotation defined!");
+        }
+        for (ActionFactory<?> factory : actionFactories.values()) {
+            if (factory.contains(information.value())) {
+                Optional<? extends Action<?>> action = factory.create(information.value(), new MemoryConfiguration());
+                if (action.isPresent()) {
+                    return (T) action.get();
+                }
+            }
+        }
+        throw new UnsupportedOperationException("Could not find matching action for " + actionClass.getCanonicalName() + " -> " + information.value());
     }
 
     @SuppressWarnings("unchecked")
@@ -290,6 +316,7 @@ public final class ActionAPI {
             return this;
         }
         String identifier = information.get().value();
+        aliases = ArrayUtils.addAll(aliases, information.get().aliases());
         return action(identifier, action, type, aliases);
     }
 
@@ -306,6 +333,7 @@ public final class ActionAPI {
             return this;
         }
         String identifier = information.get().value();
+        ArrayUtils.addAll(aliases, information.get().aliases());
         return requirement(identifier, requirement, type, aliases);
     }
 

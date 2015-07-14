@@ -4,6 +4,7 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionHolder;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.requirement.RequirementHolder;
+import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
@@ -15,6 +16,11 @@ import java.util.Optional;
  * @author mdoering
  */
 public interface Answer extends ActionHolder, RequirementHolder {
+
+    static Answer of(String text, Action... actions) {
+
+        return Conversations.createAnswer(text, actions);
+    }
 
     String DEFAULT_ANSWER_TEMPLATE = "default";
     String ANSWER_INPUT_TYPE = "input";
