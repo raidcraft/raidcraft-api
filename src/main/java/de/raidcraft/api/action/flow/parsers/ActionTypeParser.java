@@ -52,7 +52,7 @@ public class ActionTypeParser extends FlowParser {
                 break;
         }
         if (!information.isPresent()) {
-            throw new FlowException("ConfigInformation is not present for " + type);
+            throw new FlowException("ConfigInformation of type " + flowType.get().name() +  " is not present for " + type);
         }
         ConfigParser configParser = new ConfigParser(information.get());
         if (configParser.accept(getMatcher().group(3))) {
