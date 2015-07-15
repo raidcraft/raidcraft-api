@@ -99,6 +99,10 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
         });
     }
 
+    @Information(
+            value = "player.death",
+            desc = "Triggered when the player died."
+    )
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onDeath(PlayerDeathEvent event) {
 

@@ -9,9 +9,9 @@ import org.bukkit.event.HandlerList;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RCTimerTickEvent extends RCTimerEvent {
+public class RCTimerEndEvent extends RCTimerEvent {
 
-    public RCTimerTickEvent(Timer timer) {
+    public RCTimerEndEvent(Timer timer) {
 
         super(timer);
     }

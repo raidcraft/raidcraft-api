@@ -27,12 +27,57 @@ import java.util.Optional;
 @Getter
 public enum GlobalRequirement {
 
-    IS_SPRINTING("player.sprinting", (Player player, ConfigurationSection config) -> player.isSprinting()),
-    IS_SNEAKING("player.sneaking", (Player player, ConfigurationSection config) -> player.isSneaking()),
-    IS_ALIVE("player.alive", (Player player, ConfigurationSection config) -> !player.isDead()),
-    DUMMY("dummy", (Player player, ConfigurationSection config) -> true),
+    IS_SPRINTING("player.sprinting", new Requirement<Player>() {
+        @Override
+        @Information(
+                value = "player.sprinting",
+                desc = "Checks if the player is currently sprinting."
+        )
+        public boolean test(Player player, ConfigurationSection config) {
+
+            return player.isSprinting();
+        }
+    }),
+    IS_SNEAKING("player.sneaking", new Requirement<Player>() {
+        @Override
+        @Information(
+                value = "player.sneaking",
+                desc = "Checks if the player is currently sneaking."
+        )
+        public boolean test(Player type, ConfigurationSection config) {
+
+            return type.isSneaking();
+        }
+    }),
+    IS_ALIVE("player.alive", new Requirement<Player>() {
+        @Override
+        @Information(
+                value = "player.alive",
+                desc = "Checks if the player is currently alive."
+        )
+        public boolean test(Player type, ConfigurationSection config) {
+
+            return !type.isDead();
+        }
+    }),
+    DUMMY("dummy", new Requirement<Player>() {
+        @Override
+        @Information(
+                value = "dummy",
+                desc = "Dummy requirement for counting and persistant markers.",
+                aliases = {"count"}
+        )
+        public boolean test(Player type, ConfigurationSection config) {
+
+            return true;
+        }
+    }),
     EXECUTE_ONCE_TRIGGER("execute-once-trigger", new ContextualRequirement<Player>() {
         @Override
+        @Information(
+                value = "execute-once-trigger",
+                desc = "Dummy requirement to track execute once triggers."
+        )
         public boolean test(Player type, RequirementConfigWrapper<Player> context, ConfigurationSection config) {
 
             return !context.isChecked(type);
@@ -122,7 +167,20 @@ public enum GlobalRequirement {
             return false;
         }
     }),
-    TIMER_ACTIVE("timer.active", (type, config) -> Timer.isActive(type, config.getString("id")));
+    TIMER_ACTIVE("timer.active", new Requirement<Player>() {
+        @Override
+        @Information(
+                value = "timer.active",
+                desc = "Checks if the player has an active timer with the id.",
+                conf = {
+                        "id: unique id of the timer"
+                }
+        )
+        public boolean test(Player type, ConfigurationSection config) {
+
+            return Timer.isActive(type, config.getString("id"));
+        }
+    });
 
     private final String id;
     private final Requirement<Player> requirement;

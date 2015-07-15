@@ -14,6 +14,7 @@ import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.InventoryUtils;
 import de.raidcraft.util.ItemUtils;
+import de.raidcraft.util.TimeUtil;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -158,7 +159,17 @@ public enum GlobalAction {
             }
         }
     }),
-    KILL_PLAYER("player.kill", (Player player, ConfigurationSection config) -> player.damage(player.getMaxHealth() * 10)),
+    KILL_PLAYER("player.kill", new Action<Player>() {
+        @Override
+        @Information(
+                value = "player.kill",
+                desc = "Kills the player by damaging him 10x the max health."
+        )
+        public void accept(Player player, ConfigurationSection config) {
+
+            player.damage(player.getMaxHealth() * 10);
+        }
+    }),
     MESSAGE_PLAYER("player.message", new Action<Player>() {
         @Override
         @Information(
@@ -326,19 +337,91 @@ public enum GlobalAction {
             player.teleport(ConfigUtil.getLocationFromConfig(config, player));
         }
     }),
-    START_TIMER("timer.start", Timer::startTimer),
-    ADD_TIMER_TIME("timer.add", (type, config) -> {
-        Optional<Timer> timer = Timer.getActiveTimer(type, config.getString("id"));
-        if (timer.isPresent()) {
-            if (config.getBoolean("temporary", false)) {
-                timer.get().addTemporaryTime(config.getDouble("time"));
-            } else {
-                timer.get().addTime(config.getDouble("time"));
+    START_TIMER("timer.start", new Action<Player>() {
+        @Override
+        @Information(
+                value = "timer.start",
+                desc = "Starts a timer for the player, executing the given actions at cancel or end.",
+                conf = {
+                        "id: unique id for the timer",
+                        "duration: 10s2 -> 10secs 2 ticks",
+                        "end-actions: block of actions that are executed when the timer ends - you can also use the timer.end trigger",
+                        "cancel-actions: block of actions that are executed when the timer is cancelled - you can also use the timer.cancel trigger",
+                        "type: [interval] - defaults to a normal timer that runs out",
+                        "delay: interval mode only",
+                        "interval: interval mode only - use the timer.tick trigger"
+                }
+        )
+        public void accept(Player type, ConfigurationSection config) {
+
+            Timer.startTimer(type, config);
+        }
+    }),
+    ADD_TIMER_TIME("timer.add", new Action<Player>() {
+        @Override
+        @Information(
+                value = "timer.add",
+                desc = "Adds time to a running timer.",
+                conf = {
+                        "id: unique id of the timer",
+                        "time: 10s2 -> 10secs 2 ticks to add",
+                        "temporary: true/<false> - calling timer.add multiple times with temporary true will not add up"
+                }
+        )
+        public void accept(Player type, ConfigurationSection config) {
+
+            Optional<Timer> timer = Timer.getActiveTimer(type, config.getString("id"));
+            if (timer.isPresent()) {
+                if (config.getBoolean("temporary", false)) {
+                    timer.get().addTemporaryTime(TimeUtil.parseTimeAsTicks(config.getString("time")));
+                } else {
+                    timer.get().addTime(TimeUtil.parseTimeAsTicks(config.getString("time")));
+                }
             }
         }
     }),
-    ABORT_TIMER("timer.cancel", (type, config) -> Timer.cancelTimer(type, config.getString("id"))),
-    RESET_TIMER("timer.reset", (type, config) -> Timer.resetTimer(type, config.getString("id")));
+    ABORT_TIMER("timer.cancel", new Action<Player>() {
+        @Override
+        @Information(
+                value = "timer.cancel",
+                desc = "Cancels the given timer calling the timer.cancel trigger.",
+                conf = {
+                        "id: unique id of the timer"
+                }
+        )
+        public void accept(Player type, ConfigurationSection config) {
+
+            Timer.cancelTimer(type, config.getString("id"));
+        }
+    }),
+    END_TIMER("timer.end", new Action<Player>() {
+        @Override
+        @Information(
+                value = "timer.end",
+                desc = "Ends the timer calling the trigger timer.end",
+                conf = {
+                        "id: unique id of the timer"
+                }
+        )
+        public void accept(Player type, ConfigurationSection config) {
+
+            Timer.endTimer(type, config.getString("id"));
+        }
+    }),
+    RESET_TIMER("timer.reset", new Action<Player>() {
+        @Override
+        @Information(
+                value = "timer.reset",
+                desc = "Resets the given timer cancelling it and then starting it again. Will also trigger timer.cancel!",
+                conf = {
+                        "id: unique id of the timer"
+                }
+        )
+        public void accept(Player type, ConfigurationSection config) {
+
+            Timer.resetTimer(type, config.getString("id"));
+        }
+    });
 
     private static final float DEFAULT_WALK_SPEED = 0.1F;
     private static final float DEFAULT_FLY_SPEED = 0.05F;

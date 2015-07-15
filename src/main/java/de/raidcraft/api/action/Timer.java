@@ -85,6 +85,17 @@ public class Timer extends BukkitRunnable {
         return true;
     }
 
+    public static boolean endTimer(Player player, String id) {
+
+        Optional<Timer> activeTimer = getActiveTimer(player, id);
+        if (!activeTimer.isPresent()) {
+            return false;
+        }
+        // run will end the timer normally
+        activeTimer.get().run();
+        return true;
+    }
+
     public static Optional<Timer> removeTimer(Timer timer) {
 
         UUID uniqueId = timer.getPlayer().getUniqueId();
@@ -102,13 +113,14 @@ public class Timer extends BukkitRunnable {
     private final Collection<Action<Player>> endActions;
     private final Collection<Action<Player>> cancelActions;
     private long startTime;
-    private double duration;
+    // in ticks
+    private long duration;
 
     private Timer(Player player, ConfigurationSection config) {
 
         this.id = config.getString("id");
         this.player = player;
-        this.duration = config.getDouble("time");
+        this.duration = TimeUtil.parseTimeAsTicks(config.getString("duration"));
         this.endActions = ActionAPI.createActions(config.getConfigurationSection("end-actions"), Player.class);
         this.cancelActions = ActionAPI.createActions(config.getConfigurationSection("cancel-actions"), Player.class);
     }
@@ -121,12 +133,16 @@ public class Timer extends BukkitRunnable {
         return id;
     }
 
-    public void addTime(double time) {
+    /**
+     * Time to add in ticks.
+     * @param time in ticks
+     */
+    public void addTime(long time) {
 
         if (startTime > 0) {
-            double current = getDuration();
+            long current = getDuration();
             long passedTimed = startTime - System.currentTimeMillis();
-            long newTime = TimeUtil.secondsToMillis(getDuration() + time) - passedTimed;
+            long newTime = TimeUtil.millisToTicks(TimeUtil.ticksToMillis(getDuration() + time) - passedTimed);
             setDuration(newTime);
             reset();
             setDuration(current + time);
@@ -136,9 +152,9 @@ public class Timer extends BukkitRunnable {
         }
     }
 
-    public void addTemporaryTime(double time) {
+    public void addTemporaryTime(long time) {
 
-        double current = getDuration();
+        long current = getDuration();
         addTime(time);
         setDuration(current);
     }
@@ -162,7 +178,7 @@ public class Timer extends BukkitRunnable {
 
     protected void startTask() {
 
-        runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), TimeUtil.secondsToTicks(getDuration()));
+        runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), getDuration());
     }
 
     @Override
@@ -171,6 +187,7 @@ public class Timer extends BukkitRunnable {
         super.cancel();
         removeTimer(this);
         if (!player.isOnline()) return;
+        RaidCraft.callEvent(new RCTimerCancelEvent(this));
         cancelActions.forEach(playerAction -> playerAction.accept(player));
     }
 
@@ -179,6 +196,7 @@ public class Timer extends BukkitRunnable {
 
         removeTimer(this);
         if (!player.isOnline()) return;
+        RaidCraft.callEvent(new RCTimerEndEvent(this));
         endActions.forEach(playerAction -> playerAction.accept(player));
     }
 
@@ -193,8 +211,8 @@ public class Timer extends BukkitRunnable {
         private IntervalTimer(Player player, ConfigurationSection config) {
 
             super(player, config);
-            this.delay = config.getLong("delay", 1);
-            this.interval = config.getLong("interval", 1);
+            this.delay = TimeUtil.parseTimeAsTicks(config.getString("delay", "1"));
+            this.interval = TimeUtil.parseTimeAsTicks(config.getString("interval", "1"));
         }
 
         @Override
@@ -209,7 +227,7 @@ public class Timer extends BukkitRunnable {
 
             RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
             runTaskTimer(plugin, getDelay(), getInterval());
-            cancelTask = Bukkit.getScheduler().runTaskLater(plugin, this::cancel, TimeUtil.secondsToTicks(getDuration()));
+            cancelTask = Bukkit.getScheduler().runTaskLater(plugin, this::cancel, getDuration());
         }
 
         @Override

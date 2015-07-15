@@ -33,6 +33,7 @@ public class SetBlockAction implements Action<Player> {
             RaidCraft.LOGGER.warning("Unknown block material " + config.getString("block") + " in block.set action!");
             return;
         }
+        if (location == null) return;
         location.getBlock().setType(material);
     }
 }

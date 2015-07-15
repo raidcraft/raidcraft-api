@@ -26,7 +26,7 @@ public class DoorAction implements Action<Player> {
     public void accept(Player player, ConfigurationSection config) {
 
         Location location = ConfigUtil.getLocationFromConfig(config, player);
-
+        if (location == null) return;
         Block block = location.getBlock();
         if (block.getState() instanceof Openable) {
             Openable state = (Openable) block.getState();

@@ -2,6 +2,7 @@ package de.raidcraft.api.action;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
@@ -9,12 +10,9 @@ import org.bukkit.event.HandlerList;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RCTimerTickEvent extends RCTimerEvent {
+public class RCTimerEvent extends Event {
 
-    public RCTimerTickEvent(Timer timer) {
-
-        super(timer);
-    }
+    private final Timer timer;
 
     private static final HandlerList HANDLER = new HandlerList();
 

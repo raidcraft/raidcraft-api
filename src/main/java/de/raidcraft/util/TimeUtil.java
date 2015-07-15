@@ -73,6 +73,11 @@ public final class TimeUtil {
         return secondsToMillis(ticksToSeconds(ticks));
     }
 
+    public static long millisToTicks(long millis) {
+
+        return secondsToTicks(millisToSeconds(millis));
+    }
+
     public static String getFormattedTime(double seconds) {
 
         if (seconds > 60.0) {
