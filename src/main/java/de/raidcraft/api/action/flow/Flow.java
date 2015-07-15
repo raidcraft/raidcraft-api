@@ -64,7 +64,7 @@ public final class Flow {
                                     }
                                     actions.add(action.get());
                                     if (!applicableRequirements.isEmpty()) {
-                                        applicableRequirements.forEach(action.get()::addRequirement);
+                                        applicableRequirements.forEach(requirement -> action.get().addRequirement(requirement));
                                         resetRequirements = true;
                                     }
                                     break;

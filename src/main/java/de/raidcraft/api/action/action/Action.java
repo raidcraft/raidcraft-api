@@ -56,7 +56,7 @@ public interface Action<T> extends ActionConfigGenerator {
         return ActionAPI.getIdentifier(this);
     }
 
-    default void addRequirement(Requirement<T> requirement) {
+    default void addRequirement(Requirement<?> requirement) {
 
         throw new UnsupportedOperationException();
     }

@@ -75,9 +75,12 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
     }
 
     @Override
-    public void addRequirement(Requirement<T> requirement) {
+    @SuppressWarnings("unchecked")
+    public void addRequirement(Requirement<?> requirement) {
 
-        requirements.add(requirement);
+        if (ActionAPI.matchesType(requirement, getType())) {
+            requirements.add((Requirement<T>) requirement);
+        }
     }
 
     public void accept(T type) {
