@@ -14,6 +14,7 @@ import de.raidcraft.api.action.requirement.global.IfElseRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
+import de.raidcraft.api.action.trigger.global.TimerTrigger;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.MultiComment;
@@ -157,12 +158,13 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         ActionAPI actionAPI = ActionAPI.register(this).global();
         for (GlobalAction action : GlobalAction.values()) {
-            actionAPI.action(action.getId(), action.getAction());
+            actionAPI.action(action.getAction());
         }
         for (GlobalRequirement requirement : GlobalRequirement.values()) {
-            actionAPI.requirement(requirement.getId(), requirement.getRequirement());
+            actionAPI.requirement(requirement.getRequirement());
         }
         actionAPI.trigger(new GlobalPlayerTrigger());
+        actionAPI.trigger(new TimerTrigger());
         actionAPI.requirement(new IfElseRequirement<>(), Object.class);
     }
 
