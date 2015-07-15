@@ -2,6 +2,7 @@ package de.raidcraft.api.conversations.stage;
 
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ActionHolder;
+import de.raidcraft.api.action.requirement.RequirementHolder;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
@@ -13,7 +14,7 @@ import java.util.Optional;
 /**
  * @author mdoering
  */
-public interface Stage extends ActionHolder {
+public interface Stage extends ActionHolder, RequirementHolder {
 
     static Stage of(Conversation conversation, String text, Answer... answers) {
 
@@ -125,4 +126,15 @@ public interface Stage extends ActionHolder {
      * @return triggered stage
      */
     Stage trigger(boolean executeActions);
+
+    /**
+     * Changes to the given stage, calling {@link Conversation#changeToStage(Stage)}
+     *
+     * @return this stage
+     */
+    default Stage changeTo() {
+
+        getConversation().changeToStage(this);
+        return this;
+    }
 }

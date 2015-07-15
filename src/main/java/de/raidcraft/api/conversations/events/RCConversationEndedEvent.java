@@ -30,8 +30,8 @@ public class RCConversationEndedEvent extends Event {
 
     public Optional<Player> getPlayer() {
 
-        if (getConversation().getEntity() instanceof Player) {
-            return Optional.of((Player) getConversation().getEntity());
+        if (getConversation().getOwner() instanceof Player) {
+            return Optional.of((Player) getConversation().getOwner());
         }
         return Optional.empty();
     }

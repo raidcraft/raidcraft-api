@@ -14,29 +14,32 @@ import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Stack;
 
 /**
  * @author mdoering
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public abstract class AbstractConversation<T> extends DataMap implements Conversation<T> {
+public abstract class AbstractConversation extends DataMap implements Conversation {
 
-    private final T entity;
+    private final Player owner;
     private final ConversationTemplate template;
     private final ConversationHost host;
-    private final Map<String, Stage> stages = new CaseInsensitiveMap<>();
+    private final Map<String, StageTemplate> stages = new CaseInsensitiveMap<>();
+    private final Stack<Stage> stageHistory = new Stack<>();
     private Stage currentStage;
 
-    public AbstractConversation(T entity, ConversationTemplate conversationTemplate, ConversationHost conversationHost) {
+    public AbstractConversation(Player owner, ConversationTemplate conversationTemplate, ConversationHost conversationHost) {
 
         super(new MemoryConfiguration());
-        this.entity = entity;
+        this.owner = owner;
         this.template = conversationTemplate;
         this.host = conversationHost;
     }
@@ -44,7 +47,7 @@ public abstract class AbstractConversation<T> extends DataMap implements Convers
     protected abstract void load();
 
     @Override
-    public List<Stage> getStages() {
+    public List<StageTemplate> getStages() {
 
         return new ArrayList<>(stages.values());
     }
@@ -59,14 +62,18 @@ public abstract class AbstractConversation<T> extends DataMap implements Convers
     }
 
     @Override
-    public Conversation<T> setCurrentStage(Stage stage) {
+    public Conversation setCurrentStage(Stage stage) {
 
+        Optional<Stage> currentStage = getCurrentStage();
+        if (currentStage.isPresent()) {
+            stageHistory.add(currentStage.get());
+        }
         this.currentStage = stage;
         return this;
     }
 
     @Override
-    public Conversation<T> changeToStage(Stage stage) {
+    public Conversation changeToStage(Stage stage) {
 
         Optional<Stage> currentStage = getCurrentStage();
         setCurrentStage(stage);
@@ -76,7 +83,7 @@ public abstract class AbstractConversation<T> extends DataMap implements Convers
     }
 
     @Override
-    public Conversation<T> addStage(Stage stage) {
+    public Conversation addStage(StageTemplate stage) {
 
         this.stages.put(stage.getIdentifier(), stage);
         return this;
@@ -117,7 +124,11 @@ public abstract class AbstractConversation<T> extends DataMap implements Convers
     @Override
     public Optional<Stage> getStage(String identifier) {
 
-        return Optional.ofNullable(stages.get(identifier));
+        StageTemplate stageTemplate = stages.get(identifier);
+        if (stageTemplate != null) {
+            return Optional.of(stageTemplate.create(this));
+        }
+        return Optional.empty();
     }
 
     @Override

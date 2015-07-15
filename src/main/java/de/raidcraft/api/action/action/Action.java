@@ -3,7 +3,10 @@ package de.raidcraft.api.action.action;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationEndReason;
+import de.raidcraft.api.conversations.stage.Stage;
+import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.ReflectionUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -11,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 /**
  * @author Silthus
@@ -47,6 +51,42 @@ public interface Action<T> extends ActionConfigGenerator {
             public void accept(Player player, ConfigurationSection config) {
 
                 Conversations.endActiveConversation(player, reason);
+            }
+        };
+    }
+
+    static Action<?> changeStage(String stage) {
+
+        return new Action<Conversation<Player>>() {
+            @Override
+            public void accept(Conversation<Player> conversation, ConfigurationSection config) {
+
+                Optional<StageTemplate> stageTemplate = Conversations.getStageTemplate(stage, conversation.getTemplate(), config);
+                if (stageTemplate.isPresent()) {
+                    conversation.changeToStage(stageTemplate.get().create(conversation));
+                }
+            }
+        };
+    }
+
+    static Action<?> changeStage(Stage stage) {
+
+        return new Action<Conversation<Player>>() {
+            @Override
+            public void accept(Conversation<Player> conversation, ConfigurationSection config) {
+
+                conversation.changeToStage(stage);
+            }
+        };
+    }
+
+    static Action<?> setConversationVariable(String key, Object value) {
+
+        return new Action<Conversation<Player>>() {
+            @Override
+            public void accept(Conversation<Player> conversation, ConfigurationSection config) {
+
+                conversation.set(key, value);
             }
         };
     }

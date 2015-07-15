@@ -80,6 +80,27 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         this.config = config;
     }
 
+    public ConfigurationSection getConfig() {
+
+        ConfigurationSection args = config.getConfigurationSection("args");
+        if (args == null) args = config.createSection("args");
+        return args;
+    }
+
+    @Override
+    public Requirement<T> with(String key, Object value) {
+
+        config.set(key, value);
+        return this;
+    }
+
+    @Override
+    public Requirement<T> withArgs(String key, Object value) {
+
+        getConfig().set(key, value);
+        return this;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void addAction(Action<?> action) {
@@ -184,9 +205,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     @Override
     public boolean test(T type) {
 
-        ConfigurationSection args = getConfig().getConfigurationSection("args");
-        if (args == null) args = getConfig().createSection("args");
-        return test(type, args);
+        return test(type, getConfig());
     }
 
     @Override
@@ -236,9 +255,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     @Override
     public String getReason(T entity) {
 
-        ConfigurationSection args = getConfig().getConfigurationSection("args");
-        if (args == null) args = getConfig().createSection("args");
-        return getReason(entity, args);
+        return getReason(entity, getConfig());
     }
 
     @Override
@@ -253,9 +270,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     @Override
     public Optional<String> getDescription(T entity) {
 
-        ConfigurationSection args = getConfig().getConfigurationSection("args");
-        if (args == null) args = getConfig().createSection("args");
-        return getDescription(entity, args);
+        return getDescription(entity, getConfig());
     }
 
     @Override

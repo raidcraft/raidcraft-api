@@ -6,14 +6,16 @@ import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 
 /**
  * @author mdoering
  */
-public interface Conversation<T> extends ConfigurationSection {
+public interface Conversation extends ConfigurationSection {
 
     /**
      * Gets the unique identifier of the conversation.
@@ -26,11 +28,11 @@ public interface Conversation<T> extends ConfigurationSection {
     }
 
     /**
-     * Gets the entity involved in this conversation.
+     * Gets the player involved in this conversation.
      *
-     * @return entity involved in the conversation
+     * @return player involved in the conversation
      */
-    T getEntity();
+    Player getOwner();
 
     /**
      * Gets the host that started the conversation.
@@ -61,12 +63,20 @@ public interface Conversation<T> extends ConfigurationSection {
     Optional<Stage> getCurrentStage();
 
     /**
+     * Gets a list of previous stages in this conversation.
+     * The last stage is always on top and the first stage is the one on the bottom.
+     *
+     * @return stage history from most recent to first
+     */
+    Stack<Stage> getStageHistory();
+
+    /**
      * Sets the current stage to the given stage.
      *
      * @param stage to set
      * @return the current conversation
      */
-    Conversation<T> setCurrentStage(Stage stage);
+    Conversation setCurrentStage(Stage stage);
 
     /**
      * Changes the conversation to the given stage.
@@ -74,14 +84,14 @@ public interface Conversation<T> extends ConfigurationSection {
      * @param stage to  change to
      * @return current conversation
      */
-    Conversation<T> changeToStage(Stage stage);
+    Conversation changeToStage(Stage stage);
 
     /**
      * Gets a list of all stages attached to this conversation.
      *
      * @return list of stages
      */
-    List<Stage> getStages();
+    List<StageTemplate> getStages();
 
     /**
      * Gets the given stage by its identifier.
@@ -98,7 +108,7 @@ public interface Conversation<T> extends ConfigurationSection {
      * @param stage to add
      * @return this conversation
      */
-    Conversation<T> addStage(Stage stage);
+    Conversation addStage(StageTemplate stage);
 
     /**
      * Answers the conversation with the given text. Tries to find a valid answer
@@ -161,7 +171,7 @@ public interface Conversation<T> extends ConfigurationSection {
      * @param lines to send
      * @return this conversation
      */
-    Conversation<T> sendMessage(String... lines);
+    Conversation sendMessage(String... lines);
 
     /**
      * Sends the given conversation to the entity listening to this conversation.
@@ -169,7 +179,7 @@ public interface Conversation<T> extends ConfigurationSection {
      * @param lines to send
      * @return this conversation
      */
-    Conversation<T> sendMessage(FancyMessage... lines);
+    Conversation sendMessage(FancyMessage... lines);
 
     /**
      * Saves the current conversation to a persistant storage.

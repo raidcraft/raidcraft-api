@@ -40,6 +40,16 @@ public interface Requirement<T> extends RequirementConfigGenerator {
         return Optional.empty();
     }
 
+    default Requirement<T> with(String key, Object value) {
+
+        throw new UnsupportedOperationException();
+    }
+
+    default Requirement<T> withArgs(String key, Object value) {
+
+        throw new UnsupportedOperationException();
+    }
+
     default boolean isOrdered() {
 
         return false;
