@@ -7,6 +7,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.flow.FlowType;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.api.conversations.legacy.ConversationProvider;
@@ -476,12 +477,12 @@ public class RaidCraft implements Listener {
         deactiveUpdate.setParameter("server", Bukkit.getServerName());
         deactiveUpdate.execute();
 
-        trackActionApi("action", ActionAPI.getActions());
-        trackActionApi("requirement", ActionAPI.getRequirements());
-        trackActionApi("trigger", ActionAPI.getTrigger());
+        trackActionApi(FlowType.ACTION, ActionAPI.getActions());
+        trackActionApi(FlowType.REQUIREMENT, ActionAPI.getRequirements());
+        trackActionApi(FlowType.TRIGGER, ActionAPI.getTrigger());
     }
 
-    public static <T extends ConfigGenerator> void trackActionApi(String type, Map<String, T> map) {
+    public static <T extends ConfigGenerator> void trackActionApi(FlowType type, Map<String, T> map) {
 
         EbeanServer db = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase();
         String server = Bukkit.getServerName();
@@ -498,9 +499,20 @@ public class RaidCraft implements Listener {
             if (actionApi == null) {
                 actionApi = new TActionApi();
                 actionApi.setName(key);
-                actionApi.setAction_type(type);
+                actionApi.setAction_type(type.name());
                 actionApi.setServer(server);
-                Optional<ConfigGenerator.Information> information = ActionAPI.getActionInformation(key);
+                Optional<ConfigGenerator.Information> information = Optional.empty();
+                switch (type) {
+                    case ACTION:
+                        information = ActionAPI.getActionInformation(key);
+                        break;
+                    case REQUIREMENT:
+                        information = ActionAPI.getRequirementInformation(key);
+                        break;
+                    case TRIGGER:
+                        information = ActionAPI.getTriggerInformation(key);
+                        break;
+                }
                 if (information.isPresent()) {
                     actionApi.setDescription(information.get().desc());
                     actionApi.setConf(String.join(";", information.get().conf()));

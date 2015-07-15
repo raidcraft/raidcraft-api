@@ -37,21 +37,29 @@ public class ActionTypeParser extends FlowParser {
         }
         FlowConfiguration configuration = new FlowConfiguration();
         String type = getMatcher().group(2);
+        Optional<ConfigGenerator.Information> information = Optional.empty();
         switch (flowType.get()) {
             case DELAY:
                 return new FlowDelay(type);
-            default:
-                Optional<ConfigGenerator.Information> information = ActionAPI.getActionInformation(type);
-                if (!information.isPresent()) {
-                    throw new FlowException("ConfigInformation is not present for " + type);
-                }
-                ConfigParser configParser = new ConfigParser(information.get());
-                if (configParser.accept(getMatcher().group(3))) {
-                    // if the parser does not match the config is empty
-                    configuration = configParser.parse();
-                }
-                configuration.set("type", type);
-                return new ActionAPIType(flowType.get(), configuration, type);
+            case ACTION:
+                information = ActionAPI.getActionInformation(type);
+                break;
+            case REQUIREMENT:
+                information = ActionAPI.getRequirementInformation(type);
+                break;
+            case TRIGGER:
+                information = ActionAPI.getTriggerInformation(type);
+                break;
         }
+        if (!information.isPresent()) {
+            throw new FlowException("ConfigInformation is not present for " + type);
+        }
+        ConfigParser configParser = new ConfigParser(information.get());
+        if (configParser.accept(getMatcher().group(3))) {
+            // if the parser does not match the config is empty
+            configuration = configParser.parse();
+        }
+        configuration.set("type", type);
+        return new ActionAPIType(flowType.get(), configuration, type);
     }
 }
