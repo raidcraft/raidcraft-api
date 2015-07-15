@@ -60,7 +60,8 @@ public final class Flow {
                                     configuration.set("delay", delay);
                                     Optional<Action<?>> action = ActionAPI.createAction(expression.getTypeId(), configuration);
                                     if (!action.isPresent()) {
-                                        throw new FlowException("Could not find action of type " + expression.getTypeId());
+                                        ActionAPI.UNKNOWN_ACTIONS.add(expression.getTypeId());
+                                        continue;
                                     }
                                     actions.add(action.get());
                                     if (!applicableRequirements.isEmpty()) {
@@ -73,7 +74,8 @@ public final class Flow {
                                             expression.getTypeId(),
                                             expression.getConfiguration());
                                     if (!requirement.isPresent()) {
-                                        throw new FlowException("Could not find requirement of type " + expression.getTypeId());
+                                        ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId());
+                                        continue;
                                     }
                                     // not sure if we want to reset or not, needs to be discussed
                                     // if (resetRequirements) applicableRequirements.clear();
@@ -186,7 +188,8 @@ public final class Flow {
                                     configuration.set("delay", delay);
                                     Optional<Action<?>> action = ActionAPI.createAction(expression.getTypeId(), configuration);
                                     if (!action.isPresent()) {
-                                        throw new FlowException("Could not find action of type " + expression.getTypeId());
+                                        ActionAPI.UNKNOWN_ACTIONS.add(expression.getTypeId());
+                                        continue;
                                     }
                                     activeRequirement.addAction(action.get());
                                     break;
@@ -195,7 +198,8 @@ public final class Flow {
                                             expression.getTypeId(),
                                             expression.getConfiguration());
                                     if (!requirement.isPresent()) {
-                                        throw new FlowException("Could not find requirement of type " + expression.getTypeId());
+                                        ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId());
+                                        continue;
                                     }
                                     requirements.add(requirement.get());
                                     activeRequirement = requirement.get();
