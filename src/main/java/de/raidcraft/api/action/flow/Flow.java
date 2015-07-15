@@ -86,7 +86,6 @@ public final class Flow {
                     }
                 } catch (FlowException e) {
                     RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }
@@ -153,7 +152,6 @@ public final class Flow {
                     }
                 } catch (FlowException e) {
                     RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }
@@ -209,7 +207,6 @@ public final class Flow {
                     }
                 } catch (FlowException e) {
                     RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }
@@ -300,7 +297,6 @@ public final class Flow {
                     }
                 } catch (FlowException e) {
                     RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }
