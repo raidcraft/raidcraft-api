@@ -188,6 +188,15 @@ public interface ConversationProvider {
     Optional<ConversationHost<?>> getConversationHost(String id);
 
     /**
+     * Gets the host identifier that is mapped to the given host.
+     * If the host is not cached or no identifier exists, an empty optional will be returned.
+     *
+     * @param host to get identifier for
+     * @return optional identifier
+     */
+    Optional<String> getConversationHostIdentifier(ConversationHost<?> host);
+
+    /**
      * Tries to get a cached conversation host for the given host type.
      *
      * @param host to get conversation host for

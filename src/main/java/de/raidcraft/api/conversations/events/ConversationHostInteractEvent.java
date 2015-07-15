@@ -1,25 +1,21 @@
-package de.raidcraft.api.quests.events;
+package de.raidcraft.api.conversations.events;
 
-import de.raidcraft.api.quests.host.QuestHost;
+import de.raidcraft.api.conversations.host.ConversationHost;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-
-public class QuestHostInteractEvent extends Event {
-
+@RequiredArgsConstructor
+public class ConversationHostInteractEvent extends Event {
 
     @Getter
-    private final QuestHost questHost;
+    private final String hostIdentifier;
+    @Getter
+    private final ConversationHost<?> questHost;
     @Getter
     private final Player player;
-
-    public QuestHostInteractEvent(QuestHost questHost, Player player) {
-
-        this.questHost = questHost;
-        this.player = player;
-    }
 
     // Bukkit stuff
     private static final HandlerList handlers = new HandlerList();
