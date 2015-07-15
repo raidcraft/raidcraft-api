@@ -287,12 +287,8 @@ public final class ActionAPI {
     }
 
 
-    /**
-     * @deprecated use {@link #action(Action, Class, String[])} or {@link #action(Action, String[])}
-     */
     @SuppressWarnings("unchecked")
-    @Deprecated
-    public <T> ActionAPI action(@NonNull String identifier, @NonNull Action<T> action, Class<T> type, String... aliases) {
+    private <T> ActionAPI action(@NonNull String identifier, @NonNull Action<T> action, Class<T> type, String... aliases) {
 
         ActionFactory<T> factory;
         if (!actionFactories.containsKey(type)) {
@@ -325,12 +321,8 @@ public final class ActionAPI {
         return action(identifier, action, Player.class, aliases);
     }
 
-    /**
-     * @deprecated use {@link #requirement(Requirement, Class, String[])} or {@link #requirement(Requirement, String[])}
-     */
     @SuppressWarnings("unchecked")
-    @Deprecated
-    public <T> ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<T> requirement, Class<T> type, String... aliases) {
+    private <T> ActionAPI requirement(@NonNull String identifier, @NonNull Requirement<T> requirement, Class<T> type, String... aliases) {
 
         RequirementFactory<T> factory;
         if (!requirementFactories.containsKey(type)) {
@@ -402,7 +394,7 @@ public final class ActionAPI {
             return this;
         }
         String identifier = information.get().value();
-        ArrayUtils.addAll(aliases, information.get().aliases());
+        aliases = ArrayUtils.addAll(aliases, information.get().aliases());
         return requirement(identifier, requirement, type, aliases);
     }
 
