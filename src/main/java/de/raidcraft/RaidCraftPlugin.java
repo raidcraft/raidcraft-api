@@ -10,6 +10,7 @@ import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.ActionCommand;
 import de.raidcraft.api.action.GlobalAction;
 import de.raidcraft.api.action.GlobalRequirement;
+import de.raidcraft.api.action.requirement.global.IfElseRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
@@ -162,6 +163,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             actionAPI.requirement(requirement.getId(), requirement.getRequirement());
         }
         actionAPI.trigger(new GlobalPlayerTrigger());
+        actionAPI.requirement(new IfElseRequirement<>(), Object.class);
     }
 
     private void setupDatabase() {
