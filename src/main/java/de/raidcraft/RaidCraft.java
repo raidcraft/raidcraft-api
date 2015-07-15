@@ -494,12 +494,12 @@ public class RaidCraft implements Listener {
             TActionApi actionApi = db.find(TActionApi.class)
                     .where()
                     .eq("name", key)
-                    .eq("action_type", type)
+                    .eq("action_type", type.name().toLowerCase())
                     .eq("server", server).findUnique();
             if (actionApi == null) {
                 actionApi = new TActionApi();
                 actionApi.setName(key);
-                actionApi.setAction_type(type.name());
+                actionApi.setAction_type(type.name().toLowerCase());
                 actionApi.setServer(server);
                 Optional<ConfigGenerator.Information> information = Optional.empty();
                 switch (type) {
