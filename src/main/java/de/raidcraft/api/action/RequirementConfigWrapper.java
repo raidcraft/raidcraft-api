@@ -81,9 +81,12 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     }
 
     @Override
-    public void addAction(Action<T> action) {
+    @SuppressWarnings("unchecked")
+    public void addAction(Action<?> action) {
 
-        successActions.add(action);
+        if (ActionAPI.matchesType(action, getType())) {
+            successActions.add((Action<T>) action);
+        }
     }
 
     public int getIntMapping(T entity, String key) {

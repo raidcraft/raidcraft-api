@@ -132,11 +132,16 @@ public final class ActionAPI {
         return ((RequirementFactory<T>) requirementFactory).create(id, requirement, config);
     }
 
-    public static Optional<? extends Requirement<?>> createRequirement(String id, String requirement, ConfigurationSection config) {
+    public static Optional<Requirement<?>> createRequirement(String id, String type, ConfigurationSection config) {
 
-        for (RequirementFactory<?> factory : requirementFactories.values()) {
-            Optional<? extends Requirement<?>> optional = factory.create(id, requirement, config);
-            if (optional.isPresent()) return optional;
+        Optional<RequirementFactory<?>> factory = requirementFactories.values().stream()
+                .filter(requirementFactory -> requirementFactory.contains(id))
+                .findAny();
+        if (factory.isPresent()) {
+            Optional<? extends Requirement<?>> requirement = factory.get().create(id, type, config);
+            if (requirement.isPresent()) {
+                return Optional.of(requirement.get());
+            }
         }
         return Optional.empty();
     }
@@ -164,6 +169,18 @@ public final class ActionAPI {
         ActionFactory<?> actionFactory = actionFactories.get(type);
         if (actionFactory == null) return Optional.empty();
         return ((ActionFactory<T>) actionFactory).create(identifier, config);
+    }
+
+    public static Optional<Action<?>> createAction(String identifier, ConfigurationSection config) {
+
+        Optional<ActionFactory<?>> factory = actionFactories.values().stream().filter(actionFactory -> actionFactory.contains(identifier)).findAny();
+        if (factory.isPresent()) {
+            Optional<? extends Action<?>> action = factory.get().create(identifier, config);
+            if (action.isPresent()) {
+                return Optional.of(action.get());
+            }
+        }
+        return Optional.empty();
     }
 
     @SuppressWarnings("unchecked")

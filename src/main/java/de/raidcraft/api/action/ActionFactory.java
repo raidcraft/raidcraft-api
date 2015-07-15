@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -131,6 +132,7 @@ public final class ActionFactory<T> {
         return Optional.of(new ActionConfigWrapper<>(actions.get(identifier), config, getType()));
     }
 
+    @SuppressWarnings("unchecked")
     public Collection<Action<T>> createActions(ConfigurationSection actions) {
 
         ArrayList<Action<T>> list = new ArrayList<>();
@@ -138,7 +140,11 @@ public final class ActionFactory<T> {
             return list;
         }
         // lets parse our flow actions and add them
-        list.addAll(Flow.parseActions(actions, getType()));
+        List<Action<?>> flowActions = Flow.parseActions(actions);
+        flowActions.stream()
+                .filter(action -> ActionAPI.matchesType(action, getType()))
+                .map(action -> (Action<T>) action)
+                .forEach(list::add);
 
         for (String key : actions.getKeys(false)) {
             // lists are handled by the flow parser

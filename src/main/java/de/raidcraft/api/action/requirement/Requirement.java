@@ -25,7 +25,7 @@ public interface Requirement<T> extends RequirementConfigGenerator {
 
     boolean test(T type, ConfigurationSection config);
 
-    default void addAction(Action<T> action) {
+    default void addAction(Action<?> action) {
 
         throw new UnsupportedOperationException();
     }

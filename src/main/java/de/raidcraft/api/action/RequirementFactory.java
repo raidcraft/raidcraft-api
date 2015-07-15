@@ -125,6 +125,7 @@ public final class RequirementFactory<T> {
         return Optional.of(wrapper);
     }
 
+    @SuppressWarnings("unchecked")
     public List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements) {
 
         ArrayList<Requirement<T>> list = new ArrayList<>();
@@ -132,7 +133,11 @@ public final class RequirementFactory<T> {
             return list;
         }
         // lets parse via flow first and continue if the key is a list
-        list.addAll(Flow.parseRequirements(requirements, getType()));
+        List<Requirement<?>> flowRequirements = Flow.parseRequirements(requirements);
+        flowRequirements.stream()
+                .filter(requirement -> ActionAPI.matchesType(requirement, getType()))
+                .map(requirement -> (Requirement<T>) requirement)
+                .forEach(list::add);
 
         for (String key : requirements.getKeys(false)) {
             // handled by flow

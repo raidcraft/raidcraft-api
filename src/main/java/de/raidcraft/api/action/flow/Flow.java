@@ -32,9 +32,9 @@ public final class Flow {
             new AnswerParser()
     };
 
-    public static <T> List<Action<T>> parseActions(ConfigurationSection config, Class<T> type) {
+    public static List<Action<?>> parseActions(ConfigurationSection config) {
 
-        List<Action<T>> actions = new ArrayList<>();
+        List<Action<?>> actions = new ArrayList<>();
         if (config == null) return actions;
         Set<String> keys = config.getKeys(false);
         if (keys == null) return actions;
@@ -46,7 +46,7 @@ public final class Flow {
                     List<FlowExpression> flowExpressions = parse(config.getStringList(key));
                     // we are gonna add all requirements to this list until an action is added
                     boolean resetRequirements = false;
-                    List<Requirement<T>> applicableRequirements = new ArrayList<>();
+                    List<Requirement<?>> applicableRequirements = new ArrayList<>();
                     for (FlowExpression flowExpression : flowExpressions) {
                         if (flowExpression instanceof FlowDelay) {
                             delay += ((FlowDelay) flowExpression).getDelay();
@@ -58,7 +58,7 @@ public final class Flow {
                                 case ACTION:
                                     FlowConfiguration configuration = expression.getConfiguration();
                                     configuration.set("delay", delay);
-                                    Optional<Action<T>> action = ActionAPI.createAction(expression.getTypeId(), configuration, type);
+                                    Optional<Action<?>> action = ActionAPI.createAction(expression.getTypeId(), configuration);
                                     if (!action.isPresent()) {
                                         throw new FlowException("Could not find action of type " + expression.getTypeId());
                                     }
@@ -69,10 +69,9 @@ public final class Flow {
                                     }
                                     break;
                                 case REQUIREMENT:
-                                    Optional<Requirement<T>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key,
+                                    Optional<Requirement<?>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key,
                                             expression.getTypeId(),
-                                            expression.getConfiguration(),
-                                            type);
+                                            expression.getConfiguration());
                                     if (!requirement.isPresent()) {
                                         throw new FlowException("Could not find requirement of type " + expression.getTypeId());
                                     }
@@ -159,9 +158,9 @@ public final class Flow {
         return triggerFactories;
     }
 
-    public static <T> List<Requirement<T>> parseRequirements(ConfigurationSection config, Class<T> type) {
+    public static List<Requirement<?>> parseRequirements(ConfigurationSection config) {
 
-        List<Requirement<T>> requirements = new ArrayList<>();
+        List<Requirement<?>> requirements = new ArrayList<>();
         if (config == null) return requirements;
         Set<String> keys = config.getKeys(false);
         if (keys == null) return requirements;
@@ -172,7 +171,7 @@ public final class Flow {
                 try {
                     long delay = 0;
                     List<FlowExpression> flowExpressions = parse(config.getStringList(key));
-                    Requirement<T> activeRequirement = null;
+                    Requirement<?> activeRequirement = null;
                     for (FlowExpression flowExpression : flowExpressions) {
                         if (flowExpression instanceof FlowDelay) {
                             delay += ((FlowDelay) flowExpression).getDelay();
@@ -185,17 +184,16 @@ public final class Flow {
                                 case ACTION:
                                     if (activeRequirement == null) continue;
                                     configuration.set("delay", delay);
-                                    Optional<Action<T>> action = ActionAPI.createAction(expression.getTypeId(), configuration, type);
+                                    Optional<Action<?>> action = ActionAPI.createAction(expression.getTypeId(), configuration);
                                     if (!action.isPresent()) {
                                         throw new FlowException("Could not find action of type " + expression.getTypeId());
                                     }
                                     activeRequirement.addAction(action.get());
                                     break;
                                 case REQUIREMENT:
-                                    Optional<Requirement<T>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key,
+                                    Optional<Requirement<?>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key,
                                             expression.getTypeId(),
-                                            expression.getConfiguration(),
-                                            type);
+                                            expression.getConfiguration());
                                     if (!requirement.isPresent()) {
                                         throw new FlowException("Could not find requirement of type " + expression.getTypeId());
                                     }
