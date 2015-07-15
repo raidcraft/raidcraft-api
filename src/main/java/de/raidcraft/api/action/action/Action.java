@@ -57,9 +57,9 @@ public interface Action<T> extends ActionConfigGenerator {
 
     static Action<?> changeStage(String stage) {
 
-        return new Action<Conversation<Player>>() {
+        return new Action<Conversation>() {
             @Override
-            public void accept(Conversation<Player> conversation, ConfigurationSection config) {
+            public void accept(Conversation conversation, ConfigurationSection config) {
 
                 Optional<StageTemplate> stageTemplate = Conversations.getStageTemplate(stage, conversation.getTemplate(), config);
                 if (stageTemplate.isPresent()) {
@@ -71,9 +71,9 @@ public interface Action<T> extends ActionConfigGenerator {
 
     static Action<?> changeStage(Stage stage) {
 
-        return new Action<Conversation<Player>>() {
+        return new Action<Conversation>() {
             @Override
-            public void accept(Conversation<Player> conversation, ConfigurationSection config) {
+            public void accept(Conversation conversation, ConfigurationSection config) {
 
                 conversation.changeToStage(stage);
             }
@@ -82,9 +82,9 @@ public interface Action<T> extends ActionConfigGenerator {
 
     static Action<?> setConversationVariable(String key, Object value) {
 
-        return new Action<Conversation<Player>>() {
+        return new Action<Conversation>() {
             @Override
-            public void accept(Conversation<Player> conversation, ConfigurationSection config) {
+            public void accept(Conversation conversation, ConfigurationSection config) {
 
                 conversation.set(key, value);
             }
