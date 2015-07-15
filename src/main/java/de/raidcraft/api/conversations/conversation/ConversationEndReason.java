@@ -17,7 +17,8 @@ public enum ConversationEndReason {
     CUSTOM("Custom Conversation End Reason not defined!"),
     PLAYER_ABORT("Die Unterhaltung wurde abgerochen."),
     PLAYER_QUIT("Die Unterhaltung wurde abgebrochen da Du das Spiel verlassen hast."),
-    PLAYER_CHANGED_WORLD("Die Unterhaltung wurde abgebrochen da Du die Welt gewechselt hast.");
+    PLAYER_CHANGED_WORLD("Die Unterhaltung wurde abgebrochen da Du die Welt gewechselt hast."),
+    ERROR("Error occured! Please see console or inform an admin...");
 
     @Getter
     @Setter

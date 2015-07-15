@@ -5,6 +5,7 @@ import de.raidcraft.api.action.action.ActionHolder;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
+import de.raidcraft.api.conversations.conversation.ConversationEndReason;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,18 @@ public interface Stage extends ActionHolder {
     static Stage of(Conversation conversation, String text, Answer... answers) {
 
         return Conversations.createStage(conversation, text, answers);
+    }
+
+    static Stage confirm(Conversation conversation, String text, Action... successActions) {
+
+        return Conversations.createStage(conversation, text)
+                .addAnswer(
+                        Answer.of("Ja, ich bin mir sicher.")
+                                .addActions(successActions))
+                .addAnswer(
+                        Answer.of("Nein, ich habe es mir anders überlegt.")
+                                .addAction(Action.endConversation(ConversationEndReason.ENDED))
+                );
     }
 
     default String getIdentifier() {

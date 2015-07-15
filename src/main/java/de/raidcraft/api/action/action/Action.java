@@ -2,9 +2,12 @@ package de.raidcraft.api.action.action;
 
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.conversation.ConversationEndReason;
 import de.raidcraft.util.ReflectionUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -35,6 +38,17 @@ public interface Action<T> extends ActionConfigGenerator {
             }
         }
         throw new UnsupportedOperationException("Action " + actionClass.getCanonicalName() + " has no @Information tag!");
+    }
+
+    static Action<?> endConversation(ConversationEndReason reason) {
+
+        return new Action<Player>() {
+            @Override
+            public void accept(Player player, ConfigurationSection config) {
+
+                Conversations.endActiveConversation(player, reason);
+            }
+        };
     }
 
     default String getIdentifier() {

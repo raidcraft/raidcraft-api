@@ -3,6 +3,7 @@ package de.raidcraft.api.conversations;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
+import de.raidcraft.api.conversations.conversation.ConversationEndReason;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.api.conversations.conversation.ConversationVariable;
 import de.raidcraft.api.conversations.host.ConversationHost;
@@ -310,5 +311,14 @@ public class Conversations {
     public static Answer createAnswer(String text, Action... actions) {
 
         return provider.createAnswer(text, actions);
+    }
+
+    public static void endActiveConversation(Player player, ConversationEndReason reason) {
+
+        if (provider == null) return;
+        Optional<Conversation<Player>> activeConversation = provider.getActiveConversation(player);
+        if (activeConversation.isPresent()) {
+            activeConversation.get().end(reason);
+        }
     }
 }

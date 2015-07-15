@@ -10,6 +10,7 @@ import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -102,6 +103,19 @@ public interface Answer extends ActionHolder, RequirementHolder {
      * @return this answer
      */
     Answer addAction(Action<?> action);
+
+    /**
+     * Adds all actions to this answer.
+     * @see #addAction(Action)
+     *
+     * @param actions to add
+     * @return this answer
+     */
+    default Answer addActions(Action<?>... actions) {
+
+        Arrays.stream(actions).forEach(this::addAction);
+        return this;
+    }
 
     /**
      * Adds a Conversation action to this answer that is executed when the answer is chosen.
