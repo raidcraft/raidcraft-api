@@ -63,7 +63,8 @@ public enum GlobalAction {
                 conf = {
                         "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
                         "amount: [1]"
-                }
+                },
+                aliases = {"player.item.give"}
         )
         public void accept(Player player, ConfigurationSection config) {
 
@@ -84,7 +85,8 @@ public enum GlobalAction {
                 conf = {
                         "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
                         "amount: [1]"
-                }
+                },
+                aliases = {"player.item.remove"}
         )
         public void accept(Player player, ConfigurationSection config) {
 

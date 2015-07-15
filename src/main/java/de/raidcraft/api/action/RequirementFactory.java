@@ -106,7 +106,7 @@ public final class RequirementFactory<T> {
 
     public boolean contains(String actionId) {
 
-        return requirements.keySet().contains(actionId) || requirementAliases.keySet().contains(actionId);
+        return requirements.containsKey(actionId) || requirementAliases.containsKey(actionId);
     }
 
     public Optional<Requirement<T>> create(String id, @NonNull String requirement, @NonNull ConfigurationSection config) {

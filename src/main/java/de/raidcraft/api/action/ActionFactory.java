@@ -105,7 +105,7 @@ public final class ActionFactory<T> {
 
     public boolean contains(String actionId) {
 
-        return actions.keySet().contains(actionId) || actionAliases.keySet().contains(actionId);
+        return actions.containsKey(actionId) || actionAliases.containsKey(actionId);
     }
 
     public Optional<String> getActionIdentifier(Action action) {
