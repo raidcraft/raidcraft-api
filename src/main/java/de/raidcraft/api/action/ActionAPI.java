@@ -29,6 +29,7 @@ public final class ActionAPI {
 
     public static final Set<String> UNKNOWN_ACTIONS = new HashSet<>();
     public static final Set<String> UNKNOWN_REQUIREMENTS = new HashSet<>();
+    public static final Set<String> UNKNOWN_TRIGGER = new HashSet<>();
 
     private static final Map<Class<?>, ActionFactory<?>> actionFactories = new HashMap<>();
     private static final Map<Class<?>, RequirementFactory<?>> requirementFactories = new HashMap<>();
@@ -122,6 +123,11 @@ public final class ActionAPI {
             }
         }
         return false;
+    }
+
+    public static boolean isTrigger(String identifier) {
+
+        return triggerManager.contains(identifier);
     }
 
     @SuppressWarnings("unchecked")

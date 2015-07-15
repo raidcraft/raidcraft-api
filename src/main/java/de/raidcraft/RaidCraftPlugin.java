@@ -130,8 +130,12 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                     ActionAPI.UNKNOWN_REQUIREMENTS.stream()
                             .filter(requirement -> !ActionAPI.isRequirement(requirement))
                             .forEach(requirement -> RaidCraft.LOGGER.warning("unknown requirement: " + requirement));
+                    ActionAPI.UNKNOWN_TRIGGER.stream()
+                            .filter(trigger -> !ActionAPI.isRequirement(trigger))
+                            .forEach(trigger -> RaidCraft.LOGGER.warning("unknown trigger: " + trigger));
                     ActionAPI.UNKNOWN_ACTIONS.clear();
                     ActionAPI.UNKNOWN_REQUIREMENTS.clear();
+                    ActionAPI.UNKNOWN_TRIGGER.clear();
                     started.set(true);
                     RaidCraft.LOGGER.info("Player login now allowed");
                 }

@@ -36,6 +36,11 @@ public final class TriggerManager {
 
     }
 
+    public boolean contains(String identifier) {
+
+        return registeredTrigger.containsKey(identifier) || aliases.containsKey(identifier);
+    }
+
     public Optional<ConfigGenerator.Information> getInformation(String identifier) {
 
         if (triggerInformation.containsKey(identifier)) {

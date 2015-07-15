@@ -42,12 +42,24 @@ public class ActionTypeParser extends FlowParser {
             case DELAY:
                 return new FlowDelay(type);
             case ACTION:
+                if (!ActionAPI.isAction(type)) {
+                    ActionAPI.UNKNOWN_ACTIONS.add(type);
+                    throw new FlowException(flowType.get().name() + type + " inside flow not found!");
+                }
                 information = ActionAPI.getActionInformation(type);
                 break;
             case REQUIREMENT:
+                if (!ActionAPI.isRequirement(type)) {
+                    ActionAPI.UNKNOWN_REQUIREMENTS.add(type);
+                    throw new FlowException(flowType.get().name() + type + " inside flow not found!");
+                }
                 information = ActionAPI.getRequirementInformation(type);
                 break;
             case TRIGGER:
+                if (!ActionAPI.isTrigger(type)) {
+                    ActionAPI.UNKNOWN_TRIGGER.add(type);
+                    throw new FlowException(flowType.get().name() + type + " inside flow not found!");
+                }
                 information = ActionAPI.getTriggerInformation(type);
                 break;
         }
