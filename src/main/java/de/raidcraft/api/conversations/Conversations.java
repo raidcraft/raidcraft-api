@@ -44,13 +44,13 @@ public class Conversations {
         queuedAnswers.clear();
         queuedStages.entrySet().forEach(entry -> provider.registerStage(entry.getKey(), entry.getValue()));
         queuedStages.clear();
-        queuedConversations.entrySet().forEach(entry -> provider.loadConversation(entry.getKey(), entry.getValue()));
-        queuedConversations.clear();
         queuedConversationTemplates.entrySet().forEach(entry -> provider.registerConversationTemplate(entry.getKey(), entry.getValue()));
         queuedConversationTemplates.clear();
         queuedVariables.entrySet().forEach(entry -> provider.registerConversationVariable(entry.getKey(), entry.getValue()));
         queuedVariables.clear();
         queuedHostFactories.entrySet().forEach(entry -> provider.registerHostFactory(entry.getKey(), entry.getValue()));
+        queuedConversations.entrySet().forEach(entry -> provider.loadConversation(entry.getKey(), entry.getValue()));
+        queuedConversations.clear();
     }
 
     public static void disable(ConversationProvider provider) {
