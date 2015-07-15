@@ -1,42 +1,23 @@
 package de.raidcraft.api.conversations.events;
 
 import de.raidcraft.api.conversations.conversation.Conversation;
-import de.raidcraft.api.conversations.host.ConversationHost;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import java.util.Optional;
 
 /**
  * @author mdoering
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RCStartConversationEvent extends Event implements Cancellable {
+public class RCStartConversationEvent extends RCConversationEvent implements Cancellable {
 
-    private final Conversation<?> conversation;
     private boolean cancelled;
 
-    public RCStartConversationEvent(Conversation<?> conversation) {
+    public RCStartConversationEvent(Conversation conversation) {
 
-        this.conversation = conversation;
-    }
-
-    public Optional<Player> getPlayer() {
-
-        if (getConversation().getOwner() instanceof Player) {
-            return Optional.of((Player) getConversation().getOwner());
-        }
-        return Optional.empty();
-    }
-
-    public ConversationHost getHost() {
-
-        return getConversation().getHost();
+        super(conversation);
     }
 
     //<-- Handler -->//

@@ -92,7 +92,7 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     }
 
     @Override
-    public Optional<Conversation<Player>> startConversation(Player player) {
+    public Optional<Conversation> startConversation(Player player) {
 
         Optional<ConversationTemplate> conversation = getConversation(player);
         if (conversation.isPresent()) {
@@ -102,7 +102,7 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     }
 
     @Override
-    public Optional<Conversation<Player>> startConversation(Player player, String conversation) {
+    public Optional<Conversation> startConversation(Player player, String conversation) {
 
         Optional<ConversationTemplate> template = Conversations.getConversationTemplate(conversation);
         if (!template.isPresent()) {

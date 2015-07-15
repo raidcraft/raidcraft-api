@@ -147,7 +147,7 @@ public class Conversations {
     /**
      * @see ConversationProvider#setActiveConversation(Conversation)
      */
-    public static Optional<Conversation<Player>> setActiveConversation(Conversation<Player> conversation) {
+    public static Optional<Conversation> setActiveConversation(Conversation conversation) {
 
         if (provider == null) return Optional.empty();
         return provider.setActiveConversation(conversation);
@@ -165,7 +165,7 @@ public class Conversations {
     /**
      * @see ConversationProvider#getActiveConversation(Player)
      */
-    public static Optional<Conversation<Player>> getActiveConversation(Player player) {
+    public static Optional<Conversation> getActiveConversation(Player player) {
 
         if (provider == null) return Optional.empty();
         return provider.getActiveConversation(player);
@@ -174,7 +174,7 @@ public class Conversations {
     /**
      * @see ConversationProvider#removeActiveConversation(Player)
      */
-    public static Optional<Conversation<Player>> removeActiveConversation(Player player) {
+    public static Optional<Conversation> removeActiveConversation(Player player) {
 
         if (provider == null) return Optional.empty();
         return provider.removeActiveConversation(player);
@@ -279,7 +279,7 @@ public class Conversations {
         return provider.getOrCreateConversationHost(host, config);
     }
 
-    public static Optional<Conversation<Player>> startConversation(Player player, ConversationHost<?> conversationHost) {
+    public static Optional<Conversation> startConversation(Player player, ConversationHost<?> conversationHost) {
 
         if (provider == null) return Optional.empty();
         return provider.startConversation(player, conversationHost);
@@ -316,7 +316,7 @@ public class Conversations {
     public static void endActiveConversation(Player player, ConversationEndReason reason) {
 
         if (provider == null) return;
-        Optional<Conversation<Player>> activeConversation = provider.getActiveConversation(player);
+        Optional<Conversation> activeConversation = provider.getActiveConversation(player);
         if (activeConversation.isPresent()) {
             activeConversation.get().end(reason);
         }

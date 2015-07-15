@@ -273,7 +273,7 @@ public interface ConversationProvider {
      * @param conversationHost that started the conversation
      * @return started conversation or an empty optional if the host has no conversations to start
      */
-    Optional<Conversation<Player>> startConversation(Player player, ConversationHost<?> conversationHost);
+    Optional<Conversation> startConversation(Player player, ConversationHost<?> conversationHost);
 
     /**
      * Gets an active conversation for the player if any are found.
@@ -281,7 +281,7 @@ public interface ConversationProvider {
      * @param player to get active conversation for
      * @return optional active conversation
      */
-    Optional<Conversation<Player>> getActiveConversation(Player player);
+    Optional<Conversation> getActiveConversation(Player player);
 
     /**
      * Sets the active conversation of the player to the given conversation. If there already is an
@@ -291,7 +291,7 @@ public interface ConversationProvider {
      * @param conversation to set active for the player
      * @return old active conversation
      */
-    Optional<Conversation<Player>> setActiveConversation(Conversation<Player> conversation);
+    Optional<Conversation> setActiveConversation(Conversation conversation);
 
     /**
      * Removes the current active conversation of the player and aborts it.
@@ -299,7 +299,7 @@ public interface ConversationProvider {
      * @param player to remove conversation for
      * @return removed conversation
      */
-    Optional<Conversation<Player>> removeActiveConversation(Player player);
+    Optional<Conversation> removeActiveConversation(Player player);
 
     /**
      * Checks if the player has an active conversation.

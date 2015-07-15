@@ -16,5 +16,5 @@ public interface ConversationVariable {
         return Optional.ofNullable(Conversations.getActiveConversation(player).get().getString(key));
     }
 
-    String replace(Conversation<Player> conversation);
+    String replace(Conversation conversation);
 }

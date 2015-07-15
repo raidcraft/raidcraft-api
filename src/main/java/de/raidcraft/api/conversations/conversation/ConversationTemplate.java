@@ -73,7 +73,7 @@ public interface ConversationTemplate extends RequirementHolder, Comparable<Conv
      * @param host that started the conversation
      * @return started conversation
      */
-    Conversation<Player> createConversation(Player player, ConversationHost host);
+    Conversation createConversation(Player player, ConversationHost host);
 
     /**
      * Starts this conversation for the given player caching the active conversation
@@ -84,5 +84,5 @@ public interface ConversationTemplate extends RequirementHolder, Comparable<Conv
      * @param host that is hosting this conversation
      * @return started conversation
      */
-    Conversation<Player> startConversation(Player player, ConversationHost host);
+    Conversation startConversation(Player player, ConversationHost host);
 }
