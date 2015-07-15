@@ -6,6 +6,7 @@ import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.action.trigger.TriggerListener;
 import de.raidcraft.api.config.builder.ConfigBuilder;
+import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -26,17 +28,34 @@ import java.util.Optional;
 public final class TriggerManager {
 
     private final Map<String, Trigger> registeredTrigger = new CaseInsensitiveMap<>();
+    private final Map<String, ConfigGenerator.Information> triggerInformation = new CaseInsensitiveMap<>();
+    // key -> alias, value -> trigger identifier
+    private final Map<String, String> aliases = new CaseInsensitiveMap<>();
 
     protected TriggerManager() {
 
+    }
+
+    public Optional<ConfigGenerator.Information> getInformation(String identifier) {
+
+        if (triggerInformation.containsKey(identifier)) {
+            return Optional.of(triggerInformation.get(identifier));
+        }
+        if (aliases.containsKey(identifier)) {
+            return Optional.ofNullable(triggerInformation.get(aliases.get(identifier)));
+        }
+        return Optional.empty();
     }
 
     public TriggerManager registerGlobalTrigger(@NonNull Trigger trigger) {
 
         for (String action : trigger.getActions()) {
             registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
-            ConfigBuilder.registerInformation(trigger);
         }
+        ConfigBuilder.getInformations(trigger).forEach(information -> {
+            triggerInformation.put(information.value(), information);
+            Arrays.stream(information.aliases()).forEach(alias -> aliases.put(alias, information.value()));
+        });
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
         }
@@ -50,13 +69,12 @@ public final class TriggerManager {
         trigger.setIdentifier(identifier);
         for (String action : trigger.getActions()) {
             triggerName = identifier + "." + action;
-            if (registeredTrigger.containsKey(triggerName)) {
-                RaidCraft.LOGGER.warning("duplicate trigger found: " + triggerName);
-                continue;
-            }
             registeredTrigger.put(triggerName, trigger);
-            ConfigBuilder.registerInformation(trigger);
         }
+        ConfigBuilder.getInformations(trigger).forEach(information -> {
+            triggerInformation.put(plugin.getName() + "." + information.value(), information);
+            Arrays.stream(information.aliases()).forEach(alias -> aliases.put(alias, plugin.getName() + "." + information.value()));
+        });
         if (trigger instanceof Listener) {
             RaidCraft.getComponent(RaidCraftPlugin.class).registerEvents((Listener) trigger);
         }
@@ -96,11 +114,17 @@ public final class TriggerManager {
 
     public <T> Optional<Trigger> registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier, @NonNull ConfigurationSection config) {
 
-        String id = triggerIdentifier.toLowerCase();
         // we need to check partial names because actions are not listed in the map
-        Trigger trigger = registeredTrigger.get(id);
+        if (!registeredTrigger.containsKey(triggerIdentifier)) {
+            if (!aliases.containsKey(triggerIdentifier)) {
+                return Optional.empty();
+            } else {
+                triggerIdentifier = aliases.get(triggerIdentifier);
+            }
+        }
+        Trigger trigger = registeredTrigger.get(triggerIdentifier);
         if (trigger != null) {
-            trigger.registerListener(listener, id, config);
+            trigger.registerListener(listener, triggerIdentifier, config);
         }
         return Optional.ofNullable(trigger);
     }

@@ -8,7 +8,6 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.Trigger;
-import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.PastebinPoster;
 import org.bukkit.command.CommandSender;
@@ -41,7 +40,7 @@ public class ActionCommand {
                     Action<?> action = entry.getValue();
                     sb.append(entry.getKey());
                     if (action != null) {
-                        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(entry.getKey());
+                        Optional<ConfigGenerator.Information> information = ActionAPI.getActionInformation(entry.getKey());
                         if (information.isPresent()) {
                             sb.append(": ").append(information.get().desc());
                             for (String conf : information.get().conf()) {
@@ -58,7 +57,7 @@ public class ActionCommand {
                     Requirement<?> requirement = entry.getValue();
                     sb.append(entry.getKey());
                     if (requirement != null) {
-                        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(entry.getKey());
+                        Optional<ConfigGenerator.Information> information = ActionAPI.getRequirementInformation(entry.getKey());
                         if (information.isPresent()) {
                             sb.append(": ").append(information.get().desc());
                             for (String conf : information.get().conf()) {
@@ -75,7 +74,7 @@ public class ActionCommand {
                     Trigger trigger = entry.getValue();
                     sb.append(entry.getKey());
                     if (trigger != null) {
-                        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(entry.getKey());
+                        Optional<ConfigGenerator.Information> information = ActionAPI.getTriggerInformation(entry.getKey());
                         if (information.isPresent()) {
                             sb.append(": ").append(information.get().desc());
                             for (String conf : information.get().conf()) {

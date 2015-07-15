@@ -41,7 +41,7 @@ public class ActionTypeParser extends FlowParser {
             case DELAY:
                 return new FlowDelay(type);
             default:
-                Optional<ConfigGenerator.Information> information = ActionAPI.getInformation(type);
+                Optional<ConfigGenerator.Information> information = ActionAPI.getActionInformation(type);
                 if (!information.isPresent()) {
                     throw new FlowException("ConfigInformation is not present for " + type);
                 }

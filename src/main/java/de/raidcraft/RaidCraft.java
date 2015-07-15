@@ -8,7 +8,6 @@ import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.bukkit.BukkitPlayer;
-import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.api.conversations.legacy.ConversationProvider;
 import de.raidcraft.api.database.Database;
@@ -501,7 +500,7 @@ public class RaidCraft implements Listener {
                 actionApi.setName(key);
                 actionApi.setAction_type(type);
                 actionApi.setServer(server);
-                Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(key);
+                Optional<ConfigGenerator.Information> information = ActionAPI.getActionInformation(key);
                 if (information.isPresent()) {
                     actionApi.setDescription(information.get().desc());
                     actionApi.setConf(String.join(";", information.get().conf()));

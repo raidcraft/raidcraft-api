@@ -5,6 +5,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.config.builder.ConfigBuilder;
+import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Getter;
 import lombok.NonNull;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -25,12 +25,24 @@ public final class ActionFactory<T> {
     @Getter
     private final Class<T> type;
     private final Map<String, Action<T>> actions = new CaseInsensitiveMap<>();
+    private final Map<String, ConfigGenerator.Information> actionInformation = new CaseInsensitiveMap<>();
     // key -> alias, value -> action identifier
     private final Map<String, String> actionAliases = new CaseInsensitiveMap<>();
 
     protected ActionFactory(Class<T> type) {
 
         this.type = type;
+    }
+
+    public Optional<ConfigGenerator.Information> getInformation(String identifier) {
+
+        if (actionInformation.containsKey(identifier)) {
+            return Optional.of(actionInformation.get(identifier));
+        }
+        if (actionAliases.containsKey(identifier)) {
+            return Optional.ofNullable(actionInformation.get(actionAliases.get(identifier)));
+        }
+        return Optional.empty();
     }
 
     public ActionFactory addAlias(String action, String alias) {
@@ -47,21 +59,20 @@ public final class ActionFactory<T> {
     public ActionFactory registerGlobalAction(@NonNull String identifier, @NonNull Action<T> action) {
 
         actions.put(identifier, action);
-        ConfigBuilder.registerInformation(action);
-        RaidCraft.info("registered global action: " + identifier, "action.global");
+        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(action);
+        if (information.isPresent()) {
+            actionInformation.put(identifier, information.get());
+        } else {
+            RaidCraft.LOGGER.warning("no @Information defined for action " + identifier);
+        }
+        RaidCraft.info("registered action: " + identifier, "action");
         return this;
     }
 
     public ActionFactory registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Action<T> action) {
 
         identifier = plugin.getName() + "." + identifier;
-        if (actions.containsKey(identifier)) {
-            RaidCraft.LOGGER.warning("Action '" + identifier + "' is already registered!" + plugin.getName() + " tried to register duplicate!");
-        }
-        actions.put(identifier, action);
-        ConfigBuilder.registerInformation(action);
-        RaidCraft.info("registered action: " + identifier, "action." + plugin.getName());
-        return this;
+        return registerGlobalAction(identifier, action);
     }
 
     public void unregisterAction(@NonNull JavaPlugin plugin, @NonNull String identifier) {
@@ -93,7 +104,7 @@ public final class ActionFactory<T> {
 
     public boolean contains(String actionId) {
 
-        return actions.keySet().contains(actionId) || actionAliases.values().stream().collect(Collectors.toList()).contains(actionId);
+        return actions.keySet().contains(actionId) || actionAliases.keySet().contains(actionId);
     }
 
     public Optional<String> getActionIdentifier(Action action) {

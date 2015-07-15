@@ -58,9 +58,31 @@ public final class ActionAPI {
         return "undefined";
     }
 
-    public static Optional<ConfigGenerator.Information> getInformation(String identifier) {
+    public static Optional<ConfigGenerator.Information> getActionInformation(String identifier) {
 
-        return ConfigBuilder.getInformation(identifier);
+        Optional<ActionFactory<?>> factory = actionFactories.values().stream()
+                .filter(actionFactory -> actionFactory.contains(identifier))
+                .findAny();
+        if (factory.isPresent()) {
+            return factory.get().getInformation(identifier);
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<ConfigGenerator.Information> getRequirementInformation(String identifier) {
+
+        Optional<RequirementFactory<?>> factory = requirementFactories.values().stream()
+                .filter(requirementFactory -> requirementFactory.contains(identifier))
+                .findAny();
+        if (factory.isPresent()) {
+            return factory.get().getInformation(identifier);
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<ConfigGenerator.Information> getTriggerInformation(String identifier) {
+
+        return triggerManager.getInformation(identifier);
     }
 
     public static Map<String, Action<?>> getActions() {

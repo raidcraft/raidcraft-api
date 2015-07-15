@@ -5,6 +5,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.config.builder.ConfigBuilder;
+import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Getter;
 import lombok.NonNull;
@@ -16,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -26,12 +26,24 @@ public final class RequirementFactory<T> {
     @Getter
     private final Class<T> type;
     private final Map<String, Requirement<T>> requirements = new CaseInsensitiveMap<>();
+    private final Map<String, ConfigGenerator.Information> requirementInformation = new CaseInsensitiveMap<>();
     // key -> alias, value -> requirement identifier
     private final Map<String, String> requirementAliases = new CaseInsensitiveMap<>();
 
     protected RequirementFactory(Class<T> type) {
 
         this.type = type;
+    }
+
+    public Optional<ConfigGenerator.Information> getInformation(String identifier) {
+
+        if (requirementInformation.containsKey(identifier)) {
+            return Optional.of(requirementInformation.get(identifier));
+        }
+        if (requirementAliases.containsKey(identifier)) {
+            return Optional.ofNullable(requirementInformation.get(requirementAliases.get(identifier)));
+        }
+        return Optional.empty();
     }
 
     public RequirementFactory addAlias(String requirement, String alias) {
@@ -48,22 +60,20 @@ public final class RequirementFactory<T> {
     public RequirementFactory registerGlobalRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
 
         requirements.put(identifier, requirement);
-        ConfigBuilder.registerInformation(requirement);
-        RaidCraft.info("registered global requirement: " + identifier, "requirement.global");
+        Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(requirement);
+        if (information.isPresent()) {
+            requirementInformation.put(identifier, information.get());
+        } else {
+            RaidCraft.LOGGER.warning("no @Information defined for requirement " + identifier);
+        }
+        RaidCraft.info("registered requirement: " + identifier, "requirement");
         return this;
     }
 
     public RequirementFactory registerRequirement(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Requirement<T> requirement) {
 
         identifier = plugin.getName() + "." + identifier;
-        if (requirements.containsKey(identifier)) {
-            plugin.getLogger().warning("Requirement '" + identifier + "' is already registered!");
-            return this;
-        }
-        requirements.put(identifier, requirement);
-        ConfigBuilder.registerInformation(requirement);
-        RaidCraft.info("registered requirement: " + identifier, "requirement." + plugin.getName());
-        return this;
+        return registerGlobalRequirement(identifier, requirement);
     }
 
     public void unregisterRequirement(@NonNull JavaPlugin plugin, @NonNull String identifier) {
@@ -96,7 +106,7 @@ public final class RequirementFactory<T> {
 
     public boolean contains(String actionId) {
 
-        return requirements.keySet().contains(actionId) || requirementAliases.values().stream().collect(Collectors.toList()).contains(actionId);
+        return requirements.keySet().contains(actionId) || requirementAliases.keySet().contains(actionId);
     }
 
     public Optional<Requirement<T>> create(String id, @NonNull String requirement, @NonNull ConfigurationSection config) {
