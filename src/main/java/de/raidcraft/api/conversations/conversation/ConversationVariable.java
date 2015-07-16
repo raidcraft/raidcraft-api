@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 
 /**
  * @author mdoering
@@ -68,5 +69,5 @@ public interface ConversationVariable {
         }
     }
 
-    String replace(Conversation conversation);
+    String replace(Matcher matcher, Conversation conversation);
 }

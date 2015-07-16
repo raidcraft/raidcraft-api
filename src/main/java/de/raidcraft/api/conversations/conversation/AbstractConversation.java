@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author mdoering
@@ -168,8 +170,11 @@ public abstract class AbstractConversation extends DataMap implements Conversati
 
     protected String replaceVariable(String message) {
 
-        for (Map.Entry<String, ConversationVariable> entry : Conversations.getConversationVariables().entrySet()) {
-            message = message.replace(entry.getKey(), entry.getValue().replace(this));
+        for (Map.Entry<Pattern, ConversationVariable> entry : Conversations.getConversationVariables().entrySet()) {
+            Matcher matcher = entry.getKey().matcher(message);
+            while (matcher.find()) {
+                message = matcher.replaceFirst(entry.getValue().replace(matcher, this));
+            }
         }
         return message;
     }

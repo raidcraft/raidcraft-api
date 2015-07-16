@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * @author mdoering
@@ -33,7 +34,7 @@ public class Conversations {
     private static Map<String, ConfigurationSection> queuedConversations = new CaseInsensitiveMap<>();
     private static Map<String, Class<? extends ConversationTemplate>> queuedConversationTemplates = new CaseInsensitiveMap<>();
     private static Map<String, Class<? extends Conversation>> queuedConversationTypes = new CaseInsensitiveMap<>();
-    private static Map<String, ConversationVariable> queuedVariables = new CaseInsensitiveMap<>();
+    private static Map<Pattern, ConversationVariable> queuedVariables = new HashMap<>();
     private static Map<String, ConversationHostFactory<?>> queuedHostFactories = new HashMap<>();
 
     private Conversations() {}
@@ -201,15 +202,15 @@ public class Conversations {
     /**
      * Registers the given variable for all conversation replacements.
      * Registered variables will be replaced when the conversation text is written.
-     *  @param name of the variable
+     *  @param pattern of the variable
      * @param variable to register
      */
-    public static void registerConversationVariable(String name, ConversationVariable variable) {
+    public static void registerConversationVariable(Pattern pattern, ConversationVariable variable) {
 
         if (provider == null) {
-            queuedVariables.put(name, variable);
+            queuedVariables.put(pattern, variable);
         } else {
-            provider.registerConversationVariable(name, variable);
+            provider.registerConversationVariable(pattern, variable);
         }
     }
 
@@ -234,7 +235,7 @@ public class Conversations {
      *
      * @return registered variables
      */
-    public static Map<String, ConversationVariable> getConversationVariables() {
+    public static Map<Pattern, ConversationVariable> getConversationVariables() {
 
         if (provider == null) return new HashMap<>();
         return provider.getConversationVariables();

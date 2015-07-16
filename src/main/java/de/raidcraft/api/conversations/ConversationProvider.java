@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * @author mdoering
@@ -239,17 +240,17 @@ public interface ConversationProvider {
      * Registers the given variable for all conversation replacements.
      * Registered variables will be replaced when the conversation text is written.
      *
-     * @param name of the variable
+     * @param pattern of the variable
      * @param variable to register
      */
-    void registerConversationVariable(String name, ConversationVariable variable);
+    void registerConversationVariable(Pattern pattern, ConversationVariable variable);
 
     /**
      * Gets all registered conversation variables.
      *
      * @return registered variables
      */
-    Map<String, ConversationVariable> getConversationVariables();
+    Map<Pattern, ConversationVariable> getConversationVariables();
 
     /**
      * Loads the {@link ConversationTemplate} from the given config with the given identifier.
