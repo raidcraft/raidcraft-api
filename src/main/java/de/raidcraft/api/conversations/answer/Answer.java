@@ -23,6 +23,11 @@ public interface Answer extends ActionHolder, RequirementHolder {
         return Conversations.createAnswer(text, actions);
     }
 
+    static <T extends Answer> Optional<Answer> of(Class<T> answerClass, Action... actions) {
+
+        return Conversations.createAnswer(answerClass, actions);
+    }
+
     String DEFAULT_ANSWER_TEMPLATE = "default";
     String ANSWER_INPUT_TYPE = "input";
 

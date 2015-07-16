@@ -317,6 +317,11 @@ public class Conversations {
         return provider.createAnswer(text, actions);
     }
 
+    public static <T extends Answer> Optional<Answer> createAnswer(Class<T> answerClass, Action... actions) {
+
+        return provider.createAnswer(answerClass, actions);
+    }
+
     public static void endActiveConversation(Player player, ConversationEndReason reason) {
 
         if (provider == null) return;

@@ -78,6 +78,15 @@ public interface ConversationProvider {
     Optional<Answer> getAnswer(StageTemplate stageTemplate, ConfigurationSection config);
 
     /**
+     * Gets an answer based on its type. If not answer for this type is found an empty optional will be returned.
+     *
+     * @param type of the answer
+     * @param config of the answer
+     * @return created optional answer
+     */
+    Optional<Answer> getAnswer(String type, ConfigurationSection config);
+
+    /**
      * Gets a simple answer template with the given text.
      *
      * @param text of the answer
@@ -333,4 +342,6 @@ public interface ConversationProvider {
     Stage createStage(Conversation conversation, String text, Answer... answers);
 
     Answer createAnswer(String text, Action... actions);
+
+    <T extends Answer> Optional<Answer> createAnswer(Class<T> answerClass, Action... actions);
 }
