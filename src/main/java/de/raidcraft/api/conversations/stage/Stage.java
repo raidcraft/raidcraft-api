@@ -21,6 +21,11 @@ public interface Stage extends ActionHolder, RequirementHolder {
         return Conversations.createStage(conversation, text, answers);
     }
 
+    static Stage confirm(Conversation conversation, String text, Action... successActions) {
+
+        return confirm(conversation, text, false, successActions);
+    }
+
     static Stage confirm(Conversation conversation, String text, boolean abortToOldStage, Action... successActions) {
 
         Stage stage = Conversations.createStage(conversation, text)
