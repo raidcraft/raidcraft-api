@@ -35,7 +35,7 @@ public class FlowAnswer implements FlowExpression {
         config.set("text", getText());
         if (getInputVariable().isPresent()) {
             config.set("var", getInputVariable().get());
-            config.set("type", Answer.ANSWER_INPUT_TYPE);
+            config.set("type", Answer.DEFAULT_INPUT_TYPE);
         }
         return Conversations.getAnswer(template, config);
     }

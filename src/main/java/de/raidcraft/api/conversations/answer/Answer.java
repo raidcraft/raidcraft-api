@@ -29,7 +29,7 @@ public interface Answer extends ActionHolder, RequirementHolder {
     }
 
     String DEFAULT_ANSWER_TEMPLATE = "default";
-    String ANSWER_INPUT_TYPE = "input";
+    String DEFAULT_INPUT_TYPE = "input";
 
     String getType();
 
