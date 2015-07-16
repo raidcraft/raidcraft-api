@@ -32,6 +32,7 @@ public class Conversations {
     private static Map<String, Class<? extends StageTemplate>> queuedStages = new CaseInsensitiveMap<>();
     private static Map<String, ConfigurationSection> queuedConversations = new CaseInsensitiveMap<>();
     private static Map<String, Class<? extends ConversationTemplate>> queuedConversationTemplates = new CaseInsensitiveMap<>();
+    private static Map<String, Class<? extends Conversation>> queuedConversationTypes = new CaseInsensitiveMap<>();
     private static Map<String, ConversationVariable> queuedVariables = new CaseInsensitiveMap<>();
     private static Map<String, ConversationHostFactory<?>> queuedHostFactories = new HashMap<>();
 
@@ -47,6 +48,8 @@ public class Conversations {
         queuedStages.clear();
         queuedConversationTemplates.entrySet().forEach(entry -> provider.registerConversationTemplate(entry.getKey(), entry.getValue()));
         queuedConversationTemplates.clear();
+        queuedConversationTypes.entrySet().forEach(entry -> provider.registerConversationType(entry.getKey(), entry.getValue()));
+        queuedConversationTypes.clear();
         queuedVariables.entrySet().forEach(entry -> provider.registerConversationVariable(entry.getKey(), entry.getValue()));
         queuedVariables.clear();
         queuedHostFactories.entrySet().forEach(entry -> provider.registerHostFactory(entry.getKey(), entry.getValue()));
@@ -340,5 +343,19 @@ public class Conversations {
         if (activeConversation.isPresent()) {
             activeConversation.get().sendMessage(message.split("\\|"));
         }
+    }
+
+    public static void registerConversationType(String type, Class<? extends Conversation> conversation) {
+
+        if (provider == null) {
+            queuedConversationTypes.put(type, conversation);
+        } else {
+            provider.registerConversationType(type, conversation);
+        }
+    }
+
+    public static Conversation createConversation(String type, Player player, ConversationTemplate template, ConversationHost host) {
+
+        return provider.createConversation(type, player, template, host);
     }
 }

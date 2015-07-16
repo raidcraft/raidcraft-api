@@ -25,6 +25,13 @@ public interface ConversationTemplate extends RequirementHolder, Comparable<Conv
     String getIdentifier();
 
     /**
+     * Gets the conversation type that should be instaniated when starting a conversation.
+     *
+     * @return conversation type - defaults to {@link Conversation#DEFAULT_TYPE}
+     */
+    String getConversationType();
+
+    /**
      * Gets the priority of the conversation. A higher priority is relevant for the chosen
      * default conversation if multiple exist in a host and all requirements match.
      *

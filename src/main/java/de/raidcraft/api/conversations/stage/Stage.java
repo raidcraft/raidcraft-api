@@ -135,6 +135,12 @@ public interface Stage extends ActionHolder, RequirementHolder {
     Stage trigger(boolean executeActions);
 
     /**
+     * Aborts the execution of all currently running actions.
+     * Will cascade down into all active answers.
+     */
+    void abortActionExecution();
+
+    /**
      * Changes to the given stage, calling {@link Conversation#changeToStage(Stage)}
      *
      * @return this stage

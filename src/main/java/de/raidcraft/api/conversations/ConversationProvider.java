@@ -135,6 +135,26 @@ public interface ConversationProvider {
     Optional<ConversationTemplate> createConversationTemplate(String identifier, ConfigurationSection config);
 
     /**
+     * Registers the given Conversation Type with the {@link ConversationProvider}. The conversation will be
+     * instantiated from the {@link ConversationTemplate#getConversationType()} id.
+     *
+     * @param type name to register
+     * @param conversation to register
+     */
+    void registerConversationType(String type, Class<? extends Conversation> conversation);
+
+    /**
+     * Creates a new {@link Conversation} for the given ConversationType.
+     * If the given type is not found an error message will be printed to the log and the default conversation type will be used.
+     *
+     * @param player that owns the conversation
+     * @param template to create conversation from
+     * @param host to create conversation with
+     * @return created conversation
+     */
+    Conversation createConversation(String type, Player player, ConversationTemplate template, ConversationHost host);
+
+    /**
      * Registers the host factory with the {@link ConversationProvider} allowing {@link ConversationHost}s to be created.
      * {@link ConversationHostFactory}s can be factories for signs, npcs, etc.
      *

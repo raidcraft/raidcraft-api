@@ -2,6 +2,7 @@ package de.raidcraft.api.conversations.conversation;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.config.DataMap;
+import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.events.RCConversationAbortedEvent;
 import de.raidcraft.api.conversations.events.RCConversationChangedStageEvent;
@@ -13,6 +14,7 @@ import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
@@ -34,7 +36,9 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     private final ConversationHost host;
     private final Map<String, StageTemplate> stages = new CaseInsensitiveMap<>();
     private final Stack<Stage> stageHistory = new Stack<>();
+    private String lastInput;
     private Stage currentStage;
+    private boolean abortActions = false;
 
     public AbstractConversation(Player owner, ConversationTemplate conversationTemplate, ConversationHost conversationHost) {
 
@@ -45,6 +49,13 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     }
 
     protected abstract void load();
+
+    @Override
+    public void abortActionExection() {
+
+        abortActions = true;
+        getCurrentStage().ifPresent(Stage::abortActionExecution);
+    }
 
     @Override
     public List<StageTemplate> getStages() {
@@ -132,6 +143,38 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     }
 
     @Override
+    public Optional<String> getLastInput() {
+
+        return Optional.ofNullable(lastInput);
+    }
+
+    @Override
+    public Conversation sendMessage(String... lines) {
+
+        for (String line : lines) {
+            getOwner().sendMessage(replaceVariable(line));
+        }
+        return this;
+    }
+
+    @Override
+    public Conversation sendMessage(FancyMessage... lines) {
+
+        for (FancyMessage line : lines) {
+            line.send(getOwner());
+        }
+        return this;
+    }
+
+    protected String replaceVariable(String message) {
+
+        for (Map.Entry<String, ConversationVariable> entry : Conversations.getConversationVariables().entrySet()) {
+            message = message.replace(entry.getKey(), entry.getValue().replace(this));
+        }
+        return message;
+    }
+
+    @Override
     public boolean start() {
 
         if (getTemplate().isPersistant()) load();
@@ -142,7 +185,9 @@ public abstract class AbstractConversation extends DataMap implements Conversati
             RaidCraft.callEvent(event);
             if (event.isCancelled()) return false;
             setCurrentStage(stage.get());
-            return triggerCurrentStage();
+            if (triggerCurrentStage()) {
+                Conversations.setActiveConversation(this);
+            }
         }
         return false;
     }
@@ -154,6 +199,17 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         if (!currentStage.isPresent()) {
             return Optional.empty();
         }
+        switch (reason) {
+            case ERROR:
+            case DEATH:
+            case PLAYER_QUIT:
+            case OUT_OF_RANGE:
+            case PLAYER_CHANGED_WORLD:
+            case START_NEW_CONVERSATION:
+            case PLAYER_ABORT:
+                abortActionExection();
+        }
+        Conversations.removeActiveConversation(getOwner());
         RaidCraft.callEvent(new RCConversationEndedEvent(this, reason));
         return currentStage;
     }
@@ -166,6 +222,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
             return Optional.empty();
         }
         if (getTemplate().isPersistant()) save();
+        Conversations.removeActiveConversation(getOwner());
         RaidCraft.callEvent(new RCConversationAbortedEvent(this, reason));
         return currentStage;
     }

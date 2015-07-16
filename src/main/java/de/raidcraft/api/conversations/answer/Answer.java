@@ -145,6 +145,12 @@ public interface Answer extends ActionHolder, RequirementHolder {
      *
      * @param conversation to process
      * @param input to process
+     * @return true if the answer processed the input and feels responsible to take actions
      */
-    void processInput(Conversation conversation, String input);
+    boolean processInput(Conversation conversation, String input);
+
+    /**
+     * Aborts the execution of all currently running actions.
+     */
+    void abortActionExecution();
 }

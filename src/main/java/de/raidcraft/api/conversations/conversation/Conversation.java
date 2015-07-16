@@ -17,6 +17,8 @@ import java.util.Stack;
  */
 public interface Conversation extends ConfigurationSection {
 
+    String DEFAULT_TYPE = "default";
+
     /**
      * Gets the unique identifier of the conversation.
      *
@@ -54,6 +56,12 @@ public interface Conversation extends ConfigurationSection {
      * @return true if the stage was triggerd, false if no stage was found
      */
     boolean triggerCurrentStage();
+
+    /**
+     * Aborts the execution of all currently running actions.
+     * Will cascade down into the current active stage and all answers.
+     */
+    void abortActionExection();
 
     /**
      * Gets the current active stage of the conversation.
@@ -131,6 +139,20 @@ public interface Conversation extends ConfigurationSection {
      * @return executed answer
      */
     Optional<Answer> answer(String answer, boolean executeActions);
+
+    /**
+     * Gets the last input of this conversation if an input answer was answered.
+     *
+     * @return optional input if input answer was answered
+     */
+    Optional<String> getLastInput();
+
+    /**
+     * Sets the last input of this conversation.
+     *
+     * @param input to set
+     */
+    void setLastInput(String input);
 
     /**
      * @see Stage#changePage(int)
