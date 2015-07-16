@@ -1,6 +1,7 @@
 package de.raidcraft.api.action.action;
 
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.GlobalAction;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
@@ -89,6 +90,13 @@ public interface Action<T> extends ActionConfigGenerator {
                 conversation.set(key, value);
             }
         };
+    }
+
+    static Action<?> text(String text) {
+
+        Action<Player> action = GlobalAction.TEXT.getAction();
+        action.withArgs("text", text);
+        return action;
     }
 
     default String getIdentifier() {

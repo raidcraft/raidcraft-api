@@ -333,4 +333,12 @@ public class Conversations {
         if (provider == null) return Optional.empty();
         return provider.createConversationHost(config);
     }
+
+    public static void message(Player player, String message) {
+
+        Optional<Conversation> activeConversation = getActiveConversation(player);
+        if (activeConversation.isPresent()) {
+            activeConversation.get().sendMessage(message.split("\\|"));
+        }
+    }
 }

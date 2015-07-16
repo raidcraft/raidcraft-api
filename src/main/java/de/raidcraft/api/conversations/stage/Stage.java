@@ -21,16 +21,23 @@ public interface Stage extends ActionHolder, RequirementHolder {
         return Conversations.createStage(conversation, text, answers);
     }
 
-    static Stage confirm(Conversation conversation, String text, Action... successActions) {
+    static Stage confirm(Conversation conversation, String text, boolean abortToOldStage, Action... successActions) {
 
-        return Conversations.createStage(conversation, text)
+        Stage stage = Conversations.createStage(conversation, text)
                 .addAnswer(
                         Answer.of("Ja, ich bin mir sicher.")
-                                .addActions(successActions))
-                .addAnswer(
-                        Answer.of("Nein, ich habe es mir anders überlegt.")
-                                .addAction(Action.endConversation(ConversationEndReason.ENDED))
-                );
+                                .addActions(successActions));
+        if (abortToOldStage) {
+            stage.addAnswer(
+                    Answer.of("Nein, zeig mir nochmal meine Optionen.")
+                            .addAction(Action.changeStage(conversation.getStageHistory().peek())));
+        } else {
+            stage.addAnswer(
+                    Answer.of("Nein, ich habe es mir anders überlegt.")
+                            .addAction(Action.endConversation(ConversationEndReason.ENDED))
+            );
+        }
+        return stage;
     }
 
     default String getIdentifier() {
