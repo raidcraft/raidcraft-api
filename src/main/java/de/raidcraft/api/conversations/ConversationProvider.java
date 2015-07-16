@@ -306,6 +306,16 @@ public interface ConversationProvider {
     Optional<Conversation> startConversation(Player player, ConversationHost<?> conversationHost);
 
     /**
+     * Starts the given conversation directly for the player using the player as the host.
+     * So the conversation will never end because of range problems.
+     *
+     * @param player to start conversation for
+     * @param conversation to start
+     * @return started conversation
+     */
+    Optional<Conversation> startConversation(Player player, String conversation);
+
+    /**
      * Gets an active conversation for the player if any are found.
      *
      * @param player to get active conversation for

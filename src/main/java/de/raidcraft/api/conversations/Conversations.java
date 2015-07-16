@@ -289,6 +289,12 @@ public class Conversations {
         return provider.startConversation(player, conversationHost);
     }
 
+    public static Optional<Conversation> startConversation(Player player, String conversation) {
+
+        if (provider == null) return Optional.empty();
+        return provider.startConversation(player, conversation);
+    }
+
     public static Optional<ConversationHost<?>> createConversationHost(String identifier, String type, Location location) {
 
         if (provider == null) return Optional.empty();
