@@ -2,7 +2,9 @@ package de.raidcraft.api.random;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.util.CaseInsensitiveMap;
+import de.raidcraft.util.ConfigUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -54,6 +56,8 @@ public class RDS {
         object.setUnique(config.getBoolean("unique", false));
         object.setExcludeFromRandom(config.getBoolean("exclude-from-random", false));
         object.setProbability(config.getDouble("probability", 1));
+        object.setRequirements(ActionAPI.createRequirements(
+                ConfigUtil.getFileName(config).replace("/", ".").replace("\\", "."), config.getConfigurationSection("requirements")));
         if (object instanceof RDSTable) {
             ((RDSTable) object).setCount(config.getInt("count", 1));
         }
@@ -84,6 +88,7 @@ public class RDS {
         table.setUnique(config.getBoolean("unique", false));
         table.setExcludeFromRandom(config.getBoolean("exclude-from-random", false));
         table.setProbability(config.getDouble("probability", 1));
+        table.setRequirements(ActionAPI.createRequirements(name, config.getConfigurationSection("requirements")));
         table.setCount(config.getInt("count", 1));
         registeredTables.get(plugin.getName()).put(name, table);
         plugin.getLogger().info("Registered loot table (" + table.getClass().getSimpleName() + "): " + name);

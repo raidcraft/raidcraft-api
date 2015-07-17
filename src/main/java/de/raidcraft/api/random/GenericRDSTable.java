@@ -148,6 +148,7 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
                 // Find the objects, that can be hit now
                 // This is all objects, that are Enabled
                 Collection<RDSObject> dropables = getContents().stream()
+                        .filter(object -> !object.isExcludeFromRandom())
                         .filter(RDSObject::isEnabled)
                         .collect(Collectors.toList());
 

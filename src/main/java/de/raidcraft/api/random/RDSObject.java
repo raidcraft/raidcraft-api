@@ -1,11 +1,15 @@
 package de.raidcraft.api.random;
 
+import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.api.action.requirement.RequirementHolder;
+
 import java.util.Collection;
+import java.util.List;
 
 /**
  * This interface contains the properties an object must have to be a valid rds result object.
  */
-public interface RDSObject {
+public interface RDSObject extends RequirementHolder {
 
     /**
      * Whether this object shall be looted or not.
@@ -35,6 +39,8 @@ public interface RDSObject {
     RDSTable getTable();
 
     void setTable(RDSTable table);
+
+    void setRequirements(List<Requirement<?>> requirements);
 
     /**
      * Occurs before all the probabilities of all items of the current RDSTable are summed up together.

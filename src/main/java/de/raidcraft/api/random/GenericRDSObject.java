@@ -1,6 +1,10 @@
 package de.raidcraft.api.random;
 
+import de.raidcraft.api.action.requirement.Requirement;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Silthus
@@ -14,6 +18,7 @@ public class GenericRDSObject implements RDSObject {
     private boolean unique;
     private double probability;
     private RDSTable table;
+    private List<Requirement<?>> requirements = new ArrayList<>();
 
     public GenericRDSObject() {
 
