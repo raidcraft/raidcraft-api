@@ -137,15 +137,8 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
         getContents().stream()
                 .filter(entry -> entry.isAlways() && entry.isEnabled())
                 .forEach(entry -> addToResult(result, entry));
-
-        // Now calculate the real dropcount, this is the table's count minus the
-        // number of Always-drops.
-        // It is possible, that the remaining drops go below zero, in which case
-        // no other objects will be added to the result here.
-        long alwaysCount = getContents().stream()
-                .filter(entry -> entry.isAlways() && entry.isEnabled())
-                .count();
-        long realDropCount = getCount() - alwaysCount;
+        
+        long realDropCount = getCount();
 
         // Continue only, if there is a Count left to be processed
         if (realDropCount > 0)
@@ -153,9 +146,9 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
             for (int dropCount = 0; dropCount < realDropCount; dropCount++)
             {
                 // Find the objects, that can be hit now
-                // This is all objects, that are Enabled and that have not already been added through the Always flag
+                // This is all objects, that are Enabled
                 Collection<RDSObject> dropables = getContents().stream()
-                        .filter(entry -> entry.isEnabled() && !entry.isAlways())
+                        .filter(RDSObject::isEnabled)
                         .collect(Collectors.toList());
 
                 // This is the magic random number that will decide, which object is hit now

@@ -10,6 +10,7 @@ public class GenericRDSObject implements RDSObject {
 
     private boolean enabled;
     private boolean always;
+    private boolean excludeFromRandom;
     private boolean unique;
     private double probability;
     private RDSTable table;

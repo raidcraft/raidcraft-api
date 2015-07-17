@@ -20,6 +20,10 @@ public interface RDSObject {
 
     void setAlways(boolean always);
 
+    boolean isExcludeFromRandom();
+
+    void setExcludeFromRandom(boolean excludeFromRandom);
+
     boolean isUnique();
 
     void setUnique(boolean unique);

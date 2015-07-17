@@ -42,24 +42,30 @@ public class RDS {
         registeredFactories.remove(name);
     }
 
-    public static Optional<RDSObject> createObject(String name, ConfigurationSection config) {
+    public static Optional<RDSObject> createObject(String type, ConfigurationSection config, boolean load) {
 
-        Optional<RDSObjectFactory> creator = getObjectCreator(name);
+        Optional<RDSObjectFactory> creator = getObjectCreator(type);
         if (!creator.isPresent()) return Optional.empty();
         ConfigurationSection args = config.isConfigurationSection("args") ? config.getConfigurationSection("args") : new MemoryConfiguration();
-        RDSObject object = creator.get()
-                .createInstance(args);
+        RDSObject object = creator.get().createInstance(args);
+
         object.setEnabled(config.getBoolean("enabled", true));
         object.setAlways(config.getBoolean("always", false));
         object.setUnique(config.getBoolean("unique", false));
+        object.setExcludeFromRandom(config.getBoolean("exclude-from-random", false));
         object.setProbability(config.getDouble("probability", 1));
         if (object instanceof RDSTable) {
             ((RDSTable) object).setCount(config.getInt("count", 1));
         }
-        if (object instanceof Loadable) {
+        if (load && object instanceof Loadable) {
             ((Loadable) object).load(args);
         }
         return Optional.ofNullable(object);
+    }
+
+    public static Optional<RDSObject> createObject(String type, ConfigurationSection config) {
+
+        return createObject(type, config, true);
     }
 
     public static Optional<RDSObjectFactory> getObjectCreator(String name) {
@@ -76,6 +82,7 @@ public class RDS {
         table.setEnabled(config.getBoolean("enabled", true));
         table.setAlways(config.getBoolean("always", false));
         table.setUnique(config.getBoolean("unique", false));
+        table.setExcludeFromRandom(config.getBoolean("exclude-from-random", false));
         table.setProbability(config.getDouble("probability", 1));
         table.setCount(config.getInt("count", 1));
         registeredTables.get(plugin.getName()).put(name, table);
