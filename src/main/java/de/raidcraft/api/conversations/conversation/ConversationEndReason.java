@@ -18,7 +18,8 @@ public enum ConversationEndReason {
     PLAYER_ABORT("Die Unterhaltung wurde abgerochen."),
     PLAYER_QUIT("Die Unterhaltung wurde abgebrochen da Du das Spiel verlassen hast."),
     PLAYER_CHANGED_WORLD("Die Unterhaltung wurde abgebrochen da Du die Welt gewechselt hast."),
-    ERROR("Error occured! Please see console or inform an admin...");
+    ERROR("Error occured! Please see console or inform an admin..."),
+    SILENT("");
 
     @Getter
     @Setter
