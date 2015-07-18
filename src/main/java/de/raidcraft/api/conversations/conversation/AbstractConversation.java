@@ -11,7 +11,6 @@ import de.raidcraft.api.conversations.events.RCStartConversationEvent;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
-import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import mkremins.fanciful.FancyMessage;
@@ -36,7 +35,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     private final Player owner;
     private final ConversationTemplate template;
     private final ConversationHost host;
-    private final Map<String, StageTemplate> stages = new CaseInsensitiveMap<>();
+    private final Map<String, StageTemplate> stages;
     private final Stack<Stage> stageHistory = new Stack<>();
     private String lastInput;
     private Stage currentStage;
@@ -48,6 +47,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         this.owner = owner;
         this.template = conversationTemplate;
         this.host = conversationHost;
+        this.stages = conversationTemplate.getStages();
     }
 
     protected abstract void load();

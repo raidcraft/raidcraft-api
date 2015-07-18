@@ -7,7 +7,7 @@ import de.raidcraft.api.conversations.stage.StageTemplate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -60,7 +60,7 @@ public interface ConversationTemplate extends RequirementHolder, Comparable<Conv
      *
      * @return registered stages
      */
-    List<StageTemplate> getStages();
+    Map<String, StageTemplate> getStages();
 
     /**
      * Gets the given stage by its name.
