@@ -24,7 +24,7 @@ public class SimpleAnswer implements Answer {
     private final List<Requirement<?>> requirements;
     private Optional<FancyMessage> message = Optional.empty();
     private Optional<String> text;
-    private ChatColor color;
+    private ChatColor color = ChatColor.GOLD;
     private boolean abortActions = false;
 
     public SimpleAnswer(String type, String text, List<Action<?>> actions, List<Requirement<?>> requirements) {

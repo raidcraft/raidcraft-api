@@ -20,6 +20,8 @@ public interface ConversationHost<T> {
 
     T getType();
 
+    Optional<String> getName();
+
     /**
      * Loads additional information from the configuration if present.
      * This could be equipment, or sign positioning, etc.
