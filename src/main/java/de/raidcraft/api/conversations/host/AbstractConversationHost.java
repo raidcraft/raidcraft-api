@@ -1,6 +1,7 @@
 package de.raidcraft.api.conversations.host;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
@@ -8,6 +9,7 @@ import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -40,13 +42,27 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     public void load(ConfigurationSection config) {
 
         if (config.isSet("default-conv")) {
-            Optional<ConversationTemplate> template = Conversations.getConversationTemplate(config.getString("default-conv"));
+            String conf = config.getString("default-conv");
+            Optional<ConversationTemplate> template = loadDefaultConv(conf);
             if (template.isPresent()) {
                 addDefaultConversation(template.get());
             } else {
-                RaidCraft.LOGGER.warning("Could not find default conversation " + config.getString("default-conv") + " for " + ConfigUtil.getFileName(config));
+                // lets delay the loading of the default config once to make sure everything is loaded
+                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> {
+                    Optional<ConversationTemplate> defaultConv = loadDefaultConv(conf);
+                    if (defaultConv.isPresent()) {
+                        addDefaultConversation(defaultConv.get());
+                    } else {
+                        RaidCraft.LOGGER.warning("Could not find default conversation " + conf + " for " + ConfigUtil.getFileName(config));
+                    }
+                }, 5L);
             }
         }
+    }
+
+    private Optional<ConversationTemplate> loadDefaultConv(String defaultConv) {
+
+        return Conversations.getConversationTemplate(defaultConv);
     }
 
     @Override
