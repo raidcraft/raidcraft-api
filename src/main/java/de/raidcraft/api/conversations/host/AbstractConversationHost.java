@@ -27,7 +27,7 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     private final T type;
     private final List<ConversationTemplate> defaultConversations = new ArrayList<>();
     private final Map<UUID, List<ConversationTemplate>> playerConversations = new HashMap<>();
-    private Optional<String> name;
+    private Optional<String> name = Optional.empty();
 
     public void setName(String name) {
 
