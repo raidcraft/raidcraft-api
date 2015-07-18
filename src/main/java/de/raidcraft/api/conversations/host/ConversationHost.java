@@ -129,4 +129,9 @@ public interface ConversationHost<T> {
      * @return started conversation
      */
     Optional<Conversation> startConversation(Player player, String conversation);
+
+    /**
+     * Deletes the given Conversation Host despawning it.
+     */
+    void delete();
 }
