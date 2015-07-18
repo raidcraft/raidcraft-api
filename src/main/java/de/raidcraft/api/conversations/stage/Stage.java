@@ -84,7 +84,7 @@ public interface Stage extends ActionHolder, RequirementHolder {
      * @param input to process
      * @return optional answer
      */
-    Optional<Answer> getAnswer(String input);
+    Optional<Answer> processAnswer(String input);
 
     /**
      * Gets all answers of this stage.

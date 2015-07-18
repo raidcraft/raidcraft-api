@@ -125,9 +125,9 @@ public interface Conversation extends ConfigurationSection {
      * @param answer to process
      * @return executed answer
      */
-    default Optional<Answer> answer(String answer) {
+    default Optional<Answer> answer(Stage stage, String answer) {
 
-        return answer(answer, true);
+        return answer(stage, answer, true);
     }
 
     /**
@@ -138,7 +138,7 @@ public interface Conversation extends ConfigurationSection {
      * @param executeActions true if actions should be processed
      * @return executed answer
      */
-    Optional<Answer> answer(String answer, boolean executeActions);
+    Optional<Answer> answer(Stage stage, String answer, boolean executeActions);
 
     /**
      * Gets the last input of this conversation if an input answer was answered.
