@@ -4,6 +4,8 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.global.DoorAction;
 import de.raidcraft.api.action.action.global.SetBlockAction;
+import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.economy.AccountType;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
@@ -199,17 +201,31 @@ public enum GlobalAction {
                         "npc: name"
                 }
         )
+        @SuppressWarnings("unchecked")
         public void accept(Player player, ConfigurationSection config) {
 
+            Optional<Conversation> activeConversation = Conversations.getActiveConversation(player);
+            String npc;
+            if (activeConversation.isPresent()) {
+                Optional<String> name = activeConversation.get().getHost().getName();
+                npc = name.orElse(null);
+            } else {
+                npc = config.getString("npc");
+            }
             String[] text = config.getString("text").split("\\|");
             for (String line : text) {
-                if (config.isSet("npc")) {
-                    player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GOLD
-                            + config.getString("npc") + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + ": "
-                            + ChatColor.AQUA + line
-                    );
+                String message;
+                if (npc != null) {
+                    message = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD
+                                    + npc + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + ": "
+                                    + ChatColor.AQUA + line;
                 } else {
-                    player.sendMessage(ChatColor.AQUA + line);
+                    message = ChatColor.AQUA + line;
+                }
+                if (activeConversation.isPresent()) {
+                    activeConversation.get().sendMessage(message);
+                } else {
+                    player.sendMessage(message);
                 }
             }
         }
