@@ -1,8 +1,10 @@
 package de.raidcraft.api.conversations.host;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
+import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,8 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
             Optional<ConversationTemplate> template = Conversations.getConversationTemplate(config.getString("default-conv"));
             if (template.isPresent()) {
                 addDefaultConversation(template.get());
+            } else {
+                RaidCraft.LOGGER.warning("Could not find default conversation " + config.getString("default-conv") + " for " + ConfigUtil.getFileName(config));
             }
         }
     }
