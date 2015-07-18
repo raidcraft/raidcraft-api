@@ -23,14 +23,14 @@ public class SimpleAnswer implements Answer {
     private final List<Action<?>> actions;
     private final List<Requirement<?>> requirements;
     private Optional<FancyMessage> message = Optional.empty();
-    private String text;
+    private Optional<String> text;
     private ChatColor color;
     private boolean abortActions = false;
 
     public SimpleAnswer(String type, String text, List<Action<?>> actions, List<Requirement<?>> requirements) {
 
         this.type = type;
-        this.text = text;
+        this.text = Optional.ofNullable(text);
         this.actions = actions == null ? new ArrayList<>() : actions;
         this.requirements = requirements == null ? new ArrayList<>() : requirements;
     }
@@ -69,7 +69,7 @@ public class SimpleAnswer implements Answer {
     @Override
     public Answer text(String text) {
 
-        this.text = text;
+        this.text = Optional.ofNullable(text);
         return this;
     }
 

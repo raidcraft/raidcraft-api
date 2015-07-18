@@ -50,7 +50,7 @@ public interface Answer extends ActionHolder, RequirementHolder {
      *
      * @return displayed answer
      */
-    String getText();
+    Optional<String> getText();
 
     /**
      * Sets the text of the answer.
