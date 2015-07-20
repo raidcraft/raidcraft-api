@@ -441,8 +441,8 @@ public enum GlobalAction {
         }
     });
 
-    private static final float DEFAULT_WALK_SPEED = 0.1F;
-    private static final float DEFAULT_FLY_SPEED = 0.05F;
+    private static final float DEFAULT_WALK_SPEED = 0.1F * 2.0F;
+    private static final float DEFAULT_FLY_SPEED = 0.05F * 2.0F;
 
     private final String id;
     private final Action<Player> action;
