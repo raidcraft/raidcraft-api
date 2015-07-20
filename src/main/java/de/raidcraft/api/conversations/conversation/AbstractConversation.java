@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
  * @author mdoering
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = {"owner", "template", "host"})
 public abstract class AbstractConversation extends DataMap implements Conversation {
 
     private final Player owner;

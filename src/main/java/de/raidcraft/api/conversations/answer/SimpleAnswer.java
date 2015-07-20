@@ -5,6 +5,7 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,6 +18,7 @@ import java.util.Optional;
  * @author mdoering
  */
 @Data
+@EqualsAndHashCode(callSuper = false, of = {"type", "text", "actions", "requirements"})
 public class SimpleAnswer implements Answer {
 
     private final String type;

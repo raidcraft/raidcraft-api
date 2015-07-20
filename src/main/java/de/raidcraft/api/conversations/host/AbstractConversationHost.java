@@ -6,6 +6,7 @@ import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,6 +24,7 @@ import java.util.UUID;
  */
 @Data
 @RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = false, of = {"uniqueId"})
 public abstract class AbstractConversationHost<T> implements ConversationHost<T> {
 
     private final UUID uniqueId;
