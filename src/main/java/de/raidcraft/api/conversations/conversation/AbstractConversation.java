@@ -39,7 +39,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     private final Stack<Stage> stageHistory = new Stack<>();
     private String lastInput;
     private Stage currentStage;
-    private boolean abortActions = false;
+    private boolean abortActionExecution = false;
 
     public AbstractConversation(Player owner, ConversationTemplate conversationTemplate, ConversationHost conversationHost) {
 
@@ -55,7 +55,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     @Override
     public void abortActionExection() {
 
-        abortActions = true;
+        abortActionExecution = true;
         getCurrentStage().ifPresent(Stage::abortActionExecution);
     }
 

@@ -133,15 +133,16 @@ public class SimpleAnswer implements Answer {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void executeActions(Conversation conversation) {
 
-        for (Action<Object> action : getActions(Conversation.class)) {
+        for (Action<?> action : getActions()) {
             if (abortActions) break;
-            action.accept(conversation);
-        }
-        for (Action<Object> action : getActions(Player.class)) {
-            if (abortActions) break;
-            action.accept(conversation.getOwner());
+            if (ActionAPI.matchesType(action, Player.class)) {
+                ((Action<Player>) action).accept(conversation.getOwner());
+            } else if (ActionAPI.matchesType(action, Conversation.class)) {
+                ((Action<Conversation>) action).accept(conversation);
+            }
         }
         abortActions = false;
     }

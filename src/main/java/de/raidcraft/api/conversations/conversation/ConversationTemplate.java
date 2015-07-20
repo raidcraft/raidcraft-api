@@ -1,5 +1,6 @@
 package de.raidcraft.api.conversations.conversation;
 
+import de.raidcraft.api.action.action.ActionHolder;
 import de.raidcraft.api.action.requirement.RequirementHolder;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.host.ConversationHost;
@@ -13,7 +14,7 @@ import java.util.Optional;
 /**
  * @author mdoering
  */
-public interface ConversationTemplate extends RequirementHolder, Comparable<ConversationTemplate> {
+public interface ConversationTemplate extends RequirementHolder, ActionHolder, Comparable<ConversationTemplate> {
 
     String DEFAULT_CONVERSATION_TEMPLATE = "default";
 

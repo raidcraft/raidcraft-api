@@ -64,6 +64,13 @@ public interface Conversation extends ConfigurationSection {
     void abortActionExection();
 
     /**
+     * True if action execution of this conversation should be aborted.
+     *
+     * @return true if execution of actions should be aborted
+     */
+    boolean isAbortActionExecution();
+
+    /**
      * Gets the current active stage of the conversation.
      *
      * @return current stage
