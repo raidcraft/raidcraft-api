@@ -103,9 +103,13 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     }
 
     @Override
-    public Optional<Answer> answer(Stage stage, String answer, boolean executeActions) {
+    public Optional<Answer> answer(String answer, boolean executeActions) {
 
-        Optional<Answer> optional = stage.processAnswer(answer);
+        Optional<Stage> stage = getCurrentStage();
+        if (!stage.isPresent()) {
+            return Optional.empty();
+        }
+        Optional<Answer> optional = stage.get().processAnswer(answer);
         if (optional.isPresent() && executeActions) {
             optional.get().executeActions(this);
         }
