@@ -227,6 +227,9 @@ public abstract class AbstractConversation extends DataMap implements Conversati
             return Optional.empty();
         }
         if (getTemplate().isPersistant()) save();
+
+        abortActionExection();
+
         Conversations.removeActiveConversation(getOwner());
         RaidCraft.callEvent(new RCConversationAbortedEvent(this, reason));
         return currentStage;
