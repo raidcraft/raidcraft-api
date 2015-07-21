@@ -49,6 +49,14 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
     boolean isPersistant();
 
     /**
+     * If the conversation is auto ending the conversation will silently end when no extra stages
+     * besides the start stage are defined.
+     *
+     * @return true if conversation will auto end
+     */
+    boolean isAutoEnding();
+
+    /**
      * Gets the {@link ConfigurationSection} that defines special host settings that are defined in
      * the {@link ConversationTemplate}.
      *
