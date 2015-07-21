@@ -11,11 +11,11 @@ import org.bukkit.event.HandlerList;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RCStartConversationEvent extends RCConversationEvent implements Cancellable {
+public class RCConversationStartEvent extends RCConversationEvent implements Cancellable {
 
     private boolean cancelled;
 
-    public RCStartConversationEvent(Conversation conversation) {
+    public RCConversationStartEvent(Conversation conversation) {
 
         super(conversation);
     }

@@ -7,7 +7,7 @@ import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.events.RCConversationAbortedEvent;
 import de.raidcraft.api.conversations.events.RCConversationChangedStageEvent;
 import de.raidcraft.api.conversations.events.RCConversationEndedEvent;
-import de.raidcraft.api.conversations.events.RCStartConversationEvent;
+import de.raidcraft.api.conversations.events.RCConversationStartEvent;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
@@ -186,12 +186,13 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         Optional<Stage> stage = getCurrentStage();
         if (!stage.isPresent()) stage = getStage(StageTemplate.START_STAGE);
         if (stage.isPresent()) {
-            RCStartConversationEvent event = new RCStartConversationEvent(this);
+            RCConversationStartEvent event = new RCConversationStartEvent(this);
             RaidCraft.callEvent(event);
             if (event.isCancelled()) return false;
             setCurrentStage(stage.get());
             if (triggerCurrentStage()) {
                 Conversations.setActiveConversation(this);
+                return true;
             }
         }
         return false;
