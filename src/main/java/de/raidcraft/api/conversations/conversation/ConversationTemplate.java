@@ -101,4 +101,14 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
      * @return started conversation
      */
     Conversation startConversation(Player player, ConversationHost host);
+
+    /**
+     * Starts this conversation for the given player and host with the given {@link StageTemplate}.
+     *
+     * @param player to start conversation for
+     * @param host that is hosting this conversation
+     * @param stage to start at
+     * @return started conversation
+     */
+    Conversation startConversation(Player player, ConversationHost host, StageTemplate stage);
 }
