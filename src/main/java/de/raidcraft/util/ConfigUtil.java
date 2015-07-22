@@ -65,7 +65,7 @@ public class ConfigUtil {
         String[] paths = basePath.split("\\.");
         String previousBasePath = "";
         for (int i = 0; i < paths.length - 1; i++) {
-            previousBasePath += paths;
+            previousBasePath += paths[i];
         }
         for (String key : section.getKeys(true)) {
             if (section.isString(key)) {
