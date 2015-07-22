@@ -62,7 +62,8 @@ public abstract class Trigger implements TriggerConfigGenerator {
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
                             // first lets check all predicates and if we can execute at all
-                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate)).collect(Collectors.toList());
+                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
+                    .collect(Collectors.toList());
             list.stream().filter(wrapper -> wrapper.getTriggerDelay() > 0)
                     .forEach(wrapper -> Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> {
                         if (wrapper.getTriggerListener().processTrigger(triggeringEntity)) {
