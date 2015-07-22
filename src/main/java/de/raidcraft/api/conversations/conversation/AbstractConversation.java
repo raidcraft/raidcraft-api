@@ -190,9 +190,12 @@ public abstract class AbstractConversation extends DataMap implements Conversati
             RaidCraft.callEvent(event);
             if (event.isCancelled()) return false;
             setCurrentStage(stage.get());
+            Conversations.setActiveConversation(this);
             if (triggerCurrentStage()) {
-                Conversations.setActiveConversation(this);
                 return true;
+            } else {
+                Conversations.removeActiveConversation(getOwner());
+                return false;
             }
         }
         return false;
