@@ -34,7 +34,9 @@ import java.util.regex.Pattern;
 
 public class ConfigUtil {
 
-    private final static Pattern pattern = Pattern.compile(".*#([\\w\\d\\s]+):([\\w\\d\\s]+)#.*");
+    private final static Pattern VARIABLE_PATTERN = Pattern.compile(".*#([\\w\\d\\s]+):([\\w\\d\\s]+)#.*");
+    private final static Pattern THIS_PATH_PATTERN = Pattern.compile("(this\\.)");
+    private final static Pattern PREVIOUS_FOLDER_PATTERN = Pattern.compile("(\\.\\./)*");
     private static final List<TypeConversion> typeConversions = new ArrayList<>(
             Arrays.asList(new SameTypeConversion(),
                     new StringTypeConversion(),
@@ -80,8 +82,9 @@ public class ConfigUtil {
 
     public static String replacePathReference(String value, String basePath) {
 
-        if (value.startsWith("this.")) {
-            value = value.replaceFirst("this", basePath);
+        Matcher matcher = THIS_PATH_PATTERN.matcher(value);
+        if (matcher.matches()) {
+            value = matcher.replaceAll(basePath + ".");
         } else if (value.startsWith("../")) {
             String[] sections = basePath.split("\\.");
             basePath = "";
@@ -105,7 +108,7 @@ public class ConfigUtil {
         if (basePath.startsWith(".")) {
             basePath = basePath.replaceFirst("\\.", "");
         }
-        Matcher matcher = pattern.matcher(value);
+        Matcher matcher = VARIABLE_PATTERN.matcher(value);
         if (matcher.matches()) {
             String type = matcher.group(1);
             String name = replacePathReference(matcher.group(2), basePath);
