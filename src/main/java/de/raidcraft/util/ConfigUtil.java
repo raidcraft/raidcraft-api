@@ -65,7 +65,7 @@ public class ConfigUtil {
         String[] paths = basePath.split("\\.");
         String previousBasePath = "";
         for (int i = 0; i < paths.length - 1; i++) {
-            previousBasePath += paths[i];
+            previousBasePath += paths[i] + ".";
         }
         for (String key : section.getKeys(true)) {
             if (section.isString(key)) {
@@ -77,7 +77,7 @@ public class ConfigUtil {
                 List<String> newList = new ArrayList<>();
                 for (String item : stringList) {
                     item = THIS_PATH_PATTERN.matcher(item).replaceAll(basePath + ".");
-                    item = PREVIOUS_FOLDER_PATTERN.matcher(item).replaceAll(previousBasePath + ".");
+                    item = PREVIOUS_FOLDER_PATTERN.matcher(item).replaceAll(previousBasePath);
                     item = replaceRefrences(basePath, item);
                     newList.add(item);
                 }
