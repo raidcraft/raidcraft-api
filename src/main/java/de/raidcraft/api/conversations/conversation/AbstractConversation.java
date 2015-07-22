@@ -172,9 +172,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
 
         for (Map.Entry<Pattern, ConversationVariable> entry : Conversations.getConversationVariables().entrySet()) {
             Matcher matcher = entry.getKey().matcher(message);
-            while (matcher.find()) {
-                message = matcher.replaceFirst(entry.getValue().replace(matcher, this));
-            }
+            message = matcher.replaceAll(entry.getValue().replace(matcher, this));
         }
         return message;
     }
