@@ -71,7 +71,7 @@ public class ConfigUtil {
                 List<String> stringList = section.getStringList(key);
                 List<String> newList = new ArrayList<>();
                 for (String item : stringList) {
-                    item = replacePathReference(item, basePath);
+                    item = THIS_PATH_PATTERN.matcher(item).replaceAll(basePath + ".");
                     item = replaceRefrences(basePath, item);
                     newList.add(item);
                 }
@@ -83,9 +83,8 @@ public class ConfigUtil {
 
     public static String replacePathReference(String value, String basePath) {
 
-        Matcher matcher = THIS_PATH_PATTERN.matcher(value);
-        if (matcher.find()) {
-            value = matcher.replaceAll(basePath + ".");
+        if (value.startsWith("this.")) {
+            value = value.replaceFirst("this", basePath);
         } else if (value.startsWith("../")) {
             String[] sections = basePath.split("\\.");
             basePath = "";
