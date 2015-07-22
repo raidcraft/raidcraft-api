@@ -18,6 +18,8 @@ public interface ConversationHost<T> {
 
     UUID getUniqueId();
 
+    Optional<String> getIdentifier();
+
     T getType();
 
     Optional<String> getName();

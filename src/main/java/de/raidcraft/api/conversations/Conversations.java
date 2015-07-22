@@ -337,12 +337,6 @@ public class Conversations {
         }
     }
 
-    public static Optional<String> getConversationHostIdentifier(ConversationHost<?> host) {
-
-        if (provider == null) return Optional.empty();
-        return provider.getConversationHostIdentifier(host);
-    }
-
     public static Optional<ConversationHost<?>> createConversationHost(ConfigurationSection config) {
 
         if (provider == null) return Optional.empty();

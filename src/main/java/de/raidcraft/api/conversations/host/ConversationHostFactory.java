@@ -12,7 +12,7 @@ public interface ConversationHostFactory<T> {
      *
      * @return created conversation host
      */
-    ConversationHost<T> create(Location location);
+    ConversationHost<T> create(String identifier, Location location);
 
     /**
      * Wraps the given host type into a {@link ConversationHost}.

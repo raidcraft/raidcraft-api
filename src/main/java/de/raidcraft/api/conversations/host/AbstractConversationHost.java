@@ -28,6 +28,7 @@ import java.util.UUID;
 public abstract class AbstractConversationHost<T> implements ConversationHost<T> {
 
     private final UUID uniqueId;
+    private final Optional<String> identifier;
     private final T type;
     private final List<ConversationTemplate> defaultConversations = new ArrayList<>();
     private final Map<UUID, List<ConversationTemplate>> playerConversations = new HashMap<>();
