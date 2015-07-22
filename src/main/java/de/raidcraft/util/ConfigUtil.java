@@ -36,7 +36,7 @@ public class ConfigUtil {
 
     private final static Pattern VARIABLE_PATTERN = Pattern.compile(".*#([\\w\\d\\s]+):([\\w\\d\\s]+)#.*");
     private final static Pattern THIS_PATH_PATTERN = Pattern.compile("(this\\.)");
-    private final static Pattern PREVIOUS_FOLDER_PATTERN = Pattern.compile("(\\.\\./)*");
+    private final static Pattern PREVIOUS_FOLDER_PATTERN = Pattern.compile("(\\.\\./)");
     private static final List<TypeConversion> typeConversions = new ArrayList<>(
             Arrays.asList(new SameTypeConversion(),
                     new StringTypeConversion(),
@@ -62,6 +62,11 @@ public class ConfigUtil {
         if (basePath.startsWith(".")) {
             basePath = basePath.replaceFirst("\\.", "");
         }
+        String[] paths = basePath.split("\\.");
+        String previousBasePath = "";
+        for (int i = 0; i < paths.length - 1; i++) {
+            previousBasePath += paths;
+        }
         for (String key : section.getKeys(true)) {
             if (section.isString(key)) {
                 String value = replacePathReference(section.getString(key), basePath);
@@ -72,6 +77,7 @@ public class ConfigUtil {
                 List<String> newList = new ArrayList<>();
                 for (String item : stringList) {
                     item = THIS_PATH_PATTERN.matcher(item).replaceAll(basePath + ".");
+                    item = PREVIOUS_FOLDER_PATTERN.matcher(item).replaceAll(previousBasePath + ".");
                     item = replaceRefrences(basePath, item);
                     newList.add(item);
                 }
