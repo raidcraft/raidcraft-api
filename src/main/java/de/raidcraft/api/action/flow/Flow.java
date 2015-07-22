@@ -104,7 +104,6 @@ public final class Flow {
             if (config.isList(key)) {
                 try {
                     long delay = 0;
-                    String id = ConfigUtil.getFileName(config).replace("/", ".") + key;
                     List<FlowExpression> flowExpressions = parse(config.getStringList(key));
                     // we are gonna add all requirements to this list until an action is added
                     List<ActionAPIType> applicableRequirements = new ArrayList<>();
@@ -126,7 +125,7 @@ public final class Flow {
                                         }
                                     }
                                     applicableRequirements.clear();
-                                    TriggerFactory trigger = ActionAPI.createTrigger(id, configuration);
+                                    TriggerFactory trigger = ActionAPI.createTrigger(((ActionAPIType) flowExpression).getTypeId(), configuration);
                                     activeTrigger = trigger;
                                     triggerFactories.add(trigger);
                                     // reset the delay when a new trigger starts
