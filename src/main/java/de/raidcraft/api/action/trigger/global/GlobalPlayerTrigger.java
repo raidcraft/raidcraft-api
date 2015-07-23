@@ -249,12 +249,17 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             if (world == null || !world.equals(event.getPlayer().getWorld())) {
                 return false;
             }
-            return ((!config.isSet("x") || !config.isSet("y") || !config.isSet("z"))
-                    || LocationUtil.isWithinRadius(
-                    event.getPlayer().getLocation(),
-                    ConfigUtil.getLocationFromConfig(config, event.getPlayer()),
-                    config.getInt("radius", 0)
-            ));
+            Location location = new Location(world, config.getInt("x"), config.getInt("y"), config.getInt("z"));
+            int radius = config.getInt("radius", 0);
+            Location playerLocation = event.getPlayer().getLocation();
+            if (radius > 0) {
+                return LocationUtil.isWithinRadius(playerLocation, location, radius);
+            } else {
+                return playerLocation.getWorld().equals(location.getWorld())
+                        && playerLocation.getBlockX() == location.getBlockX()
+                        && playerLocation.getBlockY() == location.getBlockY()
+                        && playerLocation.getBlockZ() == location.getBlockZ();
+            }
         });
     }
 
