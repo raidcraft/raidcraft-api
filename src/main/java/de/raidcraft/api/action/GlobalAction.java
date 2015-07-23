@@ -18,9 +18,11 @@ import de.raidcraft.util.InventoryUtils;
 import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.TimeUtil;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -336,6 +338,25 @@ public enum GlobalAction {
         }
     }),
     SET_BLOCK("block.set", new SetBlockAction()),
+    CHANGE_WORLD("world.change", new Action<Player>() {
+        @Override
+        @Information(
+                value = "world.change",
+                desc = "Teleports the player to the given world but keeps the exact position.",
+                conf = "world"
+        )
+        public void accept(Player player, ConfigurationSection config) {
+
+            World world = Bukkit.getWorld(config.getString("world"));
+            if (world == null) {
+                RaidCraft.LOGGER.warning("Invalid world in world.change action defined! " + ConfigUtil.getFileName(config));
+                return;
+            }
+            Location location = player.getLocation();
+            location.setWorld(world);
+            player.teleport(location);
+        }
+    }),
     TELEPORT_COORDS("teleport.location", new Action<Player>() {
         @Override
         @Information(
