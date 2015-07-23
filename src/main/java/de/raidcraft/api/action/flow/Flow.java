@@ -133,7 +133,7 @@ public final class Flow {
                                     break;
                                 case ACTION:
                                     if (activeTrigger != null) {
-                                        String actionId = "actions.flow-" + i;
+                                        String actionId = "actions.flow-" + i++;
                                         configuration.set("delay", delay);
                                         if (!applicableRequirements.isEmpty()) {
                                             for (ActionAPIType requirement : applicableRequirements) {
