@@ -71,7 +71,6 @@ public class ConfigUtil {
             if (section.isString(key)) {
                 String value = replacePathReference(section.getString(key), basePath);
                 value = replaceRefrences(basePath, value);
-                value = value.replaceAll("/", ".");
                 section.set(key, value);
             } else if (section.isList(key)) {
                 List<String> stringList = section.getStringList(key);
@@ -80,7 +79,6 @@ public class ConfigUtil {
                     item = THIS_PATH_PATTERN.matcher(item).replaceAll(basePath + ".");
                     item = PREVIOUS_FOLDER_PATTERN.matcher(item).replaceAll(previousBasePath);
                     item = replaceRefrences(basePath, item);
-                    item = item.replaceAll("/", ".");
                     newList.add(item);
                 }
                 section.set(key, newList);
