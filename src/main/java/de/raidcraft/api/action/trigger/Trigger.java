@@ -64,17 +64,17 @@ public abstract class Trigger implements TriggerConfigGenerator {
                             // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
                     .collect(Collectors.toList());
-            // we need to always delay the event by at least one tick
-            // this needs to happen so that the events can be finished properly before checking the requirements
-            for (TriggerListenerConfigWrapper<T> wrapper : list) {
-                long delay = wrapper.getTriggerDelay();
-                if (delay < 1) delay = 1;
-                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> {
-                    if (wrapper.getTriggerListener().processTrigger(triggeringEntity)) {
-                        wrapper.executeActions(triggeringEntity);
-                    }
-                }, delay);
-            }
+            list.stream().filter(wrapper -> wrapper.getTriggerDelay() > 0)
+                    .forEach(wrapper -> Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> {
+                        if (wrapper.getTriggerListener().processTrigger(triggeringEntity)) {
+                            wrapper.executeActions(triggeringEntity);
+                        }
+                    }, wrapper.getTriggerDelay()));
+            list.stream().filter(wrapper -> wrapper.getTriggerDelay() <= 0)
+                    // then lets process the trigger
+                    .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity))
+                    // if we get true back we are ready for action processing
+                    .forEach(wrapper -> wrapper.executeActions(triggeringEntity));
         }
     }
 }
