@@ -234,7 +234,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event) {
 
-        if (!hasMoved(event)) return;
+        if (!RaidCraft.hasMoved(event.getPlayer(), event.getTo())) return;
 
         // if no coordinates are defined always return true
         // otherwise check the coordinates and the radius
@@ -261,15 +261,5 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
                         && playerLocation.getBlockZ() == location.getBlockZ();
             }
         });
-    }
-
-    private boolean hasMoved(PlayerMoveEvent event) {
-        // Did we move a block?
-        if (event.getFrom().getBlockX() != event.getTo().getBlockX()
-                || event.getFrom().getBlockY() != event.getTo().getBlockY()
-                || event.getFrom().getBlockZ() != event.getTo().getBlockZ()) {
-            return true;
-        }
-        return false;
     }
 }
