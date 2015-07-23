@@ -216,7 +216,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
 
         if (isPersistant() && isMapped(entity, CHECKED_KEY)) {
             if (plugin.getConfig().debugRequirements) {
-                plugin.getLogger().info("PERSISTANT REQUIREMENT: " + getIdentifier() + " -> " + successfullyChecked);
+                plugin.getLogger().info("PERSISTANT REQUIREMENT: " + ActionAPI.getIdentifier(this) + " -> " + successfullyChecked);
             }
             return successfullyChecked;
         }
@@ -241,7 +241,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
                 ((Player) entity).sendMessage(getCountText(entity));
             }
             if (plugin.getConfig().debugRequirements) {
-                plugin.getLogger().info("COUNTING REQUIREMENT: " + getIdentifier() + " -> " + getCount(entity) + "/" + requiredCount);
+                plugin.getLogger().info("COUNTING REQUIREMENT: " + ActionAPI.getIdentifier(this) + " -> " + getCount(entity) + "/" + requiredCount);
             }
             successfullyChecked = getCount(entity) >= getRequiredCount();
         }
@@ -255,12 +255,12 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         save();
         if (successfullyChecked) {
             if (plugin.getConfig().debugRequirements) {
-                plugin.getLogger().info("EXECUTING REQUIREMENT SUCCESS ACTIONS: " + getIdentifier());
+                plugin.getLogger().info("EXECUTING REQUIREMENT SUCCESS ACTIONS: " + ActionAPI.getIdentifier(this));
             }
             successActions.forEach(tAction -> tAction.accept(entity));
         } else {
             if (plugin.getConfig().debugRequirements) {
-                plugin.getLogger().info("EXECUTING REQUIREMENT FAILURE ACTIONS: " + getIdentifier());
+                plugin.getLogger().info("EXECUTING REQUIREMENT FAILURE ACTIONS: " + ActionAPI.getIdentifier(this));
             }
             failureActions.forEach(tAction -> tAction.accept(entity));
         }

@@ -93,19 +93,19 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         Runnable runnable = () -> {
             if (plugin.getConfig().debugActions) {
-                plugin.getLogger().info("PRE ACTION CHECK: " + getIdentifier());
+                plugin.getLogger().info("PRE ACTION CHECK: " + ActionAPI.getIdentifier(this));
             }
             if (!requirements.isEmpty()) {
                 boolean allMatch = requirements.stream()
                         .allMatch(requirement -> requirement.test(type));
                 if (plugin.getConfig().debugActions && !allMatch) {
-                    plugin.getLogger().info("PRE ACTION CHECK FAILED: " + getIdentifier());
+                    plugin.getLogger().info("PRE ACTION CHECK FAILED: " + ActionAPI.getIdentifier(this));
                 }
                 if (!allMatch) return;
             }
             action.accept(type, config);
             if (plugin.getConfig().debugActions) {
-                plugin.getLogger().info("ACTION EXECUTED: " + getIdentifier());
+                plugin.getLogger().info("ACTION EXECUTED: " + ActionAPI.getIdentifier(this));
             }
             if (isExecuteOnce()) {
                 Requirement<T> executeOnce = requirements.get(requirements.size() - 1);
