@@ -111,10 +111,10 @@ public enum GlobalRequirement {
                 value = "player.location",
                 desc = "Checks if the player is at or in a radius of the given location.",
                 conf = {
-                        "world: [current]",
                         "x",
                         "y",
                         "z",
+                        "world: [current]",
                         "radius: [0]"
                 }
         )
@@ -145,8 +145,8 @@ public enum GlobalRequirement {
                 value = "player.has-item",
                 desc = "Checks if the player has the given item in his (quest) inventory.",
                 conf = {
-                        "amount: [1]",
-                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>"
+                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
+                        "amount: [1]"
                 }
         )
         public boolean test(Player player, ConfigurationSection config) {
