@@ -141,7 +141,7 @@ public final class ActionAPI {
     public static Optional<Requirement<?>> createRequirement(String id, String type, ConfigurationSection config) {
 
         Optional<RequirementFactory<?>> factory = requirementFactories.values().stream()
-                .filter(requirementFactory -> requirementFactory.contains(id))
+                .filter(requirementFactory -> requirementFactory.contains(type))
                 .findAny();
         if (factory.isPresent()) {
             Optional<? extends Requirement<?>> requirement = factory.get().create(id, type, config);

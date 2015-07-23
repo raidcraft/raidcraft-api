@@ -113,8 +113,8 @@ public final class RequirementFactory<T> {
 
         if (!requirements.containsKey(requirement)) {
             // lets see if we find a matching alias
-            if (requirementAliases.containsKey(id) && requirements.containsKey(requirementAliases.get(id))) {
-                id = requirementAliases.get(id);
+            if (requirementAliases.containsKey(requirement) && requirements.containsKey(requirementAliases.get(requirement))) {
+                id = requirementAliases.get(requirement);
             } else {
                 ActionAPI.UNKNOWN_REQUIREMENTS.add(requirement);
                 return Optional.empty();

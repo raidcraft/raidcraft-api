@@ -191,7 +191,7 @@ public final class Flow {
                                     activeRequirement.addAction(action.get());
                                     break;
                                 case REQUIREMENT:
-                                    Optional<Requirement<?>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key,
+                                    Optional<Requirement<?>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key + (i++),
                                             expression.getTypeId(),
                                             expression.getConfiguration());
                                     if (!requirement.isPresent()) {
