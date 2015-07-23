@@ -26,6 +26,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Optional;
 
@@ -45,6 +47,7 @@ public enum GlobalAction {
 
             player.setWalkSpeed(0F);
             player.setFlySpeed(0F);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128, false));
         }
     }),
     PLAYER_UNFREEZE("player.unfreeze", new Action<Player>() {
@@ -57,6 +60,7 @@ public enum GlobalAction {
 
             player.setWalkSpeed(DEFAULT_WALK_SPEED);
             player.setFlySpeed(DEFAULT_FLY_SPEED);
+            player.removePotionEffect(PotionEffectType.JUMP);
         }
     }),
     GIVE_ITEM("player.give.item", new Action<Player>() {
