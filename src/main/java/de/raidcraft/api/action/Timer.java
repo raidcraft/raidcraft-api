@@ -134,6 +134,17 @@ public class Timer extends BukkitRunnable {
     }
 
     /**
+     * Gets the remaining time in ticks.
+     *
+     * @return remaining time in ticks
+     */
+    public long getRemainingTime() {
+
+        long passedTimed = startTime - System.currentTimeMillis();
+        return getDuration() - TimeUtil.millisToTicks(passedTimed);
+    }
+
+    /**
      * Time to add in ticks.
      * @param time in ticks
      */
