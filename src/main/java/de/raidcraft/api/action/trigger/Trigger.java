@@ -56,16 +56,26 @@ public abstract class Trigger implements TriggerConfigGenerator {
     @SuppressWarnings("unchecked")
     protected final <T> void informListeners(@NonNull String action, @NonNull T triggeringEntity, @NonNull Predicate<ConfigurationSection> predicate) {
 
+        RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         String identifier = getIdentifier() + "." + action;
+        if (plugin.getConfig().debugTrigger) {
+            plugin.getLogger().info("TRIGGER " + identifier + " fired for " + triggeringEntity);
+        }
         if (registeredListeners.containsKey(identifier)) {
+            if (plugin.getConfig().debugTrigger) {
+                plugin.getLogger().info("TRIGGER " + identifier + " VALID");
+            }
             List<TriggerListenerConfigWrapper<T>> list = new ArrayList<>(registeredListeners.get(identifier)).stream()
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
                             // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
                     .collect(Collectors.toList());
+            if (plugin.getConfig().debugTrigger && !list.isEmpty()) {
+                plugin.getLogger().info("TRIGGER " + identifier + " MATCHED TARGETS");
+            }
             list.stream().filter(wrapper -> wrapper.getTriggerDelay() > 0)
-                    .forEach(wrapper -> Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> {
+                    .forEach(wrapper -> Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         if (wrapper.getTriggerListener().processTrigger(triggeringEntity)) {
                             wrapper.executeActions(triggeringEntity);
                         }

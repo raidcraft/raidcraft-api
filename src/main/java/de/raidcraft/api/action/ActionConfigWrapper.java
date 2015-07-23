@@ -90,23 +90,33 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
 
     public void accept(T type, ConfigurationSection config) {
 
+        RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         Runnable runnable = () -> {
+            if (plugin.getConfig().debugActions) {
+                plugin.getLogger().info("PRE ACTION CHECK: " + getIdentifier());
+            }
             if (!requirements.isEmpty()) {
                 boolean allMatch = requirements.stream()
                         .allMatch(requirement -> requirement.test(type));
+                if (plugin.getConfig().debugActions && !allMatch) {
+                    plugin.getLogger().info("PRE ACTION CHECK FAILED: " + getIdentifier());
+                }
                 if (!allMatch) return;
             }
             action.accept(type, config);
+            if (plugin.getConfig().debugActions) {
+                plugin.getLogger().info("ACTION EXECUTED: " + getIdentifier());
+            }
             if (isExecuteOnce()) {
                 Requirement<T> executeOnce = requirements.get(requirements.size() - 1);
                 if (executeOnce instanceof RequirementConfigWrapper) {
-                    ((RequirementConfigWrapper<T>)executeOnce).setChecked(type, false);
+                    ((RequirementConfigWrapper<T>) executeOnce).setChecked(type, false);
                     executeOnce.save();
                 }
             }
         };
         if (delay > 0) {
-            Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), runnable, delay);
+            Bukkit.getScheduler().runTaskLater(plugin, runnable, delay);
         } else {
             runnable.run();
         }

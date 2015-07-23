@@ -65,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -92,7 +93,7 @@ public class RaidCraft implements Listener {
     public static final String CUSTOM_ITEM_IDENTIFIER = "rc";
     public static final String STORED_OBJECT_IDENTIFIER = "so";
 
-    private static final Map<String, RCPlayer> players = new HashMap<>();
+    private static final Map<UUID, RCPlayer> players = new HashMap<>();
     private static final Map<Class<? extends Component>, Component> components = new HashMap<>();
     private static final Map<String, PlayerStatisticProvider> statisticProviders = new CaseInsensitiveMap<>();
     private static Economy economy;
@@ -116,11 +117,11 @@ public class RaidCraft implements Listener {
             OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(name);
             if (offlinePlayer != null && offlinePlayer.hasPlayedBefore()) {
                 // add the player to cache if he isnt added
-                if (players.containsKey(offlinePlayer.getName())) {
-                    rcPlayer = players.get(offlinePlayer.getName());
+                if (players.containsKey(offlinePlayer.getUniqueId())) {
+                    rcPlayer = players.get(offlinePlayer.getUniqueId());
                 } else {
                     rcPlayer = new BukkitPlayer(offlinePlayer.getName());
-                    players.put(offlinePlayer.getName(), rcPlayer);
+                    players.put(offlinePlayer.getUniqueId(), rcPlayer);
                 }
             }
         } else {
@@ -160,11 +161,11 @@ public class RaidCraft implements Listener {
     public static RCPlayer getPlayer(Player player) {
 
         RCPlayer rcPlayer;
-        if (players.containsKey(player.getName())) {
-            rcPlayer = players.get(player.getName());
+        if (players.containsKey(player.getUniqueId())) {
+            rcPlayer = players.get(player.getUniqueId());
         } else {
             rcPlayer = new BukkitPlayer(player);
-            players.put(player.getName(), rcPlayer);
+            players.put(player.getUniqueId(), rcPlayer);
         }
         return rcPlayer;
     }

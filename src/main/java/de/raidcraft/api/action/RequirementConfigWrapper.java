@@ -211,9 +211,15 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     @Override
     public boolean test(T entity, ConfigurationSection config) {
 
+        RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         boolean successfullyChecked = isChecked(entity);
 
-        if (isPersistant() && isMapped(entity, CHECKED_KEY)) return successfullyChecked;
+        if (isPersistant() && isMapped(entity, CHECKED_KEY)) {
+            if (plugin.getConfig().debugRequirements) {
+                plugin.getLogger().info("PERSISTANT REQUIREMENT: " + getIdentifier() + " -> " + successfullyChecked);
+            }
+            return successfullyChecked;
+        }
 
         if (negate) {
             if (requirement instanceof ContextualRequirement) {
@@ -234,6 +240,9 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
             if (hasCountText() && entity instanceof Player && successfullyChecked) {
                 ((Player) entity).sendMessage(getCountText(entity));
             }
+            if (plugin.getConfig().debugRequirements) {
+                plugin.getLogger().info("COUNTING REQUIREMENT: " + getIdentifier() + " -> " + getCount(entity) + "/" + requiredCount);
+            }
             successfullyChecked = getCount(entity) >= getRequiredCount();
         }
         if (isPersistant()) {
@@ -245,8 +254,14 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         }
         save();
         if (successfullyChecked) {
+            if (plugin.getConfig().debugRequirements) {
+                plugin.getLogger().info("EXECUTING REQUIREMENT SUCCESS ACTIONS: " + getIdentifier());
+            }
             successActions.forEach(tAction -> tAction.accept(entity));
         } else {
+            if (plugin.getConfig().debugRequirements) {
+                plugin.getLogger().info("EXECUTING REQUIREMENT FAILURE ACTIONS: " + getIdentifier());
+            }
             failureActions.forEach(tAction -> tAction.accept(entity));
         }
         return successfullyChecked;
