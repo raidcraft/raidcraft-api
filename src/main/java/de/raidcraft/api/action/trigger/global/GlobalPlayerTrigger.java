@@ -54,10 +54,11 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             Block block = event.getClickedBlock();
             if (config.isSet("x") && config.isSet("y") && config.isSet("z")) {
                 Location blockLocation = block.getLocation();
+                World world = config.isSet("world") ? Bukkit.getWorld(config.getString("world")) : event.getPlayer().getWorld();
                 if (blockLocation.getBlockX() != config.getInt("x")
                         || blockLocation.getBlockY() != config.getInt("y")
                         || blockLocation.getBlockZ() != config.getInt("z")
-                        || !blockLocation.getWorld().equals(Bukkit.getWorld(config.getString("world", blockLocation.getWorld().getName())))) {
+                        || !blockLocation.getWorld().equals(world)) {
                     return false;
                 }
             }
@@ -129,7 +130,8 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             if (config.isSet("x")) {
                 Location location = ConfigUtil.getLocationFromConfig(config, event.getPlayer());
                 Location playerLocation = event.getPlayer().getLocation();
-                if (!location.getWorld().equals(playerLocation.getWorld())
+                World world = config.isSet("world") ? Bukkit.getWorld(config.getString("world")) : event.getPlayer().getWorld();
+                if (!location.getWorld().equals(world)
                         || location.getBlockX() != playerLocation.getBlockX()
                         || location.getBlockY() != playerLocation.getBlockY()
                         || location.getBlockZ() != playerLocation.getBlockZ()) {
@@ -178,7 +180,8 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             if (config.isSet("x")) {
                 Location location = ConfigUtil.getLocationFromConfig(config, event.getPlayer());
                 Location playerLocation = event.getPlayer().getLocation();
-                if (!location.getWorld().equals(playerLocation.getWorld())
+                World world = config.isSet("world") ? Bukkit.getWorld(config.getString("world")) : event.getPlayer().getWorld();
+                if (!location.getWorld().equals(world)
                         || location.getBlockX() != playerLocation.getBlockX()
                         || location.getBlockY() != playerLocation.getBlockY()
                         || location.getBlockZ() != playerLocation.getBlockZ()) {
