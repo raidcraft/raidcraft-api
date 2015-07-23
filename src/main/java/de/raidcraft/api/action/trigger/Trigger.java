@@ -64,6 +64,8 @@ public abstract class Trigger implements TriggerConfigGenerator {
                             // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
                     .collect(Collectors.toList());
+            // we need to always delay the event by at least one tick
+            // this needs to happen so that the events can be finished properly before checking the requirements
             for (TriggerListenerConfigWrapper<T> wrapper : list) {
                 long delay = wrapper.getTriggerDelay();
                 if (delay < 1) delay = 1;
