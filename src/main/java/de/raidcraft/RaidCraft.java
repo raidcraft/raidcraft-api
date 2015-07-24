@@ -10,6 +10,10 @@ import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.flow.FlowType;
 import de.raidcraft.api.bukkit.BukkitPlayer;
 import de.raidcraft.api.config.builder.ConfigGenerator;
+import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.conversation.Conversation;
+import de.raidcraft.api.conversations.conversation.ConversationVariable;
+import de.raidcraft.api.conversations.conversation.PlayerVariable;
 import de.raidcraft.api.conversations.legacy.ConversationProvider;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
@@ -67,6 +71,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This is the static class that gives access to all important API
@@ -96,6 +102,7 @@ public class RaidCraft implements Listener {
     private static final Map<UUID, RCPlayer> players = new HashMap<>();
     private static final Map<Class<? extends Component>, Component> components = new HashMap<>();
     private static final Map<String, PlayerStatisticProvider> statisticProviders = new CaseInsensitiveMap<>();
+    private static final Map<Pattern, PlayerVariable> playerVariables = new HashMap<>();
     private static Economy economy;
     private static ConversationProvider conversationProvider;
     private static TradeProvider tradeProvider;
@@ -173,6 +180,36 @@ public class RaidCraft implements Listener {
     public static boolean hasMoved(Player player, Location location) {
 
         return getPlayer(player).hasMoved(location);
+    }
+
+    public static void registerPlayerVariable(Pattern pattern, PlayerVariable variable) {
+
+        playerVariables.put(pattern, variable);
+    }
+
+    public static Map<Pattern, PlayerVariable> getPlayerVariables() {
+
+        return playerVariables;
+    }
+
+    public static String replaceVariables(Player player, String message) {
+
+        Optional<Conversation> activeConversation = Conversations.getActiveConversation(player);
+        if (activeConversation.isPresent()) {
+            for (Map.Entry<Pattern, ConversationVariable> entry : Conversations.getConversationVariables().entrySet()) {
+                Matcher matcher = entry.getKey().matcher(message);
+                if (matcher.find()) {
+                    message = matcher.replaceAll(entry.getValue().replace(matcher, activeConversation.get()));
+                }
+            }
+        }
+        for (Map.Entry<Pattern, PlayerVariable> entry : RaidCraft.getPlayerVariables().entrySet()) {
+            Matcher matcher = entry.getKey().matcher(message);
+            if (matcher.find()) {
+                message = matcher.replaceAll(entry.getValue().replace(matcher, player));
+            }
+        }
+        return message;
     }
 
     /**

@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author mdoering
@@ -154,7 +152,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     public Conversation sendMessage(String... lines) {
 
         for (String line : lines) {
-            getOwner().sendMessage(replaceVariable(line));
+            getOwner().sendMessage(RaidCraft.replaceVariables(getOwner(), line));
         }
         return this;
     }
@@ -166,17 +164,6 @@ public abstract class AbstractConversation extends DataMap implements Conversati
             line.send(getOwner());
         }
         return this;
-    }
-
-    protected String replaceVariable(String message) {
-
-        for (Map.Entry<Pattern, ConversationVariable> entry : Conversations.getConversationVariables().entrySet()) {
-            Matcher matcher = entry.getKey().matcher(message);
-            if (matcher.find()) {
-                message = matcher.replaceAll(entry.getValue().replace(matcher, this));
-            }
-        }
-        return message;
     }
 
     @Override

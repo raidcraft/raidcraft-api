@@ -193,7 +193,7 @@ public enum GlobalAction {
 
             String[] text = config.getString("text").split("\\|");
             for (String msg : text) {
-                player.sendMessage(msg);
+                player.sendMessage(RaidCraft.replaceVariables(player, msg));
             }
         }
     }),
@@ -231,7 +231,7 @@ public enum GlobalAction {
                 if (activeConversation.isPresent()) {
                     activeConversation.get().sendMessage(message);
                 } else {
-                    player.sendMessage(message);
+                    player.sendMessage(RaidCraft.replaceVariables(player, message));
                 }
             }
         }
@@ -249,6 +249,7 @@ public enum GlobalAction {
 
             String[] text = config.getString("text").split("\\|");
             for (String line : text) {
+                line = RaidCraft.replaceVariables(player, line);
                 player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN
                         + player.getName() + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + ": "
                         + ChatColor.AQUA + line);
@@ -268,6 +269,7 @@ public enum GlobalAction {
 
             String[] text = config.getString("text").split("\\|");
             for (String line : text) {
+                line = RaidCraft.replaceVariables(player, line);
                 player.sendMessage(ChatColor.DARK_AQUA + line);
             }
         }
