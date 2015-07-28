@@ -57,6 +57,28 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
     boolean isAutoEnding();
 
     /**
+     * Blocks the start of other conversations if this conversation is active.
+     *
+     * @return true if conversation should block the start of other conversations
+     */
+    boolean isBlockingConversationStart();
+
+    /**
+     * Aborts the conversation when the player runs out of range of the host.
+     *
+     * @return false if conversation should not end when running out of range
+     */
+    boolean isEndingOutOfRange();
+
+    /**
+     * If true the conversation cannot be exited by typing "exit" or any other end keyword.
+     * {@link #isEndingOutOfRange()} will also be false if not otherwise set to true.
+     *
+     * @return false if conversation cannot be ended by the player
+     */
+    boolean isExitable();
+
+    /**
      * Gets the {@link ConfigurationSection} that defines special host settings that are defined in
      * the {@link ConversationTemplate}.
      *
