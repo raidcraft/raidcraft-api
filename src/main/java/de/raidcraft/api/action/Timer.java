@@ -172,8 +172,8 @@ public class Timer extends BukkitRunnable {
 
     public void reset() {
 
-        cancel();
-        start();
+        super.cancel();
+        startTask();
     }
 
     public void start() {
