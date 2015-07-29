@@ -125,6 +125,15 @@ public class Timer extends BukkitRunnable {
         this.cancelActions = ActionAPI.createActions(config.getConfigurationSection("cancel-actions"), Player.class);
     }
 
+    private Timer(Timer timer) {
+
+        this.id = timer.getId();
+        this.player = timer.getPlayer();
+        this.duration = timer.getDuration();
+        this.endActions = timer.getEndActions();
+        this.cancelActions = timer.getCancelActions();
+    }
+
     public String getId() {
 
         if (id == null) {
@@ -155,8 +164,7 @@ public class Timer extends BukkitRunnable {
             long passedTimed = startTime - System.currentTimeMillis();
             long newTime = TimeUtil.millisToTicks(TimeUtil.ticksToMillis(getDuration() + time) - passedTimed);
             setDuration(newTime);
-            reset();
-            setDuration(current + time);
+            reset().setDuration(current + time);
         } else {
             setDuration(getDuration() + time);
             reset();
@@ -170,10 +178,13 @@ public class Timer extends BukkitRunnable {
         setDuration(current);
     }
 
-    public void reset() {
+    public Timer reset() {
 
-        super.cancel();
-        startTask();
+        Bukkit.getScheduler().cancelTask(getTaskId());
+        removeTimer(this);
+        Timer timer = new Timer(this);
+        timer.start();
+        return timer;
     }
 
     public void start() {
