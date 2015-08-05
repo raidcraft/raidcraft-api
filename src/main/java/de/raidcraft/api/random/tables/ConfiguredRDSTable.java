@@ -44,12 +44,16 @@ public class ConfiguredRDSTable extends GenericRDSTable implements Loadable {
         if (entries != null && entries.getKeys(false) != null && !entries.getKeys(false).isEmpty()) {
             for (String key : entries.getKeys(false)) {
                 ConfigurationSection section = entries.getConfigurationSection(key);
-                Optional<RDSObject> object = RDS.createObject(section.getString("type"), section);
-                if (object.isPresent()) {
-                    addEntry(object.get());
+                if (section != null) {
+                    Optional<RDSObject> object = RDS.createObject(section.getString("type", "table"), section);
+                    if (object.isPresent()) {
+                        addEntry(object.get());
+                    } else {
+                        RaidCraft.LOGGER.info("RDSObject referenced in " + ConfigUtil.getFileName(config)
+                                + " " + section.getString("type") + " does not exist!");
+                    }
                 } else {
-                    RaidCraft.LOGGER.info("RDSObject referenced in " + ConfigUtil.getFileName(config)
-                            + " " + section.getString("type") + " does not exist!");
+                    RaidCraft.LOGGER.warning("Invalid config section for loot table inside " + ConfigUtil.getFileName(config));
                 }
             }
         }
