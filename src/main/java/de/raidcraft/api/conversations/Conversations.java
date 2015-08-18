@@ -337,6 +337,18 @@ public class Conversations {
         }
     }
 
+    public static void changeStage(Player player, String stage) {
+
+        if (provider == null) return;
+        Optional<Conversation> activeConversation = provider.getActiveConversation(player);
+        if (activeConversation.isPresent()) {
+            Optional<Stage> stageOptional = activeConversation.get().getStage(stage);
+            if (stageOptional.isPresent()) {
+                stageOptional.get().changeTo();
+            }
+        }
+    }
+
     public static Optional<ConversationHost<?>> createConversationHost(ConfigurationSection config) {
 
         if (provider == null) return Optional.empty();
