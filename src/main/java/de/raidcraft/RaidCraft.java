@@ -199,14 +199,20 @@ public class RaidCraft implements Listener {
             for (Map.Entry<Pattern, ConversationVariable> entry : Conversations.getConversationVariables().entrySet()) {
                 Matcher matcher = entry.getKey().matcher(message);
                 if (matcher.find()) {
-                    message = matcher.replaceAll(entry.getValue().replace(matcher, activeConversation.get()));
+                    String replacement = entry.getValue().replace(matcher, activeConversation.get());
+                    if (replacement != null) {
+                        message = matcher.replaceAll(replacement);
+                    }
                 }
             }
         }
         for (Map.Entry<Pattern, PlayerVariable> entry : RaidCraft.getPlayerVariables().entrySet()) {
             Matcher matcher = entry.getKey().matcher(message);
             if (matcher.find()) {
-                message = matcher.replaceAll(entry.getValue().replace(matcher, player));
+                String replacement = entry.getValue().replace(matcher, player);
+                if (replacement != null) {
+                    message = matcher.replaceAll(replacement);
+                }
             }
         }
         return message;
