@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -375,5 +376,11 @@ public class Conversations {
     public static Conversation createConversation(String type, Player player, ConversationTemplate template, ConversationHost host) {
 
         return provider.createConversation(type, player, template, host);
+    }
+
+    public static Optional<ConversationHost<?>> spawnConversationHost(String pluginName, String name, String conversationName, Location location) {
+
+        if (provider == null) return Optional.empty();
+        return provider.spawnConversationHost(pluginName, name, conversationName, location);
     }
 }

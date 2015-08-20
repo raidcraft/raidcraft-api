@@ -354,4 +354,6 @@ public interface ConversationProvider {
     Answer createAnswer(String text, Action... actions);
 
     <T extends Answer> Optional<Answer> createAnswer(Class<T> answerClass, Action... actions);
+
+    Optional<ConversationHost<?>> spawnConversationHost(String pluginName, String name, String conversationName, Location location);
 }
