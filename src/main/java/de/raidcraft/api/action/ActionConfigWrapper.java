@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,8 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
     private final long delay;
     private final long cooldown;
     private final boolean executeOnce;
-    private List<Requirement<T>> requirements = new ArrayList<>();
+    private Optional<Player> player;
+    private List<Requirement<?>> requirements = new ArrayList<>();
 
     protected ActionConfigWrapper(Action<T> action, ConfigurationSection config, Class<T> type) {
 
@@ -38,7 +40,7 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         this.delay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         this.cooldown = TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
         this.executeOnce = config.getBoolean("execute-once", false);
-        this.requirements = ActionAPI.createRequirements(getIdentifier(), config.getConfigurationSection("requirements"), type);
+        this.requirements = ActionAPI.createRequirements(getIdentifier(), config.getConfigurationSection("requirements"));
         if (isExecuteOnce()) {
             // lets add our execute once requirement last
             // this requirement will return false after is has been checked once
@@ -62,12 +64,14 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         return args;
     }
 
+    @Override
     public Action<T> with(String key, Object value) {
 
         config.set(key, value);
         return this;
     }
 
+    @Override
     public Action<T> withArgs(String key, Object value) {
 
         getConfig().set(key, value);
@@ -75,12 +79,16 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    public Action<T> withPlayer(Player player) {
+
+        this.player = Optional.of(player);
+        return this;
+    }
+
+    @Override
     public void addRequirement(Requirement<?> requirement) {
 
-        if (ActionAPI.matchesType(requirement, getType())) {
-            requirements.add((Requirement<T>) requirement);
-        }
+        requirements.add(requirement);
     }
 
     public void accept(T type) {
@@ -88,6 +96,7 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
         accept(type, getConfig());
     }
 
+    @SuppressWarnings("unchecked")
     public void accept(T type, ConfigurationSection config) {
 
         RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
@@ -96,8 +105,15 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
                 plugin.getLogger().info("PRE ACTION CHECK: " + ActionAPI.getIdentifier(getAction()));
             }
             if (!requirements.isEmpty()) {
-                boolean allMatch = requirements.stream()
-                        .allMatch(requirement -> requirement.test(type));
+                boolean allMatch = true;
+                for (Requirement<?> requirement : requirements) {
+                    if (!allMatch) break;
+                    if (player.isPresent() && ActionAPI.matchesType(requirement, Player.class)) {
+                        allMatch = ((Requirement<Player>) requirement).test(player.get());
+                    } else if (ActionAPI.matchesType(requirement, getType())) {
+                        allMatch = ((Requirement<T>) requirement).test(type);
+                    }
+                }
                 if (plugin.getConfig().debugActions && !allMatch) {
                     plugin.getLogger().info("PRE ACTION CHECK FAILED: " + ActionAPI.getIdentifier(getAction()));
                 }
@@ -108,12 +124,13 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
                 plugin.getLogger().info("ACTION EXECUTED: " + ActionAPI.getIdentifier(getAction()));
             }
             if (isExecuteOnce()) {
-                Requirement<T> executeOnce = requirements.get(requirements.size() - 1);
+                Requirement<?> executeOnce = requirements.get(requirements.size() - 1);
                 if (executeOnce instanceof RequirementConfigWrapper) {
                     ((RequirementConfigWrapper<T>) executeOnce).setChecked(type, false);
                     executeOnce.save();
                 }
             }
+            player = Optional.empty();
         };
         if (delay > 0) {
             Bukkit.getScheduler().runTaskLater(plugin, runnable, delay);
@@ -123,11 +140,12 @@ class ActionConfigWrapper<T> implements RevertableAction<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void revert(T type) {
 
         revert(type, getConfig());
         if (isExecuteOnce()) {
-            Requirement<T> executeOnce = requirements.get(requirements.size() - 1);
+            Requirement<?> executeOnce = requirements.get(requirements.size() - 1);
             if (executeOnce instanceof RequirementConfigWrapper) {
                 ((RequirementConfigWrapper<T>)executeOnce).setChecked(type, true);
                 executeOnce.save();

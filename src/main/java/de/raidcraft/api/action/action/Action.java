@@ -125,4 +125,9 @@ public interface Action<T> extends ActionConfigGenerator {
 
         throw new UnsupportedOperationException();
     }
+
+    default Action<T> withPlayer(Player player) {
+
+        throw new UnsupportedOperationException();
+    }
 }
