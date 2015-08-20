@@ -138,6 +138,7 @@ public class SimpleAnswer implements Answer {
     @SuppressWarnings("unchecked")
     public void executeActions(Conversation conversation) {
 
+        abortActions = false;
         for (Action<?> action : getActions()) {
             if (abortActions) break;
             if (ActionAPI.matchesType(action, Player.class)) {
@@ -146,7 +147,6 @@ public class SimpleAnswer implements Answer {
                 ((Action<Conversation>) action).accept(conversation);
             }
         }
-        abortActions = false;
     }
 
     @Override
