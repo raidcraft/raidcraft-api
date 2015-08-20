@@ -349,10 +349,10 @@ public class Conversations {
         }
     }
 
-    public static Optional<ConversationHost<?>> createConversationHost(ConfigurationSection config) {
+    public static Optional<ConversationHost<?>> createConversationHost(String plugin, ConfigurationSection config) {
 
         if (provider == null) return Optional.empty();
-        return provider.createConversationHost(config);
+        return provider.createConversationHost(plugin, config);
     }
 
     public static void message(Player player, String message) {
