@@ -36,58 +36,62 @@ public final class Flow {
 
         List<Action<?>> actions = new ArrayList<>();
         if (config == null) return actions;
+
         Set<String> keys = config.getKeys(false);
         if (keys == null) return actions;
 
-        for (String key : keys) {
-            if (config.isList(key)) {
-                try {
-                    long delay = 0;
-                    List<FlowExpression> flowExpressions = parse(config.getStringList(key));
-                    // we are gonna add all requirements to this list until an action is added
-                    boolean resetRequirements = false;
-                    List<Requirement<?>> applicableRequirements = new ArrayList<>();
-                    for (FlowExpression flowExpression : flowExpressions) {
-                        if (flowExpression instanceof FlowDelay) {
-                            delay += ((FlowDelay) flowExpression).getDelay();
-                            continue;
-                        }
-                        if (flowExpression instanceof ActionAPIType) {
-                            ActionAPIType expression = (ActionAPIType) flowExpression;
-                            switch (expression.getFlowType()) {
-                                case ACTION:
-                                    FlowConfiguration configuration = expression.getConfiguration();
-                                    configuration.set("delay", delay);
-                                    Optional<Action<?>> action = ActionAPI.createAction(expression.getTypeId(), configuration);
-                                    if (!action.isPresent()) {
-                                        ActionAPI.UNKNOWN_ACTIONS.add(expression.getTypeId());
-                                        continue;
-                                    }
-                                    actions.add(action.get());
-                                    if (!applicableRequirements.isEmpty()) {
-                                        applicableRequirements.forEach(requirement -> action.get().addRequirement(requirement));
-                                        resetRequirements = true;
-                                    }
-                                    break;
-                                case REQUIREMENT:
-                                    Optional<Requirement<?>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key,
-                                            expression.getTypeId(),
-                                            expression.getConfiguration());
-                                    if (!requirement.isPresent()) {
-                                        ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId());
-                                        continue;
-                                    }
-                                    // not sure if we want to reset or not, needs to be discussed
-                                    // if (resetRequirements) applicableRequirements.clear();
-                                    applicableRequirements.add(requirement.get());
-                                    break;
+        keys.stream().filter(config::isList).forEach(key -> actions.addAll(parseActions(config, key)));
+        return actions;
+    }
+
+    public static List<Action<?>> parseActions(ConfigurationSection config, String key) {
+
+        List<Action<?>> actions = new ArrayList<>();
+        try {
+            long delay = 0;
+            List<FlowExpression> flowExpressions = parse(config.getStringList(key));
+            // we are gonna add all requirements to this list until an action is added
+            boolean resetRequirements = false;
+            List<Requirement<?>> applicableRequirements = new ArrayList<>();
+            for (FlowExpression flowExpression : flowExpressions) {
+                if (flowExpression instanceof FlowDelay) {
+                    delay += ((FlowDelay) flowExpression).getDelay();
+                    continue;
+                }
+                if (flowExpression instanceof ActionAPIType) {
+                    ActionAPIType expression = (ActionAPIType) flowExpression;
+                    switch (expression.getFlowType()) {
+                        case ACTION:
+                            FlowConfiguration configuration = expression.getConfiguration();
+                            configuration.set("delay", delay);
+                            Optional<Action<?>> action = ActionAPI.createAction(expression.getTypeId(), configuration);
+                            if (!action.isPresent()) {
+                                ActionAPI.UNKNOWN_ACTIONS.add(expression.getTypeId());
+                                continue;
                             }
-                        }
+                            actions.add(action.get());
+                            if (!applicableRequirements.isEmpty()) {
+                                applicableRequirements.forEach(requirement -> action.get().addRequirement(requirement));
+                                resetRequirements = true;
+                            }
+                            break;
+                        case REQUIREMENT:
+                            Optional<Requirement<?>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key,
+                                    expression.getTypeId(),
+                                    expression.getConfiguration());
+                            if (!requirement.isPresent()) {
+                                ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId());
+                                continue;
+                            }
+                            // not sure if we want to reset or not, needs to be discussed
+                            // if (resetRequirements) applicableRequirements.clear();
+                            applicableRequirements.add(requirement.get());
+                            break;
                     }
-                } catch (FlowException e) {
-                    RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
                 }
             }
+        } catch (FlowException e) {
+            RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
         }
         return actions;
     }
@@ -167,47 +171,55 @@ public final class Flow {
         int i = 0;
         for (String key : keys) {
             if (config.isList(key)) {
-                try {
-                    long delay = 0;
-                    List<FlowExpression> flowExpressions = parse(config.getStringList(key));
-                    Requirement<?> activeRequirement = null;
-                    for (FlowExpression flowExpression : flowExpressions) {
-                        if (flowExpression instanceof FlowDelay) {
-                            delay += ((FlowDelay) flowExpression).getDelay();
-                            continue;
-                        }
-                        if (flowExpression instanceof ActionAPIType) {
-                            ActionAPIType expression = (ActionAPIType) flowExpression;
-                            FlowConfiguration configuration = expression.getConfiguration();
-                            switch (expression.getFlowType()) {
-                                case ACTION:
-                                    if (activeRequirement == null) continue;
-                                    configuration.set("delay", delay);
-                                    Optional<Action<?>> action = ActionAPI.createAction(expression.getTypeId(), configuration);
-                                    if (!action.isPresent()) {
-                                        ActionAPI.UNKNOWN_ACTIONS.add(expression.getTypeId());
-                                        continue;
-                                    }
-                                    activeRequirement.addAction(action.get());
-                                    break;
-                                case REQUIREMENT:
-                                    Optional<Requirement<?>> requirement = ActionAPI.createRequirement(ConfigUtil.getFileName(config).replace("/", ".") + key + (i++),
-                                            expression.getTypeId(),
-                                            expression.getConfiguration());
-                                    if (!requirement.isPresent()) {
-                                        ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId());
-                                        continue;
-                                    }
-                                    requirements.add(requirement.get());
-                                    activeRequirement = requirement.get();
-                                    break;
+                parseRequirements(ConfigUtil.getFileName(config).replace("/", ".") + key + (i++), config, key);
+            }
+        }
+        return requirements;
+    }
+
+    public static List<Requirement<?>> parseRequirements(String id, ConfigurationSection config, String key) {
+
+        List<Requirement<?>> requirements = new ArrayList<>();
+        try {
+            long delay = 0;
+            List<FlowExpression> flowExpressions = parse(config.getStringList(key));
+            Requirement<?> activeRequirement = null;
+            for (FlowExpression flowExpression : flowExpressions) {
+                if (flowExpression instanceof FlowDelay) {
+                    delay += ((FlowDelay) flowExpression).getDelay();
+                    continue;
+                }
+                if (flowExpression instanceof ActionAPIType) {
+                    ActionAPIType expression = (ActionAPIType) flowExpression;
+                    FlowConfiguration configuration = expression.getConfiguration();
+                    switch (expression.getFlowType()) {
+                        case ACTION:
+                            if (activeRequirement == null) continue;
+                            configuration.set("delay", delay);
+                            Optional<Action<?>> action = ActionAPI.createAction(expression.getTypeId(), configuration);
+                            if (!action.isPresent()) {
+                                ActionAPI.UNKNOWN_ACTIONS.add(expression.getTypeId());
+                                continue;
                             }
-                        }
+                            activeRequirement.addAction(action.get());
+                            break;
+                        case REQUIREMENT:
+                            Optional<Requirement<?>> requirement = ActionAPI.createRequirement(
+                                    id,
+                                    expression.getTypeId(),
+                                    expression.getConfiguration());
+                            if (!requirement.isPresent()) {
+                                ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId());
+                                continue;
+                            }
+                            requirements.add(requirement.get());
+                            activeRequirement = requirement.get();
+                            break;
                     }
-                } catch (FlowException e) {
-                    RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
                 }
             }
+        } catch (FlowException e) {
+            RaidCraft.LOGGER.warning("Error when parsing " + key + " inside " + ConfigUtil.getFileName(config) + ": " + e.getMessage());
         }
         return requirements;
     }

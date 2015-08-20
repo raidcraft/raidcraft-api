@@ -2,6 +2,7 @@ package de.raidcraft.api.action;
 
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.config.builder.ConfigBuilder;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author mdoering
@@ -155,16 +157,30 @@ public final class ActionAPI {
     @SuppressWarnings("unchecked")
     public static <T> List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) {
 
-        RequirementFactory<?> factory = requirementFactories.get(type);
-        if (factory == null) return new ArrayList<>();
-        return ((RequirementFactory<T>) factory).createRequirements(id, requirements);
+        return createRequirements(id, requirements).stream()
+                .filter(requirement -> matchesType(requirement, type))
+                .map(requirement -> (Requirement<T>) requirement)
+                .collect(Collectors.toList());
     }
 
     public static List<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) {
 
         List<Requirement<?>> list = new ArrayList<>();
-        for (RequirementFactory<?> requirementFactory : requirementFactories.values()) {
-            list.addAll(requirementFactory.createRequirements(id, requirements));
+
+        Set<String> keys = requirements.getKeys(false);
+        // we need to keep the order of the requirements inside flow statements
+        // therefor we are processing flow and block statements seperatly
+        for (String key : keys) {
+            if (requirements.isList(key)) {
+                list.addAll(Flow.parseRequirements(id + "." + key, requirements, key));
+            } else if (requirements.isConfigurationSection(key)) {
+                // process block statements by going thru the factories
+                for (RequirementFactory<?> requirementFactory : requirementFactories.values()) {
+                    requirementFactory
+                            .create(id + "." + key, requirements.getString(key + ".type"), requirements.getConfigurationSection(key))
+                            .ifPresent(list::add);
+                }
+            }
         }
         return list;
     }
@@ -215,16 +231,29 @@ public final class ActionAPI {
     @SuppressWarnings("unchecked")
     public static  <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
 
-        ActionFactory<?> factory = actionFactories.get(type);
-        if (factory == null) return new ArrayList<>();
-        return ((ActionFactory<T>) factory).createActions(actions);
+        return createActions(actions).stream()
+                .filter(action -> matchesType(action, type))
+                .map(action -> (Action<T>) action)
+                .collect(Collectors.toList());
     }
 
     public static List<Action<?>> createActions(ConfigurationSection actions) {
 
         List<Action<?>> list = new ArrayList<>();
-        for (ActionFactory<?> factory : actionFactories.values()) {
-            list.addAll(factory.createActions(actions));
+        Set<String> keys = actions.getKeys(false);
+        // we need to keep the order of flow actions
+        // therefor we need to process flow and block actions seperatly
+        for (String key : keys) {
+            if (actions.isList(key)) {
+                // lets process the flow block as one and ignore the action factory types
+                list.addAll(Flow.parseActions(actions, key));
+            } else if (actions.isConfigurationSection(key)) {
+                // lets process our block actions normally by going thru all registered factories
+                for (ActionFactory<?> actionFactory : actionFactories.values()) {
+                    actionFactory.create(actions.getString(key + ".type"), actions.getConfigurationSection(key))
+                            .ifPresent(list::add);
+                }
+            }
         }
         return list;
     }

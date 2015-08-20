@@ -133,6 +133,11 @@ public final class ActionFactory<T> {
     }
 
     @SuppressWarnings("unchecked")
+    @Deprecated
+    /**
+     * @deprecated use {@link ActionAPI#createActions(ConfigurationSection)}
+     * @see ActionAPI#createActions(ConfigurationSection)
+     */
     public Collection<Action<T>> createActions(ConfigurationSection actions) {
 
         ArrayList<Action<T>> list = new ArrayList<>();

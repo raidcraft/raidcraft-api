@@ -126,6 +126,11 @@ public final class RequirementFactory<T> {
     }
 
     @SuppressWarnings("unchecked")
+    @Deprecated
+    /**
+     * @deprecated use {@link ActionAPI#createRequirements(String, ConfigurationSection)}
+     * @see ActionAPI#createRequirements(String, ConfigurationSection)
+     */
     public List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements) {
 
         ArrayList<Requirement<T>> list = new ArrayList<>();
