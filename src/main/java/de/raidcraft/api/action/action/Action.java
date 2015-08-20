@@ -8,7 +8,6 @@ import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationEndReason;
 import de.raidcraft.api.conversations.stage.Stage;
-import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.ReflectionUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -16,7 +15,6 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Optional;
 
 /**
  * @author Silthus
@@ -53,13 +51,7 @@ public interface Action<T> extends ActionConfigGenerator {
 
     static Action<Conversation> changeStage(String stage) {
 
-        return ActionConfigWrapper.of((conversation, config) -> {
-
-            Optional<StageTemplate> stageTemplate = Conversations.getStageTemplate(stage, conversation.getTemplate(), config);
-            if (stageTemplate.isPresent()) {
-                conversation.changeToStage(stageTemplate.get().create(conversation));
-            }
-        }, Conversation.class);
+        return ActionConfigWrapper.of((conversation, config) -> conversation.getStage(stage).ifPresent(Stage::changeTo), Conversation.class);
     }
 
     static Action<Conversation> changeStage(Stage stage) {
