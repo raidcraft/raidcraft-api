@@ -45,54 +45,33 @@ public interface Action<T> extends ActionConfigGenerator {
         throw new UnsupportedOperationException("Action " + actionClass.getCanonicalName() + " has no @Information tag!");
     }
 
-    static Action<?> endConversation(ConversationEndReason reason) {
+    static Action<Player> endConversation(ConversationEndReason reason) {
 
-        return new Action<Player>() {
-            @Override
-            public void accept(Player player, ConfigurationSection config) {
+        return (player, config) -> Conversations.endActiveConversation(player, reason);
+    }
 
-                Conversations.endActiveConversation(player, reason);
+    static Action<Conversation> changeStage(String stage) {
+
+        return (conversation, config) -> {
+
+            Optional<StageTemplate> stageTemplate = Conversations.getStageTemplate(stage, conversation.getTemplate(), config);
+            if (stageTemplate.isPresent()) {
+                conversation.changeToStage(stageTemplate.get().create(conversation));
             }
         };
     }
 
-    static Action<?> changeStage(String stage) {
+    static Action<Conversation> changeStage(Stage stage) {
 
-        return new Action<Conversation>() {
-            @Override
-            public void accept(Conversation conversation, ConfigurationSection config) {
-
-                Optional<StageTemplate> stageTemplate = Conversations.getStageTemplate(stage, conversation.getTemplate(), config);
-                if (stageTemplate.isPresent()) {
-                    conversation.changeToStage(stageTemplate.get().create(conversation));
-                }
-            }
-        };
+        return (conversation, config) -> conversation.changeToStage(stage);
     }
 
-    static Action<?> changeStage(Stage stage) {
+    static Action<Conversation> setConversationVariable(String key, Object value) {
 
-        return new Action<Conversation>() {
-            @Override
-            public void accept(Conversation conversation, ConfigurationSection config) {
-
-                conversation.changeToStage(stage);
-            }
-        };
+        return (conversation, config) -> conversation.set(key, value);
     }
 
-    static Action<?> setConversationVariable(String key, Object value) {
-
-        return new Action<Conversation>() {
-            @Override
-            public void accept(Conversation conversation, ConfigurationSection config) {
-
-                conversation.set(key, value);
-            }
-        };
-    }
-
-    static Action<?> text(String text) {
+    static Action<Player> text(String text) {
 
         Action<Player> action = GlobalAction.TEXT.getAction();
         action.withArgs("text", text);

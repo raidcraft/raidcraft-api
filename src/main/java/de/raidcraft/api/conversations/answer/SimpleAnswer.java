@@ -83,14 +83,9 @@ public class SimpleAnswer implements Answer {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Answer addRequirement(Requirement<?> requirement) {
 
-        if (ActionAPI.matchesType(requirement, Conversation.class)) {
-            addConversationRequirement((Requirement<Conversation>) requirement);
-        } else if (ActionAPI.matchesType(requirement, Player.class)) {
-            addPlayerRequirement((Requirement<Player>) requirement);
-        }
+        this.requirements.add(requirement);
         return this;
     }
 
@@ -109,14 +104,9 @@ public class SimpleAnswer implements Answer {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Answer addAction(Action<?> action) {
 
-        if (ActionAPI.matchesType(action, Conversation.class)) {
-            addConversationAction((Action<Conversation>) action);
-        } else if (ActionAPI.matchesType(action, Player.class)) {
-            addPlayerAction((Action<Player>) action);
-        }
+        this.actions.add(action);
         return this;
     }
 
@@ -144,7 +134,7 @@ public class SimpleAnswer implements Answer {
             if (ActionAPI.matchesType(action, Player.class)) {
                 ((Action<Player>) action).accept(conversation.getOwner());
             } else if (ActionAPI.matchesType(action, Conversation.class)) {
-                ((Action<Conversation>) action).accept(conversation);
+                ((Action<Conversation>) action).withPlayer(conversation.getOwner()).accept(conversation);
             }
         }
     }
