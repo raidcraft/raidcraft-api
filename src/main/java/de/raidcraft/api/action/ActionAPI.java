@@ -166,7 +166,7 @@ public final class ActionAPI {
     public static List<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) {
 
         List<Requirement<?>> list = new ArrayList<>();
-
+        if (requirements == null) return list;
         Set<String> keys = requirements.getKeys(false);
         // we need to keep the order of the requirements inside flow statements
         // therefor we are processing flow and block statements seperatly
@@ -240,6 +240,7 @@ public final class ActionAPI {
     public static List<Action<?>> createActions(ConfigurationSection actions) {
 
         List<Action<?>> list = new ArrayList<>();
+        if (actions == null) return list;
         Set<String> keys = actions.getKeys(false);
         // we need to keep the order of flow actions
         // therefor we need to process flow and block actions seperatly
