@@ -295,16 +295,16 @@ public class Conversations {
         return provider.startConversation(player, conversation);
     }
 
-    public static Optional<ConversationHost<?>> createConversationHost(String identifier, String type, Location location) {
+    public static Optional<ConversationHost<?>> createConversationHost(String holdingPlugin, String identifier, String type, Location location) {
 
         if (provider == null) return Optional.empty();
-        return provider.createConversationHost(identifier, type, location);
+        return provider.createConversationHost(holdingPlugin, identifier, type, location);
     }
 
-    public static Optional<ConversationHost<?>> createConversationHost(String identifier, ConfigurationSection config) {
+    public static Optional<ConversationHost<?>> createConversationHost(String holdingPlugin, String identifier, ConfigurationSection config) {
 
         if (provider == null) return Optional.empty();
-        return provider.createConversationHost(identifier, config);
+        return provider.createConversationHost(holdingPlugin, identifier, config);
     }
 
     public static <T> Optional<ConversationHost<T>> createConversationHost(T host, ConfigurationSection config) {

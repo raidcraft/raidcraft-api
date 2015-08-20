@@ -173,30 +173,39 @@ public interface ConversationProvider {
      */
     void registerHostFactory(String identifier, ConversationHostFactory<?> factory);
 
-    default Optional<ConversationHost<?>> createConversationHost(ConfigurationSection config) {
+    /**
+     * Creates a conversation host purly based on the config and the plugin.
+     *
+     * @param plugin that holds the conversation host
+     * @param config to create host from
+     * @return created host
+     */
+    default Optional<ConversationHost<?>> createConversationHost(String plugin, ConfigurationSection config) {
 
-        return createConversationHost(UUID.randomUUID().toString(), config);
+        return createConversationHost(plugin, UUID.randomUUID().toString(), config);
     }
 
     /**
      * Creates a {@link ConversationHost} from the given type at the given location.
      *
+     * @param plugin that holds the conversation host
      * @param identifier of the host
      * @param type of the host
      * @param location to create host at
      * @return created {@link ConversationHost}
      */
-    Optional<ConversationHost<?>> createConversationHost(String identifier, String type, Location location);
+    Optional<ConversationHost<?>> createConversationHost(String plugin, String identifier, String type, Location location);
 
     /**
      * Creates a new conversation host from the given config. The config needs to define the type of the host.
      * If no registered host for the type is found an empty {@link Optional} will be returned.
      *
+     * @param plugin that holds the conversation host
      * @param identifier of the created host
      * @param config to create host from
      * @return optional host
      */
-    Optional<ConversationHost<?>> createConversationHost(String identifier, ConfigurationSection config);
+    Optional<ConversationHost<?>> createConversationHost(String plugin, String identifier, ConfigurationSection config);
 
     /**
      * Creates a new {@link ConversationHost} from the given type.
