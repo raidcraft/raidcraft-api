@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -21,7 +22,12 @@ import java.util.Optional;
  */
 @EqualsAndHashCode(of = {"action", "config"})
 @Data
-class ActionConfigWrapper<T> implements RevertableAction<T> {
+public class ActionConfigWrapper<T> implements RevertableAction<T> {
+
+    public static <T> ActionConfigWrapper<T> of(Action<T> action, Class<T> actionClass) {
+
+        return new ActionConfigWrapper<>(action, new MemoryConfiguration(), actionClass);
+    }
 
     private final Class<T> type;
     private final Action<T> action;

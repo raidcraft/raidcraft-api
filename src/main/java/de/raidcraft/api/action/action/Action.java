@@ -1,6 +1,7 @@
 package de.raidcraft.api.action.action;
 
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.ActionConfigWrapper;
 import de.raidcraft.api.action.GlobalAction;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.conversations.Conversations;
@@ -47,28 +48,28 @@ public interface Action<T> extends ActionConfigGenerator {
 
     static Action<Player> endConversation(ConversationEndReason reason) {
 
-        return (player, config) -> Conversations.endActiveConversation(player, reason);
+        return ActionConfigWrapper.of((player, config) -> Conversations.endActiveConversation(player, reason), Player.class);
     }
 
     static Action<Conversation> changeStage(String stage) {
 
-        return (conversation, config) -> {
+        return ActionConfigWrapper.of((conversation, config) -> {
 
             Optional<StageTemplate> stageTemplate = Conversations.getStageTemplate(stage, conversation.getTemplate(), config);
             if (stageTemplate.isPresent()) {
                 conversation.changeToStage(stageTemplate.get().create(conversation));
             }
-        };
+        }, Conversation.class);
     }
 
     static Action<Conversation> changeStage(Stage stage) {
 
-        return (conversation, config) -> conversation.changeToStage(stage);
+        return ActionConfigWrapper.of((conversation, config) -> conversation.changeToStage(stage), Conversation.class);
     }
 
     static Action<Conversation> setConversationVariable(String key, Object value) {
 
-        return (conversation, config) -> conversation.set(key, value);
+        return ActionConfigWrapper.of((conversation, config) -> conversation.set(key, value), Conversation.class);
     }
 
     static Action<Player> text(String text) {

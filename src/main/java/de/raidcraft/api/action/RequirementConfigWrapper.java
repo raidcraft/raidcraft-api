@@ -16,6 +16,7 @@ import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -31,6 +32,11 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(of = {"requirement"})
 @Data
 public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparable<Requirement<T>> {
+
+    public static <T> RequirementConfigWrapper<T> of(String id, Requirement<T> requirement, Class<T> tClass) {
+
+        return new RequirementConfigWrapper<>(id, requirement, new MemoryConfiguration(), tClass);
+    }
 
     private static final String CHECKED_KEY = "checked";
     private static final String COUNT_KEY = "count";
