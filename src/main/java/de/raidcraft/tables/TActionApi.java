@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -24,6 +25,7 @@ public class TActionApi {
     private String name;
     private String description;
     private String server;
+    @Lob
     private String conf;
     private boolean active;
     private Date lastActive;
