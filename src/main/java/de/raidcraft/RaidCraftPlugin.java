@@ -16,6 +16,7 @@ import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
 import de.raidcraft.api.action.trigger.global.TimerTrigger;
 import de.raidcraft.api.commands.ConfirmCommand;
+import de.raidcraft.api.config.Comment;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.MultiComment;
 import de.raidcraft.api.config.Setting;
@@ -167,8 +168,12 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         for (GlobalRequirement requirement : GlobalRequirement.values()) {
             actionAPI.requirement(requirement.getRequirement());
         }
-        actionAPI.trigger(new GlobalPlayerTrigger());
-        actionAPI.trigger(new TimerTrigger());
+        if(getConfig().actionApiGlobalPlayerTrigger) {
+            actionAPI.trigger(new GlobalPlayerTrigger());
+        }
+        if(getConfig().actionApiTimerTrigger) {
+            actionAPI.trigger(new TimerTrigger());
+        }
         actionAPI.requirement(new IfElseRequirement<>(), Object.class);
     }
 
@@ -253,6 +258,13 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public boolean debugTrigger = true;
         @Setting("debug.requirements")
         public boolean debugRequirements = true;
+
+        @Comment("Enable GlobalPlayerTrigger, like interact, block.break, block.place, move, craft, death, join")
+        @Setting("action_api.enable_global_player_trigger")
+        private boolean actionApiGlobalPlayerTrigger = true;
+        @Comment("Enable TimerTrigger, like tick, end, cancel")
+        @Setting("action_api.enable_time_trigger")
+        private boolean actionApiTimerTrigger = true;
     }
 
     @Override
