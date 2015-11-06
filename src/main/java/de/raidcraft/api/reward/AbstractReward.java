@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * @author Philip Urban
  */
+@Deprecated
 public abstract class AbstractReward<T> implements Reward<T> {
 
     private final String name;

@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 /**
  * @author Silthus
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface RewardInformation {

@@ -34,8 +34,10 @@ public interface RCPlayer {
 
     boolean isOnline();
 
+    @Deprecated
     WorldVector getLocation();
 
+    @Deprecated
     void teleport(WorldVector vector);
 
     RCPlayer getTargetPlayer() throws InvalidTargetException;

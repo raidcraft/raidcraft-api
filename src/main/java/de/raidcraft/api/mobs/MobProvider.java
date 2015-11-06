@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * @author Silthus
  */
+@Deprecated
 public interface MobProvider {
 
     void registerMob(String id, ConfigurationSection data);

@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  * @author Philip Urban
  */
+@Deprecated
 public class RewardManager {
 
     private static final Map<String, Class<? extends Reward<?>>> rewardClasses = new CaseInsensitiveMap<>();

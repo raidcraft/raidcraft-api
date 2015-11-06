@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * @author Silthus
  */
+@Deprecated
 public class Mobs {
 
     private static MobProvider mobProvider;
