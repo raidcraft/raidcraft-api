@@ -247,10 +247,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public boolean debugRequirements = true;
 
         @Comment("Enable GlobalPlayerTrigger, like interact, block.break, block.place, move, craft, death, join")
-        @Setting("action_api.enable_global_player_trigger")
+        @Setting("action-api.enable-global-player-trigger")
         private boolean actionApiGlobalPlayerTrigger = true;
         @Comment("Enable TimerTrigger, like tick, end, cancel")
-        @Setting("action_api.enable_time_trigger")
+        @Setting("action-api.enable-time-trigger")
         private boolean actionApiTimerTrigger = true;
         @Comment("Save and Load Player Inventories in Database, allow sharing with other servers")
         @Setting("enable-player-inventory-share")
