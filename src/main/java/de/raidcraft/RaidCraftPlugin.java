@@ -24,6 +24,8 @@ import de.raidcraft.api.events.PlayerSignInteractEvent;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.TPersistentInventory;
 import de.raidcraft.api.inventory.TPersistentInventorySlot;
+import de.raidcraft.api.inventory.sync.InventorySync;
+import de.raidcraft.api.inventory.sync.TPlayerInventory;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.npc.NPC_Manager;
@@ -36,15 +38,7 @@ import de.raidcraft.api.random.objects.MoneyLootObject;
 import de.raidcraft.api.random.objects.RandomMoneyLootObject;
 import de.raidcraft.api.random.tables.ConfiguredRDSTable;
 import de.raidcraft.api.storage.TObjectStorage;
-import de.raidcraft.tables.PlayerPlacedBlock;
-import de.raidcraft.tables.TActionApi;
-import de.raidcraft.tables.TCommand;
-import de.raidcraft.tables.TListener;
-import de.raidcraft.tables.TLog;
-import de.raidcraft.tables.TPlayerLog;
-import de.raidcraft.tables.TPlayerLogStatistic;
-import de.raidcraft.tables.TPlugin_;
-import de.raidcraft.tables.TRcPlayer;
+import de.raidcraft.tables.*;
 import de.raidcraft.util.BlockUtil;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
@@ -57,27 +51,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -101,12 +82,18 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerEvents(this);
         registerEvents(new RaidCraft());
         registerEvents(new BarAPI(this));
+
         registeerChildListener();
         registerCommands(ConfirmCommand.class, getName());
         registerCommands(ActionCommand.class, getName());
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
+
+        if(getConfig().enablePlayerInventorySave) {
+            registerEvents(new InventorySync(this));
+        }
+
         // inizialize action API
         registerActionAPI();
 
@@ -168,10 +155,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         for (GlobalRequirement requirement : GlobalRequirement.values()) {
             actionAPI.requirement(requirement.getRequirement());
         }
-        if(getConfig().actionApiGlobalPlayerTrigger) {
+        if (getConfig().actionApiGlobalPlayerTrigger) {
             actionAPI.trigger(new GlobalPlayerTrigger());
         }
-        if(getConfig().actionApiTimerTrigger) {
+        if (getConfig().actionApiTimerTrigger) {
             actionAPI.trigger(new TimerTrigger());
         }
         actionAPI.requirement(new IfElseRequirement<>(), Object.class);
@@ -265,6 +252,9 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         @Comment("Enable TimerTrigger, like tick, end, cancel")
         @Setting("action_api.enable_time_trigger")
         private boolean actionApiTimerTrigger = true;
+        @Comment("Save and Load Player Inventories in Database, allow sharing with other servers")
+        @Setting("enable-player-inventory-share")
+        private boolean enablePlayerInventorySave = false;
     }
 
     @Override
@@ -285,6 +275,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TPlugin_.class);
         classes.add(TPlayerLog.class);
         classes.add(TPlayerLogStatistic.class);
+        classes.add(TPlayerInventory.class);
         return classes;
     }
 
@@ -435,6 +426,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     /**
      * Do not call this method
      * use registerCommands(Class<?> class, String host)
+     *
      * @param clazz
      */
     public void trackCommand(Class<?> clazz, String host, String baseClass) {
