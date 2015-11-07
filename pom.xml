@@ -22,6 +22,14 @@
             <id>raidcraft</id>
             <url>http://repo.raid-craft.eu/artifactory/repo/</url>
         </repository>
+        <repository>
+            <id>myplayplanet</id>
+            <url>http://maven.myplayplanet.net/</url>
+        </repository>
+        <repository>
+            <id>blha303-repo</id>
+            <url>http://repo.blha303.biz</url>
+        </repository>
     </repositories>
 
     <dependencies>
