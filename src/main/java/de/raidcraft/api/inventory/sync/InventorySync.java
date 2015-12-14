@@ -45,7 +45,7 @@ public class InventorySync implements Listener {
             plugin.getDatabase().save(inventory);
         } else {
             try {
-                PersistentInventory persistentInventory = inventoryManager.getInventory(playerInventory.getId());
+                PersistentInventory persistentInventory = inventoryManager.getInventory(playerInventory.getInventoryId());
                 persistentInventory.setInventory(event.getPlayer().getInventory());
                 persistentInventory.save();
                 inventoryManager.unloadInventory(persistentInventory);
@@ -68,11 +68,11 @@ public class InventorySync implements Listener {
             return;
         }
         try {
-            PersistentInventory persistentInventory = this.inventoryManager.getInventory(inventory.getId());
+            PersistentInventory persistentInventory = this.inventoryManager.getInventory(inventory.getInventoryId());
             event.getPlayer().getInventory().setContents(persistentInventory.getInventory().getContents());
         } catch (InvalidInventoryException e) {
             plugin.getLogger().warning("InvalidInventoryException@" + event.getPlayer().getPlayerListName()
-                    + " Inventory:" + inventory.getId());
+                    + " Inventory:" + inventory.getInventoryId());
             e.printStackTrace();
         }
     }
