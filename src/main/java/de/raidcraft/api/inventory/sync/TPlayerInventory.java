@@ -23,4 +23,5 @@ public class TPlayerInventory {
     private UUID player;
     @NotNull
     private int inventoryId;
+    private boolean locked;
 }
