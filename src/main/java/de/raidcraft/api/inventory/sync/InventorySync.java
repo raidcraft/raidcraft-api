@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
@@ -65,6 +66,10 @@ public class InventorySync implements Listener {
         saveInventoryAndRemoveLock(event.getPlayer());
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    public void playerKickEvent(PlayerKickEvent event) {
+        saveInventoryAndRemoveLock(event.getPlayer());
+    }
 
     @EventHandler(priority = EventPriority.LOW)
     public void playerJoinEvent(final PlayerJoinEvent event) {
