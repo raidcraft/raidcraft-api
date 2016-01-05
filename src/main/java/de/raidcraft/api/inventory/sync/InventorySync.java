@@ -57,6 +57,7 @@ public class InventorySync implements Listener {
         }
         // delete inventory and remove lock
         player.getInventory().clear();
+        player.updateInventory();
         playerInventory.setLocked(false);
         plugin.getDatabase().update(playerInventory);
     }
@@ -78,15 +79,14 @@ public class InventorySync implements Listener {
                 .eq("player", event.getPlayer().getUniqueId())
                 .findUnique();
 
-        if (inventory == null) {
-            saveInventoryAndRemoveLock(event.getPlayer());
+        if (inventory != null) {
+            // check if inventory is locked and we must delay the load
+            BRunnable task = new BRunnable();
+            task.setPlugin(plugin);
+            task.setPlayer(event.getPlayer());
+            int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 0, 10);
+            task.setTaskId(id);
         }
-        // check if inventory is locked and we must delay the load
-        BRunnable task = new BRunnable();
-        task.setPlugin(plugin);
-        task.setPlayer(event.getPlayer());
-        int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 0, 10);
-        task.setTaskId(id);
     }
 
     @Data
