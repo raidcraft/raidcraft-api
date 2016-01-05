@@ -39,20 +39,6 @@ public class InventorySync implements Listener {
 
     private void saveInventoryAndRemoveLock(Player player) {
 
-        // check if inventory is empty
-        boolean found = false;
-        for(ItemStack item : player.getInventory().getContents())
-        {
-            if(item != null && item.getType() != Material.AIR) {
-                found = true;
-                break;
-            }
-            found = false;
-        }
-        if(!found) {
-            return;
-        }
-
         TPlayerInventory playerInventory = getPlayerInventory(player);
         if (playerInventory == null) {
             PersistentInventory persistentInventory = inventoryManager.createInventory(player.getInventory());
@@ -84,10 +70,10 @@ public class InventorySync implements Listener {
         saveInventoryAndRemoveLock(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void playerKickEvent(PlayerKickEvent event) {
-        saveInventoryAndRemoveLock(event.getPlayer());
-    }
+//    @EventHandler(priority = EventPriority.HIGH)
+//    public void playerKickEvent(PlayerKickEvent event) {
+//        saveInventoryAndRemoveLock(event.getPlayer());
+//    }
 
     @EventHandler(priority = EventPriority.LOW)
     public void playerJoinEvent(final PlayerJoinEvent event) {
@@ -101,7 +87,7 @@ public class InventorySync implements Listener {
             BRunnable task = new BRunnable();
             task.setPlugin(plugin);
             task.setPlayer(event.getPlayer());
-            int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 0, 10);
+            int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 10, 10);
             task.setTaskId(id);
         }
     }
