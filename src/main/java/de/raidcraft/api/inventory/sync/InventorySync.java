@@ -37,7 +37,9 @@ public class InventorySync implements Listener {
 
     private void saveInventoryAndRemoveLock(Player player) {
         TPlayerInventory playerInventory = getPlayerInventory(player);
+        boolean wasNull = false;
         if (playerInventory == null) {
+            wasNull = true;
             PersistentInventory persistentInventory = inventoryManager.createInventory(player.getInventory());
             persistentInventory.save();
 
@@ -55,10 +57,12 @@ public class InventorySync implements Listener {
                 e.printStackTrace();
             }
         }
-        // delete inventory and remove lock
-        player.getInventory().clear();
-        playerInventory.setLocked(false);
-        plugin.getDatabase().update(playerInventory);
+        if(!wasNull) {
+            // delete inventory and remove lock
+            player.getInventory().clear();
+            playerInventory.setLocked(false);
+            plugin.getDatabase().update(playerInventory);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
