@@ -40,11 +40,16 @@ public class InventorySync implements Listener {
     private void saveInventoryAndRemoveLock(Player player) {
 
         // check if inventory is empty
+        boolean found = false;
         for(ItemStack item : player.getInventory().getContents())
         {
-            if(item != null || item.getType() != Material.AIR) {
+            if(item != null && item.getType() != Material.AIR) {
+                found = true;
                 break;
             }
+            found = false;
+        }
+        if(!found) {
             return;
         }
 
