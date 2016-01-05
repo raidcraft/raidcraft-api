@@ -8,6 +8,7 @@ import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.PersistentInventory;
 import lombok.Data;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Dragonfire
@@ -36,6 +38,16 @@ public class InventorySync implements Listener {
     }
 
     private void saveInventoryAndRemoveLock(Player player) {
+
+        // check if inventory is empty
+        for(ItemStack item : player.getInventory().getContents())
+        {
+            if(item != null || item.getType() != Material.AIR) {
+                break;
+            }
+            return;
+        }
+
         TPlayerInventory playerInventory = getPlayerInventory(player);
         if (playerInventory == null) {
             PersistentInventory persistentInventory = inventoryManager.createInventory(player.getInventory());
