@@ -70,10 +70,10 @@ public class InventorySync implements Listener {
         saveInventoryAndRemoveLock(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void playerKickEvent(PlayerKickEvent event) {
-        saveInventoryAndRemoveLock(event.getPlayer());
-    }
+//    @EventHandler(priority = EventPriority.HIGH)
+//    public void playerKickEvent(PlayerKickEvent event) {
+//        saveInventoryAndRemoveLock(event.getPlayer());
+//    }
 
     @EventHandler(priority = EventPriority.LOW)
     public void playerJoinEvent(final PlayerJoinEvent event) {
