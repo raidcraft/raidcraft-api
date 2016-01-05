@@ -8,7 +8,6 @@ import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.PersistentInventory;
 import lombok.Data;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,7 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Dragonfire
@@ -38,7 +36,6 @@ public class InventorySync implements Listener {
     }
 
     private void saveInventoryAndRemoveLock(Player player) {
-
         TPlayerInventory playerInventory = getPlayerInventory(player);
         if (playerInventory == null) {
             PersistentInventory persistentInventory = inventoryManager.createInventory(player.getInventory());
@@ -60,7 +57,6 @@ public class InventorySync implements Listener {
         }
         // delete inventory and remove lock
         player.getInventory().clear();
-        player.updateInventory();
         playerInventory.setLocked(false);
         plugin.getDatabase().update(playerInventory);
     }
@@ -70,10 +66,10 @@ public class InventorySync implements Listener {
         saveInventoryAndRemoveLock(event.getPlayer());
     }
 
-//    @EventHandler(priority = EventPriority.HIGH)
-//    public void playerKickEvent(PlayerKickEvent event) {
-//        saveInventoryAndRemoveLock(event.getPlayer());
-//    }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void playerKickEvent(PlayerKickEvent event) {
+        saveInventoryAndRemoveLock(event.getPlayer());
+    }
 
     @EventHandler(priority = EventPriority.LOW)
     public void playerJoinEvent(final PlayerJoinEvent event) {
@@ -82,14 +78,15 @@ public class InventorySync implements Listener {
                 .eq("player", event.getPlayer().getUniqueId())
                 .findUnique();
 
-        if (inventory != null) {
-            // check if inventory is locked and we must delay the load
-            BRunnable task = new BRunnable();
-            task.setPlugin(plugin);
-            task.setPlayer(event.getPlayer());
-            int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 10, 10);
-            task.setTaskId(id);
+        if (inventory == null) {
+            saveInventoryAndRemoveLock(event.getPlayer());
         }
+        // check if inventory is locked and we must delay the load
+        BRunnable task = new BRunnable();
+        task.setPlugin(plugin);
+        task.setPlayer(event.getPlayer());
+        int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 0, 10);
+        task.setTaskId(id);
     }
 
     @Data
