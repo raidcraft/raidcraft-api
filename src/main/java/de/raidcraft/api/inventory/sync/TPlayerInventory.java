@@ -25,9 +25,9 @@ public class TPlayerInventory {
 
     @Id
     private int id;
+    @Version
     @NotNull
     private UUID player;
-    @Version
     @NotNull
     private int inventoryId;
     private int objectHelmet = -1;
