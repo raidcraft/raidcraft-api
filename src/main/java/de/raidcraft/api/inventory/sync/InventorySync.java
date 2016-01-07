@@ -116,7 +116,7 @@ public class InventorySync implements Listener {
         // check if inventory is locked and we must delay the load
         DelayedInventoryLoader task = new DelayedInventoryLoader();
         task.setPlayer(event.getPlayer());
-        int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 10, 10);
+        int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 2, 10);
         task.setTaskId(id);
     }
 
