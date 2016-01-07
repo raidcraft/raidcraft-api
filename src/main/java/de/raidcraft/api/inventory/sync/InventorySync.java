@@ -57,6 +57,7 @@ public class InventorySync implements Listener {
         tPlayerInventory.setInventoryId(persistentInventory.getId());
         tPlayerInventory.setArmor(player.getInventory(), this.armorStorage);
         tPlayerInventory.setExp(player.getExp());
+        tPlayerInventory.setLevel(player.getLevel());
         tPlayerInventory.setLocked(false);
         plugin.getDatabase().save(tPlayerInventory);
     }
@@ -71,6 +72,7 @@ public class InventorySync implements Listener {
             persistentInventory.setInventory(player.getInventory());
             tPlayerInventory.setArmor(player.getInventory(), this.armorStorage);
             tPlayerInventory.setExp(player.getExp());
+            tPlayerInventory.setLevel(player.getLevel());
             persistentInventory.save();
         } catch (InvalidInventoryException e) {
             plugin.getLogger().warning("InvalidInventoryException@" + player.getPlayerListName() + ":");
@@ -81,6 +83,7 @@ public class InventorySync implements Listener {
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
         player.setExp(0);
+        player.setLevel(0);
         tPlayerInventory.setLocked(false);
         plugin.getDatabase().update(tPlayerInventory);
     }
@@ -149,7 +152,10 @@ public class InventorySync implements Listener {
                     PersistentInventory persistentInventory = inventoryManager.getInventory(inventory.getInventoryId());
                     player.getInventory().setContents(persistentInventory.getInventory().getContents());
                     loadArmor(inventory);
-                    player.setExp(inventory.getExp());
+                    if(inventory.getExp() != -1 && inventory.getLevel() != -1) {
+                        player.setExp(inventory.getExp());
+                        player.setLevel(inventory.getLevel());
+                    }
                 } catch (InvalidInventoryException e) {
                     plugin.getLogger().warning("InvalidInventoryException@" + player.getPlayer().getPlayerListName()
                             + " Inventory:" + inventory.getInventoryId());
