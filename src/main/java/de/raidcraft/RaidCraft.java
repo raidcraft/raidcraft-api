@@ -18,6 +18,7 @@ import de.raidcraft.api.conversations.legacy.ConversationProvider;
 import de.raidcraft.api.database.Database;
 import de.raidcraft.api.database.Table;
 import de.raidcraft.api.economy.Economy;
+import de.raidcraft.api.hero.HeroProvider;
 import de.raidcraft.api.inventory.InvalidInventoryException;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.PersistentInventory;
@@ -106,6 +107,7 @@ public class RaidCraft implements Listener {
     private static Economy economy;
     private static ConversationProvider conversationProvider;
     private static TradeProvider tradeProvider;
+    private static HeroProvider heroProvider;
 
     /**
      * Gets the wrapped Player for interaction with the player and his surroundings.
@@ -621,4 +623,12 @@ public class RaidCraft implements Listener {
         return statisticProviders.get(name);
     }
 
+    public static void registerHeroProvider(HeroProvider provider) {
+
+        heroProvider = provider;
+    }
+
+    public static HeroProvider getHeroProvider() {
+        return heroProvider;
+    }
 }
