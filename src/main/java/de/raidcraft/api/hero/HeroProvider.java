@@ -8,4 +8,10 @@ import java.util.UUID;
 public interface HeroProvider {
 
     int getLevel(UUID uuid);
+
+    String getClass(UUID uuid);
+
+    String getSkillPoints(UUID uuid);
+
+    String getEXP(UUID uuid);
 }
