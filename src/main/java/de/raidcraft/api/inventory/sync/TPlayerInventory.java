@@ -25,7 +25,6 @@ public class TPlayerInventory {
 
     @Id
     private int id;
-    @Version
     @NotNull
     private UUID player;
     @NotNull
@@ -39,6 +38,8 @@ public class TPlayerInventory {
     private boolean locked;
     private Date createdAt;
     private Date updatedAt;
+    @Version
+    private Long version;
 
     public void setArmor(PlayerInventory playerInventory, ObjectStorage<ItemStack> armorStorage) {
         if (playerInventory == null) {
