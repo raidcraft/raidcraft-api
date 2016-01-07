@@ -11,6 +11,7 @@ import org.bukkit.inventory.PlayerInventory;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,6 +27,7 @@ public class TPlayerInventory {
     private int id;
     @NotNull
     private UUID player;
+    @Version
     @NotNull
     private int inventoryId;
     private int objectHelmet = -1;
