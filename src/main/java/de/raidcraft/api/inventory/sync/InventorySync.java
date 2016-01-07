@@ -56,6 +56,7 @@ public class InventorySync implements Listener {
         tPlayerInventory.setPlayer(player.getUniqueId());
         tPlayerInventory.setInventoryId(persistentInventory.getId());
         tPlayerInventory.setArmor(player.getInventory(), this.armorStorage);
+        tPlayerInventory.setExp(player.getExp());
         tPlayerInventory.setLocked(false);
         plugin.getDatabase().save(tPlayerInventory);
     }
@@ -69,6 +70,7 @@ public class InventorySync implements Listener {
             PersistentInventory persistentInventory = inventoryManager.getInventory(tPlayerInventory.getInventoryId());
             persistentInventory.setInventory(player.getInventory());
             tPlayerInventory.setArmor(player.getInventory(), this.armorStorage);
+            tPlayerInventory.setExp(player.getExp());
             persistentInventory.save();
         } catch (InvalidInventoryException e) {
             plugin.getLogger().warning("InvalidInventoryException@" + player.getPlayerListName() + ":");
@@ -78,6 +80,7 @@ public class InventorySync implements Listener {
         // delete inventory and remove lock
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
+        player.setExp(0);
         tPlayerInventory.setLocked(false);
         plugin.getDatabase().update(tPlayerInventory);
     }
@@ -146,6 +149,7 @@ public class InventorySync implements Listener {
                     PersistentInventory persistentInventory = inventoryManager.getInventory(inventory.getInventoryId());
                     player.getInventory().setContents(persistentInventory.getInventory().getContents());
                     loadArmor(inventory);
+                    player.setExp(inventory.getExp());
                 } catch (InvalidInventoryException e) {
                     plugin.getLogger().warning("InvalidInventoryException@" + player.getPlayer().getPlayerListName()
                             + " Inventory:" + inventory.getInventoryId());

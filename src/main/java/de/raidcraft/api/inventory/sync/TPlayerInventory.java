@@ -32,6 +32,7 @@ public class TPlayerInventory {
     private int objectChestplate = -1;
     private int objectLeggings = -1;
     private int objectBoots = -1;
+    private float exp = -1;
     private boolean locked;
     private Date createdAt;
     private Date updatedAt;
