@@ -11,7 +11,7 @@ public interface HeroProvider {
 
     String getClass(UUID uuid);
 
-    String getSkillPoints(UUID uuid);
+    int getSkillPoints(UUID uuid);
 
-    String getEXP(UUID uuid);
+    int getEXP(UUID uuid);
 }
