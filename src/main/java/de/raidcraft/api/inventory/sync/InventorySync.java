@@ -58,6 +58,7 @@ public class InventorySync implements Listener {
         tPlayerInventory.setArmor(player.getInventory(), this.armorStorage);
         tPlayerInventory.setExp(player.getExp());
         tPlayerInventory.setLevel(player.getLevel());
+        tPlayerInventory.setCreatedAt(new Date(System.currentTimeMillis()));
         tPlayerInventory.setLocked(false);
         plugin.getDatabase().save(tPlayerInventory);
     }
@@ -73,6 +74,7 @@ public class InventorySync implements Listener {
             tPlayerInventory.setArmor(player.getInventory(), this.armorStorage);
             tPlayerInventory.setExp(player.getExp());
             tPlayerInventory.setLevel(player.getLevel());
+            tPlayerInventory.setUpdatedAt(new Date(System.currentTimeMillis()));
             persistentInventory.save();
         } catch (InvalidInventoryException e) {
             plugin.getLogger().warning("InvalidInventoryException@" + player.getPlayerListName() + ":");
@@ -114,7 +116,7 @@ public class InventorySync implements Listener {
         // check if inventory is locked and we must delay the load
         DelayedInventoryLoader task = new DelayedInventoryLoader();
         task.setPlayer(event.getPlayer());
-        int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 0, 10);
+        int id = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, 10, 10);
         task.setTaskId(id);
     }
 
