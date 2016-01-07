@@ -164,8 +164,8 @@ public class InventorySync implements Listener {
                     e.printStackTrace();
                 }
                 inventory.setLocked(true);
-                plugin.getDatabase().update(inventory);
                 finished = true;
+                plugin.getDatabase().update(inventory);
             }
 
         }
