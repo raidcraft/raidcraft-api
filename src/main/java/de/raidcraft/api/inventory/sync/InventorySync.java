@@ -20,7 +20,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * Save Inventory (Player, Armor) to the database.
@@ -32,6 +32,7 @@ public class InventorySync implements Listener {
     final private InventoryManager inventoryManager;
     final private ObjectStorage<ItemStack> armorStorage;
     private RaidCraftPlugin plugin;
+    private Set<UUID> loginLockCache = new HashSet<>();
 
     public InventorySync(RaidCraftPlugin plugin) {
         this.plugin = plugin;
@@ -64,6 +65,11 @@ public class InventorySync implements Listener {
     }
 
     private void saveInventoryAndRemoveLock(Player player) {
+
+        if(loginLockCache.contains(player.getUniqueId())) {
+            return;
+        }
+
         TPlayerInventory tPlayerInventory = getPlayerInventory(player);
         if (tPlayerInventory == null) {
             throw new IllegalArgumentException(player.getUniqueId() + "TPlayerInventory shoud not be null");
@@ -104,6 +110,9 @@ public class InventorySync implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void playerJoinEvent(final PlayerJoinEvent event) {
+
+        loginLockCache.add(event.getPlayer().getUniqueId());
+
         TPlayerInventory inventory = plugin.getDatabase().find(TPlayerInventory.class)
                 .where()
                 .eq("player", event.getPlayer().getUniqueId())
@@ -166,6 +175,7 @@ public class InventorySync implements Listener {
                 inventory.setLocked(true);
                 finished = true;
                 plugin.getDatabase().update(inventory);
+                loginLockCache.remove(player.getUniqueId());
             }
 
         }
