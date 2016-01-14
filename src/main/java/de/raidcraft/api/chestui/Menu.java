@@ -7,6 +7,7 @@ import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
 import de.raidcraft.api.chestui.menuitems.MenuItemAllowedPlacing;
 import de.raidcraft.api.chestui.menuitems.MenuItemHide;
 import de.raidcraft.util.InventoryUtils;
+import de.raidcraft.util.ItemUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -42,6 +43,9 @@ public class Menu {
     @Getter
     private boolean toolbarActive = false;
     private Player player;
+    private List<MenuItemAllowedPlacing> placingMenuItems = new ArrayList<>();
+    @Setter
+    private boolean placingItemsMustSameType;
 
     private int availableRows = -1;
     private int availableSlots = -1;
@@ -74,11 +78,62 @@ public class Menu {
         addMenuItem(new MenuItem());
     }
 
-    public MenuItemAllowedPlacing placingSlot() {
+    public void placingSlot() {
 
-        MenuItemAllowedPlacing menuItem = new MenuItemAllowedPlacing();
+        MenuItemAllowedPlacing menuItem = new MenuItemAllowedPlacing() {
+            @Override
+            public boolean checkPlacing(ItemStack itemstack) {
+
+                // Durability and enchantments
+                if(itemstack.getDurability() != 0 || itemstack.getEnchantments().size() > 0) {
+                    return false;
+                }
+
+                if(placingItemsMustSameType) {
+                    Material uniqueType = getPlacedItemUniqueType();
+                    if(uniqueType != null && uniqueType != itemstack.getType()) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        };
+        placingMenuItems.add(menuItem);
         addMenuItem(menuItem);
-        return menuItem;
+    }
+
+    public List<ItemStack> getPlacedItems() {
+
+        List<ItemStack> itemList = new ArrayList<>();
+        for(MenuItemAllowedPlacing menuItem : placingMenuItems) {
+            if(menuItem.getItem() == null || menuItem.getItem().getType() == Material.AIR) {
+                continue;
+            }
+            itemList.add(menuItem.getItem());
+        }
+        return itemList;
+    }
+
+    public int getPlacedItemsAmount() {
+
+        int amount = 0;
+        List<ItemStack> itemList = getPlacedItems();
+        for(ItemStack itemStack : itemList) {
+            amount += itemStack.getAmount();
+        }
+        return amount;
+    }
+
+    public Material getPlacedItemUniqueType() {
+
+        if(!placingItemsMustSameType) return null;
+
+        List<ItemStack> itemList = getPlacedItems();
+        for(ItemStack itemStack : itemList) {
+            return itemStack.getType();
+        }
+        return null;
     }
 
     public void close() {
