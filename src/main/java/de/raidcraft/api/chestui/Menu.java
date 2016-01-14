@@ -136,6 +136,21 @@ public class Menu {
         return null;
     }
 
+    public void addItemInPlacingSlot(ItemStack itemStack) {
+
+        for(MenuItemAllowedPlacing menuItem : placingMenuItems) {
+            if(menuItem.getItem() != null && menuItem.getItem().getType() != Material.AIR) {
+                continue;
+            }
+
+            if(!menuItem.checkPlacing(itemStack)) {
+                return;
+            }
+
+            menuItem.setItem(itemStack);
+        }
+    }
+
     public void close() {
 
         this.player.closeInventory();
