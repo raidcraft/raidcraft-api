@@ -70,7 +70,9 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemPlus(String name) {
 
-        return ItemUtils.setDisplayName(ItemUtils.getDye(DyeColor.MAGENTA), name);
+        ItemStack item = ItemUtils.getDye(DyeColor.LIME);
+        item.setAmount(1);
+        return ItemUtils.setDisplayName(item, name);
     }
 
 
@@ -81,7 +83,9 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemMinus(String name) {
 
-        return ItemUtils.setDisplayName(ItemUtils.getDye(DyeColor.LIME), name);
+        ItemStack item = ItemUtils.getDye(DyeColor.LIME);
+        item.setAmount(1);
+        return ItemUtils.setDisplayName(item, name);
     }
 
     public static ItemStack getItemPage() {
