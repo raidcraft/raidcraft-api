@@ -28,4 +28,9 @@ public class MenuItem implements MenuItemAPI {
     public void trigger(Player player) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public boolean checkPlacing(ItemStack itemstack) {
+        return false;
+    }
 }

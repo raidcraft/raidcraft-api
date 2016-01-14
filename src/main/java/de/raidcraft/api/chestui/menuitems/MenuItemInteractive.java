@@ -85,4 +85,9 @@ public class MenuItemInteractive extends MenuItemAPI {
     public void trigger(Player player) {
         // standard nothing
     }
+
+    @Override
+    public boolean checkPlacing(ItemStack itemstack) {
+        return false;
+    }
 }

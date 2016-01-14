@@ -9,7 +9,9 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Dragonfire
  */
-public class MenuItem extends MenuItemAPI {
+public class MenuItemAllowedPlacing extends MenuItemAPI {
+
+    private ItemStack itemStack;
 
     @Override
     public void trigger(Player player) {
@@ -18,6 +20,11 @@ public class MenuItem extends MenuItemAPI {
 
     @Override
     public boolean checkPlacing(ItemStack itemstack) {
-        return false;
+        this.itemStack = itemstack;
+        return true;
+    }
+
+    public ItemStack getItem() {
+        return itemStack;
     }
 }

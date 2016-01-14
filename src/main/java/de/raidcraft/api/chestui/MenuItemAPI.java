@@ -11,4 +11,6 @@ interface MenuItemAPI {
     ItemStack getItem();
 
     void trigger(Player player);
+
+    boolean checkPlacing(ItemStack itemstack);
 }

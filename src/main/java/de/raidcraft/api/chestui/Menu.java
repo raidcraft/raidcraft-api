@@ -4,11 +4,13 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.chestui.menuitems.MenuItem;
 import de.raidcraft.api.chestui.menuitems.MenuItemAPI;
+import de.raidcraft.api.chestui.menuitems.MenuItemAllowedPlacing;
 import de.raidcraft.api.chestui.menuitems.MenuItemHide;
 import de.raidcraft.util.InventoryUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -70,6 +72,13 @@ public class Menu {
     public void empty() {
 
         addMenuItem(new MenuItem());
+    }
+
+    public MenuItemAllowedPlacing placingSlot() {
+
+        MenuItemAllowedPlacing menuItem = new MenuItemAllowedPlacing();
+        addMenuItem(menuItem);
+        return menuItem;
     }
 
     public void close() {
@@ -285,6 +294,19 @@ public class Menu {
             return;
         }
         getMenuItem(page, slot).trigger(player);
+    }
+
+    public boolean checkPlacingMenuSlot(int slot, ItemStack itemStack) {
+
+        if (getMenuItem(page, slot) == null) {
+            return false;
+        }
+
+        if(itemStack == null || itemStack.getType() == Material.AIR) {
+            return false;
+        }
+
+        return getMenuItem(page, slot).checkPlacing(itemStack);
     }
 
     public void addMenuItem(MenuItemAPI item) {

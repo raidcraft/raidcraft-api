@@ -82,7 +82,12 @@ public class ChestUI {
             if (cache.get(player) == null) {
                 return;
             }
-            event.setCancelled(true);
+
+            if(!cache.get(player).checkPlacingMenuSlot(event.getSlot(), event.getCurrentItem())) {
+                event.setCancelled(true);
+            }
+
+
             // test if clicked outside the inventory and empty slot
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
                 return;

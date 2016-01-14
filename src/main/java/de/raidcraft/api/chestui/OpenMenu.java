@@ -27,4 +27,9 @@ public class OpenMenu implements MenuItemAPI {
 
         ChestUI.getInstance().openMenu(player, this.menu);
     }
+
+    @Override
+    public boolean checkPlacing(ItemStack itemstack) {
+        return false;
+    }
 }

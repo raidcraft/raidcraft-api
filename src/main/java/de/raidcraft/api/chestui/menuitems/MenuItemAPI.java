@@ -114,4 +114,8 @@ public abstract class MenuItemAPI {
 
         return ItemUtils.clearLore(ItemUtils.createItem(Material.RECORD_4, name));
     }
+
+    public boolean checkPlacing(ItemStack itemstack) {
+        return false;
+    }
 }
