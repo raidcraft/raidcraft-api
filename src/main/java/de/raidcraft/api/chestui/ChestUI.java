@@ -90,7 +90,8 @@ public class ChestUI {
             }
 
             if(cache.get(player).checkPlacingMenuSlot(event.getSlot(), event.getCurrentItem())) {
-                event.getInventory().setContents();
+//                event.getInventory().setContents();
+                //TODO
             }
 
             // call custom event
