@@ -181,12 +181,12 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     @Override
     public void disable() {
 
-        for (UUID uuid : new ArrayList<>(playerLogs.keySet())) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player != null) {
-                completePlayerLog(player);
-            }
-        }
+//        for (UUID uuid : new ArrayList<>(playerLogs.keySet())) {
+//            Player player = Bukkit.getPlayer(uuid);
+//            if (player != null) {
+//                completePlayerLog(player);
+//            }
+//        }
         RaidCraft.unregisterComponent(CustomItemManager.class);
         // save all NPC's
         NPC_Manager.getInstance().storeAll();
@@ -279,30 +279,30 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         return classes;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerJoin(PlayerJoinEvent event) {
-
-        createPlayerLog(event.getPlayer());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onPlayerQuit(PlayerQuitEvent event) {
-
-        completePlayerLog(event.getPlayer());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onPlayerKick(PlayerKickEvent event) {
-
-        completePlayerLog(event.getPlayer());
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
-
-        completePlayerLog(event.getPlayer());
-        createPlayerLog(event.getPlayer());
-    }
+//    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+//    public void onPlayerJoin(PlayerJoinEvent event) {
+//
+//        createPlayerLog(event.getPlayer());
+//    }
+//
+//    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+//    public void onPlayerQuit(PlayerQuitEvent event) {
+//
+//        completePlayerLog(event.getPlayer());
+//    }
+//
+//    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+//    public void onPlayerKick(PlayerKickEvent event) {
+//
+//        completePlayerLog(event.getPlayer());
+//    }
+//
+//    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+//    public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
+//
+//        completePlayerLog(event.getPlayer());
+//        createPlayerLog(event.getPlayer());
+//    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerPlacedBlock(BlockPlaceEvent event) {
