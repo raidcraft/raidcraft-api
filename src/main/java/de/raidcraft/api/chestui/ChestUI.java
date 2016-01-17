@@ -83,14 +83,14 @@ public class ChestUI {
                 return;
             }
 
+            event.setCancelled(true);
             // test if clicked outside the inventory and empty slot
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
-                event.setCancelled(true);
                 return;
             }
 
-            if(!cache.get(player).checkPlacingMenuSlot(event.getSlot(), event.getCurrentItem())) {
-                event.setCancelled(true);
+            if(cache.get(player).checkPlacingMenuSlot(event.getSlot(), event.getCurrentItem())) {
+                event.getInventory().setContents();
             }
 
             // call custom event
