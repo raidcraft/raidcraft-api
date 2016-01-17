@@ -5,6 +5,7 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.tables.TRcPlayer;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -44,12 +45,21 @@ public class UUIDUtil {
 
     public static String getNameFromUUID(UUID uuid) {
 
+        if(uuid == null) {
+            return null;
+        }
+
         TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase()
                 .find(TRcPlayer.class).where().eq("uuid", uuid.toString()).findUnique();
         if (tPlayer != null) {
             return tPlayer.getLastName();
         }
-        return Bukkit.getOfflinePlayer(uuid).getName();
+
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+        if(offlinePlayer == null) {
+            return null;
+        }
+        return offlinePlayer.getName();
     }
 
     public static String getNameFromUUID(String uuid) {
