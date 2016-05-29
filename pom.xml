@@ -28,7 +28,7 @@
         </repository>
         <repository>
             <id>collab-repo</id>
-            <url>http://blha303.github.io/repo/</url> 
+            <url>http://blha303.github.io/repo/</url>
         </repository>
     </repositories>
 
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.0.1</version>
+            <version>4.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
