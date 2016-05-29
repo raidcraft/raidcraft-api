@@ -98,7 +98,7 @@ public class FakeWither {
 
         WrapperPlayServerEntityMetadata update = new WrapperPlayServerEntityMetadata();
 
-        update.setEntityId(id);
+        update.setEntityID(id);
         update.setMetadata(watcher.getWatchableObjects());
         broadcastPacket(update.getHandle(), true);
     }

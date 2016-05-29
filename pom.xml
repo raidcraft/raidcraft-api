@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.0.1-SNAPSHOT</version>
+            <version>4.0.1-20160529.130156-1</version>
         </dependency>
         <dependency>
             <groupId>net.citizensnpcs</groupId>
