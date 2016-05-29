@@ -98,7 +98,7 @@ public class EffectUtil {
             location.getWorld().strikeLightningEffect(location);
         }
         Bukkit.getOnlinePlayers().stream().filter(player -> LocationUtil.isWithinRadius(player.getLocation(), location, radius)).forEach(player -> {
-            player.playSound(location, Sound.AMBIENCE_THUNDER, 10, 1);
+            player.playSound(location, Sound.ENTITY_LIGHTNING_THUNDER, 10, 1);
         });
     }
 
