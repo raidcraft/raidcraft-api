@@ -3,7 +3,6 @@ package de.raidcraft.api.inventory.sync;
 import com.avaje.ebean.validation.NotNull;
 import de.raidcraft.api.storage.ObjectStorage;
 import lombok.Data;
-import net.minecraft.server.v1_9_R2.Items;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
