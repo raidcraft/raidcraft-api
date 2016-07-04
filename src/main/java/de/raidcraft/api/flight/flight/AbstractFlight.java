@@ -123,7 +123,7 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     public synchronized void abortFlight() {
         try {
             onAbortFlight();
-            getAircraft().abortFlight(this);
+            if(getAircraft() != null) getAircraft().abortFlight(this);
             Location improvedLocation = getStartLocation().clone();
             improvedLocation.add(0,4,0); // add some high to prevent glitching
             getPassenger().getEntity().teleport(improvedLocation);
