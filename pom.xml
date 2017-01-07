@@ -23,10 +23,6 @@
             <url>http://repo.raid-craft.de/artifactory/repo</url>
         </repository>
         <repository>
-            <id>myplayplanet</id>
-            <url>http://maven.myplayplanet.net/</url>
-        </repository>
-        <repository>
             <id>collab-repo</id>
             <url>http://blha303.github.io/repo/</url>
         </repository>
@@ -77,7 +73,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.10.2-R0.1-SNAPSHOT</version>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
