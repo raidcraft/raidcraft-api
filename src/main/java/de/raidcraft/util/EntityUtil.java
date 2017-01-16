@@ -197,7 +197,7 @@ public class EntityUtil {
 
         try {
             if (customClass == null) {
-                RaidCraft.LOGGER.warning("[DT] NULL Custom Entity: " + name);
+                RaidCraft.LOGGER.warning("[registerEntity] NULL Custom Entity: " + name);
                 return;
             }
             // we need to check if the class is a valid transistent entity
@@ -207,8 +207,8 @@ public class EntityUtil {
             }
             List<Map<?, ?>> dataMaps = new ArrayList<>();
             for (Field f : ReflectionUtil.getNmsClass("net.minecraft.server", "EntityTypes").getDeclaredFields()) {
-                RaidCraft.LOGGER.warning("[DT] Dragon Entity class name: " + f.getType().getSimpleName());
-                RaidCraft.LOGGER.warning("[DT] Map class name: " + Map.class.getSimpleName());
+                RaidCraft.LOGGER.warning("[registerEntity] Entity class name: " + f.getType().getSimpleName());
+                RaidCraft.LOGGER.warning("[registerEntity] Map class name: " + Map.class.getSimpleName());
                 if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
                     f.setAccessible(true);
                     dataMaps.add((Map<?, ?>) f.get(null));
@@ -216,7 +216,7 @@ public class EntityUtil {
             }
 
             if(dataMaps.size() == 0) {
-                RaidCraft.LOGGER.warning("[DT] No matching Dragon Entity implementations found!");
+                RaidCraft.LOGGER.warning("[registerEntity] No matching Entity implementations found!");
             }
             else {
                 ((Map<Class<?>, String>) dataMaps.get(1)).put(customClass, name);
