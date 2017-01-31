@@ -245,7 +245,7 @@ public final class ItemUtils {
 
         Dye dye = new Dye();
         dye.setColor(color);
-        return dye.toItemStack();
+        return dye.toItemStack(1);
     }
 
     // TODO: use STAINED_GLASS_PANE
