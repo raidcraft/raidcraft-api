@@ -2,8 +2,8 @@ package de.raidcraft.api.chat;
 
 import com.google.common.base.Strings;
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.util.fanciful.FancyMessage;
 import lombok.Getter;
-import mkremins.fanciful.FancyMessage;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class Chat {
      * @param msg     object to populate
      * @param message to replace
      *
-     * @return same {@link mkremins.fanciful.FancyMessage} object with replaced items
+     * @return same {@link FancyMessage} object with replaced items
      */
     private static FancyMessage matchAndReplaceItem(List<AutoCompletionProvider> providers, Player player, FancyMessage msg, String message) {
 

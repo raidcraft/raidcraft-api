@@ -3,12 +3,7 @@ package de.raidcraft.util;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.ambient.ParticleEffect;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 
@@ -98,7 +93,7 @@ public class EffectUtil {
             location.getWorld().strikeLightningEffect(location);
         }
         Bukkit.getOnlinePlayers().stream().filter(player -> LocationUtil.isWithinRadius(player.getLocation(), location, radius)).forEach(player -> {
-            player.playSound(location, Sound.AMBIENCE_THUNDER, 10, 1);
+            player.playSound(location, Sound.ENTITY_LIGHTNING_THUNDER, 10, 1);
         });
     }
 

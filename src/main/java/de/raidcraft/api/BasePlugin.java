@@ -2,13 +2,7 @@ package de.raidcraft.api;
 
 import com.avaje.ebean.EbeanServer;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import com.sk89q.minecraft.util.commands.CommandUsageException;
-import com.sk89q.minecraft.util.commands.CommandsManager;
-import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
-import com.sk89q.minecraft.util.commands.SimpleInjector;
-import com.sk89q.minecraft.util.commands.WrappedCommandException;
+import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.commands.QueuedCommand;
@@ -22,8 +16,6 @@ import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.tables.TPlugin_;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -33,7 +25,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Date;
@@ -45,9 +36,6 @@ import java.util.Map;
  */
 public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component {
 
-    // vault variables
-    private static Chat chat;
-    private static Permission permission;
     // member variables
     private final Map<String, QueuedCommand> queuedCommands = new HashMap<>();
     private Database database;
@@ -67,22 +55,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         this.translationProvider = new ConfigTranslationProvider(this);
 
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
-        if (plugin != null) {
-            if (chat == null) {
-                if (setupChat()) {
-                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Chat API.");
-                } else {
-                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Chat API.");
-                }
-            }
-            if (permission == null) {
-                if (setupPermissions()) {
-                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Permissions API.");
-                } else {
-                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Permissions API.");
-                }
-            }
-        }
 
         this.commands = new CommandsManager<CommandSender>() {
 
@@ -96,9 +68,9 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         this.commands.setInjector(new SimpleInjector(this));
         this.commandRegistration = new CommandsManagerRegistration(this, this, this.commands);
         // check if the database needs to be setup
-        if (getDatabaseClasses().size() > 0) {
-            getDatabase();
-        }
+//        if (getDatabaseClasses().size() > 0) {
+//            getDatabase();
+//        }
         // call the sub plugins to enable
         enable();
 
@@ -127,7 +99,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
 
     public abstract void disable();
 
-    @Override
     public EbeanServer getDatabase() {
 
         if (this.ebeanDatabase == null) {
@@ -242,38 +213,9 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         return RaidCraft.getPlayer(player);
     }
 
-    public final Chat getChat() {
-
-        return chat;
-    }
-
-    public final Permission getPermissions() {
-
-        return permission;
-    }
-
     public TranslationProvider getTranslationProvider() {
 
         return translationProvider;
-    }
-
-    protected boolean setupPermissions() {
-
-        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
-        if (permissionProvider != null) {
-            permission = permissionProvider.getProvider();
-        }
-        return (permission != null);
-    }
-
-    private boolean setupChat() {
-
-        RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
-        if (chatProvider != null) {
-            chat = chatProvider.getProvider();
-        }
-
-        return (chat != null);
     }
 
     // Rc log methods for informations

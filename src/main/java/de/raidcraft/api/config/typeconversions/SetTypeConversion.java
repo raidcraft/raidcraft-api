@@ -1,6 +1,6 @@
 package de.raidcraft.api.config.typeconversions;
 
-import com.zachsthings.libcomponents.config.ConfigUtil;
+import de.raidcraft.util.ConfigUtil;
 
 import java.lang.reflect.Type;
 import java.util.Collection;

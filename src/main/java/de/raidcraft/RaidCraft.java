@@ -23,11 +23,7 @@ import de.raidcraft.api.hero.HeroProvider;
 import de.raidcraft.api.inventory.InvalidInventoryException;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.PersistentInventory;
-import de.raidcraft.api.items.CustomItem;
-import de.raidcraft.api.items.CustomItemException;
-import de.raidcraft.api.items.CustomItemManager;
-import de.raidcraft.api.items.CustomItemStack;
-import de.raidcraft.api.items.Skull;
+import de.raidcraft.api.items.*;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentProvider;
 import de.raidcraft.api.player.PlayerComponent;
@@ -41,13 +37,7 @@ import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
-import de.raidcraft.util.BlockUtil;
-import de.raidcraft.util.CaseInsensitiveMap;
-import de.raidcraft.util.CustomItemUtil;
-import de.raidcraft.util.ItemUtils;
-import de.raidcraft.util.MetaDataKey;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.permission.Permission;
+import de.raidcraft.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -66,12 +56,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -315,16 +300,6 @@ public class RaidCraft implements Listener {
     public static void setupTradeProvider(TradeProvider tradeProvider) {
 
         RaidCraft.tradeProvider = tradeProvider;
-    }
-
-    public static Permission getPermissions() {
-
-        return getComponent(RaidCraftPlugin.class).getPermissions();
-    }
-
-    public static Chat getChat() {
-
-        return getComponent(RaidCraftPlugin.class).getChat();
     }
 
     public static WorldGuardPlugin getWorldGuard() {

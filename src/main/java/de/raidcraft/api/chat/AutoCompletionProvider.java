@@ -1,7 +1,7 @@
 package de.raidcraft.api.chat;
 
+import de.raidcraft.util.fanciful.FancyMessage;
 import lombok.Data;
-import mkremins.fanciful.FancyMessage;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
@@ -62,8 +62,8 @@ public abstract class AutoCompletionProvider {
     protected abstract List<String> getAutoCompleteList(Player player, @Nullable String message);
 
     /**
-     * Auto completes the given item returning a {@link mkremins.fanciful.FancyMessage} object.
-     * Classes implementing this should append to the given FancyMessage object with {@link mkremins.fanciful.FancyMessage#then()}
+     * Auto completes the given item returning a {@link FancyMessage} object.
+     * Classes implementing this should append to the given FancyMessage object with {@link FancyMessage#then()}
      *
      * @param player to autocomplete for
      * @param fancyMessage object to append to with then

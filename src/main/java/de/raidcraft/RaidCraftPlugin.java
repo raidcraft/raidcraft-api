@@ -51,7 +51,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
 import javax.persistence.PersistenceException;
@@ -174,7 +175,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         } catch (PersistenceException e) {
             e.printStackTrace();
             getLogger().warning("Installing database for " + getDescription().getName() + " due to first time usage");
-            installDDL();
+//            installDDL();
         }
     }
 
@@ -257,7 +258,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         private boolean enablePlayerInventorySave = false;
     }
 
-    @Override
     public List<Class<?>> getDatabaseClasses() {
 
         List<Class<?>> classes = new ArrayList<>();

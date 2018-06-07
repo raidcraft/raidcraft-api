@@ -19,7 +19,7 @@
 package de.raidcraft.util;
 
 import com.sk89q.minecraft.util.commands.CommandException;
-import mkremins.fanciful.FancyMessage;
+import de.raidcraft.util.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 

@@ -1,6 +1,5 @@
 package de.raidcraft.api.items.tooltip;
 
-import com.google.common.base.Objects;
 import de.raidcraft.util.CustomItemUtil;
 
 /**
@@ -57,12 +56,12 @@ public abstract class Tooltip {
         return tooltip;
     }
 
-    @Override
-    public String toString() {
-
-        return Objects.toStringHelper(this)
-                .add("slot", slot)
-                .add("tooltip", tooltip)
-                .toString();
-    }
+//    @Override
+//    public String toString() {
+//
+//        return Objects.toString(this)
+//                .add("slot", slot)
+//                .add("tooltip", tooltip)
+//                .toString();
+//    }
 }

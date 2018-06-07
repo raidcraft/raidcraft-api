@@ -47,7 +47,6 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.util.ReflectionUtil;
-import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.block.Skull;
@@ -56,17 +55,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  *
  * @author SBPrime
  */
 public class CustomHeadCreator implements IHeadCreator {
-    private final Base64 m_base64 = new Base64();
     
     public void injectWhitelistUrl(String url) {
 
@@ -113,7 +108,7 @@ public class CustomHeadCreator implements IHeadCreator {
         
         injectWhitelistUrl(url);
 
-        byte[] encodedData = m_base64.encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
+        byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
         propertyMap.put("textures", new Property("textures", new String(encodedData)));        
         
         return profile;

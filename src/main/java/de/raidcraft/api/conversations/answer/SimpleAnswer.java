@@ -4,9 +4,9 @@ import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.conversations.conversation.Conversation;
+import de.raidcraft.util.fanciful.FancyMessage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import mkremins.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

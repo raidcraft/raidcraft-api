@@ -11,17 +11,13 @@ import de.raidcraft.api.conversations.events.RCConversationStartEvent;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
+import de.raidcraft.util.fanciful.FancyMessage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import mkremins.fanciful.FancyMessage;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * @author mdoering

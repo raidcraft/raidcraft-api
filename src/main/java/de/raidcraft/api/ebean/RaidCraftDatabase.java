@@ -407,7 +407,8 @@ public class RaidCraftDatabase {
      */
     protected List<Class<?>> getDatabaseClasses() {
 
-        return plugin.getDatabaseClasses();
+        return new ArrayList<>();
+//        return plugin.getDatabaseClasses();
     }
 
     /**
