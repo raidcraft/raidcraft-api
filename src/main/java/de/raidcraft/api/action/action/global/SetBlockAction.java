@@ -30,7 +30,7 @@ public class SetBlockAction implements Action<Player> {
         Location location = ConfigUtil.getLocationFromConfig(config, player);
         Material material = Material.matchMaterial(config.getString("block", "minecraft:air"));
         if (material == null) {
-            RaidCraft.LOGGER.warning("Unknown block material " + config.getString("block") + " in block.set action!");
+            RaidCraft.LOGGER.warning("Unknown block material " + config.getString("block") + " in block.set withAction!");
             return;
         }
         if (location == null) return;

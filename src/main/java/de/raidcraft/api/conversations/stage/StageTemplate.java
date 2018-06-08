@@ -6,6 +6,7 @@ import de.raidcraft.api.action.requirement.RequirementHolder;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,7 @@ import java.util.Optional;
  */
 public interface StageTemplate extends RequirementHolder, ActionHolder {
 
-    String START_STAGE = "start";
+    String START_STAGE = "startStage";
     String DEFAULT_STAGE_TEMPLATE = "default";
     int MAX_ANSWERS = 5;
 
@@ -34,10 +35,10 @@ public interface StageTemplate extends RequirementHolder, ActionHolder {
     ConversationTemplate getConversationTemplate();
 
     /**
-     * Gets the text that is displayed for this stage.
-     * If no text is display the optional will be empty.
+     * Gets the withText that is displayed for this stage.
+     * If no withText is display the optional will be empty.
      *
-     * @return display text
+     * @return display withText
      */
     Optional<String[]> getText();
 
@@ -50,7 +51,7 @@ public interface StageTemplate extends RequirementHolder, ActionHolder {
 
     /**
      * Gets a list of random actions to execute. Random actions can be used to display a
-     * randomized text to the player when the stage is executed.
+     * randomized withText to the player when the stage is executed.
      *
      * @return list of random actions
      */
@@ -58,11 +59,19 @@ public interface StageTemplate extends RequirementHolder, ActionHolder {
 
     /**
      * Whether or not this stage will auto display its answers. If answers are not
-     * automatically shown, the action answers.show must be called.
+     * automatically shown, the withAction answers.show must be called.
      *
      * @return true if answers are shown automatically
      */
     boolean isAutoShowingAnswers();
 
+    void loadConfig(ConfigurationSection config);
+
+    void setText(String text);
+
+    void setText(String... text);
+
     Stage create(Conversation conversation);
+
+    void addAnswer(Answer answer);
 }

@@ -23,10 +23,10 @@ public class Title {
     /* Chat serializer */
     private Class<?> nmsChatSerializer;
     private Class<?> chatBaseComponent;
-    /* Title text and color */
+    /* Title withText and color */
     private String title = "";
     private ChatColor titleColor = ChatColor.WHITE;
-    /* Subtitle text and color */
+    /* Subtitle withText and color */
     private String subtitle = "";
     private ChatColor subtitleColor = ChatColor.WHITE;
     /* Title timings */
@@ -52,9 +52,9 @@ public class Title {
      * Create a new 1.8 title
      *
      * @param title
-     * Title text
+     * Title withText
      * @param subtitle
-     * Subtitle text
+     * Subtitle withText
      */
     public Title(String title, String subtitle) {
         this.title = title;
@@ -85,9 +85,9 @@ public class Title {
      * Create a new 1.8 title
      *
      * @param title
-     * Title text
+     * Title withText
      * @param subtitle
-     * Subtitle text
+     * Subtitle withText
      * @param fadeInTime
      * Fade in time
      * @param stayTime
@@ -116,7 +116,7 @@ public class Title {
     }
 
     /**
-     * Set title text
+     * Set title withText
      *
      * @param title
      * Title
@@ -126,28 +126,28 @@ public class Title {
     }
 
     /**
-     * Get title text
+     * Get title withText
      *
-     * @return Title text
+     * @return Title withText
      */
     public String getTitle() {
         return this.title;
     }
 
     /**
-     * Set subtitle text
+     * Set subtitle withText
      *
      * @param subtitle
-     * Subtitle text
+     * Subtitle withText
      */
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
     }
 
     /**
-     * Get subtitle text
+     * Get subtitle withText
      *
-     * @return Subtitle text
+     * @return Subtitle withText
      */
     public String getSubtitle() {
         return this.subtitle;
@@ -249,7 +249,7 @@ public class Title {
                 Object serialized = getMethod(nmsChatSerializer, "a",
                         String.class).invoke(
                         null,
-                        "{text:\""
+                        "{withText:\""
                                 + ChatColor.translateAlternateColorCodes('&',
                                 title) + "\",color:"
                                 + titleColor.name().toLowerCase() + "}");
@@ -260,7 +260,7 @@ public class Title {
                     // Send subtitle if present
                     serialized = getMethod(nmsChatSerializer, "a", String.class)
                             .invoke(null,
-                                    "{text:\""
+                                    "{withText:\""
                                             + ChatColor
                                             .translateAlternateColorCodes(
                                                     '&', subtitle)

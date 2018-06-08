@@ -41,18 +41,18 @@ public interface ConversationProvider {
      * <code>
      *     flow:
      *       - :"Flow Answer"
-     *       - ^action-after-answer
+     *       - ^withAction-after-answer
      *       - ?requirement1-for-answer
      *       - :"Flow Input Answer"->flow-input-var1
-     *       - ^action-with-input action-conf:%%
+     *       - ^withAction-with-input withAction-conf:%%
      *     '1':
-     *       text: "Block Answer"
+     *       withText: "Block Answer"
      *       requirements:
      *         ...
      *       actions:
      *         ...
      *     '2':
-     *       text: "Block Input Answer"
+     *       withText: "Block Input Answer"
      *       var: block-input-var
      *       requirements:
      *         ...
@@ -87,10 +87,10 @@ public interface ConversationProvider {
     Optional<Answer> getAnswer(String type, ConfigurationSection config);
 
     /**
-     * Gets a simple answer template with the given text.
+     * Gets a simple answer template with the given withText.
      *
      * @param text of the answer
-     * @return simple answer with text
+     * @return simple answer with withText
      */
     Answer getAnswer(String text);
 
@@ -104,12 +104,12 @@ public interface ConversationProvider {
 
     /**
      * Registers the given stage template class. Registered stage templates can be
-     * used in the configuration to display custom text and answers that is dynamically generated.
+     * used in the configuration to display custom withText and answers that is dynamically generated.
      *
      * @param type name of the stage
      * @param stage type to register
      */
-    void registerStage(String type, Class<? extends StageTemplate> stage);
+    void registerStageTemplate(String type, Class<? extends StageTemplate> stage);
 
     /**
      * Gets an instance of a registered {@link StageTemplate} or an empty {@link Optional} if no
@@ -247,7 +247,7 @@ public interface ConversationProvider {
 
     /**
      * Registers the given variable for all conversation replacements.
-     * Registered variables will be replaced when the conversation text is written.
+     * Registered variables will be replaced when the conversation withText is written.
      *
      * @param pattern of the variable
      * @param variable to register
@@ -271,6 +271,8 @@ public interface ConversationProvider {
      * @return loaded conversation template or empty {@link Optional} if template was not found
      */
     Optional<ConversationTemplate> loadConversation(String identifier, ConfigurationSection config);
+
+    ConversationTemplate registerConversationTemplate(ConversationTemplate template);
 
     /**
      * Gets a registered and loaded {@link ConversationTemplate} with the given identifier.
@@ -299,9 +301,9 @@ public interface ConversationProvider {
      * engaged in a conversation the active conversation will be aborted and the new one will be started.
      * If the conversation is the same as the active conversation nothing will change.
      *
-     * @param player to start conversation for
+     * @param player to startStage conversation for
      * @param conversationHost that started the conversation
-     * @return started conversation or an empty optional if the host has no conversations to start
+     * @return started conversation or an empty optional if the host has no conversations to startStage
      */
     Optional<Conversation> startConversation(Player player, ConversationHost<?> conversationHost);
 
@@ -309,11 +311,15 @@ public interface ConversationProvider {
      * Starts the given conversation directly for the player using the player as the host.
      * So the conversation will never end because of range problems.
      *
-     * @param player to start conversation for
-     * @param conversation to start
+     * @param player to startStage conversation for
+     * @param conversation to startStage
      * @return started conversation
      */
     Optional<Conversation> startConversation(Player player, String conversation);
+
+    Conversation startConversation(Player player, ConversationTemplate template, ConversationHost<?> host);
+
+    Conversation startConversation(Player player, ConversationTemplate template);
 
     /**
      * Gets an active conversation for the player if any are found.
@@ -326,7 +332,7 @@ public interface ConversationProvider {
     /**
      * Sets the active conversation of the player to the given conversation. If there already is an
      * active conversation it will be aborted.
-     * The new conversation will not start automatically and {@link Conversation#start()} must be called.
+     * The new conversation will not startStage automatically and {@link Conversation#start()} must be called.
      *
      * @param conversation to set active for the player
      * @return old active conversation

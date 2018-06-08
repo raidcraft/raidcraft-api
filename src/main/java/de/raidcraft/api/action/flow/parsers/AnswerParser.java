@@ -26,7 +26,7 @@ public class AnswerParser extends FlowParser {
 
         String text = getMatcher().group(1);
         if (text == null) {
-            throw new FlowException("Could not parse answer without text!");
+            throw new FlowException("Could not parse answer without withText!");
         }
         String inputVar = getMatcher().group(3);
         return new FlowAnswer(text, inputVar);

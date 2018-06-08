@@ -32,7 +32,7 @@ public class FlowAnswer implements FlowExpression {
     public Optional<Answer> create(StageTemplate template) {
 
         MemoryConfiguration config = new MemoryConfiguration();
-        config.set("text", getText());
+        config.set("withText", getText());
         if (getInputVariable().isPresent()) {
             config.set("var", getInputVariable().get());
             config.set("type", Answer.DEFAULT_INPUT_TYPE);

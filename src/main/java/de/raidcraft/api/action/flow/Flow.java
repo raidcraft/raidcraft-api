@@ -50,7 +50,7 @@ public final class Flow {
         try {
             long delay = 0;
             List<FlowExpression> flowExpressions = parse(config.getStringList(key));
-            // we are gonna add all requirements to this list until an action is added
+            // we are gonna add all requirements to this list until an withAction is added
             boolean resetRequirements = false;
             List<Requirement<?>> applicableRequirements = new ArrayList<>();
             for (FlowExpression flowExpression : flowExpressions) {
@@ -109,7 +109,7 @@ public final class Flow {
                 try {
                     long delay = 0;
                     List<FlowExpression> flowExpressions = parse(config.getStringList(key));
-                    // we are gonna add all requirements to this list until an action is added
+                    // we are gonna add all requirements to this list until an withAction is added
                     List<ActionAPIType> applicableRequirements = new ArrayList<>();
                     TriggerFactory activeTrigger = null;
 
@@ -296,7 +296,7 @@ public final class Flow {
                                                 expression.getConfiguration(),
                                                 Conversation.class);
                                         if (conversationRequirement.isPresent()) {
-                                            throw new FlowException("Could not find valid requirement type for " + expression.getTypeId());
+                                            throw new FlowException("Could not find valid withRequirement type for " + expression.getTypeId());
                                         }
                                         conversationRequirements.add(conversationRequirement.get());
                                     } else {

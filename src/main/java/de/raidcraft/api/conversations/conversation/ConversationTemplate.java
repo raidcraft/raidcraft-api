@@ -41,25 +41,25 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
     int getPriority();
 
     /**
-     * If the conversation is persistant, the current state of the conversation will be saved
+     * If the conversation is persistent, the current state of the conversation will be saved
      * when the conversation is aborted.
      *
      * @return true if conversation will save if it is aborted
      */
-    boolean isPersistant();
+    boolean isPersistent();
 
     /**
      * If the conversation is auto ending the conversation will silently end when no extra stages
-     * besides the start stage are defined.
+     * besides the startStage stage are defined.
      *
      * @return true if conversation will auto end
      */
     boolean isAutoEnding();
 
     /**
-     * Blocks the start of other conversations if this conversation is active.
+     * Blocks the startStage of other conversations if this conversation is active.
      *
-     * @return true if conversation should block the start of other conversations
+     * @return true if conversation should block the startStage of other conversations
      */
     boolean isBlockingConversationStart();
 
@@ -77,6 +77,14 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
      * @return false if conversation cannot be ended by the player
      */
     boolean isExitable();
+
+    /**
+     * The implementation of this method depends on the conversation template.
+     * May load the provided config into the conversation template and may do nothing.
+     *
+     * @param config to load
+     */
+    void loadConfig(ConfigurationSection config);
 
     /**
      * Gets the {@link ConfigurationSection} that defines special host settings that are defined in
@@ -103,8 +111,20 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
     Optional<StageTemplate> getStage(String name);
 
     /**
+     * Adds the given stage to the conversation.
+     * If a stage with the same identifier already exists it will return the already existing stage.
+     * If the existing stage does not match {@link TStage} it will override the existing stage
+     * and add the passed in {@param stageTemplate}.
+     *
+     * @param stageTemplate to add to the conversation.
+     * @param <TStage>      type of the stage template
+     * @return added stage or existing stage with same identifier if {@link TStage} matches.
+     */
+    <TStage extends StageTemplate> TStage addStage(TStage stageTemplate);
+
+    /**
      * Creates a new conversation without starting it.
-     * Call {@link de.raidcraft.api.conversations.conversation.Conversation#start()} to start the conversation.
+     * Call {@link de.raidcraft.api.conversations.conversation.Conversation#start()} to startStage the conversation.
      * Make sure to keep a reference to the conversation as it will not persist in cache.
      *
      * @param player to create conversation for
@@ -118,7 +138,7 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
      * in {@link Conversations#setActiveConversation(Conversation)}. If the player already has an
      * active conversation the conversation will be aborted with the {@link ConversationEndReason#START_NEW_CONVERSATION}.
      *
-     * @param player to start conversation for
+     * @param player to startStage conversation for
      * @param host that is hosting this conversation
      * @return started conversation
      */
@@ -127,9 +147,9 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
     /**
      * Starts this conversation for the given player and host with the given {@link StageTemplate}.
      *
-     * @param player to start conversation for
+     * @param player to startStage conversation for
      * @param host that is hosting this conversation
-     * @param stage to start at
+     * @param stage to startStage at
      * @return started conversation
      */
     Conversation startConversation(Player player, ConversationHost host, StageTemplate stage);

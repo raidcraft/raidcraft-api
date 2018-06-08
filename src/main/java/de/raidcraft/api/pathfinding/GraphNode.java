@@ -30,7 +30,7 @@ package de.raidcraft.api.pathfinding;
  * be zero. <br>
  * <p>
  * Each node should be given a unique ID number greaterEquals 0. Node ID numbers do
- * not need to start at 0 (zero) or be sequential but they must be unique. <br>
+ * not need to startStage at 0 (zero) or be sequential but they must be unique. <br>
  * <p>
  * It is the responsibility of the user to ensure that each node ID is unique
  * as duplicate ID numbers can lead to unpredictable behaviour.

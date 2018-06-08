@@ -19,17 +19,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author Silthus
  */
-@EqualsAndHashCode(of = {"requirement"})
+@EqualsAndHashCode(of = {"withRequirement"})
 @Data
 public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparable<Requirement<T>> {
 
@@ -68,11 +64,11 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         } else {
             this.reasonable = null;
         }
-        this.persistant = config.getBoolean("persistant", false);
+        this.persistant = config.getBoolean("persistent", false);
         this.negate = config.getBoolean("negate", false);
         this.order = config.getInt("order", 0);
         this.requiredCount = config.getInt("count", 0);
-        this.countText = config.getString("count-text");
+        this.countText = config.getString("count-withText");
         this.description = config.getString("description");
         this.optional = config.getBoolean("optional", false);
         this.successActions = ActionAPI.createActions(config.getConfigurationSection("success")).stream()
@@ -322,7 +318,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
                         .where()
                         .eq("uuid", entry.getKey())
                         .eq("plugin", plugin.getName())
-                        .eq("requirement", getId()).findUnique();
+                        .eq("withRequirement", getId()).findUnique();
                 if (dbEntry == null) {
                     dbEntry = new TPersistantRequirement();
                     dbEntry.setPlugin(plugin.getName());
@@ -365,7 +361,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
             List<TPersistantRequirement> list = database.find(TPersistantRequirement.class)
                     .where()
                     .eq("plugin", plugin.getName())
-                    .eq("requirement", getId()).findList();
+                    .eq("withRequirement", getId()).findList();
             list.forEach(entry -> {
                 for (TPersistantRequirementMapping mapping : entry.getMappings()) {
                     setMapping(entry.getUuid(), mapping.getMappedKey(), mapping.getMappedValue());
@@ -385,7 +381,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
                     .where()
                     .eq("uuid", ((Player) entity).getUniqueId())
                     .eq("plugin", plugin.getName())
-                    .eq("requirement", getId()).findList();
+                    .eq("withRequirement", getId()).findList();
             database.delete(list);
         }
     }

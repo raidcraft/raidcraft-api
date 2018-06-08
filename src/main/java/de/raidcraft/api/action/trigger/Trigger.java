@@ -83,7 +83,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
             list.stream().filter(wrapper -> wrapper.getTriggerDelay() <= 0)
                     // then lets process the trigger
                     .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity))
-                    // if we get true back we are ready for action processing
+                    // if we get true back we are ready for withAction processing
                     .forEach(wrapper -> wrapper.executeActions(triggeringEntity));
         }
     }

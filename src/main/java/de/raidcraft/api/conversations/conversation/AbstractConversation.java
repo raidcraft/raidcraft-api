@@ -165,7 +165,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     @Override
     public boolean start() {
 
-        if (getTemplate().isPersistant()) load();
+        if (getTemplate().isPersistent()) load();
         Optional<Stage> stage = getCurrentStage();
         if (!stage.isPresent()) stage = getStage(StageTemplate.START_STAGE);
         if (stage.isPresent()) {
@@ -213,7 +213,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         if (!currentStage.isPresent()) {
             return Optional.empty();
         }
-        if (getTemplate().isPersistant()) save();
+        if (getTemplate().isPersistent()) save();
 
         abortActionExection();
 

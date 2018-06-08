@@ -17,8 +17,8 @@ public class IfElseRequirement<T> implements Requirement<T> {
             value = "if-else",
             desc = "Compares two requirements against each other.",
             conf = {
-                    "left: leftside requirement",
-                    "right: rightside requirement",
+                    "left: leftside withRequirement",
+                    "right: rightside withRequirement",
                     "operator: [&&][||]"
             }
     )

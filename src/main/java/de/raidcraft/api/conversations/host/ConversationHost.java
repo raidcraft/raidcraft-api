@@ -89,7 +89,7 @@ public interface ConversationHost<T> {
      * Sets the given {@link Conversation} for the player. The
      * Conversation will persist until {@link #unsetConversation(Player, ConversationTemplate)} is called.
      *
-     * @param player to set persistant conversation for
+     * @param player to set persistent conversation for
      * @param conversation to set
      */
     default void setConversation(@NonNull Player player, @NonNull ConversationTemplate conversation) {
@@ -101,7 +101,7 @@ public interface ConversationHost<T> {
      * Sets the given {@link Conversation} for the player. The
      * Conversation will persist until {@link #unsetConversation(Player, ConversationTemplate)} is called.
      *
-     * @param player to set persistant conversation for
+     * @param player to set persistent conversation for
      * @param conversation to set
      */
     void setConversation(@NonNull UUID player, @NonNull ConversationTemplate conversation);
@@ -118,7 +118,7 @@ public interface ConversationHost<T> {
     /**
      * Gets the conversation from {@link #getConversation(Player)} and calls {@link ConversationTemplate#startConversation(Player, ConversationHost)}.
      *
-     * @param player to start conversation for
+     * @param player to startStage conversation for
      * @return started conversation
      */
     Optional<Conversation> startConversation(Player player);
@@ -126,8 +126,8 @@ public interface ConversationHost<T> {
     /**
      * Starts the given {@link Conversation} for the given {@link Player}
      *
-     * @param player to start conversation for
-     * @param conversation to start
+     * @param player to startStage conversation for
+     * @param conversation to startStage
      * @return started conversation
      */
     Optional<Conversation> startConversation(Player player, String conversation);

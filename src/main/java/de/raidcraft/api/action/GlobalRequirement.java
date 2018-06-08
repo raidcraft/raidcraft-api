@@ -64,7 +64,7 @@ public enum GlobalRequirement {
         @Override
         @Information(
                 value = "dummy",
-                desc = "Dummy requirement for counting and persistant markers.",
+                desc = "Dummy withRequirement for counting and persistent markers.",
                 aliases = {"count"}
         )
         public boolean test(Player type, ConfigurationSection config) {
@@ -76,7 +76,7 @@ public enum GlobalRequirement {
         @Override
         @Information(
                 value = "execute-once-trigger",
-                desc = "Dummy requirement to track execute once triggers."
+                desc = "Dummy withRequirement to track execute once triggers."
         )
         public boolean test(Player type, RequirementConfigWrapper<Player> context, ConfigurationSection config) {
 
@@ -87,8 +87,8 @@ public enum GlobalRequirement {
         @Override
         @Information(
                 value = "cooldown",
-                desc = "When this requirement is checked the first time it will be true. Then for the duration of the cooldown " +
-                        "it will be false and when a check occurs after the cooldown expired the requirement will be true again.",
+                desc = "When this withRequirement is checked the first time it will be true. Then for the duration of the cooldown " +
+                        "it will be false and when a check occurs after the cooldown expired the withRequirement will be true again.",
                 conf = "cooldown: <[1y]{200d][11h][3m][20s][10]>"
         )
         public boolean test(Player player, RequirementConfigWrapper<Player> context, ConfigurationSection config) {

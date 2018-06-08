@@ -14,14 +14,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -225,7 +218,7 @@ public final class ActionAPI {
                 }
             }
         }
-        throw new UnsupportedOperationException("Could not find matching action for " + actionClass.getCanonicalName() + " -> " + information.value());
+        throw new UnsupportedOperationException("Could not find matching withAction for " + actionClass.getCanonicalName() + " -> " + information.value());
     }
 
     @SuppressWarnings("unchecked")
@@ -246,7 +239,7 @@ public final class ActionAPI {
         // therefor we need to process flow and block actions seperatly
         for (String key : keys) {
             if (actions.isList(key)) {
-                // lets process the flow block as one and ignore the action factory types
+                // lets process the flow block as one and ignore the withAction factory types
                 list.addAll(Flow.parseActions(actions, key));
             } else if (actions.isConfigurationSection(key)) {
                 // lets process our block actions normally by going thru all registered factories
@@ -445,7 +438,7 @@ public final class ActionAPI {
         public static <T> Optional<Requirement<T>> createExecuteOnceRequirement(String id, Class<T> type) {
 
             MemoryConfiguration configuration = new MemoryConfiguration();
-            configuration.set("persistant", true);
+            configuration.set("persistent", true);
             Optional<RequirementFactory<T>> factory = ActionAPI.getRequirementFactory(type);
             if (factory.isPresent()) {
                 return factory.get().create(
@@ -460,7 +453,7 @@ public final class ActionAPI {
 
             MemoryConfiguration configuration = new MemoryConfiguration();
             configuration.set("args.cooldown", cooldown);
-            configuration.set("persistant", true);
+            configuration.set("persistent", true);
             Optional<RequirementFactory<T>> factory = ActionAPI.getRequirementFactory(type);
             if (factory.isPresent()) {
                 return factory.get().create(

@@ -45,13 +45,13 @@ class TriggerListenerConfigWrapper<T> {
         this.executeOnce = config.getBoolean("execute-once", false);
         this.cooldown = TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
         this.triggerDelay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
-        this.actionDelay = TimeUtil.parseTimeAsTicks(config.getString("action-delay"));
+        this.actionDelay = TimeUtil.parseTimeAsTicks(config.getString("withAction-delay"));
         this.worlds.addAll(config.getStringList("worlds"));
         this.actions = ActionAPI.createActions(config.getConfigurationSection("actions"), triggerListener.getTriggerEntityType());
         this.requirements = ActionAPI.createRequirements(triggerListener.getListenerId(), config.getConfigurationSection("requirements"), triggerListener.getTriggerEntityType());
         if (isExecuteOnce()) {
-            // lets add our execute once requirement last
-            // this requirement will return false after is has been checked once
+            // lets add our execute once withRequirement last
+            // this withRequirement will return false after is has been checked once
             Optional<Requirement<T>> optional = ActionAPI.Helper.createExecuteOnceRequirement(
                     getTriggerListener().getListenerId(),
                     getTriggerListener().getTriggerEntityType());
@@ -91,7 +91,7 @@ class TriggerListenerConfigWrapper<T> {
 
             actions.forEach(action -> action.accept(triggeringEntity));
             if (isExecuteOnce()) {
-                // lets get the last requirement which will be the executed once requirement
+                // lets get the last withRequirement which will be the executed once withRequirement
                 // and set the checked key to false
                 Requirement<T> requirement = requirements.get(requirements.size() - 1);
                 if (requirement instanceof RequirementConfigWrapper) {

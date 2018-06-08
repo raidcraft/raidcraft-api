@@ -12,11 +12,7 @@ import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Silthus
@@ -27,7 +23,7 @@ public final class RequirementFactory<T> {
     private final Class<T> type;
     private final Map<String, Requirement<T>> requirements = new CaseInsensitiveMap<>();
     private final Map<String, ConfigGenerator.Information> requirementInformation = new CaseInsensitiveMap<>();
-    // key -> alias, value -> requirement identifier
+    // key -> alias, value -> withRequirement identifier
     private final Map<String, String> requirementAliases = new CaseInsensitiveMap<>();
 
     protected RequirementFactory(Class<T> type) {
@@ -64,9 +60,9 @@ public final class RequirementFactory<T> {
         if (information.isPresent()) {
             requirementInformation.put(identifier, information.get());
         } else {
-            RaidCraft.LOGGER.warning("no @Information defined for requirement " + identifier);
+            RaidCraft.LOGGER.warning("no @Information defined for withRequirement " + identifier);
         }
-        RaidCraft.info("registered requirement: " + identifier, "requirement");
+        RaidCraft.info("registered withRequirement: " + identifier, "withRequirement");
         return this;
     }
 
@@ -81,7 +77,7 @@ public final class RequirementFactory<T> {
         Requirement<T> requirement = requirements.remove(identifier);
         if (requirement == null) requirement = requirements.remove(plugin.getName() + "." + identifier);
         if (requirement != null) {
-            RaidCraft.info("removed requirement: " + identifier + " (" + plugin.getName() + ")", "requirement." + plugin.getName());
+            RaidCraft.info("removed withRequirement: " + identifier + " (" + plugin.getName() + ")", "withRequirement." + plugin.getName());
         }
     }
 
@@ -91,7 +87,7 @@ public final class RequirementFactory<T> {
                 .filter(key -> key.startsWith(plugin.getName().toLowerCase()))
                 .forEach(requirements::remove);
         RaidCraft.info("removed all requirements of: " + plugin.getName()
-                , "requirement." + plugin.getName());
+                , "withRequirement." + plugin.getName());
     }
 
     public Map<String, Requirement<T>> getRequirements() {

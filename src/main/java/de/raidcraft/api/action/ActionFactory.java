@@ -12,11 +12,7 @@ import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Silthus
@@ -27,7 +23,7 @@ public final class ActionFactory<T> {
     private final Class<T> type;
     private final Map<String, Action<T>> actions = new CaseInsensitiveMap<>();
     private final Map<String, ConfigGenerator.Information> actionInformation = new CaseInsensitiveMap<>();
-    // key -> alias, value -> action identifier
+    // key -> alias, value -> withAction identifier
     private final Map<String, String> actionAliases = new CaseInsensitiveMap<>();
 
     protected ActionFactory(Class<T> type) {
@@ -64,9 +60,9 @@ public final class ActionFactory<T> {
         if (information.isPresent()) {
             actionInformation.put(identifier, information.get());
         } else {
-            RaidCraft.LOGGER.warning("no @Information defined for action " + identifier);
+            RaidCraft.LOGGER.warning("no @Information defined for withAction " + identifier);
         }
-        RaidCraft.info("registered action: " + identifier, "action");
+        RaidCraft.info("registered withAction: " + identifier, "withAction");
         return this;
     }
 
@@ -81,7 +77,7 @@ public final class ActionFactory<T> {
         Action<T> requirement = actions.remove(identifier);
         if (requirement == null) requirement = actions.remove(plugin.getName() + "." + identifier);
         if (requirement != null) {
-            RaidCraft.info("removed action: " + identifier + " (" + plugin.getName() + ")", "action." + plugin.getName());
+            RaidCraft.info("removed withAction: " + identifier + " (" + plugin.getName() + ")", "withAction." + plugin.getName());
         }
     }
 
@@ -90,7 +86,7 @@ public final class ActionFactory<T> {
         actions.keySet().stream()
                 .filter(key -> key.startsWith(plugin.getName().toLowerCase()))
                 .forEach(actions::remove);
-        RaidCraft.info("removed all actions of: " + plugin.getName(), "action." + plugin.getName());
+        RaidCraft.info("removed all actions of: " + plugin.getName(), "withAction." + plugin.getName());
     }
 
     public Map<String, Action<T>> getActions() {

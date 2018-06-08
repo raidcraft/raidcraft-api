@@ -21,7 +21,7 @@ public class CommandUtil {
      * @param args             command args
      * @param sender           command sender
      * @param to               sender to warp
-     * @param playerStartIndex start argument for player name
+     * @param playerStartIndex startStage argument for player name
      *
      * @return the target (sender or player defined)
      *

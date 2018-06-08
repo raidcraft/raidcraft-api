@@ -12,17 +12,9 @@ import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.ItemType;
 import de.raidcraft.api.quests.QuestProvider;
 import de.raidcraft.api.quests.Quests;
-import de.raidcraft.util.ConfigUtil;
-import de.raidcraft.util.CustomItemUtil;
-import de.raidcraft.util.InventoryUtils;
-import de.raidcraft.util.ItemUtils;
-import de.raidcraft.util.TimeUtil;
+import de.raidcraft.util.*;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -186,24 +178,24 @@ public enum GlobalAction {
                 value = "player.message",
                 desc = "Sends the given message to the player. Multiline splitting with |.",
                 conf = {
-                        "text: <First line.|Second line.>"
+                        "withText: <First line.|Second line.>"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
 
-            String[] text = config.getString("text").split("\\|");
+            String[] text = config.getString("withText").split("\\|");
             for (String msg : text) {
                 player.sendMessage(RaidCraft.replaceVariables(player, msg));
             }
         }
     }),
-    TEXT("text", new Action<Player>() {
+    TEXT("withText", new Action<Player>() {
         @Override
         @Information(
-                value = "text",
-                desc = "Sends the given text to the player prepended by the given NPC name.",
+                value = "withText",
+                desc = "Sends the given withText to the player prepended by the given NPC name.",
                 conf = {
-                        "text: <First line.|Second line.>",
+                        "withText: <First line.|Second line.>",
                         "npc: name"
                 }
         )
@@ -218,7 +210,7 @@ public enum GlobalAction {
             } else {
                 npc = config.getString("npc");
             }
-            String[] text = config.getString("text").split("\\|");
+            String[] text = config.getString("withText").split("\\|");
             for (String line : text) {
                 String message;
                 if (npc != null) {
@@ -236,18 +228,18 @@ public enum GlobalAction {
             }
         }
     }),
-    TEXT_PLAYER("text.player", new Action<Player>() {
+    TEXT_PLAYER("withText.player", new Action<Player>() {
         @Override
         @Information(
-                value = "text.player",
-                desc = "Sends the given text to the player prepended by the player name.",
+                value = "withText.player",
+                desc = "Sends the given withText to the player prepended by the player name.",
                 conf = {
-                        "text: <First line.|Second line.>"
+                        "withText: <First line.|Second line.>"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
 
-            String[] text = config.getString("text").split("\\|");
+            String[] text = config.getString("withText").split("\\|");
             for (String line : text) {
                 line = RaidCraft.replaceVariables(player, line);
                 player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN
@@ -256,18 +248,18 @@ public enum GlobalAction {
             }
         }
     }),
-    TEXT_INFO("text.info", new Action<Player>() {
+    TEXT_INFO("withText.info", new Action<Player>() {
         @Override
         @Information(
-                value = "text.info",
-                desc = "Sends the given text to the player formatted in DARK AQUA.",
+                value = "withText.info",
+                desc = "Sends the given withText to the player formatted in DARK AQUA.",
                 conf = {
-                        "text: <First line.|Second line.>"
+                        "withText: <First line.|Second line.>"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
 
-            String[] text = config.getString("text").split("\\|");
+            String[] text = config.getString("withText").split("\\|");
             for (String line : text) {
                 line = RaidCraft.replaceVariables(player, line);
                 player.sendMessage(ChatColor.DARK_AQUA + line);
@@ -355,7 +347,7 @@ public enum GlobalAction {
 
             World world = Bukkit.getWorld(config.getString("world"));
             if (world == null) {
-                RaidCraft.LOGGER.warning("Invalid world in world.change action defined! " + ConfigUtil.getFileName(config));
+                RaidCraft.LOGGER.warning("Invalid world in world.change withAction defined! " + ConfigUtil.getFileName(config));
                 return;
             }
             Location location = player.getLocation();
@@ -382,10 +374,10 @@ public enum GlobalAction {
             player.teleport(ConfigUtil.getLocationFromConfig(config, player));
         }
     }),
-    START_TIMER("timer.start", new Action<Player>() {
+    START_TIMER("timer.startStage", new Action<Player>() {
         @Override
         @Information(
-                value = "timer.start",
+                value = "timer.startStage",
                 desc = "Starts a timer for the player, executing the given actions at cancel or end.",
                 conf = {
                         "id: unique id for the timer",

@@ -46,14 +46,14 @@ public interface Answer extends ActionHolder, RequirementHolder {
     Answer message(FancyMessage message);
 
     /**
-     * Gets the text displayed as answer.
+     * Gets the withText displayed as answer.
      *
      * @return displayed answer
      */
     Optional<String> getText();
 
     /**
-     * Sets the text of the answer.
+     * Sets the withText of the answer.
      *
      * @param text to display
      * @return this answer
@@ -68,23 +68,23 @@ public interface Answer extends ActionHolder, RequirementHolder {
     ChatColor getColor();
 
     /**
-     * Sets the given ChatColor as text color of this answer.
+     * Sets the given ChatColor as withText color of this answer.
      *
      * @param color to set
      */
     Answer color(ChatColor color);
 
     /**
-     * Trys to add the given requirement to the answer. If the requirement is not a conversation or
-     * player requirement it will not be added and silently fail.
+     * Trys to add the given withRequirement to the answer. If the withRequirement is not a conversation or
+     * player withRequirement it will not be added and silently fail.
      *
      * @param requirement to add to the answer
      * @return this answer
      */
-    Answer addRequirement(Requirement<?> requirement);
+    <T> Requirement<T> addRequirement(Requirement<T> requirement);
 
     /**
-     * Adds a Conversation requirement to this answer that is checked before actions are executed.
+     * Adds a Conversation withRequirement to this answer that is checked before actions are executed.
      *
      * @param conversationRequirement to add
      * @return this answer
@@ -92,7 +92,7 @@ public interface Answer extends ActionHolder, RequirementHolder {
     Answer addConversationRequirement(Requirement<Conversation> conversationRequirement);
 
     /**
-     * Adds a Player action to this answer that is executed before actions are executed.
+     * Adds a Player withAction to this answer that is executed before actions are executed.
      *
      * @param playerRequirement to add
      * @return this answer
@@ -100,30 +100,30 @@ public interface Answer extends ActionHolder, RequirementHolder {
     Answer addPlayerRequirement(Requirement<Player> playerRequirement);
 
     /**
-     * Adds an action to the answer that will be executed when the answer is chosen.
-     * The action will only be added if it is a conversation or player action, otherwise
+     * Adds an withAction to the answer that will be executed when the answer is chosen.
+     * The withAction will only be added if it is a conversation or player withAction, otherwise
      * it will silently fail.
      *
      * @param action to add
      * @return this answer
      */
-    Answer addAction(Action<?> action);
+    <T> Answer addActionToAnswer(Action<T> action);
 
     /**
      * Adds all actions to this answer.
-     * @see #addAction(Action)
+     * @see #addActionToAnswer(Action)
      *
      * @param actions to add
      * @return this answer
      */
     default Answer addActions(Action<?>... actions) {
 
-        Arrays.stream(actions).forEach(this::addAction);
+        Arrays.stream(actions).forEach(this::addActionToAnswer);
         return this;
     }
 
     /**
-     * Adds a Conversation action to this answer that is executed when the answer is chosen.
+     * Adds a Conversation withAction to this answer that is executed when the answer is chosen.
      *
      * @param conversationAction to add
      * @return this answer
@@ -131,7 +131,7 @@ public interface Answer extends ActionHolder, RequirementHolder {
     Answer addConversationAction(Action<Conversation> conversationAction);
 
     /**
-     * Adds a Player action to this answer that is executed when the answer is chosen.
+     * Adds a Player withAction to this answer that is executed when the answer is chosen.
      *
      * @param playerAction to add
      * @return this answer

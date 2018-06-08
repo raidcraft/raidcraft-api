@@ -37,6 +37,11 @@ public interface RequirementHolder {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    default <T> Requirement<T> addRequirement(Requirement<T> requirement) {
+        getRequirements().add(requirement);
+        return requirement;
+    }
+
     /**
      * Gets all requirements and applies the given filter to them before returning.
      *

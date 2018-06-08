@@ -44,7 +44,7 @@ public interface RDSTable extends RDSObject {
     RDSTable addEntry(RDSObject object, double probability, boolean enabled, boolean always, boolean unique);
 
     /**
-     * Gets the result. Calling this method will start the random pick process and generate the result.
+     * Gets the result. Calling this method will startStage the random pick process and generate the result.
      * This result remains constant for the lifetime of this table object.
      * Use the ResetResult method to clear the result and create a new one.
      *

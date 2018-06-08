@@ -92,14 +92,14 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
             if (clickActionName != null && clickActionData != null) {
                 json.name("clickEvent")
                         .beginObject()
-                        .name("action").value(clickActionName)
+                        .name("withAction").value(clickActionName)
                         .name("value").value(clickActionData)
                         .endObject();
             }
             if (hoverActionName != null && hoverActionData != null) {
                 json.name("hoverEvent")
                         .beginObject()
-                        .name("action").value(hoverActionName)
+                        .name("withAction").value(hoverActionName)
                         .name("value");
                 hoverActionData.writeJson(json);
                 json.endObject();
@@ -122,7 +122,7 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
 
     public Map<String, Object> serialize() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("text", text);
+        map.put("withText", text);
         map.put("styles", styles);
         map.put("color", color.getChar());
         map.put("hoverActionName", hoverActionName);
@@ -136,7 +136,7 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
 
     @SuppressWarnings("unchecked")
     public static MessagePart deserialize(Map<String, Object> serialized) {
-        MessagePart part = new MessagePart((TextualComponent) serialized.get("text"));
+        MessagePart part = new MessagePart((TextualComponent) serialized.get("withText"));
         part.styles = (ArrayList<ChatColor>) serialized.get("styles");
         part.color = ChatColor.getByChar(serialized.get("color").toString());
         part.hoverActionName = (String) serialized.get("hoverActionName");

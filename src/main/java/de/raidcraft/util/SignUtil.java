@@ -21,12 +21,12 @@ public final class SignUtil {
 
     /**
      * Checks if the given line on the sign is equals to
-     * the given text colored in the given color.
+     * the given withText colored in the given color.
      *
-     * @param strSign colored sign text
-     * @param strText text to compare
+     * @param strSign colored sign withText
+     * @param strText withText to compare
      *
-     * @return true if text is equal
+     * @return true if withText is equal
      */
     public static boolean isLineEqual(String strSign, String strText) {
 

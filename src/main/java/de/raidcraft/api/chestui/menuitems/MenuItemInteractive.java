@@ -21,7 +21,7 @@ public class MenuItemInteractive extends MenuItemAPI {
     /**
      * @param item_empty  null = nothing, displayed if amount == 0
      * @param item_full   item stack displayed if amount &gt; 0
-     * @param startAmount start amount
+     * @param startAmount startStage amount
      * @param maxAmount   -1 = no max
      */
     public MenuItemInteractive(ItemStack item_full,ItemStack item_empty,

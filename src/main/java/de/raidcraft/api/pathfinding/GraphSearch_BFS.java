@@ -103,11 +103,11 @@ public class GraphSearch_BFS implements IGraphSearch {
     /**
      * Search for a route from node startID and ends at targetID. <br>
      * This will return a linkedlist of the nodes that make up the route
-     * from start to end order. <br>
-     * If either the start or target node does not exist or if a route
+     * from startStage to end order. <br>
+     * If either the startStage or target node does not exist or if a route
      * can't be found the returned list is empty.
      *
-     * @param startID  id of the start node
+     * @param startID  id of the startStage node
      * @param targetID id of the target node
      *
      * @return the route as a list of nodes
@@ -120,11 +120,11 @@ public class GraphSearch_BFS implements IGraphSearch {
     /**
      * Search for a route from node startID and ends at targetID. <br>
      * This will return a linkedlist of the nodes that make up the route
-     * from start to end order. <br>
-     * If either the start or target node does not exist or if a route
+     * from startStage to end order. <br>
+     * If either the startStage or target node does not exist or if a route
      * can't be found the returned list is empty.
      *
-     * @param startID  id of the start node
+     * @param startID  id of the startStage node
      * @param targetID id of the target node
      * @param remember whether to remember the examined edges.
      *
@@ -206,7 +206,7 @@ public class GraphSearch_BFS implements IGraphSearch {
     }
 
     /**
-     * Get the path found as an array of GraphNode(s) in start to end
+     * Get the path found as an array of GraphNode(s) in startStage to end
      * order <br>
      *
      * @return path found or array size 0 if none found
@@ -217,7 +217,7 @@ public class GraphSearch_BFS implements IGraphSearch {
     }
 
     /**
-     * Get the path found as an array of T(s) in start to end
+     * Get the path found as an array of T(s) in startStage to end
      * order. <br>
      * The type of each element in the array will be of type Object
      * if the parameter is null otherwise it is T (where T is GraphNode

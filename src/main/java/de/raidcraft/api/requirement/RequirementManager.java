@@ -48,7 +48,7 @@ public final class RequirementManager {
                     try {
                         final ConfigurationSection section = config.getConfigurationSection(key + "." + reqName);
                         if (section == null) {
-                            RaidCraft.LOGGER.warning("Wrong requirement section " + key + "." + reqName + " defined for " + resolver);
+                            RaidCraft.LOGGER.warning("Wrong withRequirement section " + key + "." + reqName + " defined for " + resolver);
                             continue;
                         }
                         final Requirement<O> requirement = (Requirement<O>) constructors.get(rClass).newInstance(
@@ -69,7 +69,7 @@ public final class RequirementManager {
                     }
                 }
             } else {
-                RaidCraft.LOGGER.warning("There are no requirement types defined for the type " + key);
+                RaidCraft.LOGGER.warning("There are no withRequirement types defined for the type " + key);
                 RaidCraft.LOGGER.warning("Available Requirement Types are: " + String.join(", ", new ArrayList<>(requirementClasses.keySet())));
             }
         }

@@ -51,7 +51,7 @@ public interface Conversation extends ConfigurationSection {
     ConversationTemplate getTemplate();
 
     /**
-     * Triggers the current stage. If not current stage is found the start stage will be triggered.
+     * Triggers the current stage. If not current stage is found the startStage stage will be triggered.
      *
      * @return true if the stage was triggerd, false if no stage was found
      */
@@ -64,7 +64,7 @@ public interface Conversation extends ConfigurationSection {
     void abortActionExection();
 
     /**
-     * True if action execution of this conversation should be aborted.
+     * True if withAction execution of this conversation should be aborted.
      *
      * @return true if execution of actions should be aborted
      */
@@ -126,7 +126,7 @@ public interface Conversation extends ConfigurationSection {
     Conversation addStage(StageTemplate stage);
 
     /**
-     * Answers the conversation with the given text. Tries to find a valid answer
+     * Answers the conversation with the given withText. Tries to find a valid answer
      * and executes all actions of the answer if it was found.
      *
      * @param answer to process
@@ -138,7 +138,7 @@ public interface Conversation extends ConfigurationSection {
     }
 
     /**
-     * Answers the conversation with the given text. Tries to find a valid answer
+     * Answers the conversation with the given withText. Tries to find a valid answer
      * and executes all actions of the answer if it was found and executeActions is true.
      *
      * @param answer to process
@@ -187,7 +187,7 @@ public interface Conversation extends ConfigurationSection {
     Optional<Stage> end(ConversationEndReason reason);
 
     /**
-     * Aborts the current conversation saving the progress if {@link ConversationTemplate#isPersistant()} is true.
+     * Aborts the current conversation saving the progress if {@link ConversationTemplate#isPersistent()} is true.
      *
      * @param reason why the conversation was aborted
      * @return last active stage of the conversation
@@ -211,7 +211,7 @@ public interface Conversation extends ConfigurationSection {
     Conversation sendMessage(FancyMessage... lines);
 
     /**
-     * Saves the current conversation to a persistant storage.
+     * Saves the current conversation to a persistent storage.
      * Saved conversations can be resumed when the conversation is started again.
      */
     void save();

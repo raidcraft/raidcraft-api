@@ -41,6 +41,11 @@ public interface ActionHolder {
                 .collect(Collectors.toList());
     }
 
+    default <T> Action<T> addAction(Action<T> action) {
+        getActions().add(action);
+        return action;
+    }
+
     @SuppressWarnings("unchecked")
     static <T> List<Action<T>> getFilteredActions(Collection<Action<?>> actions, Class<?> entityClazz) {
 

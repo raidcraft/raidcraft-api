@@ -92,12 +92,12 @@ public interface Flight {
     void startFlight() throws de.raidcraft.api.flight.flight.FlightException;
 
     /**
-     * Aborts the flight, unmounts the passenger and returns him to the start location of the flight.
+     * Aborts the flight, unmounts the passenger and returns him to the startStage location of the flight.
      */
     void abortFlight();
 
     /**
-     * Ends the flight gracefully, unmounting the passenger without returning him to the start.
+     * Ends the flight gracefully, unmounting the passenger without returning him to the startStage.
      */
     void endFlight() throws de.raidcraft.api.flight.flight.FlightException;
 

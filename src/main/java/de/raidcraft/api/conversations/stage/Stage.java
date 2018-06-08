@@ -35,11 +35,11 @@ public interface Stage extends ActionHolder, RequirementHolder {
         if (abortToOldStage) {
             stage.addAnswer(
                     Answer.of("Nein, zeig mir nochmal meine Optionen.")
-                            .addAction(Action.changeStage(conversation.getStageHistory().peek())));
+                            .addActionToAnswer(Action.changeStage(conversation.getStageHistory().peek())));
         } else {
             stage.addAnswer(
                     Answer.of("Nein, ich habe es mir anders überlegt.")
-                            .addAction(Action.endConversation(ConversationEndReason.ENDED))
+                            .addActionToAnswer(Action.endConversation(ConversationEndReason.ENDED))
             );
         }
         return stage;
@@ -125,14 +125,14 @@ public interface Stage extends ActionHolder, RequirementHolder {
     boolean changePage(int page);
 
     /**
-     * Triggers this stage displaying the text and executing all actions.
+     * Triggers this stage displaying the withText and executing all actions.
      *
      * @return triggered stage
      */
     Stage trigger();
 
     /**
-     * Triggers this stage displaying the text and executing all actions.
+     * Triggers this stage displaying the withText and executing all actions.
      *
      * @param executeActions if false no actions will be executed
      * @return triggered stage

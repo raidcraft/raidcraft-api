@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author mdoering
  */
 @Data
-@EqualsAndHashCode(callSuper = false, of = {"type", "text", "actions", "requirements"})
+@EqualsAndHashCode(callSuper = false, of = {"type", "withText", "actions", "requirements"})
 public class SimpleAnswer implements Answer {
 
     private final String type;
@@ -83,10 +83,10 @@ public class SimpleAnswer implements Answer {
     }
 
     @Override
-    public Answer addRequirement(Requirement<?> requirement) {
+    public <T> Requirement<T> addRequirement(Requirement<T> requirement) {
 
         this.requirements.add(requirement);
-        return this;
+        return requirement;
     }
 
     @Override
@@ -104,10 +104,11 @@ public class SimpleAnswer implements Answer {
     }
 
     @Override
-    public Answer addAction(Action<?> action) {
+    public <T> Answer addActionToAnswer(Action<T> action) {
 
         this.actions.add(action);
-        return this;
+        return this
+                ;
     }
 
     @Override

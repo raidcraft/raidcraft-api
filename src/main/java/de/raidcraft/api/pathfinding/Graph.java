@@ -21,11 +21,7 @@
 
 package de.raidcraft.api.pathfinding;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Objects of this class represents graphs that can be used in games. <br>
@@ -140,7 +136,7 @@ public class Graph {
     }
 
     /**
-     * If the node exists remove it and all edges that start
+     * If the node exists remove it and all edges that startStage
      * or end at this node.
      *
      * @param nodeID id of the node to remove
@@ -448,7 +444,7 @@ public class Graph {
      * Gets a list of GraphEdges from this node. <br>
      * Used by graph search classes.
      *
-     * @param nodeID id of the node where the edges start from
+     * @param nodeID id of the node where the edges startStage from
      */
     public LinkedList<GraphEdge> getEdgeList(int nodeID) {
 
@@ -459,7 +455,7 @@ public class Graph {
      * Gets a list of GraphEdges from this node. <br>
      * Used by graph search classes.
      *
-     * @param node the node where the edges start from
+     * @param node the node where the edges startStage from
      */
     public LinkedList<GraphEdge> getEdgeList(GraphNode node) {
 
@@ -499,10 +495,10 @@ public class Graph {
     }
 
     /**
-     * Will return an array of all the GraphEdges that start from the node. <br>
+     * Will return an array of all the GraphEdges that startStage from the node. <br>
      * The type of each element in the array will be of type GraphEdge
      *
-     * @param from the node where the edges start from
+     * @param from the node where the edges startStage from
      */
     public GraphEdge[] getEdgeArray(int from) {
 
@@ -510,13 +506,13 @@ public class Graph {
     }
 
     /**
-     * Will return an array of all the GraphEdges that start from the node. <br>
+     * Will return an array of all the GraphEdges that startStage from the node. <br>
      * The type of each element in the array will be of type Object
      * if the parameter is null otherwise it is T (where T is GrahEdge
      * or any class that extends GrahEdge.
      *
      * @param <T>
-     * @param from  the node where the edges start from
+     * @param from  the node where the edges startStage from
      * @param array a zero length array of GraphNode or any derived class.
      */
     @SuppressWarnings("unchecked")

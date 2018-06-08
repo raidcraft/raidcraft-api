@@ -140,12 +140,12 @@ public interface Aircraft<T> {
                         return;
                     }
                     cancel();
-                    // start flight
+                    // startStage flight
                     mountPassenger(flight);
                     startNavigation(flight);
                     move(flight, flight.getPath().getFirstWaypoint());
                     if (flight.getMoveInterval() > 0) {
-                        // lets start the task that moves the aircraft around from waypoint to waypoint
+                        // lets startStage the task that moves the aircraft around from waypoint to waypoint
                         setAircraftMoverTask(Bukkit.getScheduler().runTaskTimer(plugin,
                                 new de.raidcraft.api.flight.aircraft.AircraftMoverTask(Aircraft.this, flight),
                                 -1, flight.getMoveInterval()));

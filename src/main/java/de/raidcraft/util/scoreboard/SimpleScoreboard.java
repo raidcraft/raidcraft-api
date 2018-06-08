@@ -97,7 +97,7 @@ public class SimpleScoreboard {
         String result;
         if (text.length() <= 16)
             return new AbstractMap.SimpleEntry<>(null, text);
-        Team team = scoreboard.registerNewTeam("text-" + scoreboard.getTeams().size());
+        Team team = scoreboard.registerNewTeam("withText-" + scoreboard.getTeams().size());
         Iterator<String> iterator = Splitter.fixedLength(16).split(text).iterator();
         team.setPrefix(iterator.next());
         result = iterator.next();

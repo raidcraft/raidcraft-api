@@ -2,6 +2,7 @@ package de.raidcraft.api.conversations;
 
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.answer.Answer;
+import de.raidcraft.api.conversations.builder.ConversationBuilder;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationEndReason;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
@@ -41,7 +42,7 @@ public class Conversations {
 
         queuedAnswers.entrySet().forEach(entry -> provider.registerAnswer(entry.getKey(), entry.getValue()));
         queuedAnswers.clear();
-        queuedStages.entrySet().forEach(entry -> provider.registerStage(entry.getKey(), entry.getValue()));
+        queuedStages.entrySet().forEach(entry -> provider.registerStageTemplate(entry.getKey(), entry.getValue()));
         queuedStages.clear();
         queuedConversationTemplates.entrySet().forEach(entry -> provider.registerConversationTemplate(entry.getKey(), entry.getValue()));
         queuedConversationTemplates.clear();
@@ -57,6 +58,10 @@ public class Conversations {
     public static void disable(ConversationProvider provider) {
 
         de.raidcraft.api.conversations.Conversations.provider = null;
+    }
+
+    public static ConversationBuilder create(String identifier) {
+        return new ConversationBuilder(provider, identifier);
     }
 
     /**
@@ -110,14 +115,14 @@ public class Conversations {
     }
 
     /**
-     * @see ConversationProvider#registerStage(String, Class)
+     * @see ConversationProvider#registerStageTemplate(String, Class)
      */
     public static void registerStage(String type, Class<? extends StageTemplate> stage) {
 
         if (provider == null) {
             queuedStages.put(type, stage);
         } else {
-            provider.registerStage(type, stage);
+            provider.registerStageTemplate(type, stage);
         }
     }
 
@@ -197,7 +202,7 @@ public class Conversations {
 
     /**
      * Registers the given variable for all conversation replacements.
-     * Registered variables will be replaced when the conversation text is written.
+     * Registered variables will be replaced when the conversation withText is written.
      *  @param pattern of the variable
      * @param variable to register
      */

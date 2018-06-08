@@ -111,7 +111,7 @@ public class Tile {
             // only update if g hasn't been calculated or if forced
             Tile currentParent = this.getParent(), currentTile = this;
             int gCost = 0;
-            // follow path back to start
+            // follow path back to startStage
             while ((currentParent = currentTile.getParent()) != null) {
 
                 int dx = currentTile.getX() - currentParent.getX(), dy = currentTile.getY() - currentParent.getY(), dz = currentTile.getZ() - currentParent.getZ();

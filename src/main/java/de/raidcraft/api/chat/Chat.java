@@ -92,7 +92,7 @@ public class Chat {
                     }
                     return msg;
                 }
-                // lets recursivly match the text before the current match
+                // lets recursivly match the withText before the current match
                 msg = matchAndReplaceItem(getMatchingProviders(matcher.group(1)), player, msg, matcher.group(1));
                 msg = provider.autoComplete(player, msg, matcher.group(2).replace("_", " "));
                 if (!Strings.isNullOrEmpty(matcher.group(3))) {

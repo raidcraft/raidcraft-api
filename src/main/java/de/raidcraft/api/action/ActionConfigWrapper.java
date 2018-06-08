@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * @author Silthus
  */
-@EqualsAndHashCode(of = {"action", "config"})
+@EqualsAndHashCode(of = {"withAction", "config"})
 @Data
 public class ActionConfigWrapper<T> implements RevertableAction<T> {
 
@@ -48,8 +48,8 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
         this.executeOnce = config.getBoolean("execute-once", false);
         this.requirements = ActionAPI.createRequirements(getIdentifier(), config.getConfigurationSection("requirements"));
         if (isExecuteOnce()) {
-            // lets add our execute once requirement last
-            // this requirement will return false after is has been checked once
+            // lets add our execute once withRequirement last
+            // this withRequirement will return false after is has been checked once
             Optional<Requirement<T>> optional = ActionAPI.Helper.createExecuteOnceRequirement(
                     getIdentifier(),
                     getType());
@@ -73,7 +73,7 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
     @Override
     public Action<T> with(String key, Object value) {
 
-        config.set(key, value);
+        getConfig().set(key, value);
         return this;
     }
 

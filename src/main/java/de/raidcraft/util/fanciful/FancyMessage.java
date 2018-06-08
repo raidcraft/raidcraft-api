@@ -31,7 +31,7 @@ import static de.raidcraft.util.fanciful.TextualComponent.rawText;
  * This class follows the builder pattern, allowing for method chaining.
  * It is set up such that invocations of property-setting methods will affect the current editing component,
  * and a call to {@link #then()} or {@link #then(String)} will append a new editing component to the end of the message,
- * optionally initializing it with text. Further property-setting method calls will affect that editing component.
+ * optionally initializing it with withText. Further property-setting method calls will affect that editing component.
  * </p>
  */
 public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<MessagePart>, ConfigurationSerializable {
@@ -59,9 +59,9 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Creates a JSON message with text.
+	 * Creates a JSON message with withText.
      *
-     * @param firstPartText The existing text in the message.
+	 * @param firstPartText The existing withText in the message.
      */
     public FancyMessage(final String firstPartText) {
         this(rawText(firstPartText));
@@ -86,16 +86,16 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Creates a JSON message without text.
+	 * Creates a JSON message without withText.
      */
     public FancyMessage() {
         this((TextualComponent) null);
     }
 
     /**
-     * Sets the text of the current editing component to a value.
+	 * Sets the withText of the current editing component to a value.
      *
-     * @param text The new text of the current editing component.
+	 * @param text The new withText of the current editing component.
      * @return This builder instance.
      */
     public FancyMessage text(String text) {
@@ -106,9 +106,9 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Sets the text of the current editing component to a value.
+	 * Sets the withText of the current editing component to a value.
      *
-     * @param text The new text of the current editing component.
+	 * @param text The new withText of the current editing component.
      * @return This builder instance.
      */
     public FancyMessage text(TextualComponent text) {
@@ -178,7 +178,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * Set the behavior of the current editing component to instruct the client to replace the chat input box content with the specified string when the currently edited part of the {@code FancyMessage} is clicked.
      * The client will not immediately send the command to the server to be executed unless the client player submits the command/chat message, usually with the enter key.
      *
-     * @param command The text to display in the chat bar of the client.
+	 * @param command The withText to display in the chat bar of the client.
      * @return This builder instance.
      */
     public FancyMessage suggest(final String command) {
@@ -190,7 +190,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * Set the behavior of the current editing component to instruct the client to append the chat input box content with the specified string when the currently edited part of the {@code FancyMessage} is SHIFT-CLICKED.
      * The client will not immediately send the command to the server to be executed unless the client player submits the command/chat message, usually with the enter key.
      *
-     * @param command The text to append to the chat bar of the client.
+	 * @param command The withText to append to the chat bar of the client.
      * @return This builder instance.
      */
     public FancyMessage insert(final String command) {
@@ -203,7 +203,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * Set the behavior of the current editing component to instruct the client to send the specified string to the server as a chat message when the currently edited part of the {@code FancyMessage} is clicked.
      * The client <b>will</b> immediately send the command to the server to be executed when the editing component is clicked.
      *
-     * @param command The text to display in the chat bar of the client.
+	 * @param command The withText to display in the chat bar of the client.
      * @return This builder instance.
      */
     public FancyMessage command(final String command) {
@@ -212,7 +212,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display information about an achievement when the client hovers over the text.
+	 * Set the behavior of the current editing component to display information about an achievement when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
      * @param name The name of the achievement to display, excluding the "achievement." prefix.
@@ -224,7 +224,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display information about an achievement when the client hovers over the text.
+	 * Set the behavior of the current editing component to display information about an achievement when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
      * @param which The achievement to display.
@@ -247,7 +247,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display information about a parameterless statistic when the client hovers over the text.
+	 * Set the behavior of the current editing component to display information about a parameterless statistic when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
      * @param which The statistic to display.
@@ -275,7 +275,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display information about a statistic parameter with a material when the client hovers over the text.
+	 * Set the behavior of the current editing component to display information about a statistic parameter with a material when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
      * @param which The statistic to display.
@@ -307,7 +307,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display information about a statistic parameter with an entity type when the client hovers over the text.
+	 * Set the behavior of the current editing component to display information about a statistic parameter with an entity type when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
      * @param which  The statistic to display.
@@ -339,7 +339,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display information about an item when the client hovers over the text.
+	 * Set the behavior of the current editing component to display information about an item when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
      * @param itemJSON A string representing the JSON-serialized NBT data tag of an {@link ItemStack}.
@@ -351,7 +351,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display information about an item when the client hovers over the text.
+	 * Set the behavior of the current editing component to display information about an item when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
      * @param itemStack The stack for which to display information.
@@ -368,10 +368,10 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display raw text when the client hovers over the text.
+	 * Set the behavior of the current editing component to display raw withText when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
-     * @param text The text, which supports newlines, which will be displayed to the client upon hovering.
+	 * @param text The withText, which supports newlines, which will be displayed to the client upon hovering.
      * @return This builder instance.
      */
     public FancyMessage tooltip(final String text) {
@@ -380,10 +380,10 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display raw text when the client hovers over the text.
+	 * Set the behavior of the current editing component to display raw withText when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
-     * @param lines The lines of text which will be displayed to the client upon hovering. The iteration order of this object will be the order in which the lines of the tooltip are created.
+	 * @param lines The lines of withText which will be displayed to the client upon hovering. The iteration order of this object will be the order in which the lines of the tooltip are created.
      * @return This builder instance.
      */
     public FancyMessage tooltip(final Iterable<String> lines) {
@@ -392,10 +392,10 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display raw text when the client hovers over the text.
+	 * Set the behavior of the current editing component to display raw withText when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
-     * @param lines The lines of text which will be displayed to the client upon hovering.
+	 * @param lines The lines of withText which will be displayed to the client upon hovering.
      * @return This builder instance.
      */
     public FancyMessage tooltip(final String... lines) {
@@ -411,18 +411,18 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display formatted text when the client hovers over the text.
+	 * Set the behavior of the current editing component to display formatted withText when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
-     * @param text The formatted text which will be displayed to the client upon hovering.
+	 * @param text The formatted withText which will be displayed to the client upon hovering.
      * @return This builder instance.
      */
     public FancyMessage formattedTooltip(FancyMessage text) {
         for (MessagePart component : text.messageParts) {
             if (component.clickActionData != null && component.clickActionName != null) {
-                throw new IllegalArgumentException("The tooltip text cannot have click data.");
+				throw new IllegalArgumentException("The tooltip withText cannot have click data.");
             } else if (component.hoverActionData != null && component.hoverActionName != null) {
-                throw new IllegalArgumentException("The tooltip text cannot have a tooltip.");
+				throw new IllegalArgumentException("The tooltip withText cannot have a tooltip.");
             }
         }
         onHover("show_text", text);
@@ -430,10 +430,10 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display the specified lines of formatted text when the client hovers over the text.
+	 * Set the behavior of the current editing component to display the specified lines of formatted withText when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
-     * @param lines The lines of formatted text which will be displayed to the client upon hovering.
+	 * @param lines The lines of formatted withText which will be displayed to the client upon hovering.
      * @return This builder instance.
      */
     public FancyMessage formattedTooltip(FancyMessage... lines) {
@@ -443,15 +443,15 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
         }
 
         FancyMessage result = new FancyMessage();
-        result.messageParts.clear(); // Remove the one existing text component that exists by default, which destabilizes the object
+		result.messageParts.clear(); // Remove the one existing withText component that exists by default, which destabilizes the object
 
         for (int i = 0; i < lines.length; i++) {
             try {
                 for (MessagePart component : lines[i]) {
                     if (component.clickActionData != null && component.clickActionName != null) {
-                        throw new IllegalArgumentException("The tooltip text cannot have click data.");
+						throw new IllegalArgumentException("The tooltip withText cannot have click data.");
                     } else if (component.hoverActionData != null && component.hoverActionName != null) {
-                        throw new IllegalArgumentException("The tooltip text cannot have a tooltip.");
+						throw new IllegalArgumentException("The tooltip withText cannot have a tooltip.");
                     }
                     if (component.hasText()) {
                         result.messageParts.add(component.clone());
@@ -469,10 +469,10 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * Set the behavior of the current editing component to display the specified lines of formatted text when the client hovers over the text.
+	 * Set the behavior of the current editing component to display the specified lines of formatted withText when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
-     * @param lines The lines of text which will be displayed to the client upon hovering. The iteration order of this object will be the order in which the lines of the tooltip are created.
+	 * @param lines The lines of withText which will be displayed to the client upon hovering. The iteration order of this object will be the order in which the lines of the tooltip are created.
      * @return This builder instance.
      */
     public FancyMessage formattedTooltip(final Iterable<FancyMessage> lines) {
@@ -480,7 +480,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * If the text is a translatable key, and it has replaceable values, this function can be used to set the replacements that will be used in the message.
+	 * If the withText is a translatable key, and it has replaceable values, this function can be used to set the replacements that will be used in the message.
      *
      * @param replacements The replacements, in order, that will be used in the language-specific message.
      * @return This builder instance.
@@ -496,7 +496,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 	/*
 
 	/**
-	 * If the text is a translatable key, and it has replaceable values, this function can be used to set the replacements that will be used in the message.
+	 * If the withText is a translatable key, and it has replaceable values, this function can be used to set the replacements that will be used in the message.
 	 * @param replacements The replacements, in order, that will be used in the language-specific message.
 	 * @return This builder instance.
 	 */   /* ------------
@@ -511,7 +511,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 	*/
 
     /**
-     * If the text is a translatable key, and it has replaceable values, this function can be used to set the replacements that will be used in the message.
+	 * If the withText is a translatable key, and it has replaceable values, this function can be used to set the replacements that will be used in the message.
      *
      * @param replacements The replacements, in order, that will be used in the language-specific message.
      * @return This builder instance.
@@ -527,7 +527,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
     }
 
     /**
-     * If the text is a translatable key, and it has replaceable values, this function can be used to set the replacements that will be used in the message.
+	 * If the withText is a translatable key, and it has replaceable values, this function can be used to set the replacements that will be used in the message.
      *
      * @param replacements The replacements, in order, that will be used in the language-specific message.
      * @return This builder instance.
@@ -540,7 +540,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * Terminate construction of the current editing component, and begin construction of a new message component.
      * After a successful call to this method, all setter methods will refer to a new message component, created as a result of the call to this method.
      *
-     * @param text The text which will populate the new message component.
+	 * @param text The withText which will populate the new message component.
      * @return This builder instance.
      */
     public FancyMessage then(final String text) {
@@ -551,12 +551,12 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * Terminate construction of the current editing component, and begin construction of a new message component.
      * After a successful call to this method, all setter methods will refer to a new message component, created as a result of the call to this method.
      *
-     * @param text The text which will populate the new message component.
+	 * @param text The withText which will populate the new message component.
      * @return This builder instance.
      */
     public FancyMessage then(final TextualComponent text) {
         if (!latest().hasText()) {
-            throw new IllegalStateException("previous message part has no text");
+			throw new IllegalStateException("previous message part has no withText");
         }
         messageParts.add(new MessagePart(text));
         dirty = true;
@@ -571,7 +571,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      */
     public FancyMessage then() {
         if (!latest().hasText()) {
-            throw new IllegalStateException("previous message part has no text");
+			throw new IllegalStateException("previous message part has no withText");
         }
         messageParts.add(new MessagePart());
         dirty = true;
@@ -583,7 +583,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
         if (messageParts.size() == 1) {
             latest().writeJson(writer);
         } else {
-            writer.beginObject().name("text").value("").name("extra").beginArray();
+			writer.beginObject().name("withText").value("").name("extra").beginArray();
             for (final MessagePart part : this) {
                 part.writeJson(writer);
             }
@@ -729,14 +729,14 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * <ol>
      * <li>The color of each message part.</li>
      * <li>The applicable stylizations for each message part.</li>
-     * <li>The core text of the message part.</li>
+	 * <li>The core withText of the message part.</li>
      * </ol>
      * The primary omissions are tooltips and clickable actions. Consequently, this method should be used only as a last resort.
      * </p>
      * <p>
      * Color and formatting can be removed from the returned string by using {@link ChatColor#stripColor(String)}.</p>
      *
-     * @return A human-readable string representing limited formatting in addition to the core text of this message.
+	 * @return A human-readable string representing limited formatting in addition to the core withText of this message.
      */
     public String toOldMessageFormat() {
         StringBuilder result = new StringBuilder();
@@ -817,7 +817,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
             MessagePart component = new MessagePart();
             JsonObject messagePart = mPrt.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : messagePart.entrySet()) {
-                // Deserialize text
+				// Deserialize withText
                 if (TextualComponent.isTextKey(entry.getKey())) {
                     // The map mimics the YAML serialization, which has a "key" field and one or more "value" fields
                     Map<String, Object> serializedMapForm = new HashMap<String, Object>(); // Must be object due to Bukkit serializer API compliance
@@ -840,11 +840,11 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
                     component.color = ChatColor.valueOf(entry.getValue().getAsString().toUpperCase());
                 } else if (entry.getKey().equals("clickEvent")) {
                     JsonObject object = entry.getValue().getAsJsonObject();
-                    component.clickActionName = object.get("action").getAsString();
+					component.clickActionName = object.get("withAction").getAsString();
                     component.clickActionData = object.get("value").getAsString();
                 } else if (entry.getKey().equals("hoverEvent")) {
                     JsonObject object = entry.getValue().getAsJsonObject();
-                    component.hoverActionName = object.get("action").getAsString();
+					component.hoverActionName = object.get("withAction").getAsString();
                     if (object.get("value").isJsonPrimitive()) {
                         // Assume string
                         component.hoverActionData = new JsonString(object.get("value").getAsString());

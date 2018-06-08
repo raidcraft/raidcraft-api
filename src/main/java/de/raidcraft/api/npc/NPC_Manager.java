@@ -119,7 +119,7 @@ public class NPC_Manager {
     /**
      * Initialize the data structure of the NPC. This method must be called ONE time,
      * e.g. if a admin create a new DragonStation.
-     * WARNING: Do not call this command on each server start/reload
+     * WARNING: Do not call this command on each server startStage/reload
      *
      * @param name npc name
      * @param host sttore file, e.g. a pluginname, componentname
@@ -143,7 +143,7 @@ public class NPC_Manager {
     /**
      * Initialize the data structure of the NPC and spawn it. This method must be called ONE time,
      * e.g. if a admin create a new DragonStation.
-     * WARNING: Do not call this command on each server start/reload
+     * WARNING: Do not call this command on each server startStage/reload
      *
      * @param name npc name
      * @param host sttore file, e.g. a pluginname, componentname

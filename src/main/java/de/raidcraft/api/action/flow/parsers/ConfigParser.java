@@ -46,7 +46,7 @@ public class ConfigParser extends FlowParser {
         String params = matcher.group(3);
         if (globalParams != null) {
             // ok we found global params, lets extract them
-            // -1 of a start position means that no positional params are allowed
+            // -1 of a startStage position means that no positional params are allowed
             config = extractKeyValuePairs(config, globalParams, -1);
         }
         if (params != null) {

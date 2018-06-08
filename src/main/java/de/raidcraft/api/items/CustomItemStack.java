@@ -5,15 +5,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.attachments.AttachableCustomItem;
 import de.raidcraft.api.items.attachments.ItemAttachment;
 import de.raidcraft.api.items.attachments.RequiredItemAttachment;
-import de.raidcraft.api.items.tooltip.AttributeTooltip;
-import de.raidcraft.api.items.tooltip.BindTooltip;
-import de.raidcraft.api.items.tooltip.DPSTooltip;
-import de.raidcraft.api.items.tooltip.DurabilityTooltip;
-import de.raidcraft.api.items.tooltip.EnchantmentTooltip;
-import de.raidcraft.api.items.tooltip.MetaDataTooltip;
-import de.raidcraft.api.items.tooltip.RequirementTooltip;
-import de.raidcraft.api.items.tooltip.Tooltip;
-import de.raidcraft.api.items.tooltip.TooltipSlot;
+import de.raidcraft.api.items.tooltip.*;
 import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.items.EnchantGlow;
 import org.bukkit.ChatColor;
@@ -21,14 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Silthus
@@ -212,7 +197,7 @@ public class CustomItemStack extends ItemStack {
         if (!(getItem() instanceof AttachableCustomItem)) {
             return;
         }
-        // lets also add our requirement lore
+        // lets also add our withRequirement lore
         for (ItemAttachment attachment : ((AttachableCustomItem) getItem()).getAttachments(player)) {
             if (attachment instanceof RequiredItemAttachment) {
                 ((AttachableCustomItem) getItem()).apply(player, this, true);

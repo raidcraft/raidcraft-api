@@ -17,11 +17,7 @@ package de.raidcraft.util;// $Id$
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -80,7 +76,7 @@ public class PastebinPoster {
                         + "&api_paste_private=" + URLEncoder.encode("0", "utf-8")
                         + "&api_paste_name=" + URLEncoder.encode("", "utf-8")
                         + "&api_paste_expire_date=" + URLEncoder.encode("1M", "utf-8")
-                        + "&api_paste_format=" + URLEncoder.encode("text", "utf-8")
+                        + "&api_paste_format=" + URLEncoder.encode("withText", "utf-8")
                         + "&api_user_key=" + URLEncoder.encode("", "utf-8")).getBytes());
                 out.flush();
                 out.close();

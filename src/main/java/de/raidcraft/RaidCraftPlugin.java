@@ -95,7 +95,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             registerEvents(new InventorySync(this));
         }
 
-        // inizialize action API
+        // inizialize withAction API
         registerActionAPI();
 
         // register random objects
@@ -115,10 +115,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
                     ActionAPI.UNKNOWN_ACTIONS.stream()
                             .filter(action -> !ActionAPI.isAction(action))
-                            .forEach(action -> RaidCraft.LOGGER.warning("unknown action: " + action));
+                            .forEach(action -> RaidCraft.LOGGER.warning("unknown withAction: " + action));
                     ActionAPI.UNKNOWN_REQUIREMENTS.stream()
                             .filter(requirement -> !ActionAPI.isRequirement(requirement))
-                            .forEach(requirement -> RaidCraft.LOGGER.warning("unknown requirement: " + requirement));
+                            .forEach(requirement -> RaidCraft.LOGGER.warning("unknown withRequirement: " + requirement));
                     ActionAPI.UNKNOWN_TRIGGER.stream()
                             .filter(trigger -> !ActionAPI.isRequirement(trigger))
                             .forEach(trigger -> RaidCraft.LOGGER.warning("unknown trigger: " + trigger));
@@ -226,7 +226,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public boolean checkPlayerBlockPlacement = false;
         @Setting("player-placed-block-worlds")
         public List<String> player_placed_block_worlds = new ArrayList<>();
-        @Setting("server-start-delay")
+        @Setting("server-startStage-delay")
         public double startDelay = 10.0;
         @Setting("pre-login-kicker")
         public boolean preLoginKicker = true;
@@ -234,7 +234,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public int actoionapiSyncDelay = 10;
         @Setting("hide-attributes")
         public boolean hideAttributes = true;
-        @Setting("action-api.parallel")
+        @Setting("withAction-api.parallel")
         public boolean parallelActionAPI = true;
         @Setting("heartbeat-ticks")
         @MultiComment({"prints a heartbeat message in this interval",
@@ -248,10 +248,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public boolean debugRequirements = true;
 
         @Comment("Enable GlobalPlayerTrigger, like interact, block.break, block.place, move, craft, death, join")
-        @Setting("action-api.enable-global-player-trigger")
+        @Setting("withAction-api.enable-global-player-trigger")
         private boolean actionApiGlobalPlayerTrigger = true;
         @Comment("Enable TimerTrigger, like tick, end, cancel")
-        @Setting("action-api.enable-time-trigger")
+        @Setting("withAction-api.enable-time-trigger")
         private boolean actionApiTimerTrigger = true;
         @Comment("Save and Load Player Inventories in Database, allow sharing with other servers")
         @Setting("enable-player-inventory-share")

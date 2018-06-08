@@ -20,7 +20,7 @@ public class PseudoRandomGenerator {
 
         if (chance > 1.0) chance = 2.0;
         if (chance <= 0) chance = 1.0;
-        // lets calculate the base chance by taking the number of times the action should hit
+        // lets calculate the base chance by taking the number of times the withAction should hit
         // e.g. with a chance of 0.25 -> 25% 1/4 should be a hit
         this.baseChance = chance / ((1.0 / chance) - 1);
     }

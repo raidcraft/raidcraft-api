@@ -330,11 +330,11 @@ public class RaidCraftDatabase {
                     //Reset the table-tracker
                     currentTable = null;
                 } else if (currentLine.startsWith("alter table")) {
-                    //Found a potentially unsupported action
+                    //Found a potentially unsupported withAction
                     String[] alterTableLine = currentLine.split(" ", 4);
 
                     if (alterTableLine[3].startsWith("add constraint")) {
-                        //Found an unsupported action: ALTER TABLE using ADD CONSTRAINT
+                        //Found an unsupported withAction: ALTER TABLE using ADD CONSTRAINT
                         String[] addConstraintLine = alterTableLine[3].split(" ", 4);
 
                         //Check if this line can be fixed somehow
@@ -354,7 +354,7 @@ public class RaidCraftDatabase {
                             tableOffset++;
                         } else {
                             //Exception: This line cannot be fixed but is known the be unsupported by SQLite
-                            throw new RuntimeException("Unsupported action encountered: ALTER TABLE using ADD CONSTRAINT with " + addConstraintLine[3]);
+                            throw new RuntimeException("Unsupported withAction encountered: ALTER TABLE using ADD CONSTRAINT with " + addConstraintLine[3]);
                         }
                     }
                 }
