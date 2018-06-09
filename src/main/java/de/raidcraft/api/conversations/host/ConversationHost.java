@@ -3,6 +3,7 @@ package de.raidcraft.api.conversations.host;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import lombok.NonNull;
+import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -14,7 +15,8 @@ import java.util.UUID;
 /**
  * @author mdoering
  */
-public interface ConversationHost<T> {
+public interface
+ConversationHost<T> {
 
     UUID getUniqueId();
 
@@ -47,6 +49,37 @@ public interface ConversationHost<T> {
      * @param conversationTemplate to add as default conversation
      */
     void addDefaultConversation(ConversationTemplate conversationTemplate);
+
+    /**
+     * Adds the given citizens {@link Trait} to the host.
+     * Will silently fail and return false if the trait cannot be added.
+     * This can be the case if the host is not a NPC host.
+     *
+     * @param traitClass trait to add
+     * @return false if trait could not be added
+     */
+    boolean addTrait(Class<? extends Trait> traitClass);
+
+    /**
+     * Adds the given citizens {@link Trait} to the host.
+     * Will silently fail and return false if the trait cannot be added.
+     * This can be the case if the host is not a NPC host.
+     *
+     * @param trait to add
+     * @return false if trait could not be added
+     */
+    boolean addTrait(Trait trait);
+
+    /**
+     * Gets the given trait from the host.
+     * Returns empty optional if the host is not a NPC
+     * or the trait does not exist.
+     *
+     * @param traitClass class of the trait
+     * @param <T>        type of the trait
+     * @return trait or empty optional
+     */
+    <T extends Trait> Optional<T> getTrait(Class<T> traitClass);
 
     /**
      * Gets the default conversation of this conversation host. If no default

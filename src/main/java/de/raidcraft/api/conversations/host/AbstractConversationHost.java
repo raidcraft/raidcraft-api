@@ -9,15 +9,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author mdoering
@@ -57,6 +53,21 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
 
         defaultConversations.add(conversationTemplate);
         defaultConversations.sort(ConversationTemplate::compareTo);
+    }
+
+    @Override
+    public boolean addTrait(Class<? extends Trait> traitClass) {
+        return false;
+    }
+
+    @Override
+    public boolean addTrait(Trait trait) {
+        return false;
+    }
+
+    @Override
+    public <T1 extends Trait> Optional<T1> getTrait(Class<T1> traitClass) {
+        return Optional.empty();
     }
 
     @Override

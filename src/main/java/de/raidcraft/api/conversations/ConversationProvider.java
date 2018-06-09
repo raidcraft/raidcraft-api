@@ -321,6 +321,8 @@ public interface ConversationProvider {
 
     Conversation startConversation(Player player, ConversationTemplate template);
 
+    Conversation startConversation(Player player);
+
     /**
      * Gets an active conversation for the player if any are found.
      *

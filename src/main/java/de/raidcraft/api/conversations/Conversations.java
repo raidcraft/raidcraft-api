@@ -406,4 +406,8 @@ public class Conversations {
         if (provider == null) return Optional.empty();
         return provider.spawnConversationHost(pluginName, name, conversationName, location);
     }
+
+    public static Conversation getOrStartConversation(Player player) {
+        return getActiveConversation(player).orElseGet(() -> provider.startConversation(player));
+    }
 }
