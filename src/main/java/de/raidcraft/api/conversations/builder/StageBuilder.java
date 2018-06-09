@@ -8,10 +8,10 @@ import de.raidcraft.util.fanciful.FancyMessage;
 
 import java.util.function.Consumer;
 
-public class StageBuilder extends ActionRequirementBuilder<ConversationBuilder, StageTemplate> {
+public class StageBuilder extends ActionRequirementBuilder<StageTemplate> {
 
-    public StageBuilder(ConversationBuilder conversationBuilder, StageTemplate item) {
-        super(conversationBuilder, item);
+    public StageBuilder(StageTemplate item) {
+        super(item);
     }
 
     public StageBuilder withText(String... text) {

@@ -14,6 +14,7 @@ import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.fanciful.FancyMessage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.Location;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
@@ -69,12 +70,24 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     }
 
     @Override
+    public Optional<Stage> getPreviousStage() {
+
+        if (getStageHistory().size() > 1) {
+            Stage topStage = getStageHistory().pop();
+            Stage previousStage = getStageHistory().peek();
+            getStageHistory().push(topStage);
+
+            return Optional.of(previousStage);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public Conversation setCurrentStage(Stage stage) {
 
         Optional<Stage> currentStage = getCurrentStage();
-        if (currentStage.isPresent()) {
-            stageHistory.add(currentStage.get());
-        }
+        currentStage.ifPresent(stageHistory::add);
         this.currentStage = stage;
         return this;
     }
@@ -86,6 +99,25 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         setCurrentStage(stage);
         triggerCurrentStage();
         RaidCraft.callEvent(new RCConversationChangedStageEvent(this, currentStage, stage));
+        return this;
+    }
+
+    @Override
+    public Conversation changeToStage(StageTemplate template) {
+
+        return changeToStage(createStage(template));
+    }
+
+    @Override
+    public Conversation changeToPreviousStage() {
+
+        Optional<Stage> previousStage = getPreviousStage();
+
+        if (previousStage.isPresent()) {
+            changeToStage(previousStage.get());
+        } else {
+            abort(ConversationEndReason.ENDED);
+        }
         return this;
     }
 
@@ -129,13 +161,22 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     }
 
     @Override
+    public Location getLocation() {
+        return getHost().getLocation();
+    }
+
+    @Override
     public Optional<Stage> getStage(String identifier) {
 
         StageTemplate stageTemplate = stages.get(identifier);
         if (stageTemplate != null) {
-            return Optional.of(stageTemplate.create(this));
+            return Optional.of(createStage(stageTemplate));
         }
         return Optional.empty();
+    }
+
+    protected Stage createStage(StageTemplate template) {
+        return template.create(this);
     }
 
     @Override

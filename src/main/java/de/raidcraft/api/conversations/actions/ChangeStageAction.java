@@ -29,5 +29,6 @@ public class ChangeStageAction implements Action<Conversation> {
         if (stage.isPresent()) {
             conversation.changeToStage(stage.get());
         }
+
     }
 }

@@ -11,32 +11,32 @@ import lombok.Data;
 import java.util.function.Consumer;
 
 @Data
-public class ActionRequirementBuilder<TParent, TResult extends ActionHolder & RequirementHolder> extends BaseBuilder<TParent, TResult> {
+public class ActionRequirementBuilder<TResult extends ActionHolder & RequirementHolder> extends BaseBuilder<TResult> {
 
-    public ActionRequirementBuilder(TParent parent, TResult item) {
-        super(parent, item);
+    public ActionRequirementBuilder(TResult item) {
+        super(item);
     }
 
-    public <TEntity> ActionRequirementBuilder<TParent, TResult> withAction(Action<TEntity> action, Consumer<ActionBuilder> callback) {
+    public <TEntity> ActionRequirementBuilder<TResult> withAction(Action<TEntity> action, Consumer<ActionBuilder> callback) {
 
-        ActionBuilder<?, Action<TEntity>> actionBuilder = withBuilder(ActionBuilder.class, action, callback);
+        ActionBuilder<Action<TEntity>> actionBuilder = withBuilder(ActionBuilder.class, action, callback);
         actionBuilder.build(result -> getResult().addAction(result));
 
         return this;
     }
 
-    public <TEntity> ActionRequirementBuilder<TParent, TResult> withAction(Action<TEntity> action) {
+    public <TEntity> ActionRequirementBuilder<TResult> withAction(Action<TEntity> action) {
         return withAction(action, null);
     }
 
-    public <TEntity> ActionRequirementBuilder<TParent, TResult> withRequirement(Requirement<TEntity> requirement, Consumer<RequirementBuilder> callback) {
+    public <TEntity> ActionRequirementBuilder<TResult> withRequirement(Requirement<TEntity> requirement, Consumer<RequirementBuilder> callback) {
 
-        RequirementBuilder<?, Requirement<TEntity>> requirementBuilder = withBuilder(RequirementBuilder.class, requirement, callback);
+        RequirementBuilder<Requirement<TEntity>> requirementBuilder = withBuilder(RequirementBuilder.class, requirement, callback);
         requirementBuilder.build(result -> getResult().addRequirement(result));
         return this;
     }
 
-    public <TEntity> ActionRequirementBuilder<TParent, TResult> withRequirement(Requirement<TEntity> requirement) {
+    public <TEntity> ActionRequirementBuilder<TResult> withRequirement(Requirement<TEntity> requirement) {
         return withRequirement(requirement, null);
     }
 }

@@ -5,6 +5,7 @@ import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.fanciful.FancyMessage;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -44,6 +45,15 @@ public interface Conversation extends ConfigurationSection {
     ConversationHost getHost();
 
     /**
+     * Gets the location of the conversation.
+     * This is ultimatly almost always the location of the host.
+     * {@link ConversationHost#getLocation()}
+     *
+     * @return location of the conversation host
+     */
+    Location getLocation();
+
+    /**
      * Gets the {@link ConversationTemplate} of this Conversation.
      *
      * @return conversation template
@@ -78,6 +88,14 @@ public interface Conversation extends ConfigurationSection {
     Optional<Stage> getCurrentStage();
 
     /**
+     * Gets the previous stage of the conversation.
+     * If this is the first and only stage it will return empty.
+     *
+     * @return empty if current stage is the only one
+     */
+    Optional<Stage> getPreviousStage();
+
+    /**
      * Gets a list of previous stages in this conversation.
      * The last stage is always on top and the first stage is the one on the bottom.
      *
@@ -100,6 +118,22 @@ public interface Conversation extends ConfigurationSection {
      * @return current conversation
      */
     Conversation changeToStage(Stage stage);
+
+    /**
+     * Creates a new stage from the template and changes to it.
+     *
+     * @param template to create stage from
+     * @return current conversation
+     */
+    Conversation changeToStage(StageTemplate template);
+
+    /**
+     * Changes the conversation to the previous stage.
+     * If no previous stage exists, the conversation will exit.
+     *
+     * @return current conversation
+     */
+    Conversation changeToPreviousStage();
 
     /**
      * Gets a list of all stages attached to this conversation.

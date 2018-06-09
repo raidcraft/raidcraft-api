@@ -32,7 +32,9 @@ public interface StageTemplate extends RequirementHolder, ActionHolder {
      *
      * @return conversation template that loaded this stage
      */
-    ConversationTemplate getConversationTemplate();
+    Optional<ConversationTemplate> getConversationTemplate();
+
+    void setConversationTemplate(ConversationTemplate template);
 
     /**
      * Gets the withText that is displayed for this stage.

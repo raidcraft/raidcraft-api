@@ -59,6 +59,10 @@ public interface Action<T> extends ActionConfigGenerator {
         return ActionConfigWrapper.of((conversation, config) -> conversation.changeToStage(stage), Conversation.class);
     }
 
+    static Action<Conversation> changeToPreviousStage() {
+        return ActionConfigWrapper.of((conversation, config) -> conversation.changeToPreviousStage(), Conversation.class);
+    }
+
     static Action<Conversation> setConversationVariable(String key, Object value) {
 
         return ActionConfigWrapper.of((conversation, config) -> conversation.set(key, value), Conversation.class);

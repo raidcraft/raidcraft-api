@@ -1,5 +1,11 @@
 package de.raidcraft.util;
 
+import com.google.common.collect.Sets;
+
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.stream.Collectors;
+
 /**
  * @author Silthus
  */
@@ -36,5 +42,25 @@ public final class EnumUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * Parses the string into an enum set.
+     * The string will be split at | characters.
+     *
+     * @param enumClass to parse enums into.
+     * @param string    to split and parse
+     * @param <T>       type of the enum
+     * @return set of enum flags
+     */
+    public static <T extends Enum<T>> EnumSet<T> getEnumSetFromString(Class<T> enumClass, String string) {
+
+        if (string == null || string.isEmpty()) {
+            return EnumSet.noneOf(enumClass);
+        }
+
+        return Sets.newEnumSet(Arrays.stream(string.trim().split("\\|"))
+                .map(part -> getEnumFromString(enumClass, part))
+                .collect(Collectors.toList()), enumClass);
     }
 }

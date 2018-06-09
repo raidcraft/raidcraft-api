@@ -1,5 +1,7 @@
 package de.raidcraft.api.config.builder;
 
+import org.bukkit.entity.Player;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,6 +19,8 @@ public interface ConfigGenerator {
         String value();
 
         String desc();
+
+        Class<?> type() default Player.class;
 
         String[] conf() default {};
 

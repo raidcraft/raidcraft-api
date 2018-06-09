@@ -14,6 +14,6 @@ public class CodedConversationTemplate extends AbstractConversationTemplate {
     }
 
     public CodedStageTemplate stage(String identifier) {
-        return addStage(new CodedStageTemplate(identifier, this));
+        return addStage(new CodedStageTemplate(identifier));
     }
 }

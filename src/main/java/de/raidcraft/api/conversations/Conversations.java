@@ -1,8 +1,11 @@
 package de.raidcraft.api.conversations;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.answer.Answer;
+import de.raidcraft.api.conversations.builder.CodedStageTemplate;
 import de.raidcraft.api.conversations.builder.ConversationBuilder;
+import de.raidcraft.api.conversations.builder.StageBuilder;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationEndReason;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
@@ -11,8 +14,10 @@ import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.host.ConversationHostFactory;
 import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
+import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.fanciful.FancyMessage;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -61,7 +66,11 @@ public class Conversations {
     }
 
     public static ConversationBuilder create(String identifier) {
-        return new ConversationBuilder(provider, identifier);
+        return new ConversationBuilder(identifier);
+    }
+
+    public static StageBuilder buildStage(String stageName) {
+        return new StageBuilder(new CodedStageTemplate(stageName));
     }
 
     /**
@@ -362,6 +371,20 @@ public class Conversations {
         if (activeConversation.isPresent()) {
             activeConversation.get().sendMessage(message.split("\\|"));
         }
+    }
+
+    /**
+     * Sends an error message to the conversation and console
+     * and then ends the conversation.
+     *
+     * @param conv  to send error to and abort
+     * @param error to send
+     */
+    public static void error(Conversation conv, String error) {
+
+        conv.sendMessage(ChatColor.RED + error);
+        conv.abort(ConversationEndReason.ERROR);
+        RaidCraft.log(error, "Conversation::" + conv.getIdentifier(), RcLogLevel.WARNING);
     }
 
     public static void registerConversationType(String type, Class<? extends Conversation> conversation) {

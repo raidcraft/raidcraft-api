@@ -21,7 +21,6 @@ import java.util.Optional;
 public abstract class AbstractStageTemplate implements StageTemplate {
 
     private final String identifier;
-    private final ConversationTemplate conversationTemplate;
     private final List<Requirement<?>> requirements = new ArrayList<>();
     private final List<Action<?>> actions = new ArrayList<>();
     private final List<Action<?>> randomActions = new ArrayList<>();
@@ -30,11 +29,17 @@ public abstract class AbstractStageTemplate implements StageTemplate {
     @Getter
     private Optional<String[]> text;
     private boolean autoShowingAnswers = true;
+    @Getter
+    private Optional<ConversationTemplate> conversationTemplate = Optional.empty();
 
-    public AbstractStageTemplate(String identifier, ConversationTemplate conversationTemplate) {
+    public AbstractStageTemplate(String identifier) {
 
         this.identifier = identifier;
-        this.conversationTemplate = conversationTemplate;
+    }
+
+    @Override
+    public void setConversationTemplate(ConversationTemplate template) {
+        this.conversationTemplate = Optional.ofNullable(template);
     }
 
     @Override
