@@ -1,6 +1,8 @@
 package de.raidcraft.api;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebeaninternal.api.SpiEbeanServer;
+import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
@@ -27,9 +29,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Silthus
@@ -107,6 +107,29 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
             this.ebeanDatabase.initializeDatabase(config);
         }
         return this.ebeanDatabase.getDatabase();
+    }
+
+    /**
+     * Provides a list of all classes that should be persisted in the database
+     *
+     * @return List of Classes that are Ebeans
+     */
+    public List<Class<?>> getDatabaseClasses() {
+        return new ArrayList<Class<?>>();
+    }
+
+    protected void installDDL() {
+        SpiEbeanServer serv = (SpiEbeanServer) getDatabase();
+        DdlGenerator gen = serv.getDdlGenerator();
+
+        gen.runScript(false, gen.generateCreateDdl());
+    }
+
+    protected void removeDDL() {
+        SpiEbeanServer serv = (SpiEbeanServer) getDatabase();
+        DdlGenerator gen = serv.getDdlGenerator();
+
+        gen.runScript(true, gen.generateDropDdl());
     }
 
     public void reload() {

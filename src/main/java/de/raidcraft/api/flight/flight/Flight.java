@@ -86,10 +86,12 @@ public interface Flight {
      */
     Passenger<?> removePassenger();
 
+    void startDelayedFlight(int delay);
+
     /**
      * Starts the flight, mounting the passenger and flying to the first waypoint.
      */
-    void startFlight() throws de.raidcraft.api.flight.flight.FlightException;
+    void startFlight();
 
     /**
      * Aborts the flight, unmounts the passenger and returns him to the startStage location of the flight.
@@ -99,7 +101,7 @@ public interface Flight {
     /**
      * Ends the flight gracefully, unmounting the passenger without returning him to the startStage.
      */
-    void endFlight() throws de.raidcraft.api.flight.flight.FlightException;
+    void endFlight();
 
     /**
      * Checks if the flight path still has a next waypoint

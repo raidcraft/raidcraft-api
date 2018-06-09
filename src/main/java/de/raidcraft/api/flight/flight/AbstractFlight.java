@@ -1,7 +1,10 @@
 package de.raidcraft.api.flight.flight;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.flight.aircraft.Aircraft;
 import de.raidcraft.api.flight.passenger.Passenger;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -104,6 +107,16 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
     }
 
     @Override
+    public void startDelayedFlight(int delay) {
+        if (delay < 1) {
+            startFlight();
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), this::startFlight, delay);
+    }
+
+    @Override
     public synchronized void startFlight() {
 
         if (isActive()) return;
@@ -158,9 +171,7 @@ public abstract class AbstractFlight implements de.raidcraft.api.flight.flight.F
 
         if (currentIndex != that.currentIndex) return false;
         if (!aircraft.equals(that.aircraft)) return false;
-        if (!path.equals(that.path)) return false;
-
-        return true;
+        return path.equals(that.path);
     }
 
     @Override

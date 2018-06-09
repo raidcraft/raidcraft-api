@@ -175,7 +175,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         } catch (PersistenceException e) {
             e.printStackTrace();
             getLogger().warning("Installing database for " + getDescription().getName() + " due to first time usage");
-//            installDDL();
+            installDDL();
         }
     }
 
