@@ -1,8 +1,6 @@
 package de.raidcraft.api.flight.aircraft;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.flight.flight.Flight;
-import de.raidcraft.api.flight.flight.FlightException;
 import de.raidcraft.api.flight.flight.Waypoint;
 
 /**
@@ -37,12 +35,7 @@ public class AircraftMoverTask implements Runnable {
                 landing = true;
                 aircraft.move(flight, lastWaypoint);
             } else if (aircraft.hasReachedWaypoint(lastWaypoint, 1)) {
-                try {
-                    flight.endFlight();
-                } catch (FlightException e) {
-                    RaidCraft.LOGGER.warning(e.getMessage());
-                    e.printStackTrace();
-                }
+                flight.endFlight();
             }
         } else {
             aircraft.move(flight, flight.nextWaypoint());
