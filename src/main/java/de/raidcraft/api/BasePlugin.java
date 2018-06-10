@@ -18,6 +18,8 @@ import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.tables.TPlugin_;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -35,6 +38,10 @@ import java.util.*;
  * @author Silthus
  */
 public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component {
+
+    // vault variables
+    private static Chat chat;
+    private static Permission permission;
 
     // member variables
     private final Map<String, QueuedCommand> queuedCommands = new HashMap<>();
@@ -68,9 +75,9 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         this.commands.setInjector(new SimpleInjector(this));
         this.commandRegistration = new CommandsManagerRegistration(this, this, this.commands);
         // check if the database needs to be setup
-//        if (getDatabaseClasses().size() > 0) {
-//            getDatabase();
-//        }
+        if (getDatabaseClasses().size() > 0) {
+            getDatabase();
+        }
         // call the sub plugins to enable
         enable();
 
@@ -196,6 +203,26 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         }
         return true;
     }
+
+    protected boolean setupPermissions() {
+
+        RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
+    }
+
+    private boolean setupChat() {
+
+        RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(Chat.class);
+        if (chatProvider != null) {
+            chat = chatProvider.getProvider();
+        }
+
+        return (chat != null);
+    }
+
 
     public final void registerTable(Class<? extends Table> clazz, Table table) {
 
