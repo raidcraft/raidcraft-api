@@ -51,7 +51,7 @@ public class RaidCraftDatabase {
         }
     }
 
-    private JavaPlugin plugin;
+    private BasePlugin plugin;
     private ClassLoader classLoader;
     private Level loggerLevel;
     private boolean usingSQLite;
@@ -115,6 +115,8 @@ public class RaidCraftDatabase {
                     config.getString("username", "minecraft"),
                     config.getString("password", "password"),
                     config.getString("isolation", "SERIALIZABLE"));
+
+            config.save();
 
             //Load the database
             loadDatabase();
@@ -222,6 +224,9 @@ public class RaidCraftDatabase {
         boolean databaseExists = false;
 
         List<Class<?>> classes = getDatabaseClasses();
+
+        if (classes.size() < 1) return;
+
         for (int i = 0; i < classes.size(); i++) {
             try {
                 //Do a simple query which only throws an exception if the table does not exist
@@ -407,8 +412,7 @@ public class RaidCraftDatabase {
      */
     protected List<Class<?>> getDatabaseClasses() {
 
-        return new ArrayList<>();
-//        return plugin.getDatabaseClasses();
+        return plugin.getDatabaseClasses();
     }
 
     /**

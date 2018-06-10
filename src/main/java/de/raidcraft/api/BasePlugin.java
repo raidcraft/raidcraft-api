@@ -17,7 +17,6 @@ import de.raidcraft.api.language.ConfigTranslationProvider;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.tables.RcLogLevel;
-import de.raidcraft.tables.TPlugin_;
 import lombok.Getter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -33,7 +32,10 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Silthus
@@ -100,16 +102,6 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         }
         // call the sub plugins to enable
         enable();
-
-        // log plugin activation into db
-        PluginDescriptionFile description = getDescription();
-        getLogger().info(description.getName() + "-v" + description.getVersion() + " enabled.");
-        TPlugin_ tPlugin = new TPlugin_();
-        tPlugin.setAuthor(String.join(", ", this.getDescription().getAuthors()));
-        tPlugin.setName(this.getDescription().getFullName());
-        tPlugin.setVersion(this.getDescription().getVersion());
-        tPlugin.setLastActive(new Date());
-        RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase().save(tPlugin);
     }
 
     public final void onDisable() {

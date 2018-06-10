@@ -258,6 +258,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         private boolean enablePlayerInventorySave = false;
     }
 
+    @Override
     public List<Class<?>> getDatabaseClasses() {
 
         List<Class<?>> classes = new ArrayList<>();

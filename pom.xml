@@ -67,7 +67,9 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>io.ebean:ebean</include>
+                                    <include>io.ebean:*</include>
+                                    <include>org.avaje:*</include>
+                                    <include>com.avaje:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
