@@ -18,6 +18,7 @@ import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.tables.TPlugin_;
+import lombok.Getter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -40,7 +41,9 @@ import java.util.*;
 public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component {
 
     // vault variables
+    @Getter
     private static Chat chat;
+    @Getter
     private static Permission permission;
 
     // member variables
@@ -62,6 +65,23 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         this.translationProvider = new ConfigTranslationProvider(this);
 
         Plugin plugin = Bukkit.getPluginManager().getPlugin("Vault");
+        if (plugin != null) {
+            if (chat == null) {
+                if (setupChat()) {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Chat API.");
+                } else {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Chat API.");
+                }
+            }
+            if (permission == null) {
+                if (setupPermissions()) {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": loaded Permissions API.");
+                } else {
+                    getLogger().info(plugin.getName() + "-v" + plugin.getDescription().getVersion() + ": failed to load Permissions API.");
+                }
+            }
+        }
+
 
         this.commands = new CommandsManager<CommandSender>() {
 

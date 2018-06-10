@@ -38,6 +38,8 @@ import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
 import de.raidcraft.util.*;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -301,6 +303,17 @@ public class RaidCraft implements Listener {
 
         RaidCraft.tradeProvider = tradeProvider;
     }
+
+    public static Permission getPermissions() {
+
+        return getComponent(RaidCraftPlugin.class).getPermission();
+    }
+
+    public static Chat getChat() {
+
+        return getComponent(RaidCraftPlugin.class).getChat();
+    }
+
 
     public static WorldGuardPlugin getWorldGuard() {
 
