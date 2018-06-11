@@ -3,6 +3,7 @@ package de.raidcraft.api.config;
 import de.raidcraft.api.BasePlugin;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -168,7 +169,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
     public final void load(File file) {
 
         try {
-            if (!file.exists()) {
+            if (!file.exists() || file.length() == 0) {
                 copyFile();
                 save();
             }
@@ -355,15 +356,8 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
                 return;
             }
             OutputStream out = new FileOutputStream(file);
-            // buffer 1024 byte so we don't need to write/read too much
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = stream.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-            // exit cleanly
-            stream.close();
-            out.close();
+            IOUtils.copy(stream, out);
+            plugin.getLogger().log(Level.INFO, "Copied default config: " + name);
         } catch (IOException iex) {
             plugin.getLogger().log(Level.WARNING, "could not create default config: " + name, iex);
         }
