@@ -1,20 +1,14 @@
 package de.raidcraft.api.config;
 
 import de.raidcraft.api.BasePlugin;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +37,9 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
      */
     private File file;
     private DataMap override = null;
+    @Getter
+    @Setter
+    private boolean saveDefaults = false;
 
     private HashMap<String, String[]> annos = new HashMap<>();
 
@@ -177,7 +174,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
             }
             // load the config by calling the bukkit super method
             super.load(file);
-            // plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + name + "\" successfully.");
+//            plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + name + "\" successfully.");
         } catch (IOException | InvalidConfigurationException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();
@@ -377,6 +374,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         if (!isSet(path)) {
             set(path, def);
+            if (isSaveDefaults()) save();
         } else {
             return super.getInt(path, def);
         }
@@ -389,6 +387,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
         if (def == null) return super.getString(path, null);
         if (!isSet(path)) {
             set(path, def);
+            if (isSaveDefaults()) save();
         } else {
             return super.getString(path, def);
         }
@@ -400,6 +399,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         if (!isSet(path)) {
             set(path, def);
+            if (isSaveDefaults()) save();
         } else {
             return super.getBoolean(path, def);
         }
@@ -411,6 +411,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         if (!isSet(path)) {
             set(path, def);
+            if (isSaveDefaults()) save();
         } else {
             return super.getDouble(path, def);
         }
@@ -422,6 +423,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
 
         if (!isSet(path)) {
             set(path, def);
+            if (isSaveDefaults()) save();
         } else {
             return super.getLong(path, def);
         }

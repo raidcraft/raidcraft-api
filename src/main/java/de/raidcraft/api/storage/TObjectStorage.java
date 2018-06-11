@@ -19,7 +19,7 @@ public class TObjectStorage {
     @NotNull
     private String storageName;
     @NotNull
-    @Column(length = 16384)
+    @Column(columnDefinition = "TEXT")
     private String serialization;
 
     public int getId() {
