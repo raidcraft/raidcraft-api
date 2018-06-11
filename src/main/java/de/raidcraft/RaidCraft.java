@@ -399,9 +399,10 @@ public class RaidCraft implements Listener {
      * @return created itemstack out of the id
      *
      * @throws CustomItemException is thrown if nothing matched
-     */
+     */ 
     public static ItemStack getItem(String id) throws CustomItemException {
-
+        // TODO: return Optional<T>
+        // TODO: check item manager for null and fallback to vanilla functions
         if (id == null || id.equals("")) return null;
         try {
             String lowercaseId = id.toLowerCase();
