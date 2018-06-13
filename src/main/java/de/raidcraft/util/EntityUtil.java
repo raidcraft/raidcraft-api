@@ -1,16 +1,12 @@
 package de.raidcraft.util;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.nms.NMSUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Silthus
@@ -189,42 +185,47 @@ public class EntityUtil {
 
     public static void registerEntity(EntityType type, Class<?> customClass) {
 
-        registerEntity(type.getName(), type.getTypeId(), customClass);
+        NMSUtils.registerEntity(EnumUtils.getEnumFromString(NMSUtils.Type.class, type.name()), customClass, false);
+//        registerEntity(type.getName(), type.getTypeId(), customClass);
     }
 
     @SuppressWarnings("unchecked")
     public static void registerEntity(String name, int id, Class<?> customClass) {
 
-        try {
-            if (customClass == null) {
-                RaidCraft.LOGGER.warning("[registerEntity] NULL Custom Entity: " + name);
-                return;
-            }
-            // we need to check if the class is a valid transistent entity
-            // and because we dont want to break every version we are using reflection
-            if (!ReflectionUtil.getNmsClass("net.minecraft.server", "EntityInsentient").isAssignableFrom(customClass)) {
-                return;
-            }
-            List<Map<?, ?>> dataMaps = new ArrayList<>();
-            for (Field f : ReflectionUtil.getNmsClass("net.minecraft.server", "EntityTypes").getDeclaredFields()) {
-                RaidCraft.LOGGER.warning("[registerEntity] Entity class name: " + f.getType().getSimpleName());
-                RaidCraft.LOGGER.warning("[registerEntity] Map class name: " + Map.class.getSimpleName());
-                if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
-                    f.setAccessible(true);
-                    dataMaps.add((Map<?, ?>) f.get(null));
-                }
-            }
-
-            if(dataMaps.size() == 0) {
-                RaidCraft.LOGGER.warning("[registerEntity] No matching Entity implementations found!");
-            }
-            else {
-                ((Map<Class<?>, String>) dataMaps.get(1)).put(customClass, name);
-                ((Map<Class<?>, Integer>) dataMaps.get(3)).put(customClass, id);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (customClass == null) {
+            RaidCraft.LOGGER.warning("[registerEntity] NULL Custom Entity: " + name);
+            return;
         }
+
+        NMSUtils.Type type = EnumUtils.getEnumFromString(NMSUtils.Type.class, name);
+        NMSUtils.registerEntity(name, type, customClass, false);
+
+//        try {
+//            // we need to check if the class is a valid transistent entity
+//            // and because we dont want to break every version we are using reflection
+//            if (!ReflectionUtil.getNmsClass("net.minecraft.server", "EntityInsentient").isAssignableFrom(customClass)) {
+//                return;
+//            }
+//            List<Map<?, ?>> dataMaps = new ArrayList<>();
+//            for (Field f : ReflectionUtil.getNmsClass("net.minecraft.server", "EntityTypes").getDeclaredFields()) {
+//                RaidCraft.LOGGER.warning("[registerEntity] Entity class name: " + f.getType().getSimpleName());
+//                RaidCraft.LOGGER.warning("[registerEntity] Map class name: " + Map.class.getSimpleName());
+//                if (f.getType().getSimpleName().equals(Map.class.getSimpleName())) {
+//                    f.setAccessible(true);
+//                    dataMaps.add((Map<?, ?>) f.get(null));
+//                }
+//            }
+//
+//            if(dataMaps.size() == 0) {
+//                RaidCraft.LOGGER.warning("[registerEntity] No matching Entity implementations found!");
+//            }
+//            else {
+//                ((Map<Class<?>, String>) dataMaps.get(1)).put(customClass, name);
+//                ((Map<Class<?>, Integer>) dataMaps.get(3)).put(customClass, id);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static boolean isBehind(LivingEntity source, LivingEntity target) {
