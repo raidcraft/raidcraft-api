@@ -76,10 +76,10 @@ ConversationHost<T> {
      * or the trait does not exist.
      *
      * @param traitClass class of the trait
-     * @param <T>        type of the trait
+     * @param <TTrait> type of the trait
      * @return trait or empty optional
      */
-    <T extends Trait> Optional<T> getTrait(Class<T> traitClass);
+    <TTrait extends Trait> Optional<TTrait> getTrait(Class<TTrait> traitClass);
 
     /**
      * Gets the default conversation of this conversation host. If no default

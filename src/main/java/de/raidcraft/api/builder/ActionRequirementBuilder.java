@@ -17,12 +17,13 @@ public class ActionRequirementBuilder<TResult extends ActionHolder & Requirement
         super(item);
     }
 
-    public <TEntity> ActionRequirementBuilder<TResult> withAction(Action<TEntity> action, Consumer<ActionBuilder> callback) {
+    public <TEntity> ActionRequirementBuilder<TResult>
+    withAction(Action<TEntity> action, Consumer<ActionBuilder> callback) {
 
         ActionBuilder<Action<TEntity>> actionBuilder = withBuilder(ActionBuilder.class, action, callback);
-        actionBuilder.build(result -> getResult().addAction(result));
-
+        getResult().addAction(actionBuilder.build());
         return this;
+
     }
 
     public <TEntity> ActionRequirementBuilder<TResult> withAction(Action<TEntity> action) {
@@ -32,7 +33,7 @@ public class ActionRequirementBuilder<TResult extends ActionHolder & Requirement
     public <TEntity> ActionRequirementBuilder<TResult> withRequirement(Requirement<TEntity> requirement, Consumer<RequirementBuilder> callback) {
 
         RequirementBuilder<Requirement<TEntity>> requirementBuilder = withBuilder(RequirementBuilder.class, requirement, callback);
-        requirementBuilder.build(result -> getResult().addRequirement(result));
+        getResult().addRequirement(requirementBuilder.build());
         return this;
     }
 

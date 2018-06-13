@@ -24,11 +24,9 @@ public class ConversationBuilder extends BaseBuilder<ConversationTemplate> {
     public ConversationBuilder withStage(String identifier, Consumer<StageBuilder> builder) {
 
         StageBuilder stageBuilder = withBuilder(StageBuilder.class, new CodedStageTemplate(identifier), builder);
-        stageBuilder.build(result -> {
-            result.setConversationTemplate(getResult());
-            getResult().addStage(result);
-        });
-
+        StageTemplate stageTemplate = stageBuilder.build();
+        stageTemplate.setConversationTemplate(getResult());
+        getResult().addStage(stageTemplate);
         return this;
     }
 

@@ -17,6 +17,9 @@ package de.raidcraft.util;// $Id$
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -71,12 +74,12 @@ public class PastebinPoster {
                 out = conn.getOutputStream();
 
                 out.write(("api_option=paste"
-                        + "&api_dev_key=" + URLEncoder.encode("4867eae74c6990dbdef07c543cf8f805", "utf-8")
+                        + "&api_dev_key=" + URLEncoder.encode(RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().pastebinApiKey, "utf-8")
                         + "&api_paste_code=" + URLEncoder.encode(code, "utf-8")
-                        + "&api_paste_private=" + URLEncoder.encode("0", "utf-8")
+                        + "&api_paste_private=" + URLEncoder.encode("1", "utf-8")
                         + "&api_paste_name=" + URLEncoder.encode("", "utf-8")
                         + "&api_paste_expire_date=" + URLEncoder.encode("1M", "utf-8")
-                        + "&api_paste_format=" + URLEncoder.encode("withText", "utf-8")
+                        + "&api_paste_format=" + URLEncoder.encode("yaml", "utf-8")
                         + "&api_user_key=" + URLEncoder.encode("", "utf-8")).getBytes());
                 out.flush();
                 out.close();

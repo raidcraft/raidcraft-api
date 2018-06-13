@@ -122,7 +122,7 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
 
     public Map<String, Object> serialize() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("withText", text);
+        map.put("text", text);
         map.put("styles", styles);
         map.put("color", color.getChar());
         map.put("hoverActionName", hoverActionName);
@@ -136,7 +136,7 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
 
     @SuppressWarnings("unchecked")
     public static MessagePart deserialize(Map<String, Object> serialized) {
-        MessagePart part = new MessagePart((TextualComponent) serialized.get("withText"));
+        MessagePart part = new MessagePart((TextualComponent) serialized.get("text"));
         part.styles = (ArrayList<ChatColor>) serialized.get("styles");
         part.color = ChatColor.getByChar(serialized.get("color").toString());
         part.hoverActionName = (String) serialized.get("hoverActionName");

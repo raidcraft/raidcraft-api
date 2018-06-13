@@ -16,6 +16,7 @@ public class ActionBuilder<TEntity> extends BaseBuilder<Action<TEntity>> {
 
     public ActionBuilder<TEntity> withConfig(String key, Object value) {
         getResult().with(key, value);
+
         return this;
     }
 }

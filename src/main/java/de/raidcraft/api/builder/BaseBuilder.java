@@ -25,14 +25,14 @@ public abstract class BaseBuilder<TResult> {
 
     public <TBuilder extends BaseBuilder<TNewResult>, TNewResult> TBuilder withBuilder(Class<TBuilder> builderClass, TNewResult result, Consumer<TBuilder> callback) {
         try {
-            TBuilder builder = builderClass.getDeclaredConstructor(result.getClass()).newInstance(result);
+            TBuilder builder = (TBuilder) builderClass.getDeclaredConstructors()[0].newInstance(result);
 
             if (callback != null) {
                 callback.accept(builder);
             }
 
             return builder;
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             return null;
         }

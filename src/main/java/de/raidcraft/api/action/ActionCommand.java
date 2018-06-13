@@ -2,7 +2,6 @@ package de.raidcraft.api.action;
 
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.action.Action;
@@ -12,6 +11,8 @@ import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.PastebinPoster;
 import org.bukkit.command.CommandSender;
 
+import java.util.Comparator;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -31,11 +32,11 @@ public class ActionCommand {
             desc = "Creates a HTML page with all triggers, requirements and actions"
     )
     @CommandPermissions("raidcraft.actionapi.createhtml")
-    public void createHTML(CommandContext args, CommandSender sender) throws CommandException {
+    public void createHTML(CommandContext args, CommandSender sender) {
 
         StringBuilder sb = new StringBuilder();
         sb.append("########### ACTIONS ###########\n");
-        ActionAPI.getActions().entrySet().forEach(
+        ActionAPI.getActions().entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).forEach(
                 entry -> {
                     Action<?> action = entry.getValue();
                     sb.append(entry.getKey());
@@ -52,7 +53,7 @@ public class ActionCommand {
                 }
         );
         sb.append("\n\n########### REQUIREMENTS ###########\n");
-        ActionAPI.getRequirements().entrySet().forEach(
+        ActionAPI.getRequirements().entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).forEach(
                 entry -> {
                     Requirement<?> requirement = entry.getValue();
                     sb.append(entry.getKey());
@@ -69,7 +70,7 @@ public class ActionCommand {
                 }
         );
         sb.append("\n\n########### TRIGGER ###########\n");
-        ActionAPI.getTrigger().entrySet().forEach(
+        ActionAPI.getTrigger().entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).forEach(
                 entry -> {
                     Trigger trigger = entry.getValue();
                     sb.append(entry.getKey());

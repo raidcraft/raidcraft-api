@@ -28,15 +28,13 @@ public class StageBuilder extends ActionRequirementBuilder<StageTemplate> {
     public StageBuilder withAnswer(String answer, Consumer<AnswerBuilder> consumer) {
 
         AnswerBuilder answerBuilder = withBuilder(AnswerBuilder.class, new SimpleAnswer(answer), consumer);
-        answerBuilder.build(result -> getResult().addAnswer(result));
-
+        getResult().addAnswer(answerBuilder.build());
         return this;
     }
 
     public StageBuilder withAnswer(FancyMessage message, Consumer<AnswerBuilder> consumer) {
-        AnswerBuilder answerBuilder = withBuilder(AnswerBuilder.class, new SimpleAnswer(message));
-        answerBuilder.build(result -> getResult().addAnswer(result));
-
+        AnswerBuilder answerBuilder = withBuilder(AnswerBuilder.class, new SimpleAnswer(message), consumer);
+        getResult().addAnswer(answerBuilder.build());
         return this;
     }
 

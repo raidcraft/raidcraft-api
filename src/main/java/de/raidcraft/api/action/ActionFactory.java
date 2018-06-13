@@ -1,5 +1,6 @@
 package de.raidcraft.api.action;
 
+import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
@@ -96,12 +97,24 @@ public final class ActionFactory<T> {
 
     public boolean contains(Action action) {
 
-        return actions.values().contains(action);
+        return contains(action.getClass());
     }
 
     public boolean contains(String actionId) {
 
         return actions.containsKey(actionId) || actionAliases.containsKey(actionId);
+    }
+
+    public boolean contains(Class<?> actionClass) {
+        if (actionClass == null) return false;
+        String className = actionClass.getName().split("\\$")[0];
+        if (Strings.isNullOrEmpty(className)) return false;
+        return actions.values().stream()
+                .filter(Objects::nonNull)
+                .filter(action -> action.getClass() != null)
+                .map(action -> action.getClass().getName().split("\\$")[0])
+                .filter(name -> !Strings.isNullOrEmpty(name))
+                .anyMatch(name -> name.equals(className));
     }
 
     public Optional<String> getActionIdentifier(Action action) {
@@ -128,6 +141,16 @@ public final class ActionFactory<T> {
         return Optional.of(new ActionConfigWrapper<>(actions.get(identifier), config, getType()));
     }
 
+    public Optional<Action<T>> create(@NonNull Class<? extends Action> actionClass, @NonNull ConfigurationSection config) {
+        Optional<Action<T>> action = actions.values().stream().filter(a -> a.getClass().equals(actionClass)).findFirst();
+
+        return action.map(a -> new ActionConfigWrapper<>(a, config, getType()));
+    }
+
+    public Optional<Action<T>> createWrapper(Action<T> action, ConfigurationSection config) {
+        return Optional.of(new ActionConfigWrapper<>(action, config, getType()));
+    }
+
     @SuppressWarnings("unchecked")
     @Deprecated
     /**
@@ -150,10 +173,8 @@ public final class ActionFactory<T> {
         for (String key : actions.getKeys(false)) {
             // lists are handled by the flow parser
             if (actions.isList(key)) continue;
-            Optional<Action<T>> optional = create(actions.getString(key + ".type"), actions.getConfigurationSection(key));
-            if (optional.isPresent()) {
-                list.add(optional.get());
-            }
+            create(actions.getString(key + ".type"), actions.getConfigurationSection(key))
+                    .ifPresent(list::add);
         }
         return list;
     }

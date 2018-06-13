@@ -212,7 +212,7 @@ public class Conversations {
     /**
      * Registers the given variable for all conversation replacements.
      * Registered variables will be replaced when the conversation withText is written.
-     *  @param pattern of the variable
+     * @param pattern of the variable
      * @param variable to register
      */
     public static void registerConversationVariable(Pattern pattern, ConversationVariable variable) {
@@ -222,6 +222,16 @@ public class Conversations {
         } else {
             provider.registerConversationVariable(pattern, variable);
         }
+    }
+
+    /**
+     * Registers the given raw string as a pattern for conversation variables.
+     *
+     * @param pattern  to register
+     * @param variable to resolve
+     */
+    public static void registerConversationVariable(String pattern, ConversationVariable variable) {
+        registerConversationVariable(Pattern.compile(pattern), variable);
     }
 
     /**

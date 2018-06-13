@@ -178,7 +178,7 @@ public enum GlobalAction {
                 value = "player.message",
                 desc = "Sends the given message to the player. Multiline splitting with |.",
                 conf = {
-                        "withText: <First line.|Second line.>"
+                        "text: <First line.|Second line.>"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
@@ -189,13 +189,13 @@ public enum GlobalAction {
             }
         }
     }),
-    TEXT("withText", new Action<Player>() {
+    TEXT("text", new Action<Player>() {
         @Override
         @Information(
-                value = "withText",
-                desc = "Sends the given withText to the player prepended by the given NPC name.",
+                value = "text",
+                desc = "Sends the given text to the player prepended by the given NPC name.",
                 conf = {
-                        "withText: <First line.|Second line.>",
+                        "text: <First line.|Second line.>",
                         "npc: name"
                 }
         )
@@ -210,7 +210,7 @@ public enum GlobalAction {
             } else {
                 npc = config.getString("npc");
             }
-            String[] text = config.getString("withText").split("\\|");
+            String[] text = config.getString("text").split("\\|");
             for (String line : text) {
                 String message;
                 if (npc != null) {
@@ -228,18 +228,18 @@ public enum GlobalAction {
             }
         }
     }),
-    TEXT_PLAYER("withText.player", new Action<Player>() {
+    TEXT_PLAYER("text.player", new Action<Player>() {
         @Override
         @Information(
-                value = "withText.player",
-                desc = "Sends the given withText to the player prepended by the player name.",
+                value = "text.player",
+                desc = "Sends the given text to the player prepended by the player name.",
                 conf = {
-                        "withText: <First line.|Second line.>"
+                        "text: <First line.|Second line.>"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
 
-            String[] text = config.getString("withText").split("\\|");
+            String[] text = config.getString("text").split("\\|");
             for (String line : text) {
                 line = RaidCraft.replaceVariables(player, line);
                 player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN
@@ -248,18 +248,18 @@ public enum GlobalAction {
             }
         }
     }),
-    TEXT_INFO("withText.info", new Action<Player>() {
+    TEXT_INFO("text.info", new Action<Player>() {
         @Override
         @Information(
-                value = "withText.info",
-                desc = "Sends the given withText to the player formatted in DARK AQUA.",
+                value = "text.info",
+                desc = "Sends the given text to the player formatted in DARK AQUA.",
                 conf = {
-                        "withText: <First line.|Second line.>"
+                        "text: <First line.|Second line.>"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
 
-            String[] text = config.getString("withText").split("\\|");
+            String[] text = config.getString("text").split("\\|");
             for (String line : text) {
                 line = RaidCraft.replaceVariables(player, line);
                 player.sendMessage(ChatColor.DARK_AQUA + line);

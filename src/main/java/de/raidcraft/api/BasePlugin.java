@@ -102,6 +102,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
         }
         // call the sub plugins to enable
         enable();
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::loadDependencyConfigs, 5 * 20L);
     }
 
     public final void onDisable() {
@@ -115,6 +117,13 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
     }
 
     public abstract void enable();
+
+    /**
+     * Override this method to load your plugins configs that depend on other plugins.
+     */
+    public void loadDependencyConfigs() {
+
+    }
 
     public abstract void disable();
 

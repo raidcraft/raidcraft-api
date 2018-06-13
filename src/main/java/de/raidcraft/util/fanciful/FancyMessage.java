@@ -633,7 +633,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      */
     public FancyMessage then() {
         if (!latest().hasText()) {
-			throw new IllegalStateException("previous message part has no withText");
+            throw new IllegalStateException("previous message part has no text");
         }
         this.builder.append(new BaseComponent[]{});
 //        messageParts.add(new MessagePart());
@@ -646,7 +646,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
         if (messageParts.size() == 1) {
             latest().writeJson(writer);
         } else {
-			writer.beginObject().name("withText").value("").name("extra").beginArray();
+            writer.beginObject().name("text").value("").name("extra").beginArray();
             for (final MessagePart part : this) {
                 part.writeJson(writer);
             }

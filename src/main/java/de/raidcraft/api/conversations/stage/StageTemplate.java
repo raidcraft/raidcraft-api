@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 public interface StageTemplate extends RequirementHolder, ActionHolder {
 
-    String START_STAGE = "startStage";
+    String START_STAGE = "start";
     String DEFAULT_STAGE_TEMPLATE = "default";
     int MAX_ANSWERS = 5;
 

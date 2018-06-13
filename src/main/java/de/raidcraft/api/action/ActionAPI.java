@@ -211,14 +211,14 @@ public final class ActionAPI {
             throw new UnsupportedOperationException(actionClass.getCanonicalName() + " has not @Information annotation defined!");
         }
         for (ActionFactory<?> factory : actionFactories.values()) {
-            if (factory.contains(information.value())) {
-                Optional<? extends Action<?>> action = factory.create(information.value(), new MemoryConfiguration());
+            if (factory.contains(actionClass)) {
+                Optional<? extends Action<?>> action = factory.create(actionClass, new MemoryConfiguration());
                 if (action.isPresent()) {
                     return (T) action.get();
                 }
             }
         }
-        throw new UnsupportedOperationException("Could not find matching withAction for " + actionClass.getCanonicalName() + " -> " + information.value());
+        throw new UnsupportedOperationException("Could not find matching action for " + actionClass.getCanonicalName() + " -> " + information.value());
     }
 
     @SuppressWarnings("unchecked")

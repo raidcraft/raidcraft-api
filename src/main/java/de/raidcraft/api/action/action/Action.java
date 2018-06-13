@@ -71,7 +71,7 @@ public interface Action<T> extends ActionConfigGenerator {
     static Action<Player> text(String text) {
 
         Action<Player> action = GlobalAction.TEXT.getAction();
-        action.withArgs("withText", text);
+        action.withArgs("text", text);
         return action;
     }
 

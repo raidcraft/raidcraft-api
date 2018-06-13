@@ -125,7 +125,9 @@ public interface Conversation extends ConfigurationSection {
      * @param template to create stage from
      * @return current conversation
      */
-    Conversation changeToStage(StageTemplate template);
+    Conversation
+
+    changeToStage(StageTemplate template);
 
     /**
      * Changes the conversation to the previous stage.

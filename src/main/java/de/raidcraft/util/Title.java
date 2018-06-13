@@ -249,7 +249,7 @@ public class Title {
                 Object serialized = getMethod(nmsChatSerializer, "a",
                         String.class).invoke(
                         null,
-                        "{withText:\""
+                        "{text:\""
                                 + ChatColor.translateAlternateColorCodes('&',
                                 title) + "\",color:"
                                 + titleColor.name().toLowerCase() + "}");
@@ -260,7 +260,7 @@ public class Title {
                     // Send subtitle if present
                     serialized = getMethod(nmsChatSerializer, "a", String.class)
                             .invoke(null,
-                                    "{withText:\""
+                                    "{text:\""
                                             + ChatColor
                                             .translateAlternateColorCodes(
                                                     '&', subtitle)

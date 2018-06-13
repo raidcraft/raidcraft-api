@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * @author Silthus
  */
-@EqualsAndHashCode(of = {"withAction", "config"})
+@EqualsAndHashCode(of = {"action", "config"})
 @Data
 public class ActionConfigWrapper<T> implements RevertableAction<T> {
 

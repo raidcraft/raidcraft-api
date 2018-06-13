@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author mdoering
  */
 @Data
-@EqualsAndHashCode(callSuper = false, of = {"type", "withText", "actions", "requirements"})
+@EqualsAndHashCode(callSuper = false, of = {"type", "text", "actions", "requirements"})
 public class SimpleAnswer implements Answer {
 
     private final String type;

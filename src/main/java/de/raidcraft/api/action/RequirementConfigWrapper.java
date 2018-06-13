@@ -68,7 +68,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         this.negate = config.getBoolean("negate", false);
         this.order = config.getInt("order", 0);
         this.requiredCount = config.getInt("count", 0);
-        this.countText = config.getString("count-withText");
+        this.countText = config.getString("count-text");
         this.description = config.getString("description");
         this.optional = config.getBoolean("optional", false);
         this.successActions = ActionAPI.createActions(config.getConfigurationSection("success")).stream()

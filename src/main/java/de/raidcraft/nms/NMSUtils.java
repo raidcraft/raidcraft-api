@@ -50,12 +50,11 @@ public class NMSUtils {
      * If you're using a custom entity class, remember to <b>register</b> it before using this! Otherwise it'll not be
      * rendered by the client.
      * <p>
-     * If {@link #isAccessible()} returns false, the process will not be executed.
      *
      * @param data   - The spawn data (chance, amount, spawn weight..)
      * @param meta   - The category in which your mob'll spawn (i.e creatures'll spawn in day, monsters during night..)
      * @param biomes - The array of biomes to let the mobs spawn in, use {@link Biome#COLLECTION_ALL} for all of them.
-     * @see #registerEntity(MobType, Class, boolean)
+     * @see #registerEntity(Type, Class, boolean)
      */
     public static boolean addRandomSpawn(SpawnData data, MobMeta meta, Biome... biomes) {
         Field field;
@@ -86,12 +85,11 @@ public class NMSUtils {
      * If you're using a custom entity class, remember to <b>register</b> it before using this! Otherwise it'll not be
      * rendered by the client.
      * <p>
-     * If {@link #isAccessible()} returns false, the process will not be executed.
      *
      * @param type   - The mob type to spawn
      * @param data   - The spawn data (chance, amount, spawn weight..)
      * @param biomes - The array of biomes to let the mobs spawn in, use {@link Biome#COLLECTION_ALL} for all of them.
-     * @see #registerEntity(MobType, Class, boolean)
+     * @see #registerEntity(Type, Class, boolean)
      * @see #addRandomSpawn(SpawnData, MobMeta, Biome...)
      */
     public static boolean addRandomSpawn(Type type, SpawnData data, Biome... biomes) {
@@ -153,15 +151,11 @@ public class NMSUtils {
     /**
      * Registers the custom class to be available for use.
      *
-     * @param id          - The mob id. BE CAREFUL with this. Your Minecraft client renders the entity based on this, and if
-     *                    used improperly, will cause unexpected behavior!
      * @param name        - The 'savegame id' of the mob.
      * @param type        - The type of your mob
      * @param customClass - Your custom class that'll be used
      * @param biomes      - The array of biomes to make the mob spawn in.
-     * @see #registerEntity(int, String, MobType, Class, Biome[])
      * @see EntityType#getName() EntityType#getName() for the savegame id.
-     * @see EntityType#getId() EntityType#getId() for the correct mob id.
      */
     @SuppressWarnings("unchecked")
     public static void registerEntity(String name, Type type, Class<?> customClass, Biome... biomes) {
@@ -202,7 +196,7 @@ public class NMSUtils {
      * @param customClass - Your custom class that'll be used
      * @param override    - Should your mob be set as a default in each biome? Only one custom entity of this type entity can
      *                    have this set as 'true'.
-     * @see #registerEntity(int, String, MobType, Class, Biome[])
+     * @see #registerEntity(String, Type, Class, Biome[])
      * @see EntityType#getName() EntityType#getName() for the savegame id.
      */
     @SuppressWarnings("unchecked")

@@ -67,7 +67,7 @@ public abstract class TextualComponent implements Cloneable {
     }
 
     static boolean isTextKey(String key) {
-        return key.equals("translate") || key.equals("withText") || key.equals("score") || key.equals("selector");
+        return key.equals("translate") || key.equals("text") || key.equals("score") || key.equals("selector");
     }
 
     static boolean isTranslatableText(TextualComponent component) {
@@ -222,7 +222,7 @@ public abstract class TextualComponent implements Cloneable {
      * @return The withText component representing the specified literal withText.
      */
     public static TextualComponent rawText(String textValue) {
-        return new ArbitraryTextTypeComponent("withText", textValue);
+        return new ArbitraryTextTypeComponent("text", textValue);
     }
 
 
