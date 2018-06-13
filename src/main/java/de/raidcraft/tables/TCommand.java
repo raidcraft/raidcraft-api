@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -31,6 +32,7 @@ public class TCommand {
     private int min;
     private int max;
     private String flags;
+    @Column(columnDefinition = "TEXT")
     private String help_; // sql reservered word
     private String permission;
     private String server;
