@@ -2,6 +2,7 @@ package de.raidcraft.api.ambient;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.util.EffectUtil;
+import de.raidcraft.util.EnumUtils;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -18,7 +19,7 @@ public class AmbientFireworkEffect extends AbstractAmbientEffect {
 
         super(config);
         FireworkEffect.Builder builder = FireworkEffect.builder();
-        builder.with(org.bukkit.FireworkEffect.Type.valueOf(config.getString("effect", "ball")));
+        builder.with(EnumUtils.getEnumFromString(FireworkEffect.Type.class, config.getString("effect", "ball")));
         builder.flicker(config.getBoolean("flicker", false));
         builder.trail(config.getBoolean("trail", false));
         for (String color : config.getStringList("colors")) {

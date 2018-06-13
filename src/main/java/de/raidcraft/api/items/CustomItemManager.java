@@ -7,11 +7,7 @@ import de.raidcraft.util.CustomItemUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Silthus
@@ -109,8 +105,10 @@ public final class CustomItemManager implements Component {
             // okay nothing there, so lets search for a matching name
             name = name.toLowerCase();
             List<CustomItem> matching = new ArrayList<>();
-            for (CustomItem item : customItems.values()) {
-                if (item.getName().equalsIgnoreCase(name)) {
+            Collection<CustomItem> customItems = this.customItems.values();
+            customItems.addAll(namedCustomItems.values());
+            for (CustomItem item : customItems) {
+                if (ChatColor.stripColor(item.getName()).equalsIgnoreCase(name)) {
                     return item;
                 } else if (item.getName().toLowerCase().contains(name)) {
                     matching.add(item);

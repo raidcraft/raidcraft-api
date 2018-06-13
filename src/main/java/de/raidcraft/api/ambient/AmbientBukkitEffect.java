@@ -1,5 +1,9 @@
 package de.raidcraft.api.ambient;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.tables.RcLogLevel;
+import de.raidcraft.util.ConfigUtil;
+import de.raidcraft.util.EnumUtils;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,15 +22,21 @@ public class AmbientBukkitEffect extends AbstractAmbientEffect {
     protected AmbientBukkitEffect(ConfigurationSection config) {
 
         super(config);
-        this.effectType = Effect.valueOf(config.getString("effect"));
+        this.effectType = EnumUtils.getEnumFromString(Effect.class, config.getString("effect"));
         this.data = config.getInt("data", 1);
         this.radius = config.getInt("radius", 100);
         this.speed = (float) config.getDouble("speed", 1.0);
         this.particleCount = config.getInt("particle-count", 10);
+        if (effectType == null) {
+            RaidCraft.log("Invalid bukkit effect type: " + config.getString("effect") + " in " + ConfigUtil.getFileName(config),
+                    "AmbientBukkitEffect", RcLogLevel.WARNING);
+        }
     }
 
     @Override
     protected void runEffect(Location... locations) {
+
+        if (effectType == null) return;
 
         for (Location location : locations) {
             location.getWorld().playEffect(location, effectType, data, radius);
