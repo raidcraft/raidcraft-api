@@ -1,6 +1,7 @@
 package de.raidcraft.api.quests;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.config.ConfigLoader;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ public class Quests {
     }
 
     private static QuestProvider provider;
-    private static Set<QuestConfigLoader> queuedConfigLoader = new HashSet<>();
+    private static Set<ConfigLoader> queuedConfigLoader = new HashSet<>();
 
     public static void enable(QuestProvider questProvider) {
 
@@ -37,7 +38,7 @@ public class Quests {
         return provider != null;
     }
 
-    public static void registerQuestLoader(QuestConfigLoader loader) {
+    public static void registerQuestLoader(ConfigLoader loader) {
 
         if (isEnabled()) {
             provider.registerQuestConfigLoader(loader);
@@ -51,7 +52,7 @@ public class Quests {
     }
 
     @Nullable
-    public static QuestConfigLoader getQuestConfigLoader(String suffix) {
+    public static ConfigLoader getQuestConfigLoader(String suffix) {
 
         return provider.getQuestConfigLoader(suffix);
     }

@@ -1,5 +1,6 @@
 package de.raidcraft.api.quests;
 
+import de.raidcraft.api.config.ConfigLoader;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -8,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface QuestProvider {
 
-    void registerQuestConfigLoader(QuestConfigLoader loader);
+    void registerQuestConfigLoader(ConfigLoader loader);
 
-    QuestConfigLoader getQuestConfigLoader(String suffix);
+    ConfigLoader getQuestConfigLoader(String suffix);
 
     boolean hasQuestItem(Player player, ItemStack itemStack, int amount);
 

@@ -1,18 +1,11 @@
 package de.raidcraft.util;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.config.ConfigLoader;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.api.config.KeyValueMap;
-import de.raidcraft.api.config.typeconversions.BooleanTypeConversion;
-import de.raidcraft.api.config.typeconversions.EnumTypeConversion;
-import de.raidcraft.api.config.typeconversions.ListTypeConversion;
-import de.raidcraft.api.config.typeconversions.MapTypeConversion;
-import de.raidcraft.api.config.typeconversions.NumberTypeConversion;
-import de.raidcraft.api.config.typeconversions.SameTypeConversion;
-import de.raidcraft.api.config.typeconversions.SetTypeConversion;
-import de.raidcraft.api.config.typeconversions.StringTypeConversion;
-import de.raidcraft.api.config.typeconversions.TypeConversion;
-import de.raidcraft.api.quests.QuestConfigLoader;
+import de.raidcraft.api.config.SimpleConfiguration;
+import de.raidcraft.api.config.typeconversions.*;
 import de.raidcraft.api.quests.Quests;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,14 +14,12 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,7 +109,7 @@ public class ConfigUtil {
         if (matcher.matches()) {
             String type = matcher.group(1);
             String name = replacePathReference(matcher.group(2), basePath);
-            QuestConfigLoader loader = Quests.getQuestConfigLoader(type);
+            ConfigLoader loader = Quests.getQuestConfigLoader(type);
             if (loader != null) {
                 try {
                     return loader.replaceReference(name);
@@ -238,6 +229,39 @@ public class ConfigUtil {
     public static Location getLocationFromConfig(ConfigurationSection section) {
 
         return getLocationFromConfig(section, null);
+    }
+
+    public static void loadRecursiveConfigs(JavaPlugin plugin, String path, ConfigLoader... loaders) {
+
+        loadRecursiveConfigs(plugin, path, Arrays.asList(loaders));
+    }
+
+    public static void loadRecursiveConfigs(JavaPlugin plugin, String path, Collection<ConfigLoader> loaders) {
+        File dir = new File(plugin.getDataFolder(), path);
+        dir.mkdirs();
+        loadConfigs(dir, path, loaders);
+    }
+
+    private static void loadConfigs(File baseFolder, String path, Collection<ConfigLoader> loaders) {
+
+        for (File file : Objects.requireNonNull(baseFolder.listFiles())) {
+            String fileName = file.getName();
+            if (file.isDirectory()) {
+                loadConfigs(file, path + "." + fileName.toLowerCase(), loaders);
+            } else {
+                if (path.startsWith(".")) {
+                    path = path.replaceFirst("\\.", "");
+                }
+                for (ConfigLoader loader : loaders) {
+                    if (!loader.matches(file)) continue;
+                    loader.setPath(path);
+                    String id = (path + "." + file.getName().toLowerCase()).replace(loader.getSuffix(), "");
+                    ConfigurationSection configFile = loader.getPlugin().configure(new SimpleConfiguration<>(loader.getPlugin(), file));
+
+                    loader.loadConfig(id, configFile);
+                }
+            }
+        }
     }
 }
 
