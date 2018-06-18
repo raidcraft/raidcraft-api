@@ -3,6 +3,7 @@ package de.raidcraft.api.items;
 import de.raidcraft.api.items.tooltip.Tooltip;
 import de.raidcraft.api.items.tooltip.TooltipSlot;
 import de.raidcraft.api.requirement.RequirementResolver;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,7 +22,7 @@ public interface CustomItem extends RequirementResolver<Player> {
 
     String getEncodedId();
 
-    int getMinecraftId();
+    Material getMinecraftItem();
 
     short getMinecraftDataValue();
 

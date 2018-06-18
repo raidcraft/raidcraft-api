@@ -5,6 +5,7 @@ import de.raidcraft.api.Component;
 import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.CustomItemUtil;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -19,11 +20,11 @@ public final class CustomItemManager implements Component {
     private final Map<Integer, Gem> loadedGems = new HashMap<>();
     private final Map<String, CustomItem> namedCustomItems = new CaseInsensitiveMap<>();
     // minecraft item id | possible list of custom items
-    private final Map<Integer, List<CustomItem>> mappedMinecraftItems = new HashMap<>();
+    private final Map<Material, List<CustomItem>> mappedMinecraftItems = new HashMap<>();
 
     public CustomItemStack getCustomItemStack(CustomItem customItem) {
 
-        ItemStack itemStack = new ItemStack(customItem.getMinecraftId(), 1, customItem.getMinecraftDataValue());
+        ItemStack itemStack = new ItemStack(customItem.getMinecraftItem(), 1, customItem.getMinecraftDataValue());
         return new CustomItemStack(customItem, itemStack);
     }
 
@@ -141,10 +142,10 @@ public final class CustomItemManager implements Component {
             throw new DuplicateCustomItemException("The custom item with the id " + item.getId() + " is already registered.");
         }
         customItems.put(item.getId(), item);
-        if (!mappedMinecraftItems.containsKey(item.getMinecraftId())) {
-            mappedMinecraftItems.put(item.getMinecraftId(), new ArrayList<>());
+        if (!mappedMinecraftItems.containsKey(item.getMinecraftItem())) {
+            mappedMinecraftItems.put(item.getMinecraftItem(), new ArrayList<>());
         }
-        mappedMinecraftItems.get(item.getMinecraftId()).add(item);
+        mappedMinecraftItems.get(item.getMinecraftItem()).add(item);
     }
 
     public void registerNamedCustomItem(String name, CustomItem item) throws DuplicateCustomItemException {
@@ -159,8 +160,8 @@ public final class CustomItemManager implements Component {
 
         CustomItem item = customItems.remove(id);
         if (item != null) {
-            if (mappedMinecraftItems.containsKey(item.getMinecraftId())) {
-                mappedMinecraftItems.get(item.getMinecraftId()).remove(item);
+            if (mappedMinecraftItems.containsKey(item.getMinecraftItem())) {
+                mappedMinecraftItems.get(item.getMinecraftItem()).remove(item);
             }
         }
         return item;
