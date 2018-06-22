@@ -22,7 +22,7 @@ public class AnswerParser extends FlowParser {
     }
 
     @Override
-    protected FlowExpression parse() throws FlowException {
+    public FlowExpression parse() throws FlowException {
 
         String text = getMatcher().group(1);
         if (text == null) {

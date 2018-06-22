@@ -33,7 +33,7 @@ public class ConfigParser extends FlowParser {
     }
 
     @Override
-    protected FlowConfiguration parse() throws FlowException {
+    public FlowConfiguration parse() throws FlowException {
 
         FlowConfiguration config = new FlowConfiguration();
         // lets first check if the input has global params and extract them

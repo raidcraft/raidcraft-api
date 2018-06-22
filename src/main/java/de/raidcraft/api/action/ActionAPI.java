@@ -179,7 +179,7 @@ public final class ActionAPI {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Optional<Action<T>> createAction(String identifier, ConfigurationSection config, Class<?> type) {
+    public static <T> Optional<Action<T>> createAction(String identifier, ConfigurationSection config, Class<T> type) {
 
         ActionFactory<?> actionFactory = actionFactories.get(type);
         if (actionFactory == null) return Optional.empty();

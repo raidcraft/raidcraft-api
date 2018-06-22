@@ -25,5 +25,5 @@ public abstract class FlowParser {
         return matcher.matches();
     }
 
-    protected abstract FlowExpression parse() throws FlowException;
+    public abstract FlowExpression parse() throws FlowException;
 }

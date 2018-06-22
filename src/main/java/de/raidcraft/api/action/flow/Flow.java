@@ -4,7 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.TriggerFactory;
 import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.action.flow.parsers.ActionTypeParser;
+import de.raidcraft.api.action.flow.parsers.ActionApiFlowParser;
 import de.raidcraft.api.action.flow.parsers.AnswerParser;
 import de.raidcraft.api.action.flow.types.ActionAPIType;
 import de.raidcraft.api.action.flow.types.FlowAnswer;
@@ -28,7 +28,7 @@ import java.util.Set;
 public final class Flow {
 
     private static final FlowParser[] parsers = {
-            new ActionTypeParser(),
+            new ActionApiFlowParser(),
             new AnswerParser()
     };
 

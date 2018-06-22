@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 /**
  * @author mdoering
  */
-public class ActionTypeParser extends FlowParser {
+public class ActionApiFlowParser extends FlowParser {
 
-    public ActionTypeParser() {
+    public ActionApiFlowParser() {
 
         super(Pattern.compile("^([!@\\?~])([a-zA-Z\\-\\._\\d]+)([( ]?.*)$"));
         // #0 	@trigger(blubb: aaaa) world,1,2,3
@@ -27,7 +27,7 @@ public class ActionTypeParser extends FlowParser {
     }
 
     @Override
-    protected ActionAPIType parse() throws FlowException {
+    public ActionAPIType parse() throws FlowException {
 
         // first we need to find out the flow type from group 1
         String typeSymbol = getMatcher().group(1);

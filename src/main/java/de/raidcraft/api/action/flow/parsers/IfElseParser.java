@@ -24,7 +24,7 @@ public class IfElseParser extends FlowParser {
     }
 
     @Override
-    protected FlowExpression parse() {
+    public FlowExpression parse() {
 
         // group1: keyworkd if, elseif, else or fi
         // group2: the withRequirement or empty
