@@ -26,6 +26,8 @@ import de.raidcraft.api.inventory.PersistentInventory;
 import de.raidcraft.api.items.*;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentProvider;
+import de.raidcraft.api.permissions.GroupManager;
+import de.raidcraft.api.permissions.RCPermissionsProvider;
 import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.PlayerStatisticProvider;
 import de.raidcraft.api.player.RCPlayer;
@@ -38,6 +40,8 @@ import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
 import de.raidcraft.util.*;
+import lombok.Getter;
+import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -95,6 +99,11 @@ public class RaidCraft implements Listener {
     private static Economy economy;
     private static ConversationProvider conversationProvider;
     private static TradeProvider tradeProvider;
+    @Setter
+    @Getter
+    private static GroupManager permissionGroupManager;
+    @Getter
+    private static RCPermissionsProvider permissionsProvider;
     private static HeroProvider heroProvider = new DefaultHeroProvider();
 
     /**
@@ -616,6 +625,10 @@ public class RaidCraft implements Listener {
     public static void registerHeroProvider(HeroProvider provider) {
 
         heroProvider = provider;
+    }
+
+    public static void registerPermissionsProvider(RCPermissionsProvider provider) {
+        permissionsProvider = provider;
     }
 
     public static HeroProvider getHeroProvider() {
