@@ -26,6 +26,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -270,6 +271,10 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
     public final void registerEvents(Listener listener) {
 
         RaidCraft.registerEvents(listener, this);
+    }
+
+    public final void unregisterEvents(Listener listener) {
+        HandlerList.unregisterAll(listener);
     }
 
     public RCPlayer getPlayer(Player player) {
