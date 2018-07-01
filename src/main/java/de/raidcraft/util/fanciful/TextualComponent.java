@@ -251,7 +251,7 @@ public abstract class TextualComponent implements Cloneable {
      * <b>This method is currently guaranteed to throw an {@code UnsupportedOperationException} as it is only supported on snapshot clients.</b>
      * </p>
      *
-     * @param scoreboardObjective The name of the objective for which to display the score.
+     * @param scoreboardObjective The displayName of the objective for which to display the score.
      * @return The withText component representing the specified scoreboard score (for the viewing player), or {@code null} if an error occurs during JSON serialization.
      */
     public static TextualComponent objectiveScore(String scoreboardObjective) {
@@ -265,9 +265,9 @@ public abstract class TextualComponent implements Cloneable {
      * <b>This method is currently guaranteed to throw an {@code UnsupportedOperationException} as it is only supported on snapshot clients.</b>
      * </p>
      *
-     * @param playerName          The name of the player whos score will be shown. If this string represents the single-character sequence "*", the viewing player's score will be displayed.
+     * @param playerName          The displayName of the player whos score will be shown. If this string represents the single-character sequence "*", the viewing player's score will be displayed.
      *                            Standard minecraft selectors (@a, @p, etc) are <em>not</em> supported.
-     * @param scoreboardObjective The name of the objective for which to display the score.
+     * @param scoreboardObjective The displayName of the objective for which to display the score.
      * @return The withText component representing the specified scoreboard score for the specified player, or {@code null} if an error occurs during JSON serialization.
      */
     public static TextualComponent objectiveScore(String playerName, String scoreboardObjective) {
@@ -280,14 +280,14 @@ public abstract class TextualComponent implements Cloneable {
     }
 
     /**
-     * Create a textual component representing a player name, retrievable by using a standard minecraft selector.
+     * Create a textual component representing a player displayName, retrievable by using a standard minecraft selector.
      * The client will see the players or entities captured by the specified selector as the withText represented by this component.
      * <p>
      * <b>This method is currently guaranteed to throw an {@code UnsupportedOperationException} as it is only supported on snapshot clients.</b>
      * </p>
      *
      * @param selector The minecraft player or entity selector which will capture the entities whose string representations will be displayed in the place of this withText component.
-     * @return The withText component representing the name of the entities captured by the selector.
+     * @return The withText component representing the displayName of the entities captured by the selector.
      */
     public static TextualComponent selector(String selector) {
         throwUnsupportedSnapshot(); // Remove this line when the feature is released to non-snapshot versions, in addition to updating ALL THE OVERLOADS documentation accordingly

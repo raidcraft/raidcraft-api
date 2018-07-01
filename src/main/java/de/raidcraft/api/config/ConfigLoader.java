@@ -39,7 +39,7 @@ public abstract class ConfigLoader implements Comparable<ConfigLoader> {
      * Implement your custom config loading in this function.
      * This will be called for every file that matches the given {@link #getSuffix()}.
      *
-     * @param id     unique id of the config based on its path and file name without the suffix.
+     * @param id     unique id of the config based on its path and file displayName without the suffix.
      *               Subfolders will be separated by a colon, e.g.
      *               subfolder1.subfolder2.my-config
      * @param config loaded config file not null

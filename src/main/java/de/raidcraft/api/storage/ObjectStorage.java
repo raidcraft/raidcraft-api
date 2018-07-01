@@ -6,10 +6,10 @@ package de.raidcraft.api.storage;
 public interface ObjectStorage<T> {
 
     /**
-     * Returns the name of the provider that stored the object in the database.
+     * Returns the displayName of the provider that stored the object in the database.
      * Can be a plugin, skill, or whatever. Is only used to identify the source in the database.
      *
-     * @return name of the source that stored the object
+     * @return displayName of the source that stored the object
      */
     String getStorageSource();
 

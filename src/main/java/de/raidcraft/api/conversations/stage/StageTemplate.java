@@ -21,9 +21,9 @@ public interface StageTemplate extends RequirementHolder, ActionHolder {
     int MAX_ANSWERS = 5;
 
     /**
-     * Gets the unique identifier/name of this stage.
+     * Gets the unique identifier/displayName of this stage.
      *
-     * @return stage name/identifier
+     * @return stage displayName/identifier
      */
     String getIdentifier();
 

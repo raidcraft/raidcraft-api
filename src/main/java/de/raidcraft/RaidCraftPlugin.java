@@ -395,11 +395,11 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 .where().eq("uuid", uuid.toString()).findUnique();
         // known player
         if (player != null) {
-            // if name changed
+            // if displayName changed
             if (!player.getLastName().equalsIgnoreCase(name)) {
                 getLogger().warning("---- NAME CHANGE FOUND (" + uuid + ") !!! ----");
-                getLogger().warning("---- old name (" + player.getLastName() + ") !!! ----");
-                getLogger().warning("---- new name (" + name + ") !!! ----");
+                getLogger().warning("---- old displayName (" + player.getLastName() + ") !!! ----");
+                getLogger().warning("---- new displayName (" + name + ") !!! ----");
                 event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                         "You changed your playername. Contact raid-craft.de to reactivate.");
             }
@@ -410,7 +410,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         // new player
         player = getDatabase().find(TRcPlayer.class)
                 .where().ieq("last_name", name).findUnique();
-        // check if name already in use
+        // check if displayName already in use
         if (player != null) {
             getLogger().warning("---- NEW UUID FOR NAME (" + name + ") FOUND !!! ----");
             getLogger().warning("---- new uuid (" + uuid + ") FOUND !!! ----");

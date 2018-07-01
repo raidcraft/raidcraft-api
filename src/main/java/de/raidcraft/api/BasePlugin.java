@@ -17,6 +17,7 @@ import de.raidcraft.api.language.ConfigTranslationProvider;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.tables.RcLogLevel;
+import fr.zcraft.zlib.core.ZPlugin;
 import lombok.Getter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -31,7 +32,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ import java.util.Map;
 /**
  * @author Silthus
  */
-public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, Component {
+public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Component {
 
     // vault variables
     @Getter
@@ -58,6 +58,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
     private CommandsManagerRegistration commandRegistration;
 
     public final void onEnable() {
+
+        super.onEnable();
 
         // lets register the plugin as component
         RaidCraft.registerComponent(getClass(), this);
@@ -108,6 +110,8 @@ public abstract class BasePlugin extends JavaPlugin implements CommandExecutor, 
     }
 
     public final void onDisable() {
+
+        super.onDisable();
 
         this.commandRegistration.unregisterCommands();
         // call the sub plugin to disable

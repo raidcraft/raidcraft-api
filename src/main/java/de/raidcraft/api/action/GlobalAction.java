@@ -193,10 +193,10 @@ public enum GlobalAction {
         @Override
         @Information(
                 value = "text",
-                desc = "Sends the given text to the player prepended by the given NPC name.",
+                desc = "Sends the given text to the player prepended by the given NPC displayName.",
                 conf = {
                         "text: <First line.|Second line.>",
-                        "npc: name"
+                        "npc: displayName"
                 }
         )
         @SuppressWarnings("unchecked")
@@ -232,7 +232,7 @@ public enum GlobalAction {
         @Override
         @Information(
                 value = "text.player",
-                desc = "Sends the given text to the player prepended by the player name.",
+                desc = "Sends the given text to the player prepended by the player displayName.",
                 conf = {
                         "text: <First line.|Second line.>"
                 }
@@ -277,7 +277,7 @@ public enum GlobalAction {
                         "y",
                         "z",
                         "world: [current]",
-                        "name: [Compass]"
+                        "displayName: [Compass]"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
@@ -292,9 +292,9 @@ public enum GlobalAction {
         @Override
         @Information(
                 value = "player.remove.compass",
-                desc = "Removes the compass with the given name from the player.",
+                desc = "Removes the compass with the given displayName from the player.",
                 conf = {
-                        "name: [Compass]"
+                        "displayName: [Compass]"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {

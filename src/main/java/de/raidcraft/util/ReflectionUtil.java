@@ -3,13 +3,7 @@ package de.raidcraft.util;
 import org.apache.commons.lang.ClassUtils;
 import org.bukkit.Bukkit;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericDeclaration;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +15,7 @@ import java.util.Map;
 public class ReflectionUtil {
 
     /**
-     * When {@code Type} initialized with a value of an object, its fully qualified class name
+     * When {@code Type} initialized with a value of an object, its fully qualified class displayName
      * will be prefixed with this.
      *
      * @see {@link ReflectionUtil#getClassName(Type)}
@@ -37,13 +31,13 @@ public class ReflectionUtil {
     }
 
     /**
-     * {@link Type#toString()} value is the fully qualified class name prefixed
+     * {@link Type#toString()} value is the fully qualified class displayName prefixed
      * with {@link ReflectionUtil#TYPE_CLASS_NAME_PREFIX}. This method will substring it, for it to be eligible
      * for {@link Class#forName(String)}.
      *
-     * @param type the {@code Type} value whose class name is needed.
+     * @param type the {@code Type} value whose class displayName is needed.
      *
-     * @return {@code String} class name of the invoked {@code type}.
+     * @return {@code String} class displayName of the invoked {@code type}.
      *
      * @see {@link ReflectionUtil#getClass()}
      */
@@ -63,11 +57,11 @@ public class ReflectionUtil {
 
     /**
      * Returns the {@code Class} object associated with the given {@link Type}
-     * depending on its fully qualified name.
+     * depending on its fully qualified displayName.
      *
      * @param type the {@code Type} whose {@code Class} is needed.
      *
-     * @return the {@code Class} object for the class with the specified name.
+     * @return the {@code Class} object for the class with the specified displayName.
      *
      * @throws ClassNotFoundException if the class cannot be located.
      * @see {@link ReflectionUtil#getClassName(Type)}
@@ -171,15 +165,15 @@ public class ReflectionUtil {
 
     /**
      * Returns a {@code Class} object that identifies the
-     * declared class for the field represented by the given {@code String name} parameter inside
+     * declared class for the field represented by the given {@code String displayName} parameter inside
      * the invoked {@code Class<?> clazz} parameter.
      *
      * @param clazz the {@code Class} object whose declared fields to be
      *              checked for a certain field.
-     * @param name  the field name as {@code String} to be
+     * @param name  the field displayName as {@code String} to be
      *              compared with {@link Field#getName()}
      *
-     * @return the {@code Class} object representing the type of given field name.
+     * @return the {@code Class} object representing the type of given field displayName.
      *
      * @see {@link Class#getDeclaredFields()}
      * @see {@link Field#getType()}
@@ -206,14 +200,14 @@ public class ReflectionUtil {
     /**
      * Returns a {@code Class} object that identifies the
      * declared class as a return type for the method represented by the given
-     * {@code String name} parameter inside the invoked {@code Class<?> clazz} parameter.
+     * {@code String displayName} parameter inside the invoked {@code Class<?> clazz} parameter.
      *
      * @param clazz the {@code Class} object whose declared methods to be
-     *              checked for the wanted method name.
-     * @param name  the method name as {@code String} to be
+     *              checked for the wanted method displayName.
+     * @param name  the method displayName as {@code String} to be
      *              compared with {@link Method#getName()}
      *
-     * @return the {@code Class} object representing the return type of the given method name.
+     * @return the {@code Class} object representing the return type of the given method displayName.
      *
      * @see {@link Class#getDeclaredMethods()}
      * @see {@link Method#getReturnType()}
@@ -277,18 +271,18 @@ public class ReflectionUtil {
 
     /**
      * Extracts the enum constant of the specified enum class with the
-     * specified name. The name must match exactly an identifier used
+     * specified displayName. The displayName must match exactly an identifier used
      * to declare an enum constant in the given class.
      *
      * @param clazz the {@code Class} object of the enum type from which
      *              to return a constant.
-     * @param name  the name of the constant to return.
+     * @param name  the displayName of the constant to return.
      *
      * @return the enum constant of the specified enum type with the
-     * specified name.
+     * specified displayName.
      *
      * @throws IllegalArgumentException if the specified enum type has
-     *                                  no constant with the specified name, or the specified
+     *                                  no constant with the specified displayName, or the specified
      *                                  class object does not represent an enum type.
      * @see {@link Enum#valueOf(Class, String)}
      */

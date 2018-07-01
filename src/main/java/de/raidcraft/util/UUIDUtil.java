@@ -33,7 +33,7 @@ public class UUIDUtil {
         if (tPlayer != null) {
             return tPlayer.getUuid();
         }
-        // if we are here there is no player for this name -> must be a npc
+        // if we are here there is no player for this displayName -> must be a npc
         return Bukkit.getOfflinePlayer(name).getUniqueId();
     }
 

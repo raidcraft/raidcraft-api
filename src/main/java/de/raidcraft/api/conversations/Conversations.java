@@ -197,7 +197,7 @@ public class Conversations {
     /**
      * Registers the given conversation template with the {@link ConversationProvider}. Registered
      * conversation templates allow the setting if custom variables at the beginning of a conversation.
-     *  @param type name of the conversation template
+     *  @param type displayName of the conversation template
      * @param conversationTemplate type to register
      */
     public static void registerConversationTemplate(String type, Class<? extends ConversationTemplate> conversationTemplate) {

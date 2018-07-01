@@ -21,7 +21,7 @@ public class CommandUtil {
      * @param args             command args
      * @param sender           command sender
      * @param to               sender to warp
-     * @param playerStartIndex startStage argument for player name
+     * @param playerStartIndex startStage argument for player displayName
      *
      * @return the target (sender or player defined)
      *
@@ -53,11 +53,11 @@ public class CommandUtil {
 
         UUID uuid = UUIDUtil.convertPlayer(name);
         if (uuid == null) {
-            throw new CommandException("No player with the name (" + name + ") found");
+            throw new CommandException("No player with the displayName (" + name + ") found");
         }
         Player player = Bukkit.getPlayer(uuid);
         if (player == null) {
-            throw new CommandException("No player with the name (" + name + ") is online");
+            throw new CommandException("No player with the displayName (" + name + ") is online");
         }
         return player;
     }
@@ -66,11 +66,11 @@ public class CommandUtil {
 
         UUID uuid = UUIDUtil.convertPlayer(name);
         if (uuid == null) {
-            throw new CommandException("No player with the name (" + name + ") found");
+            throw new CommandException("No player with the displayName (" + name + ") found");
         }
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
         if (player == null) {
-            throw new CommandException("Player with the name (" + name + ") does not exist");
+            throw new CommandException("Player with the displayName (" + name + ") does not exist");
         }
         return player;
     }

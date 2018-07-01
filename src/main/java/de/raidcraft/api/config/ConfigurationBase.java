@@ -175,7 +175,7 @@ public abstract class ConfigurationBase<T extends BasePlugin> extends YamlConfig
             }
             // load the config by calling the bukkit super method
             super.load(file);
-//            plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + name + "\" successfully.");
+//            plugin.getLogger().info("[" + plugin.getName() + "] loaded config file \"" + displayName + "\" successfully.");
         } catch (IOException | InvalidConfigurationException e) {
             plugin.getLogger().warning(e.getMessage());
             e.printStackTrace();

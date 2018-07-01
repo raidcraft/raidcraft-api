@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Represents a JSON string value.
- * Writes by this object will not write name values nor begin/end objects in the JSON stream.
+ * Writes by this object will not write displayName values nor begin/end objects in the JSON stream.
  * All writes merely write the represented string value.
  */
 final class JsonString implements JsonRepresentedObject, ConfigurationSerializable {

@@ -139,7 +139,7 @@ public class RaidCraft implements Listener {
 
     /**
      * Gets the player but will ignore the exception thrown.
-     * This can be used when you know that the player name is correct.
+     * This can be used when you know that the player displayName is correct.
      *
      * @param name of the player
      *

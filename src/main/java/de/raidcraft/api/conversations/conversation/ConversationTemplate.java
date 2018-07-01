@@ -102,7 +102,7 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
     Map<String, StageTemplate> getStages();
 
     /**
-     * Gets the given stage by its name.
+     * Gets the given stage by its displayName.
      * If no stage is found an empty optional will be returned.
      *
      * @param name of the stage

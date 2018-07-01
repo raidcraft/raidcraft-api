@@ -87,7 +87,7 @@ public final class RequirementManager {
             if (constructor.getParameterTypes()[1].isAssignableFrom(ConfigurationSection.class)) {
                 constructor.setAccessible(true);
                 constructors.put(rClass, (Constructor<T>) constructor);
-                // get the name for aliasing
+                // get the displayName for aliasing
                 String name = StringUtils.formatName(rClass.getAnnotation(RequirementInformation.class).value());
                 requirementClasses.put(name, rClass);
                 RaidCraft.info("Registered Requirement Type: " + name, "RequirementManager");

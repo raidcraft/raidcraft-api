@@ -20,8 +20,8 @@ public final class Reflection {
     }
 
     /**
-     * Gets the version string from the package name of the CraftBukkit server implementation.
-     * This is needed to bypass the JAR package name changing on each update.
+     * Gets the version string from the package displayName of the CraftBukkit server implementation.
+     * This is needed to bypass the JAR package displayName changing on each update.
      *
      * @return The version string of the OBC and NMS packages, <em>including the trailing dot</em>.
      */
@@ -52,7 +52,7 @@ public final class Reflection {
      * Gets a {@link Class} object representing a type contained within the {@code net.minecraft.server} versioned package.
      * The class instances returned by this method are cached, such that no lookup will be done twice (unless multiple threads are accessing this method simultaneously).
      *
-     * @param className The name of the class, excluding the package, within NMS.
+     * @param className The displayName of the class, excluding the package, within NMS.
      * @return The class instance representing the specified NMS class, or {@code null} if it could not be loaded.
      */
     public synchronized static Class<?> getNMSClass(String className) {
@@ -77,7 +77,7 @@ public final class Reflection {
      * Gets a {@link Class} object representing a type contained within the {@code org.bukkit.craftbukkit} versioned package.
      * The class instances returned by this method are cached, such that no lookup will be done twice (unless multiple threads are accessing this method simultaneously).
      *
-     * @param className The name of the class, excluding the package, within OBC. This name may contain a subpackage name, such as {@code inventory.CraftItemStack}.
+     * @param className The displayName of the class, excluding the package, within OBC. This displayName may contain a subpackage displayName, such as {@code inventory.CraftItemStack}.
      * @return The class instance representing the specified OBC class, or {@code null} if it could not be loaded.
      */
     public synchronized static Class<?> getOBCClass(String className) {
@@ -119,7 +119,7 @@ public final class Reflection {
     private static final Map<Class<?>, Map<String, Field>> _loadedFields = new HashMap<Class<?>, Map<String, Field>>();
 
     /**
-     * Retrieves a {@link Field} instance declared by the specified class with the specified name.
+     * Retrieves a {@link Field} instance declared by the specified class with the specified displayName.
      * Java access modifiers are ignored during this retrieval. No guarantee is made as to whether the field
      * returned will be an instance or static field.
      * <p>
@@ -132,8 +132,8 @@ public final class Reflection {
      * </p>
      *
      * @param clazz The class which contains the field to retrieve.
-     * @param name  The declared name of the field in the class.
-     * @return A field object with the specified name declared by the specified class.
+     * @param name  The declared displayName of the field in the class.
+     * @return A field object with the specified displayName declared by the specified class.
      * @see Class#getDeclaredField(String)
      */
     public synchronized static Field getField(Class<?> clazz, String name) {
@@ -169,7 +169,7 @@ public final class Reflection {
     private static final Map<Class<?>, Map<String, Map<ArrayWrapper<Class<?>>, Method>>> _loadedMethods = new HashMap<Class<?>, Map<String, Map<ArrayWrapper<Class<?>>, Method>>>();
 
     /**
-     * Retrieves a {@link Method} instance declared by the specified class with the specified name and argument types.
+     * Retrieves a {@link Method} instance declared by the specified class with the specified displayName and argument types.
      * Java access modifiers are ignored during this retrieval. No guarantee is made as to whether the field
      * returned will be an instance or static field.
      * <p>
@@ -185,9 +185,9 @@ public final class Reflection {
      * Callers wishing this behavior should use {@link Class#getDeclaredMethod(String, Class...)}.
      *
      * @param clazz The class which contains the method to retrieve.
-     * @param name  The declared name of the method in the class.
+     * @param name  The declared displayName of the method in the class.
      * @param args  The formal argument types of the method.
-     * @return A method object with the specified name declared by the specified class.
+     * @return A method object with the specified displayName declared by the specified class.
      */
     public synchronized static Method getMethod(Class<?> clazz, String name, Class<?>... args) {
         if (!_loadedMethods.containsKey(clazz)) {

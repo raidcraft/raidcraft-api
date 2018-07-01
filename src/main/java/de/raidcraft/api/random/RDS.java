@@ -23,7 +23,7 @@ public class RDS {
 
         Class<? extends RDSObjectFactory> creatorClass = creator.getClass();
         if (!creatorClass.isAnnotationPresent(RDSObjectFactory.Name.class)) {
-            RaidCraft.LOGGER.warning("RDSObjectFactory has no name defined! " + creatorClass.getCanonicalName());
+            RaidCraft.LOGGER.warning("RDSObjectFactory has no displayName defined! " + creatorClass.getCanonicalName());
             return;
         }
         registeredFactories.put(creatorClass.getAnnotation(RDSObjectFactory.Name.class).value(), creator);
@@ -33,7 +33,7 @@ public class RDS {
 
         Class<? extends RDSObjectFactory> creatorClass = factory.getClass();
         if (!creatorClass.isAnnotationPresent(RDSObjectFactory.Name.class)) {
-            RaidCraft.LOGGER.warning("RDSObjectFactory has no name defined! " + creatorClass.getCanonicalName());
+            RaidCraft.LOGGER.warning("RDSObjectFactory has no displayName defined! " + creatorClass.getCanonicalName());
             return;
         }
         unregisterObject(creatorClass.getAnnotation(RDSObjectFactory.Name.class).value());

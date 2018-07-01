@@ -246,14 +246,14 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 	 * Set the behavior of the current editing component to display information about an achievement when the client hovers over the withText.
      * <p>Tooltips do not inherit display characteristics, such as color and styles, from the message component on which they are applied.</p>
      *
-     * @param name The name of the achievement to display, excluding the "achievement." prefix.
+     * @param displayName The displayName of the achievement to display, excluding the "achievement." prefix.
      * @return This builder instance.
      *
      * @deprecated does not work anymore. Use {@link ComponentBuilder} directly.
      */
 //    @Deprecated
-//    public FancyMessage achievementTooltip(final String name) {
-////        onHover("show_achievement", new JsonString("achievement." + name));
+//    public FancyMessage achievementTooltip(final String displayName) {
+////        onHover("show_achievement", new JsonString("achievement." + displayName));
 //        return this;
 //    }
 
@@ -270,7 +270,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 //    public FancyMessage achievementTooltip(final Achievement which) {
 //        try {
 //            Object achievement = Reflection.getMethod(Reflection.getOBCClass("CraftStatistic"), "getNMSAchievement", Achievement.class).invoke(null, which);
-//            return achievementTooltip((String) Reflection.getField(Reflection.getNMSClass("Achievement"), "name").get(achievement));
+//            return achievementTooltip((String) Reflection.getField(Reflection.getNMSClass("Achievement"), "displayName").get(achievement));
 //        } catch (IllegalAccessException e) {
 //            Bukkit.getLogger().log(Level.WARNING, "Could not access method.", e);
 //            return this;
@@ -301,7 +301,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 //        }
 //        try {
 //            Object statistic = Reflection.getMethod(Reflection.getOBCClass("CraftStatistic"), "getNMSStatistic", Statistic.class).invoke(null, which);
-//            return achievementTooltip((String) Reflection.getField(Reflection.getNMSClass("Statistic"), "name").get(statistic));
+//            return achievementTooltip((String) Reflection.getField(Reflection.getNMSClass("Statistic"), "displayName").get(statistic));
 //        } catch (IllegalAccessException e) {
 //            Bukkit.getLogger().log(Level.WARNING, "Could not access method.", e);
 //            return this;
@@ -336,7 +336,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 //        }
 //        try {
 //            Object statistic = Reflection.getMethod(Reflection.getOBCClass("CraftStatistic"), "getMaterialStatistic", Statistic.class, Material.class).invoke(null, which, item);
-//            return achievementTooltip((String) Reflection.getField(Reflection.getNMSClass("Statistic"), "name").get(statistic));
+//            return achievementTooltip((String) Reflection.getField(Reflection.getNMSClass("Statistic"), "displayName").get(statistic));
 //        } catch (IllegalAccessException e) {
 //            Bukkit.getLogger().log(Level.WARNING, "Could not access method.", e);
 //            return this;
@@ -371,7 +371,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 //        }
 //        try {
 //            Object statistic = Reflection.getMethod(Reflection.getOBCClass("CraftStatistic"), "getEntityStatistic", Statistic.class, EntityType.class).invoke(null, which, entity);
-//            return achievementTooltip((String) Reflection.getField(Reflection.getNMSClass("Statistic"), "name").get(statistic));
+//            return achievementTooltip((String) Reflection.getField(Reflection.getNMSClass("Statistic"), "displayName").get(statistic));
 //        } catch (IllegalAccessException e) {
 //            Bukkit.getLogger().log(Level.WARNING, "Could not access method.", e);
 //            return this;
@@ -760,7 +760,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 //            }
 //        }
 //
-//        // Since the method is so simple, and all the obfuscated methods have the same name, it's easier to reimplement 'IChatBaseComponent a(String)' than to reflectively call it
+//        // Since the method is so simple, and all the obfuscated methods have the same displayName, it's easier to reimplement 'IChatBaseComponent a(String)' than to reflectively call it
 //        // Of course, the implementation may change, but fuzzy matches might break with signature changes
 //        Object serializedChatComponent = fromJsonMethod.invoke(nmsChatSerializerGsonInstance, json, Reflection.getNMSClass("IChatBaseComponent"));
 //
@@ -835,16 +835,16 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
         return messageParts.get(messageParts.size() - 1);
     }
 
-    //    private void onClick(final String name, final String data) {
+    //    private void onClick(final String displayName, final String data) {
 //        final MessagePart latest = latest();
-//        latest.clickActionName = name;
+//        latest.clickActionName = displayName;
 //        latest.clickActionData = data;
 //        dirty = true;
 //    }
 //
-//    private void onHover(final String name, final JsonRepresentedObject data) {
+//    private void onHover(final String displayName, final JsonRepresentedObject data) {
 //        final MessagePart latest = latest();
-//        latest.hoverActionName = name;
+//        latest.hoverActionName = displayName;
 //        latest.hoverActionData = data;
 //        dirty = true;
 //    }

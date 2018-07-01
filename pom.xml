@@ -17,6 +17,10 @@
             <id>faldoria-deps</id>
             <url>https://repo.faldoria.de/artifactory/faldoria-repo/</url>
         </repository>
+        <repository>
+            <id>zDevelopers</id>
+            <url>http://maven.carrade.eu/artifactory/snapshots</url>
+        </repository>
     </repositories>
 
     <properties>
@@ -48,6 +52,31 @@
             <version>11.17.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>fr.zcraft</groupId>
+            <artifactId>zlib</artifactId>
+            <version>0.99-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -70,6 +99,7 @@
                                     <include>io.ebean:*</include>
                                     <include>org.avaje:*</include>
                                     <include>com.avaje:*</include>
+                                    <include>fr.zcraft:zlib</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

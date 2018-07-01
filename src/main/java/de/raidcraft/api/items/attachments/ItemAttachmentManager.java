@@ -13,13 +13,13 @@ import java.util.Map;
  */
 public class ItemAttachmentManager implements Component {
 
-    // provider name | provider instance
+    // provider displayName | provider instance
     private final Map<String, ItemAttachmentProvider> itemAttachmentProvider = new HashMap<>();
 
     public void registerItemAttachmentProvider(ItemAttachmentProvider provider) throws RaidCraftException {
 
         if (!provider.getClass().isAnnotationPresent(ProviderInformation.class)) {
-            throw new RaidCraftException("ItemAttachmentProvider needs to be annotated with @ProviderInformation(name) in class: "
+            throw new RaidCraftException("ItemAttachmentProvider needs to be annotated with @ProviderInformation(displayName) in class: "
                     + provider.getClass().getCanonicalName());
         }
         String providerName = StringUtils.formatName(provider.getClass().getAnnotation(ProviderInformation.class).value());
@@ -35,7 +35,7 @@ public class ItemAttachmentManager implements Component {
 
         name = StringUtils.formatName(name);
         if (!itemAttachmentProvider.containsKey(name)) {
-            throw new RaidCraftException("No ItemAttachmentProvider with the name " + name + " was found!");
+            throw new RaidCraftException("No ItemAttachmentProvider with the displayName " + name + " was found!");
         }
         return itemAttachmentProvider.get(name);
     }
@@ -43,7 +43,7 @@ public class ItemAttachmentManager implements Component {
     public ItemAttachment getItemAttachment(String provider, String name, Player player) throws ItemAttachmentException {
 
         if (!itemAttachmentProvider.containsKey(provider)) {
-            throw new ItemAttachmentException("ItemAttachmentProvider with the name " + provider + " was not found!");
+            throw new ItemAttachmentException("ItemAttachmentProvider with the displayName " + provider + " was not found!");
         }
         return itemAttachmentProvider.get(provider).getItemAttachment(player, name);
     }

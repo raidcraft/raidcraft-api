@@ -33,7 +33,7 @@ public class NMSUtils {
      * Registers an Item (Not an ItemStack!) to be available for use. an ItemStack can then be created using
      * <code>new ItemStack(item)</code>.
      *
-     * @param name - The name of the item, can be anything
+     * @param name - The displayName of the item, can be anything
      * @param id   - The ID of the item, will be rendered depending on this
      * @param item - The net.minecraft.server.version.Item itself
      */
@@ -868,10 +868,10 @@ public class NMSUtils {
         }
 
         /**
-         * Returns the NMS name of the attribute. For example, <code>MAX_HEALTH</code> returns
+         * Returns the NMS displayName of the attribute. For example, <code>MAX_HEALTH</code> returns
          * <code>"generic.maxHealth"</code>, and so on and so forth.
          *
-         * @return The name as a String.
+         * @return The displayName as a String.
          */
         public String getName() {
             return this.name;

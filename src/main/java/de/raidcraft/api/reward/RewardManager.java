@@ -67,7 +67,7 @@ public class RewardManager {
             if (constructor.getParameterTypes()[0].isAssignableFrom(ConfigurationSection.class)) {
                 constructor.setAccessible(true);
                 constructors.put(rClass, (Constructor<T>) constructor);
-                // get the name for aliasing
+                // get the displayName for aliasing
                 String name = StringUtils.formatName(rClass.getAnnotation(RewardInformation.class).value());
                 rewardClasses.put(name, rClass);
                 RaidCraft.info("Registered Reward Type: " + name, "RewardManager");

@@ -316,7 +316,7 @@ public class RaidCraftDatabase {
 
                 //Check if the current line is of any use
                 if (currentLine.startsWith("create table")) {
-                    //Found a table, so get its name and remember the line it has been encountered on
+                    //Found a table, so get its displayName and remember the line it has been encountered on
                     currentTable = currentLine.split(" ", 4)[2];
                     foundTables.put(currentLine.split(" ", 3)[2], scriptLines.size() - 1);
                 } else if (currentLine.startsWith(";") && currentTable != null && !currentTable.equals("")) {

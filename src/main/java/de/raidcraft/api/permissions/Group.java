@@ -8,7 +8,7 @@ import java.util.UUID;
  */
 public interface Group {
 
-    // Gets this group's actual name
+    // Gets this group's actual displayName
     String getName();
 
     String getGlobalMasterPermission();
@@ -16,15 +16,15 @@ public interface Group {
     /**
      * Returns the master permission string for this group on the specified world
      *
-     * @param world The name of the world we're fetching the permission master for
-     * @return A string consisting of this group's name and the specified world, prefixed by master "master.[group name].[world]"
+     * @param world The displayName of the world we're fetching the permission master for
+     * @return A string consisting of this group's displayName and the specified world, prefixed by master "master.[group displayName].[world]"
      */
     String getMasterPermission(String world);
 
     /**
      * Gets all permissions that are attached to this group.
      *
-     * @param world The name of the world to fetch the permissions for
+     * @param world The displayName of the world to fetch the permissions for
      * @return A set of unique permission nodes attached to this group.
      */
     Set<String> getPermissions(String world);
@@ -33,7 +33,7 @@ public interface Group {
      * Checks whether this group has the specified permission node on the given world
      *
      * @param node  The permission node
-     * @param world The name of the world on which we're checking the permission
+     * @param world The displayName of the world on which we're checking the permission
      * @return true if the group has the permission, otherwise false
      */
     boolean hasPermission(String node, String world);
@@ -41,8 +41,8 @@ public interface Group {
     /**
      * Adds the specified permission to the list for the specified world. If world is null, adds to the group's global permission list
      *
-     * @param world The name of the world we're attaching the node to
-     * @param node  The name of the permission node
+     * @param world The displayName of the world we're attaching the node to
+     * @param node  The displayName of the permission node
      * @return true if the permission was attached successfully, otherwise false
      */
     boolean addPermission(String world, String node);
@@ -53,8 +53,8 @@ public interface Group {
     /**
      * Removes the specified permission node from the list for the specified world. If world is null, removes from the group's global list.
      *
-     * @param world The name of the world we're removing the node from
-     * @param node  The name of the permission node
+     * @param world The displayName of the world we're removing the node from
+     * @param node  The displayName of the permission node
      * @return true if the node is removed successfully, otherwise false
      */
     boolean removePermission(String world, String node);

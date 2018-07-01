@@ -121,7 +121,7 @@ public class NPC_Manager {
      * e.g. if a admin create a new DragonStation.
      * WARNING: Do not call this command on each server startStage/reload
      *
-     * @param name npc name
+     * @param name npc displayName
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
@@ -145,7 +145,7 @@ public class NPC_Manager {
      * e.g. if a admin create a new DragonStation.
      * WARNING: Do not call this command on each server startStage/reload
      *
-     * @param name npc name
+     * @param name npc displayName
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
@@ -170,7 +170,7 @@ public class NPC_Manager {
     /**
      * Warning: NPC will not be saved on disk and is lost on reload/restart
      *
-     * @param name npc name
+     * @param name npc displayName
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
@@ -198,7 +198,7 @@ public class NPC_Manager {
     /**
      * Warning: NPC will not be saved on disk and is lost on reload/restart
      *
-     * @param name name of the npc
+     * @param name displayName of the npc
      * @param host sttore file, e.g. a pluginname, componentname
      *
      * @return
@@ -228,7 +228,7 @@ public class NPC_Manager {
      * You must register custom Traits over this method BEFORE you load the custom npc's
      *
      * @param trait     class for custom traits
-     * @param traitname name to identify and store trait
+     * @param traitname displayName to identify and store trait
      */
     public void registerTrait(Class<? extends Trait> trait, String traitname) {
 
@@ -238,7 +238,7 @@ public class NPC_Manager {
     /**
      * ATTENTION: load NPCs after you register all customs traits
      *
-     * @param host name of the holder of the npcs, typically the plugin name
+     * @param host displayName of the holder of the npcs, typically the plugin displayName
      *
      * @see this.registerTrait
      */

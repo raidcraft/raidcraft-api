@@ -84,11 +84,11 @@ public class FakeWither {
                 watcher.setObject(METADATA_NAME, name);
                 watcher.setObject(METADATA_SHOW_NAME, (byte) 1);
             } else {
-                // Hide custom name
+                // Hide custom displayName
                 watcher.setObject(METADATA_SHOW_NAME, (byte) 0);
             }
 
-            // Only players nearby when this is sent will see this name
+            // Only players nearby when this is sent will see this displayName
             sendMetadata(watcher);
         }
         this.customName = name;

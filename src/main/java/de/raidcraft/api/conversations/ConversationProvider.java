@@ -29,7 +29,7 @@ public interface ConversationProvider {
      * Registers the given answer at the conversation host. Registered answer types
      * will be available in the configuration.
      *
-     * @param type name
+     * @param type displayName
      * @param answer type to register
      */
     void registerAnswer(String type, Class<? extends Answer> answer);
@@ -106,7 +106,7 @@ public interface ConversationProvider {
      * Registers the given stage template class. Registered stage templates can be
      * used in the configuration to display custom withText and answers that is dynamically generated.
      *
-     * @param type name of the stage
+     * @param type displayName of the stage
      * @param stage type to register
      */
     void registerStageTemplate(String type, Class<? extends StageTemplate> stage);
@@ -127,7 +127,7 @@ public interface ConversationProvider {
      * Registers the given conversation template with the {@link ConversationProvider}. Registered
      * conversation templates allow the setting if custom variables at the beginning of a conversation.
      *
-     * @param type name of the conversation template
+     * @param type displayName of the conversation template
      * @param conversationTemplate type to register
      */
     void registerConversationTemplate(String type, Class<? extends ConversationTemplate> conversationTemplate);
@@ -148,7 +148,7 @@ public interface ConversationProvider {
      * Registers the given Conversation Type with the {@link ConversationProvider}. The conversation will be
      * instantiated from the {@link ConversationTemplate#getConversationType()} id.
      *
-     * @param type name to register
+     * @param type displayName to register
      * @param conversation to register
      */
     void registerConversationType(String type, Class<? extends Conversation> conversation);

@@ -97,13 +97,13 @@ public final class CustomItemManager implements Component {
         try {
             return getCustomItem(Integer.parseInt(name));
         } catch (NumberFormatException e) {
-            // first we need to strip the name of any special chars
+            // first we need to strip the displayName of any special chars
             name = ChatColor.stripColor(name);
             // lets check our named custom items first
             if (namedCustomItems.containsKey(name)) {
                 return namedCustomItems.get(name);
             }
-            // okay nothing there, so lets search for a matching name
+            // okay nothing there, so lets search for a matching displayName
             name = name.toLowerCase();
             List<CustomItem> matching = new ArrayList<>();
             Collection<CustomItem> customItems = this.customItems.values();
@@ -151,7 +151,7 @@ public final class CustomItemManager implements Component {
     public void registerNamedCustomItem(String name, CustomItem item) throws DuplicateCustomItemException {
 
         if (namedCustomItems.containsKey(name)) {
-            throw new DuplicateCustomItemException("The custom item with the name" + name + " is already registered.");
+            throw new DuplicateCustomItemException("The custom item with the displayName" + name + " is already registered.");
         }
         namedCustomItems.put(name, item);
     }
