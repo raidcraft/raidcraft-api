@@ -7,6 +7,7 @@ import de.raidcraft.api.config.KeyValueMap;
 import de.raidcraft.api.config.SimpleConfiguration;
 import de.raidcraft.api.config.typeconversions.*;
 import de.raidcraft.api.quests.Quests;
+import org.apache.commons.lang.BooleanUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -196,10 +197,11 @@ public class ConfigUtil {
             try {
                 configuration.set(entry.getDataKey(), Double.parseDouble(entry.getDataValue()));
             } catch (NumberFormatException e) {
-                try {
-                    configuration.set(entry.getDataKey(), Boolean.parseBoolean(entry.getDataValue()));
-                } catch (NumberFormatException e1) {
+                Boolean value = BooleanUtils.toBooleanObject(entry.getDataValue());
+                if (value == null) {
                     configuration.set(entry.getDataKey(), entry.getDataValue());
+                } else {
+                    configuration.set(entry.getDataKey(), value);
                 }
             }
         }
