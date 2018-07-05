@@ -17,7 +17,7 @@ public enum ItemType {
     @EnumValue("EQUIPMENT")
     EQUIPMENT("Equipment"),
     @EnumValue("QUEST")
-    QUEST("Quest"),
+    QUEST("Quest Item"),
     @EnumValue("ENCHANTMENT")
     ENCHANTMENT("Verzauberung"),
     @EnumValue("GEM")
@@ -42,7 +42,7 @@ public enum ItemType {
 
     private final String germanName;
 
-    private ItemType(String germanName) {
+    ItemType(String germanName) {
 
         this.germanName = germanName;
     }

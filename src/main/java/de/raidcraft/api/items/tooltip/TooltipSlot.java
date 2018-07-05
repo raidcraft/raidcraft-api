@@ -22,12 +22,13 @@ public enum TooltipSlot {
     SELL_PRICE(12, TooltipSlotType.SINGLE),
     DURABILITY(13, TooltipSlotType.SINGLE),
     MISC(14, TooltipSlotType.FIXED_MULTI_LINE),
-    META_ID(15, TooltipSlotType.SINGLE);
+    TYPE(15, TooltipSlotType.SINGLE),
+    META_ID(16, TooltipSlotType.SINGLE);
 
     private final int id;
     private final TooltipSlotType lineType;
 
-    private TooltipSlot(int id, TooltipSlotType lineType) {
+    TooltipSlot(int id, TooltipSlotType lineType) {
 
         this.id = id;
         this.lineType = lineType;
