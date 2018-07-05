@@ -14,14 +14,14 @@ public enum ItemBindType {
     @EnumValue("BOP")
     BIND_ON_PICKUP("Wird beim Aufheben gebunden", ChatColor.BLUE),
     @EnumValue("QUEST")
-    QUEST("Questgegenstand", ChatColor.GOLD),
+    QUEST("Quest Item", ChatColor.GRAY),
     @EnumValue("NONE")
     NONE("", ChatColor.WHITE);
 
     private final String itemText;
     private final ChatColor color;
 
-    private ItemBindType(String itemText, ChatColor color) {
+    ItemBindType(String itemText, ChatColor color) {
 
         this.itemText = itemText;
         this.color = color;
