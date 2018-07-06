@@ -100,6 +100,9 @@
                                     <include>org.avaje:*</include>
                                     <include>com.avaje:*</include>
                                     <include>fr.zcraft:zlib</include>
+                                    <include>javax.xml.bind:jaxb-api</include>
+                                    <include>javax.xml.bind:jaxb-core</include>
+                                    <include>javax.xml.bind:jaxb-impl</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
