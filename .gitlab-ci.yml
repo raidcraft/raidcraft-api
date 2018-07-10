@@ -25,3 +25,14 @@ deploy:
     - mvn $MAVEN_CLI_OPTS deploy
   only:
     - master
+
+pages:
+  stage: deploy
+  script:
+    - mkdir public
+    - cp target/*.jar public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
