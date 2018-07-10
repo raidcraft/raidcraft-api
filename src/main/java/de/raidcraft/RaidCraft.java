@@ -2,6 +2,7 @@ package de.raidcraft;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.SqlUpdate;
+import com.google.common.base.Strings;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
@@ -493,6 +494,15 @@ public class RaidCraft implements Listener {
         }
         // so nothing matched :( bukkit here ya go!
         return itemStack.getType().name() + ":" + itemStack.getDurability();
+    }
+
+    public static void removeStoredItem(String id) {
+        try {
+            if (Strings.isNullOrEmpty(id) || !id.startsWith(STORED_OBJECT_IDENTIFIER)) return;
+            int itemId = Integer.parseInt(id.toLowerCase().replace(STORED_OBJECT_IDENTIFIER, ""));
+            new ItemStorage("API").removeObject(itemId);
+        } catch (StorageException ignored) {
+        }
     }
 
     public static void registerItemAttachmentProvider(ItemAttachmentProvider provider) throws RaidCraftException {
