@@ -257,7 +257,8 @@ public class ConfigUtil {
                 for (ConfigLoader loader : loaders) {
                     if (!loader.matches(file)) continue;
                     loader.setPath(path);
-                    String id = (path + "." + file.getName().toLowerCase()).replace(loader.getSuffix(), "").replaceFirst("\\.", "");
+                    String id = (path + "." + file.getName().toLowerCase()).replace(loader.getSuffix(), "");
+                    if (id.startsWith(".")) id = id.replaceFirst("\\.", "");
                     ConfigurationSection configFile = loader.getPlugin().configure(new SimpleConfiguration<>(loader.getPlugin(), file));
 
                     loader.loadConfig(id, configFile);
