@@ -252,12 +252,12 @@ public class ConfigUtil {
                 loadConfigs(file, path + "." + fileName.toLowerCase(), loaders);
             } else {
                 if (path.startsWith(".")) {
-                    path = path.replaceFirst("\\.", "").replaceFirst("\\.", "");
+                    path = path.replaceFirst("\\.", "");
                 }
                 for (ConfigLoader loader : loaders) {
                     if (!loader.matches(file)) continue;
                     loader.setPath(path);
-                    String id = (path + "." + file.getName().toLowerCase()).replace(loader.getSuffix(), "");
+                    String id = (path + "." + file.getName().toLowerCase()).replace(loader.getSuffix(), "").replaceFirst("\\.", "");
                     ConfigurationSection configFile = loader.getPlugin().configure(new SimpleConfiguration<>(loader.getPlugin(), file));
 
                     loader.loadConfig(id, configFile);
