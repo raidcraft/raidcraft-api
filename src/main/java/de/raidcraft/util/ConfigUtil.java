@@ -241,7 +241,7 @@ public class ConfigUtil {
     public static void loadRecursiveConfigs(JavaPlugin plugin, String path, Collection<ConfigLoader> loaders) {
         File dir = new File(plugin.getDataFolder(), path);
         dir.mkdirs();
-        loadConfigs(dir, path, loaders);
+        loadConfigs(dir, "", loaders);
     }
 
     private static void loadConfigs(File baseFolder, String path, Collection<ConfigLoader> loaders) {
@@ -252,7 +252,7 @@ public class ConfigUtil {
                 loadConfigs(file, path + "." + fileName.toLowerCase(), loaders);
             } else {
                 if (path.startsWith(".")) {
-                    path = path.replaceFirst("\\.", "");
+                    path = path.replaceFirst("\\.", "").replaceFirst("\\.", "");
                 }
                 for (ConfigLoader loader : loaders) {
                     if (!loader.matches(file)) continue;
