@@ -1,3 +1,5 @@
+[![pipeline status](https://git.faldoria.de/raidcraft/raidcraft-api/badges/master/pipeline.svg)](https://git.faldoria.de/raidcraft/raidcraft-api/commits/master)
+
 # RaidCraft API
 
 Die RaidCraft API ist das Kernstück für alle RaidCraft Plugins. In ihr befinden sich grundlegende Methoden und APIs für den Zugriff auf Minecraft Schnittstellen.
