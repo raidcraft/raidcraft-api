@@ -16,7 +16,7 @@ build:
   artifacts:
     name: Plugin
     paths:
-    - ./target/*.jar
+    - target/
     expire_in: 1 week
 
 test:
