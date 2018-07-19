@@ -476,6 +476,8 @@ public class RaidCraft implements Listener {
 
     public static String getItemIdString(ItemStack itemStack, boolean storeObject) {
 
+        if (itemStack == null) return null;
+
         // lets try some stuff and see what item type this is
         if (CustomItemUtil.isCustomItem(itemStack)) {
             CustomItemStack customItem = getCustomItem(itemStack);

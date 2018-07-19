@@ -5,6 +5,7 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.host.ConversationHost;
+import de.raidcraft.api.conversations.host.PlayerHost;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.EqualsAndHashCode;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Getter
 @Setter
@@ -34,6 +36,7 @@ public abstract class AbstractConversationTemplate implements ConversationTempla
     private boolean exitable = true;
     private int priority = 1;
     private ConfigurationSection hostSettings = new MemoryConfiguration();
+    private Consumer<Conversation> conversationEndCallback;
 
     private final List<Requirement<?>> requirements = new ArrayList<>();
     private final List<Action<?>> actions = new ArrayList<>();
@@ -41,6 +44,10 @@ public abstract class AbstractConversationTemplate implements ConversationTempla
 
     public AbstractConversationTemplate(String identifier) {
         this.identifier = identifier;
+    }
+
+    public Optional<Consumer<Conversation>> getConversationEndCallback() {
+        return Optional.ofNullable(conversationEndCallback);
     }
 
     @Override
@@ -67,6 +74,11 @@ public abstract class AbstractConversationTemplate implements ConversationTempla
     public Conversation createConversation(Player player, ConversationHost host) {
 
         return Conversations.createConversation(getConversationType(), player, this, host);
+    }
+
+    @Override
+    public Conversation startConversation(Player player) {
+        return startConversation(player, new PlayerHost(player));
     }
 
     @Override

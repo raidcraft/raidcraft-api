@@ -16,6 +16,8 @@ public class ItemStorage extends PersistantObjectStorage<ItemStack> {
     @Override
     public int storeObject(ItemStack object) {
 
+        if (object == null) return -1;
+
         return store(SerializationUtil.toByteStream(object));
     }
 

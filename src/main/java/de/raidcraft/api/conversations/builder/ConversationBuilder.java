@@ -1,6 +1,7 @@
 package de.raidcraft.api.conversations.builder;
 
 import de.raidcraft.api.builder.BaseBuilder;
+import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 
@@ -32,5 +33,10 @@ public class ConversationBuilder extends BaseBuilder<ConversationTemplate> {
 
     public ConversationBuilder withStage(String identifier) {
         return withStage(identifier, null);
+    }
+
+    public ConversationBuilder withConversationEndCallback(Consumer<Conversation> callback) {
+        getResult().setConversationEndCallback(callback);
+        return this;
     }
 }

@@ -243,6 +243,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
                 abortActionExection();
         }
         Conversations.removeActiveConversation(getOwner());
+        getTemplate().getConversationEndCallback().ifPresent(callback -> callback.accept(this));
         RaidCraft.callEvent(new RCConversationEndedEvent(this, reason));
         return currentStage;
     }
@@ -259,6 +260,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         abortActionExection();
 
         Conversations.removeActiveConversation(getOwner());
+        getTemplate().getConversationEndCallback().ifPresent(callback -> callback.accept(this));
         RaidCraft.callEvent(new RCConversationAbortedEvent(this, reason));
         return currentStage;
     }

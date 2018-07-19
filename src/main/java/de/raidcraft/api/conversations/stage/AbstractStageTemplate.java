@@ -7,7 +7,6 @@ import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,36 +25,42 @@ public abstract class AbstractStageTemplate implements StageTemplate {
     private final List<Action<?>> randomActions = new ArrayList<>();
     private final List<Answer> answers = new ArrayList<>();
 
-    @Getter
-    private Optional<String[]> text;
+    private String[] text = null;
     private boolean autoShowingAnswers = true;
-    @Getter
-    private Optional<ConversationTemplate> conversationTemplate = Optional.empty();
+    private ConversationTemplate conversationTemplate = null;
 
     public AbstractStageTemplate(String identifier) {
 
         this.identifier = identifier;
     }
 
+    public Optional<String[]> getText() {
+        return Optional.ofNullable(text);
+    }
+
+    public Optional<ConversationTemplate> getConversationTemplate() {
+        return Optional.ofNullable(conversationTemplate);
+    }
+
     @Override
     public void setConversationTemplate(ConversationTemplate template) {
-        this.conversationTemplate = Optional.ofNullable(template);
+        this.conversationTemplate = template;
     }
 
     @Override
     public void setText(String text) {
 
         if (text == null) {
-            this.text = Optional.empty();
+            this.text = null;
         } else {
-            this.text = Optional.of(text.split("\\|"));
+            this.text = text.split("\\|");
         }
     }
 
     @Override
     public void setText(String... text) {
 
-        this.text = Optional.ofNullable(text);
+        this.text = text;
     }
 
     @Override

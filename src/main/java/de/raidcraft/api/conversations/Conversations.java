@@ -23,6 +23,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
@@ -63,6 +64,15 @@ public class Conversations {
     public static void disable(ConversationProvider provider) {
 
         de.raidcraft.api.conversations.Conversations.provider = null;
+    }
+
+    /**
+     * Creates a new {@link ConversationBuilder} with a random {@link UUID}.
+     *
+     * @return the {@link ConversationBuilder}
+     */
+    public static ConversationBuilder create() {
+        return create(UUID.randomUUID().toString());
     }
 
     public static ConversationBuilder create(String identifier) {
@@ -419,5 +429,52 @@ public class Conversations {
 
     public static Conversation getOrStartConversation(Player player) {
         return getActiveConversation(player).orElseGet(() -> provider.startConversation(player));
+    }
+
+    /**
+     * Starts a new conversation for the given player and prompts him for input.
+     *
+     * @param player        to ask for input
+     * @param text          to display the player
+     * @param inputListener to consume the given input
+     */
+    public static void readLine(Player player, String text, Consumer<String> inputListener) {
+        ConversationTemplate conversationTemplate = create()
+                .startStage(stageBuilder -> stageBuilder
+                        .withInput(text, inputBuilder -> inputBuilder.withInputListener(inputListener))).build();
+        conversationTemplate.startConversation(player);
+    }
+
+    public static void readLines(Player player, Consumer<String[]> inputListener, String... inputs) {
+        if (inputs.length < 1) {
+            inputListener.accept(new String[0]);
+            return;
+        }
+
+        ArrayList<String> output = new ArrayList<>();
+
+        ConversationBuilder conversationBuilder = null;
+
+        for (int i = 0; i < inputs.length; i++) {
+            String text = inputs[i];
+            String nextStage = i < inputs.length - 1 ? i + 1 + "" : "end";
+            if (i == 0) {
+                conversationBuilder = create().startStage(stageBuilder -> buildInputStage(stageBuilder, text, nextStage, output));
+            } else {
+                conversationBuilder.withStage(i + "", stageBuilder -> buildInputStage(stageBuilder, text, nextStage, output));
+            }
+        }
+
+        conversationBuilder.withConversationEndCallback(conversation -> inputListener.accept(output.toArray(new String[0])));
+        ConversationTemplate conversationTemplate = conversationBuilder.withStage("end", stageBuilder -> stageBuilder
+                .withAction(Action.endConversation(ConversationEndReason.ENDED)))
+                .build();
+
+        conversationTemplate.startConversation(player);
+    }
+
+    private static void buildInputStage(StageBuilder stageBuilder, String text, String nextStage, List<String> output) {
+        stageBuilder.withInput(text, inputBuilder -> inputBuilder.withInputListener(output::add)
+                .withAction(Action.changeStage(nextStage)));
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author mdoering
@@ -95,6 +96,20 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
     ConfigurationSection getHostSettings();
 
     /**
+     * Gets a callback function that should be called when the conversation ends.
+     *
+     * @return optional conversation end callback
+     */
+    Optional<Consumer<Conversation>> getConversationEndCallback();
+
+    /**
+     * Sets a callback that will be called once the conversations ends or is aborted.
+     *
+     * @param callback to call onConversationEnd
+     */
+    void setConversationEndCallback(Consumer<Conversation> callback);
+
+    /**
      * Gets all stages registered in this conversation template.
      *
      * @return registered stages
@@ -132,6 +147,8 @@ public interface ConversationTemplate extends RequirementHolder, ActionHolder, C
      * @return started conversation
      */
     Conversation createConversation(Player player, ConversationHost host);
+
+    Conversation startConversation(Player player);
 
     /**
      * Starts this conversation for the given player caching the active conversation

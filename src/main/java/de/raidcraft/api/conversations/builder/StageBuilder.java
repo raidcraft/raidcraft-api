@@ -2,6 +2,8 @@ package de.raidcraft.api.conversations.builder;
 
 import de.raidcraft.api.builder.ActionRequirementBuilder;
 import de.raidcraft.api.conversations.answer.AnswerBuilder;
+import de.raidcraft.api.conversations.answer.InputAnswer;
+import de.raidcraft.api.conversations.answer.InputBuilder;
 import de.raidcraft.api.conversations.answer.SimpleAnswer;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.fanciful.FancyMessage;
@@ -40,5 +42,15 @@ public class StageBuilder extends ActionRequirementBuilder<StageTemplate> {
 
     public StageBuilder withAnswer(FancyMessage message) {
         return withAnswer(message, null);
+    }
+
+    public StageBuilder withInput(String message) {
+        return withInput(message, null);
+    }
+
+    public StageBuilder withInput(String message, Consumer<InputBuilder> consumer) {
+        InputBuilder answerBuilder = withBuilder(InputBuilder.class, new InputAnswer(message), consumer);
+        getResult().addAnswer(answerBuilder.build());
+        return this;
     }
 }

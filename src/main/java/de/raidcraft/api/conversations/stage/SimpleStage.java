@@ -162,7 +162,7 @@ public class SimpleStage implements Stage {
                     return Optional.of(answer);
                 }
             }
-            // if not answer processed the input we will try to select by the id
+            // if no answer processed the input we will try to select by the id
             int id = Integer.parseInt(input.trim()) - 1;
             if (currentPage < this.answers.size()) {
                 List<Answer> answers = this.answers.get(currentPage);
