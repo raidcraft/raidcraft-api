@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class GenericRDSObject implements RDSObject {
 
+    private String type;
     private boolean enabled;
     private boolean always;
     private boolean excludeFromRandom;

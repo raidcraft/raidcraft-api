@@ -12,6 +12,14 @@ import java.util.List;
 public interface RDSObject extends RequirementHolder {
 
     /**
+     * Gets the unique factory type of the object.
+     *
+     * @return
+     */
+    String getType();
+
+    void setType(String type);
+    /**
      * Whether this object shall be looted or not.
      *
      * @return true if object can be looted

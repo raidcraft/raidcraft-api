@@ -1,17 +1,15 @@
 package de.raidcraft.api.random.tables;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.api.random.GenericRDSTable;
-import de.raidcraft.api.random.Loadable;
-import de.raidcraft.api.random.RDS;
-import de.raidcraft.api.random.RDSObject;
-import de.raidcraft.api.random.RDSObjectFactory;
-import de.raidcraft.api.random.RDSTable;
+import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.config.SimpleConfiguration;
+import de.raidcraft.api.random.*;
 import de.raidcraft.util.ConfigUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.io.File;
 import java.util.Optional;
 
 /**
@@ -57,5 +55,36 @@ public class ConfiguredRDSTable extends GenericRDSTable implements Loadable {
                 }
             }
         }
+    }
+
+    /**
+     * Saves the RDS Table to the file.
+     *
+     * @param file to save table to
+     */
+    public void save(BasePlugin plugin, File file) {
+
+        SimpleConfiguration<BasePlugin> config = new SimpleConfiguration<>(plugin, file);
+        ConfigurationSection entries = config.getSafeConfigSection("entries");
+        int i = 0;
+        for (RDSObject object : getContents()) {
+            ConfigurationSection section = entries.createSection(i + "");
+            entries.set(i + "", saveRdsObject(object, section));
+            i++;
+        }
+    }
+
+    private ConfigurationSection saveRdsObject(RDSObject object, ConfigurationSection section) {
+        section.set("type", object.getType());
+        section.set("enabled", object.isEnabled());
+        section.set("always", object.isAlways());
+        section.set("unique", object.isUnique());
+        section.set("exclude-from-random", object.isExcludeFromRandom());
+        section.set("probability", object.getProbability());
+        if (object instanceof RDSTable) {
+            section.set("count", ((RDSTable) object).getCount());
+        }
+
+        return section;
     }
 }

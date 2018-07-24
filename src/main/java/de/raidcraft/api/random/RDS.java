@@ -51,6 +51,7 @@ public class RDS {
         ConfigurationSection args = config.isConfigurationSection("args") ? config.getConfigurationSection("args") : new MemoryConfiguration();
         RDSObject object = creator.get().createInstance(args);
 
+        object.setType(type);
         object.setEnabled(config.getBoolean("enabled", true));
         object.setAlways(config.getBoolean("always", false));
         object.setUnique(config.getBoolean("unique", false));
