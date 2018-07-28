@@ -106,7 +106,7 @@ public final class CustomItemManager implements Component {
             // okay nothing there, so lets search for a matching displayName
             name = name.toLowerCase();
             List<CustomItem> matching = new ArrayList<>();
-            Collection<CustomItem> customItems = this.customItems.values();
+            Collection<CustomItem> customItems = new ArrayList<>(this.customItems.values());
             customItems.addAll(namedCustomItems.values());
             for (CustomItem item : customItems) {
                 if (ChatColor.stripColor(item.getName()).equalsIgnoreCase(name)) {
