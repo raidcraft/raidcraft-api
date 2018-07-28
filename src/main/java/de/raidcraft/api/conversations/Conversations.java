@@ -431,6 +431,18 @@ public class Conversations {
         return getActiveConversation(player).orElseGet(() -> provider.startConversation(player));
     }
 
+    public static void askYesNo(Player player, String yes, String no, Consumer<Boolean> result, String... message) {
+        create().startStage(stageBuilder -> stageBuilder.withText(message)
+                .withAnswer(yes, answerBuilder -> answerBuilder.withAction((type, config) -> result.accept(true)))
+                .withAnswer(no, answerBuilder -> answerBuilder.withAction((type, config) -> result.accept(false)))
+        ).build().startConversation(player);
+    }
+
+    public static void askYesNo(Player player, Consumer<Boolean> result, String... message) {
+
+        askYesNo(player, "Ja", "Nein", result, message);
+    }
+
     /**
      * Starts a new conversation for the given player and prompts him for input.
      *
