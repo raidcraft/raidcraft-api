@@ -69,7 +69,7 @@ public enum GlobalAction {
         public void accept(Player player, ConfigurationSection config) {
 
             try {
-                ItemStack item = RaidCraft.getItem(config.getString("item"), config.getInt("amount", 1));
+                ItemStack item = RaidCraft.getSafeItem(config.getString("item"), config.getInt("amount", 1));
                 InventoryUtils.addOrDropItems(player, item);
             } catch (CustomItemException e) {
                 player.sendMessage(ChatColor.RED + e.getMessage());
@@ -91,7 +91,7 @@ public enum GlobalAction {
         public void accept(Player player, ConfigurationSection config) {
 
             try {
-                ItemStack item = RaidCraft.getItem(config.getString("item"));
+                ItemStack item = RaidCraft.getSafeItem(config.getString("item"));
                 int amount = config.getInt("amount", 1);
                 do {
                     if (amount <= item.getMaxStackSize()) {

@@ -409,8 +409,8 @@ public class RaidCraft implements Listener {
      * @return created itemstack out of the id
      *
      * @throws CustomItemException is thrown if nothing matched
-     */ 
-    public static ItemStack getItem(String id) throws CustomItemException {
+     */
+    public static ItemStack getSafeItem(String id) throws CustomItemException {
         // TODO: return Optional<T>
         // TODO: check item manager for null and fallback to vanilla functions
         if (id == null || id.equals("")) return null;
@@ -443,9 +443,9 @@ public class RaidCraft implements Listener {
         throw new CustomItemException("Unknown item type specified: " + id);
     }
 
-    public static ItemStack getItem(String id, int amount) throws CustomItemException {
+    public static ItemStack getSafeItem(String id, int amount) throws CustomItemException {
 
-        ItemStack item = getItem(id);
+        ItemStack item = getSafeItem(id);
         item.setAmount(amount);
         return item;
     }
@@ -453,7 +453,7 @@ public class RaidCraft implements Listener {
     public static ItemStack getUnsafeItem(String id) {
 
         try {
-            return getItem(id);
+            return getSafeItem(id);
         } catch (CustomItemException e) {
             return null;
         }
@@ -478,24 +478,31 @@ public class RaidCraft implements Listener {
 
         if (itemStack == null) return null;
 
+        StringBuilder sb = new StringBuilder();
+
         // lets try some stuff and see what item type this is
         if (CustomItemUtil.isCustomItem(itemStack)) {
             CustomItemStack customItem = getCustomItem(itemStack);
             if (customItem != null) {
-                return CUSTOM_ITEM_IDENTIFIER + customItem.getItem().getId();
+                sb.append(CUSTOM_ITEM_IDENTIFIER).append(customItem.getItem().getId());
             }
-        }
-        // lets check this param after the custom item, but before mc
-        if (storeObject
+        } else if (storeObject
                 && ((itemStack.hasItemMeta() && (itemStack.getItemMeta().hasDisplayName() || itemStack.getItemMeta().hasLore()))
                 || itemStack.getType() == Material.WRITTEN_BOOK
                 || itemStack.getType() == Material.ENCHANTED_BOOK
                 || itemStack.getType() == Material.BOOK_AND_QUILL
                 || !itemStack.getEnchantments().isEmpty())) {
-            return STORED_OBJECT_IDENTIFIER + new ItemStorage("API").storeObject(itemStack);
+            // lets check this param after the custom item, but before mc
+            sb.append(STORED_OBJECT_IDENTIFIER).append(new ItemStorage("API").storeObject(itemStack));
+        } else {
+            sb.append(itemStack.getType().name()).append(":").append(itemStack.getDurability());
         }
-        // so nothing matched :( bukkit here ya go!
-        return itemStack.getType().name() + ":" + itemStack.getDurability();
+
+        if (itemStack.getAmount() > 1) {
+            sb.append("#").append(itemStack.getAmount());
+        }
+
+        return sb.toString();
     }
 
     public static void removeStoredItem(String id) {

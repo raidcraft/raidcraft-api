@@ -152,7 +152,7 @@ public enum GlobalRequirement {
         public boolean test(Player player, ConfigurationSection config) {
 
             try {
-                ItemStack item = RaidCraft.getItem(config.getString("item"));
+                ItemStack item = RaidCraft.getSafeItem(config.getString("item"));
                 int amount = config.getInt("amount", 1);
                 if (player.getInventory().containsAtLeast(item, amount)) {
                     return true;

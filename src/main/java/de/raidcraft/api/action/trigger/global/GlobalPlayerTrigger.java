@@ -93,7 +93,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
         }
         informListeners("craft", event.getWhoClicked(), config -> {
             try {
-                return !config.isSet("item") || RaidCraft.getItem(config.getString("item")).isSimilar(event.getRecipe().getResult());
+                return !config.isSet("item") || RaidCraft.getSafeItem(config.getString("item")).isSimilar(event.getRecipe().getResult());
             } catch (CustomItemException e) {
                 return false;
             }
