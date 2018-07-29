@@ -401,6 +401,64 @@ public class RaidCraft implements Listener {
     }
 
     /**
+     * Parses the given Item String and tries to resolve it as one of the given items:
+     * - Custom Item: rci[0-9]+, e.g. rci1337
+     * - Stored Item: so[0-9]+, eg. so1234
+     * - Skull: skull:Silthus
+     * - Vanilla Item: name:data, e.g. STICK:5
+     * <p>
+     * All items can be created with a specified amount (defaults to 1) by appending the amount after a pound sign.
+     * e.g. STICK#10 will create 10 sticks.
+     *
+     * @param id of the item to parse
+     * @return created item or an empty optional
+     */
+    public static Optional<ItemStack> getItem(String id) {
+
+        if (Strings.isNullOrEmpty(id)) return Optional.empty();
+
+        try {
+            String[] split = id.toLowerCase().split("#");
+            id = split[0];
+            int amount = split.length > 1 ? Integer.parseInt(split[1]) : 1;
+            ItemStack itemStack = null;
+
+            if (id.startsWith(CUSTOM_ITEM_IDENTIFIER)) {
+                itemStack = getCustomItemStack(Integer.parseInt(id.replace(CUSTOM_ITEM_IDENTIFIER, "")));
+            } else if (id.startsWith(STORED_OBJECT_IDENTIFIER)) {
+                itemStack = new ItemStorage("API").getObject(Integer.parseInt(id.replace(STORED_OBJECT_IDENTIFIER, "")));
+            } else {
+                // check if it is a named custom item
+                CustomItemManager itemManager = RaidCraft.getComponent(CustomItemManager.class);
+                if (itemManager != null) {
+                    return itemManager.getCustomItem(id).map(CustomItem::createNewItem).map(item -> {
+                        item.setAmount(amount);
+                        return item;
+                    });
+                }
+                // fallback to vanilla items
+                Material item = ItemUtils.getItem(id);
+                String[] data = id.split(":");
+                if (item == null) return Optional.empty();
+                if ((item == Material.SKULL_ITEM || item == Material.SKULL) && data.length > 1) {
+                    itemStack = Skull.getSkull(data[1]);
+                } else {
+                    if (data.length > 1) {
+                        itemStack = new ItemStack(item, amount, Short.parseShort(data[1]));
+                    } else {
+                        itemStack = new ItemStack(item);
+                    }
+                }
+            }
+            itemStack.setAmount(amount);
+            return Optional.of(itemStack);
+        } catch (CustomItemException | NumberFormatException | StorageException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Will try to parse any item out of the given id. The result can be a custom item or stored item.
      * Even minecraft Items are possible.
      *
@@ -409,31 +467,31 @@ public class RaidCraft implements Listener {
      * @return created itemstack out of the id
      *
      * @throws CustomItemException is thrown if nothing matched
+     * @deprecated use {@link #getItem(String)} for safe item creation and amount support
      */
+    @Deprecated
     public static ItemStack getSafeItem(String id) throws CustomItemException {
-        // TODO: return Optional<T>
-        // TODO: check item manager for null and fallback to vanilla functions
         if (id == null || id.equals("")) return null;
         try {
-            String lowercaseId = id.toLowerCase();
-            if (lowercaseId.startsWith(CUSTOM_ITEM_IDENTIFIER)) {
+            id = id.toLowerCase().split("#")[0];
+            if (id.startsWith(CUSTOM_ITEM_IDENTIFIER)) {
                 // its a custom item
-                return getCustomItemStack(Integer.parseInt(lowercaseId.replace(CUSTOM_ITEM_IDENTIFIER, "")));
-            } else if (lowercaseId.startsWith(STORED_OBJECT_IDENTIFIER)) {
+                return getCustomItemStack(Integer.parseInt(id.replace(CUSTOM_ITEM_IDENTIFIER, "")));
+            } else if (id.startsWith(STORED_OBJECT_IDENTIFIER)) {
                 // its a stored item object
-                return new ItemStorage("API").getObject(Integer.parseInt(lowercaseId.replace(STORED_OBJECT_IDENTIFIER, "")));
+                return new ItemStorage("API").getObject(Integer.parseInt(id.replace(STORED_OBJECT_IDENTIFIER, "")));
             } else {
                 // maybe it is a named custom item
-                Optional<CustomItem> customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(lowercaseId);
+                Optional<CustomItem> customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(id);
                 if (customItem.isPresent()) {
                     return customItem.get().createNewItem();
                 } else {
                     // or a normal minecraft item
-                    Material item = ItemUtils.getItem(lowercaseId);
+                    Material item = ItemUtils.getItem(id);
                     if (item != null && (item == Material.SKULL_ITEM || item == Material.SKULL)) {
                         return Skull.getSkull(id);
                     } else if (item != null) {
-                        return new ItemStack(item, 1, ItemUtils.getItemData(lowercaseId));
+                        return new ItemStack(item, 1, ItemUtils.getItemData(id));
                     }
                 }
             }

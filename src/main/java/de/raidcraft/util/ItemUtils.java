@@ -1,5 +1,6 @@
 package de.raidcraft.util;
 
+import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.util.items.serialazition.BookSerialization;
 import de.raidcraft.util.items.serialazition.EnchantmentSerialization;
@@ -34,7 +35,7 @@ public final class ItemUtils {
 
     public static Material getItem(String name) {
 
-        if (name == null || name.equals("")) {
+        if (Strings.isNullOrEmpty(name)) {
             return null;
         }
         if (name.contains(":")) {
