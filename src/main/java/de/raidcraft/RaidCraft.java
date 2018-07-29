@@ -431,10 +431,11 @@ public class RaidCraft implements Listener {
                 // check if it is a named custom item
                 CustomItemManager itemManager = RaidCraft.getComponent(CustomItemManager.class);
                 if (itemManager != null) {
-                    return itemManager.getCustomItem(id).map(CustomItem::createNewItem).map(item -> {
+                    Optional<ItemStack> customItemStack = itemManager.getCustomItem(id).map(CustomItem::createNewItem).map(item -> {
                         item.setAmount(amount);
                         return item;
                     });
+                    if (customItemStack.isPresent()) return customItemStack;
                 }
                 // fallback to vanilla items
                 Material item = ItemUtils.getItem(id);
