@@ -135,9 +135,16 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         if (!stage.isPresent()) {
             return Optional.empty();
         }
+
         Optional<Answer> optional = stage.get().processAnswer(answer);
         if (optional.isPresent() && executeActions) {
             optional.get().executeActions(this);
+        }
+
+        if (getTemplate().isAutoEnding() && getStages().size() < 2) {
+            // auto end the conversation if no other stages are present
+            // and after the player had a chance to answer
+            end(ConversationEndReason.SILENT);
         }
         return optional;
     }

@@ -248,7 +248,9 @@ public class SimpleStage implements Stage {
         }
         RaidCraft.callEvent(event);
 
-        if (getConversation().getTemplate().isAutoEnding() && getConversation().getStages().size() < 2) {
+        if (getConversation().getTemplate().isAutoEnding()
+                && getConversation().getStages().size() < 2
+                && getAnswers().size() < 1) {
             // automatically end the conversation silently if one one stage is defined and auto-end == true
             getConversation().end(ConversationEndReason.SILENT);
         }
