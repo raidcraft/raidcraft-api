@@ -47,6 +47,26 @@ public abstract class AbstractConversation extends DataMap implements Conversati
 
     protected abstract void load();
 
+    /**
+     * On Start is called just before the first stage is triggered and after the conversation is created.
+     * Override the method to implement custom setup logic before the first stage starts.
+     * You can still add stages and answers to the conversation dynamically building it.
+     *
+     * @return true to proceed with starting the conversation or false to cancel it
+     */
+    protected boolean onStart() {
+        return true;
+    }
+
+    /**
+     * On End is called just before the conversation is unregistered and destroyed.
+     * Override the method to do cleanup and other custom logic when a conversation ends.
+     *
+     * @param reason the reason the conversation ended
+     */
+    protected void onEnd(ConversationEndReason reason) {
+    }
+
     @Override
     public void abortActionExection() {
 
@@ -214,6 +234,8 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     public boolean start() {
 
         if (getTemplate().isPersistent()) load();
+        if (!onStart()) return false;
+
         Optional<Stage> stage = getCurrentStage();
         if (!stage.isPresent()) stage = getStage(StageTemplate.START_STAGE);
         if (stage.isPresent()) {
@@ -249,6 +271,7 @@ public abstract class AbstractConversation extends DataMap implements Conversati
             case PLAYER_ABORT:
                 abortActionExection();
         }
+        onEnd(reason);
         Conversations.removeActiveConversation(getOwner());
         getTemplate().getConversationEndCallback().ifPresent(callback -> callback.accept(this));
         RaidCraft.callEvent(new RCConversationEndedEvent(this, reason));

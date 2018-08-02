@@ -162,7 +162,7 @@ public interface ConversationProvider {
      * @param host to create conversation with
      * @return created conversation
      */
-    Conversation createConversation(String type, Player player, ConversationTemplate template, ConversationHost host);
+    Conversation startConversation(String type, Player player, ConversationTemplate template, ConversationHost host);
 
     /**
      * Registers the host factory with the {@link ConversationProvider} allowing {@link ConversationHost}s to be created.
@@ -316,6 +316,18 @@ public interface ConversationProvider {
      * @return started conversation
      */
     Optional<Conversation> startConversation(Player player, String conversation);
+
+    /**
+     * Creates a ready to start conversation from the given {@link Conversation} class.
+     * Great for plugins that want to start a specific Conversation directly from a class.
+     *
+     * @param player            to start conversation for
+     * @param conversation      the name of the conversation template to start
+     * @param conversationClass to start conversation from
+     * @param <TConversation>   type of the conversation
+     * @return ready to start conversation
+     */
+    <TConversation extends Conversation> Optional<TConversation> startConversation(Player player, String conversation, Class<TConversation> conversationClass);
 
     Conversation startConversation(Player player, ConversationTemplate template, ConversationHost<?> host);
 

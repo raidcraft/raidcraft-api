@@ -313,6 +313,11 @@ public class Conversations {
         return provider.getOrCreateConversationHost(host, config);
     }
 
+    public static <TConversation extends Conversation> Optional<TConversation> startConversation(Player player, String conversation, Class<TConversation> conversationClass) {
+        if (provider == null) return Optional.empty();
+        return provider.startConversation(player, conversation, conversationClass);
+    }
+
     public static Optional<Conversation> startConversation(Player player, ConversationHost<?> conversationHost) {
 
         if (provider == null) return Optional.empty();
@@ -418,7 +423,7 @@ public class Conversations {
 
     public static Conversation createConversation(String type, Player player, ConversationTemplate template, ConversationHost host) {
 
-        return provider.createConversation(type, player, template, host);
+        return provider.startConversation(type, player, template, host);
     }
 
     public static Optional<ConversationHost<?>> spawnConversationHost(String pluginName, String name, String conversationName, Location location) {

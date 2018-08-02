@@ -43,6 +43,11 @@ public class InputAnswer extends ConfiguredAnswer {
         super(message);
     }
 
+    public InputAnswer setInputListener(Consumer<String> inputListener) {
+        this.inputListener = inputListener;
+        return this;
+    }
+
     @Override
     protected void load(ConfigurationSection args) {
 
