@@ -1,5 +1,7 @@
 package de.raidcraft.api.conversations.conversation;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
@@ -11,6 +13,7 @@ import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
@@ -125,7 +128,10 @@ public abstract class AbstractConversationTemplate implements ConversationTempla
             conversation.setCurrentStage(stage.create(conversation));
         }
 
-        conversation.start();
+        // delay the start of the conversation by one tick
+        // to allow the creator of the conversation to fill in member variables
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), conversation::start, 1L);
+
         return conversation;
     }
 
