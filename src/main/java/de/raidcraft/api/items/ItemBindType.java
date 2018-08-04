@@ -14,7 +14,7 @@ public enum ItemBindType {
     @EnumValue("BOP")
     BIND_ON_PICKUP("Wird beim Aufheben gebunden", ChatColor.BLUE),
     @EnumValue("QUEST")
-    QUEST("Quest Item", ChatColor.GRAY),
+    QUEST("Quest Item", ChatColor.DARK_GREEN),
     @EnumValue("NONE")
     NONE("", ChatColor.WHITE);
 
