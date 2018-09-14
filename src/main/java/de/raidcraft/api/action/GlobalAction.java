@@ -374,10 +374,10 @@ public enum GlobalAction {
             player.teleport(ConfigUtil.getLocationFromConfig(config, player));
         }
     }),
-    START_TIMER("timer.startStage", new Action<Player>() {
+    START_TIMER("timer.start", new Action<Player>() {
         @Override
         @Information(
-                value = "timer.startStage",
+                value = "timer.start",
                 desc = "Starts a timer for the player, executing the given actions at cancel or end.",
                 conf = {
                         "id: unique id for the timer",
