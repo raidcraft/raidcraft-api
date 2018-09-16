@@ -502,6 +502,10 @@ public class RaidCraft implements Listener {
         throw new CustomItemException("Unknown item type specified: " + id);
     }
 
+    /**
+     * @deprecated use {@link #getItem(String)} for safe item creation and amount support
+     */
+    @Deprecated
     public static ItemStack getSafeItem(String id, int amount) throws CustomItemException {
 
         ItemStack item = getSafeItem(id);
@@ -511,11 +515,7 @@ public class RaidCraft implements Listener {
 
     public static ItemStack getUnsafeItem(String id) {
 
-        try {
-            return getSafeItem(id);
-        } catch (CustomItemException e) {
-            return null;
-        }
+        return getItem(id).orElse(null);
     }
 
     public static ItemStack getUnsafeItem(String id, int amount) {
