@@ -31,41 +31,27 @@ public enum GlobalAction {
 
     PLAYER_FREEZE("player.freeze", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.freeze",
-                desc = "Freezes the given player in place making him unable to move. Needs to be disabled with player.unfreeze"
-        )
+        @Information(value = "player.freeze", desc = "Freezes the given player in place making him unable to move. Needs to be disabled with player.unfreeze")
         public void accept(Player player, ConfigurationSection config) {
 
             player.setWalkSpeed(0F);
             player.setFlySpeed(0F);
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 128, false));
         }
-    }),
-    PLAYER_UNFREEZE("player.unfreeze", new Action<Player>() {
+    }), PLAYER_UNFREEZE("player.unfreeze", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.unfreeze",
-                desc = "Unfreezes the player resetting his walk and fly speed to the default values"
-        )
+        @Information(value = "player.unfreeze", desc = "Unfreezes the player resetting his walk and fly speed to the default values")
         public void accept(Player player, ConfigurationSection config) {
 
             player.setWalkSpeed(DEFAULT_WALK_SPEED);
             player.setFlySpeed(DEFAULT_FLY_SPEED);
             player.removePotionEffect(PotionEffectType.JUMP);
         }
-    }),
-    GIVE_ITEM("player.give.item", new Action<Player>() {
+    }), GIVE_ITEM("player.give.item", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.give.item",
-                desc = "Gives the player the item or drops it if inventory is full.",
-                conf = {
-                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
-                        "amount: [1]"
-                },
-                aliases = {"player.item.give"}
-        )
+        @Information(value = "player.give.item", desc = "Gives the player the item or drops it if inventory is full.", conf = {
+                "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
+                "amount: [1]" }, aliases = { "player.item.give" })
         public void accept(Player player, ConfigurationSection config) {
 
             try {
@@ -76,18 +62,11 @@ public enum GlobalAction {
                 RaidCraft.LOGGER.warning("player.give.item (" + player.getName() + "): " + e.getMessage());
             }
         }
-    }),
-    REMOVE_ITEM("player.remove.item", new Action<Player>() {
+    }), REMOVE_ITEM("player.remove.item", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.remove.item",
-                desc = "Removes the item from the player, will also search in the quest inventory if it is a quest item.",
-                conf = {
-                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
-                        "amount: [1]"
-                },
-                aliases = {"player.item.remove"}
-        )
+        @Information(value = "player.remove.item", desc = "Removes the item from the player, will also search in the quest inventory if it is a quest item.", conf = {
+                "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
+                "amount: [1]" }, aliases = { "player.item.remove" })
         public void accept(Player player, ConfigurationSection config) {
 
             try {
@@ -101,7 +80,8 @@ public enum GlobalAction {
                         item.setAmount(item.getMaxStackSize());
                         amount -= item.getMaxStackSize();
                     }
-                    if (CustomItemUtil.isCustomItem(item) && RaidCraft.getCustomItem(item).getItem().getType() == ItemType.QUEST) {
+                    if (CustomItemUtil.isCustomItem(item)
+                            && RaidCraft.getCustomItem(item).getItem().getType() == ItemType.QUEST) {
                         Optional<QuestProvider> questProvider = Quests.getQuestProvider();
                         if (questProvider.isPresent()) {
                             questProvider.get().removeQuestItem(player, item);
@@ -118,19 +98,14 @@ public enum GlobalAction {
                 RaidCraft.LOGGER.warning("player.remove.item (" + player.getName() + "): " + e.getMessage());
             }
         }
-    }),
-    GIVE_MONEY("player.give.money", new Action<Player>() {
+    }), GIVE_MONEY("player.give.money", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.give.money",
-                desc = "Gives the player the given amount of money.",
-                conf = {
-                        "amount: <1g5s3k/1g/5g3k>|<50.0>"
-                }
-        )
+        @Information(value = "player.give.money", desc = "Gives the player the given amount of money.", conf = {
+                "amount: <1g5s3k/1g/5g3k>|<50.0>" })
         public void accept(Player player, ConfigurationSection config) {
 
-            if (!config.isSet("amount")) return;
+            if (!config.isSet("amount"))
+                return;
             Economy economy = RaidCraft.getEconomy();
             String amount = config.getString("amount");
             try {
@@ -139,66 +114,45 @@ public enum GlobalAction {
                 economy.add(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(amount));
             }
         }
-    }),
-    TAKE_MONEY("player.remove.money", new Action<Player>() {
+    }), TAKE_MONEY("player.remove.money", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.remove.money",
-                desc = "Removes the given amount of money from the player.",
-                conf = {
-                        "amount: <1g5s3k/1g/5g3k>|<50.0>"
-                }
-        )
+        @Information(value = "player.remove.money", desc = "Removes the given amount of money from the player.", conf = {
+                "amount: <1g5s3k/1g/5g3k>|<50.0>" })
         public void accept(Player player, ConfigurationSection config) {
 
-            if (!config.isSet("amount")) return;
+            if (!config.isSet("amount"))
+                return;
             Economy economy = RaidCraft.getEconomy();
             String amount = config.getString("amount");
             try {
                 economy.substract(AccountType.PLAYER, player.getUniqueId().toString(), Double.parseDouble(amount));
             } catch (NumberFormatException ignored) {
-                economy.substract(AccountType.PLAYER, player.getUniqueId().toString(), economy.parseCurrencyInput(amount));
+                economy.substract(AccountType.PLAYER, player.getUniqueId().toString(),
+                        economy.parseCurrencyInput(amount));
             }
         }
-    }),
-    KILL_PLAYER("player.kill", new Action<Player>() {
+    }), KILL_PLAYER("player.kill", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.kill",
-                desc = "Kills the player by damaging him 10x the max health."
-        )
+        @Information(value = "player.kill", desc = "Kills the player by damaging him 10x the max health.")
         public void accept(Player player, ConfigurationSection config) {
 
             player.damage(player.getMaxHealth() * 10);
         }
-    }),
-    MESSAGE_PLAYER("player.message", new Action<Player>() {
+    }), MESSAGE_PLAYER("player.message", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.message",
-                desc = "Sends the given message to the player. Multiline splitting with |.",
-                conf = {
-                        "text: <First line.|Second line.>"
-                }
-        )
+        @Information(value = "player.message", desc = "Sends the given message to the player. Multiline splitting with |.", conf = {
+                "text: <First line.|Second line.>" })
         public void accept(Player player, ConfigurationSection config) {
 
-            String[] text = config.getString("withText").split("\\|");
+            String[] text = config.getString("text").split("\\|");
             for (String msg : text) {
                 player.sendMessage(RaidCraft.replaceVariables(player, msg));
             }
         }
-    }),
-    TEXT("text", new Action<Player>() {
+    }), TEXT("text", new Action<Player>() {
         @Override
-        @Information(
-                value = "text",
-                desc = "Sends the given text to the player prepended by the given NPC displayName.",
-                conf = {
-                        "text: <First line.|Second line.>",
-                        "npc: displayName"
-                }
-        )
+        @Information(value = "text", desc = "Sends the given text to the player prepended by the given NPC displayName.", conf = {
+                "text: <First line.|Second line.>", "npc: displayName" })
         @SuppressWarnings("unchecked")
         public void accept(Player player, ConfigurationSection config) {
 
@@ -214,9 +168,8 @@ public enum GlobalAction {
             for (String line : text) {
                 String message;
                 if (npc != null) {
-                    message = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD
-                                    + npc + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + ": "
-                                    + ChatColor.AQUA + line;
+                    message = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + npc + ChatColor.DARK_GRAY + "]"
+                            + ChatColor.GOLD + ": " + ChatColor.AQUA + line;
                 } else {
                     message = ChatColor.AQUA + line;
                 }
@@ -227,36 +180,23 @@ public enum GlobalAction {
                 }
             }
         }
-    }),
-    TEXT_PLAYER("text.player", new Action<Player>() {
+    }), TEXT_PLAYER("text.player", new Action<Player>() {
         @Override
-        @Information(
-                value = "text.player",
-                desc = "Sends the given text to the player prepended by the player displayName.",
-                conf = {
-                        "text: <First line.|Second line.>"
-                }
-        )
+        @Information(value = "text.player", desc = "Sends the given text to the player prepended by the player displayName.", conf = {
+                "text: <First line.|Second line.>" })
         public void accept(Player player, ConfigurationSection config) {
 
             String[] text = config.getString("text").split("\\|");
             for (String line : text) {
                 line = RaidCraft.replaceVariables(player, line);
-                player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN
-                        + player.getName() + ChatColor.DARK_GRAY + "]" + ChatColor.GOLD + ": "
-                        + ChatColor.AQUA + line);
+                player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + player.getName() + ChatColor.DARK_GRAY
+                        + "]" + ChatColor.GOLD + ": " + ChatColor.AQUA + line);
             }
         }
-    }),
-    TEXT_INFO("text.info", new Action<Player>() {
+    }), TEXT_INFO("text.info", new Action<Player>() {
         @Override
-        @Information(
-                value = "text.info",
-                desc = "Sends the given text to the player formatted in DARK AQUA.",
-                conf = {
-                        "text: <First line.|Second line.>"
-                }
-        )
+        @Information(value = "text.info", desc = "Sends the given text to the player formatted in DARK AQUA.", conf = {
+                "text: <First line.|Second line.>" })
         public void accept(Player player, ConfigurationSection config) {
 
             String[] text = config.getString("text").split("\\|");
@@ -265,21 +205,10 @@ public enum GlobalAction {
                 player.sendMessage(ChatColor.DARK_AQUA + line);
             }
         }
-    }),
-    TOGGLE_DOOR("door.toggle", new DoorAction()),
-    GIVE_COMPASS("player.give.compass", new Action<Player>() {
+    }), TOGGLE_DOOR("door.toggle", new DoorAction()), GIVE_COMPASS("player.give.compass", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.give.compass",
-                desc = "Gives the player a compass that points to the given location and names it.",
-                conf = {
-                        "x",
-                        "y",
-                        "z",
-                        "world: [current]",
-                        "displayName: [Compass]"
-                }
-        )
+        @Information(value = "player.give.compass", desc = "Gives the player a compass that points to the given location and names it.", conf = {
+                "x", "y", "z", "world: [current]", "displayName: [Compass]" })
         public void accept(Player player, ConfigurationSection config) {
 
             ItemStack item = ItemUtils.createItem(Material.COMPASS, config.getString("name", "Compass"));
@@ -287,39 +216,24 @@ public enum GlobalAction {
             player.setCompassTarget(location);
             InventoryUtils.addOrDropItems(player, item);
         }
-    }),
-    REMOVE_COMPASS("player.remove.compass", new Action<Player>() {
+    }), REMOVE_COMPASS("player.remove.compass", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.remove.compass",
-                desc = "Removes the compass with the given displayName from the player.",
-                conf = {
-                        "displayName: [Compass]"
-                }
-        )
+        @Information(value = "player.remove.compass", desc = "Removes the compass with the given displayName from the player.", conf = {
+                "displayName: [Compass]" })
         public void accept(Player player, ConfigurationSection config) {
 
             String name = config.getString("name", "Compass");
             for (ItemStack itemStack : player.getInventory().getContents()) {
-                if (itemStack != null
-                        && itemStack.hasItemMeta()
-                        && itemStack.getItemMeta().getDisplayName() != null
+                if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().getDisplayName() != null
                         && name.equals(itemStack.getItemMeta().getDisplayName())) {
                     player.getInventory().remove(itemStack);
                 }
             }
         }
-    }),
-    PLAYER_HEAL("player.heal", new Action<Player>() {
+    }), PLAYER_HEAL("player.heal", new Action<Player>() {
         @Override
-        @Information(
-                value = "player.heal",
-                desc = "Heals the player by the given amount or to max.",
-                conf = {
-                        "amount: defaults to max",
-                        "from-max: false"
-                }
-        )
+        @Information(value = "player.heal", desc = "Heals the player by the given amount or to max.", conf = {
+                "amount: defaults to max", "from-max: false" })
         public void accept(Player player, ConfigurationSection config) {
 
             if (!config.isSet("amount")) {
@@ -334,77 +248,46 @@ public enum GlobalAction {
             }
             player.setHealth(amount);
         }
-    }),
-    SET_BLOCK("block.set", new SetBlockAction()),
-    CHANGE_WORLD("world.change", new Action<Player>() {
+    }), SET_BLOCK("block.set", new SetBlockAction()), CHANGE_WORLD("world.change", new Action<Player>() {
         @Override
-        @Information(
-                value = "world.change",
-                desc = "Teleports the player to the given world but keeps the exact position.",
-                conf = "world"
-        )
+        @Information(value = "world.change", desc = "Teleports the player to the given world but keeps the exact position.", conf = "world")
         public void accept(Player player, ConfigurationSection config) {
 
             World world = Bukkit.getWorld(config.getString("world"));
             if (world == null) {
-                RaidCraft.LOGGER.warning("Invalid world in world.change withAction defined! " + ConfigUtil.getFileName(config));
+                RaidCraft.LOGGER
+                        .warning("Invalid world in world.change action defined! " + ConfigUtil.getFileName(config));
                 return;
             }
             Location location = player.getLocation();
             location.setWorld(world);
             player.teleport(location);
         }
-    }),
-    TELEPORT_COORDS("teleport.location", new Action<Player>() {
+    }), TELEPORT_COORDS("teleport.location", new Action<Player>() {
         @Override
-        @Information(
-                value = "teleport.location",
-                desc = "Teleports the player to the given location.",
-                conf = {
-                        "x",
-                        "y",
-                        "z",
-                        "world: [current]",
-                        "yaw",
-                        "pitch"
-                }
-        )
+        @Information(value = "teleport.location", desc = "Teleports the player to the given location.", conf = { "x",
+                "y", "z", "world: [current]", "yaw", "pitch" })
         public void accept(Player player, ConfigurationSection config) {
 
             player.teleport(ConfigUtil.getLocationFromConfig(config, player));
         }
-    }),
-    START_TIMER("timer.start", new Action<Player>() {
+    }), START_TIMER("timer.start", new Action<Player>() {
         @Override
-        @Information(
-                value = "timer.start",
-                desc = "Starts a timer for the player, executing the given actions at cancel or end.",
-                conf = {
-                        "id: unique id for the timer",
-                        "duration: 10s2 -> 10secs 2 ticks",
-                        "end-actions: block of actions that are executed when the timer ends - you can also use the timer.end trigger",
-                        "cancel-actions: block of actions that are executed when the timer is cancelled - you can also use the timer.cancel trigger",
-                        "type: [interval] - defaults to a normal timer that runs out",
-                        "delay: interval mode only",
-                        "interval: interval mode only - use the timer.tick trigger"
-                }
-        )
+        @Information(value = "timer.start", desc = "Starts a timer for the player, executing the given actions at cancel or end.", conf = {
+                "id: unique id for the timer", "duration: 10s2 -> 10secs 2 ticks",
+                "end-actions: block of actions that are executed when the timer ends - you can also use the timer.end trigger",
+                "cancel-actions: block of actions that are executed when the timer is cancelled - you can also use the timer.cancel trigger",
+                "type: [interval] - defaults to a normal timer that runs out", "delay: interval mode only",
+                "interval: interval mode only - use the timer.tick trigger" })
         public void accept(Player type, ConfigurationSection config) {
 
             Timer.startTimer(type, config);
         }
-    }),
-    ADD_TIMER_TIME("timer.add", new Action<Player>() {
+    }), ADD_TIMER_TIME("timer.add", new Action<Player>() {
         @Override
-        @Information(
-                value = "timer.add",
-                desc = "Adds time to a running timer.",
-                conf = {
-                        "id: unique id of the timer",
-                        "time: 10s2 -> 10secs 2 ticks to add",
-                        "temporary: true/<false> - calling timer.add multiple times with temporary true will not add up"
-                }
-        )
+        @Information(value = "timer.add", desc = "Adds time to a running timer.", conf = { "id: unique id of the timer",
+                "time: 10s2 -> 10secs 2 ticks to add",
+                "temporary: true/<false> - calling timer.add multiple times with temporary true will not add up" })
         public void accept(Player type, ConfigurationSection config) {
 
             Optional<Timer> timer = Timer.getActiveTimer(type, config.getString("id"));
@@ -416,44 +299,26 @@ public enum GlobalAction {
                 }
             }
         }
-    }),
-    ABORT_TIMER("timer.cancel", new Action<Player>() {
+    }), ABORT_TIMER("timer.cancel", new Action<Player>() {
         @Override
-        @Information(
-                value = "timer.cancel",
-                desc = "Cancels the given timer calling the timer.cancel trigger.",
-                conf = {
-                        "id: unique id of the timer"
-                }
-        )
+        @Information(value = "timer.cancel", desc = "Cancels the given timer calling the timer.cancel trigger.", conf = {
+                "id: unique id of the timer" })
         public void accept(Player type, ConfigurationSection config) {
 
             Timer.cancelTimer(type, config.getString("id"));
         }
-    }),
-    END_TIMER("timer.end", new Action<Player>() {
+    }), END_TIMER("timer.end", new Action<Player>() {
         @Override
-        @Information(
-                value = "timer.end",
-                desc = "Ends the timer calling the trigger timer.end",
-                conf = {
-                        "id: unique id of the timer"
-                }
-        )
+        @Information(value = "timer.end", desc = "Ends the timer calling the trigger timer.end", conf = {
+                "id: unique id of the timer" })
         public void accept(Player type, ConfigurationSection config) {
 
             Timer.endTimer(type, config.getString("id"));
         }
-    }),
-    RESET_TIMER("timer.reset", new Action<Player>() {
+    }), RESET_TIMER("timer.reset", new Action<Player>() {
         @Override
-        @Information(
-                value = "timer.reset",
-                desc = "Resets the given timer cancelling it and then starting it again. Will also trigger timer.cancel!",
-                conf = {
-                        "id: unique id of the timer"
-                }
-        )
+        @Information(value = "timer.reset", desc = "Resets the given timer cancelling it and then starting it again. Will also trigger timer.cancel!", conf = {
+                "id: unique id of the timer" })
         public void accept(Player type, ConfigurationSection config) {
 
             Timer.resetTimer(type, config.getString("id"));

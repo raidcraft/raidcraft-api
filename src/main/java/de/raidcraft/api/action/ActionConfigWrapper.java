@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * @author Silthus
  */
-@EqualsAndHashCode(of = {"action", "config"})
+@EqualsAndHashCode(of = { "action", "config" })
 @Data
 public class ActionConfigWrapper<T> implements RevertableAction<T> {
 
@@ -46,27 +46,28 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
         this.delay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         this.cooldown = TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
         this.executeOnce = config.getBoolean("execute-once", false);
-        this.requirements = ActionAPI.createRequirements(getIdentifier(), config.getConfigurationSection("requirements"));
+        this.requirements = ActionAPI.createRequirements(getIdentifier(),
+                config.getConfigurationSection("requirements"));
         if (isExecuteOnce()) {
             // lets add our execute once withRequirement last
-            // this withRequirement will return false after is has been checked once
-            Optional<Requirement<T>> optional = ActionAPI.Helper.createExecuteOnceRequirement(
-                    getIdentifier(),
+            // this requirement will return false after is has been checked once
+            Optional<Requirement<T>> optional = ActionAPI.Helper.createExecuteOnceRequirement(getIdentifier(),
                     getType());
-            if (optional.isPresent()) this.requirements.add(optional.get());
+            if (optional.isPresent())
+                this.requirements.add(optional.get());
         } else if (cooldown > 0) {
-            Optional<Requirement<T>> cooldownRequirement = ActionAPI.Helper.createCooldownRequirement(
-                    getIdentifier(),
-                    cooldown,
-                    getType());
-            if (cooldownRequirement.isPresent()) this.requirements.add(cooldownRequirement.get());
+            Optional<Requirement<T>> cooldownRequirement = ActionAPI.Helper.createCooldownRequirement(getIdentifier(),
+                    cooldown, getType());
+            if (cooldownRequirement.isPresent())
+                this.requirements.add(cooldownRequirement.get());
         }
     }
 
     public ConfigurationSection getConfig() {
 
         ConfigurationSection args = this.config.getConfigurationSection("args");
-        if (args == null) args = this.config.createSection("args");
+        if (args == null)
+            args = this.config.createSection("args");
         return args;
     }
 
@@ -113,7 +114,8 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
             if (!requirements.isEmpty()) {
                 boolean allMatch = true;
                 for (Requirement<?> requirement : requirements) {
-                    if (!allMatch) break;
+                    if (!allMatch)
+                        break;
                     if (player.isPresent() && ActionAPI.matchesType(requirement, Player.class)) {
                         allMatch = ((Requirement<Player>) requirement).test(player.get());
                     } else if (ActionAPI.matchesType(requirement, getType())) {
@@ -123,7 +125,8 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
                 if (plugin.getConfig().debugActions && !allMatch) {
                     plugin.getLogger().info("PRE ACTION CHECK FAILED: " + ActionAPI.getIdentifier(getAction()));
                 }
-                if (!allMatch) return;
+                if (!allMatch)
+                    return;
             }
             action.accept(type, config);
             if (plugin.getConfig().debugActions) {
@@ -153,7 +156,7 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
         if (isExecuteOnce()) {
             Requirement<?> executeOnce = requirements.get(requirements.size() - 1);
             if (executeOnce instanceof RequirementConfigWrapper) {
-                ((RequirementConfigWrapper<T>)executeOnce).setChecked(type, true);
+                ((RequirementConfigWrapper<T>) executeOnce).setChecked(type, true);
                 executeOnce.save();
             }
         }

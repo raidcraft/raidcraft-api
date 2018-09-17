@@ -21,7 +21,7 @@ public abstract class ConfiguredAnswer extends SimpleAnswer {
 
         super(type, config.getString("text"),
                 ActionAPI.createActions(config.getConfigurationSection("actions")),
-                ActionAPI.createRequirements(config.getName(), config.getConfigurationSection("withRequirement")));
+                ActionAPI.createRequirements(config.getName(), config.getConfigurationSection("requirement")));
         load(config.getConfigurationSection("args"));
     }
 

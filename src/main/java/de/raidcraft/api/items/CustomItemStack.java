@@ -197,7 +197,7 @@ public class CustomItemStack extends ItemStack {
         if (!(getItem() instanceof AttachableCustomItem)) {
             return;
         }
-        // lets also add our withRequirement lore
+        // lets also add our requirement lore
         for (ItemAttachment attachment : ((AttachableCustomItem) getItem()).getAttachments(player)) {
             if (attachment instanceof RequiredItemAttachment) {
                 ((AttachableCustomItem) getItem()).apply(player, this, true);

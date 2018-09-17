@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * @author Silthus
  */
-@EqualsAndHashCode(of = {"withRequirement"})
+@EqualsAndHashCode(of = { "requirement" })
 @Data
 public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Comparable<Requirement<T>> {
 
@@ -54,7 +54,8 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     private final Map<UUID, Map<String, String>> mappings = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config, Class<T> type) {
+    protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config,
+            Class<T> type) {
 
         this.id = config.isSet("id") ? config.getString("id") : id;
         this.requirement = requirement;
@@ -72,12 +73,10 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         this.description = config.getString("description");
         this.optional = config.getBoolean("optional", false);
         this.successActions = ActionAPI.createActions(config.getConfigurationSection("success")).stream()
-                .filter(action -> ActionAPI.matchesType(action, getType()))
-                .map(action -> (Action<T>) action)
+                .filter(action -> ActionAPI.matchesType(action, getType())).map(action -> (Action<T>) action)
                 .collect(Collectors.toList());
         this.failureActions = ActionAPI.createActions(config.getConfigurationSection("failure")).stream()
-                .filter(action -> ActionAPI.matchesType(action, getType()))
-                .map(action -> (Action<T>) action)
+                .filter(action -> ActionAPI.matchesType(action, getType())).map(action -> (Action<T>) action)
                 .collect(Collectors.toList());
         this.config = config;
     }
@@ -85,7 +84,8 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     public ConfigurationSection getConfig() {
 
         ConfigurationSection args = config.getConfigurationSection("args");
-        if (args == null) args = config.createSection("args");
+        if (args == null)
+            args = config.createSection("args");
         return args;
     }
 
@@ -218,7 +218,8 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
 
         if (isPersistant() && isMapped(entity, CHECKED_KEY)) {
             if (plugin.getConfig().debugRequirements) {
-                plugin.getLogger().info("PERSISTANT REQUIREMENT: " + ActionAPI.getIdentifier(getRequirement()) + " -> " + successfullyChecked);
+                plugin.getLogger().info("PERSISTANT REQUIREMENT: " + ActionAPI.getIdentifier(getRequirement()) + " -> "
+                        + successfullyChecked);
             }
             return successfullyChecked;
         }
@@ -238,18 +239,21 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         }
 
         if (isCounting()) {
-            if (successfullyChecked) setMapping(entity, COUNT_KEY, getCount(entity) + 1);
+            if (successfullyChecked)
+                setMapping(entity, COUNT_KEY, getCount(entity) + 1);
             if (hasCountText() && entity instanceof Player && successfullyChecked) {
                 ((Player) entity).sendMessage(getCountText(entity));
             }
             if (plugin.getConfig().debugRequirements) {
-                plugin.getLogger().info("COUNTING REQUIREMENT: " + ActionAPI.getIdentifier(getRequirement()) + " -> " + getCount(entity) + "/" + requiredCount);
+                plugin.getLogger().info("COUNTING REQUIREMENT: " + ActionAPI.getIdentifier(getRequirement()) + " -> "
+                        + getCount(entity) + "/" + requiredCount);
             }
             successfullyChecked = getCount(entity) >= getRequiredCount();
         }
         if (isPersistant()) {
             if (isCounting()) {
-                if (successfullyChecked) setChecked(entity, true);
+                if (successfullyChecked)
+                    setChecked(entity, true);
             } else {
                 setChecked(entity, successfullyChecked);
             }
@@ -257,12 +261,14 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         save();
         if (successfullyChecked) {
             if (plugin.getConfig().debugRequirements) {
-                plugin.getLogger().info("EXECUTING REQUIREMENT SUCCESS ACTIONS: " + ActionAPI.getIdentifier(getRequirement()));
+                plugin.getLogger()
+                        .info("EXECUTING REQUIREMENT SUCCESS ACTIONS: " + ActionAPI.getIdentifier(getRequirement()));
             }
             successActions.forEach(tAction -> tAction.accept(entity));
         } else {
             if (plugin.getConfig().debugRequirements) {
-                plugin.getLogger().info("EXECUTING REQUIREMENT FAILURE ACTIONS: " + ActionAPI.getIdentifier(getRequirement()));
+                plugin.getLogger()
+                        .info("EXECUTING REQUIREMENT FAILURE ACTIONS: " + ActionAPI.getIdentifier(getRequirement()));
             }
             failureActions.forEach(tAction -> tAction.accept(entity));
         }
@@ -303,22 +309,22 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     @Override
     public int compareTo(Requirement<T> other) {
 
-        return Integer.compare(getOrder(), (other instanceof RequirementConfigWrapper ? ((RequirementConfigWrapper) other).getOrder() : 0));
+        return Integer.compare(getOrder(),
+                (other instanceof RequirementConfigWrapper ? ((RequirementConfigWrapper) other).getOrder() : 0));
     }
 
     @Override
     public void save() {
 
-        if (!isPersistant()) return;
+        if (!isPersistant())
+            return;
         if (getConfig().getRoot() instanceof ConfigurationBase) {
             BasePlugin plugin = ((ConfigurationBase) getConfig().getRoot()).getPlugin();
             EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
             for (Map.Entry<UUID, Map<String, String>> entry : mappings.entrySet()) {
-                TPersistantRequirement dbEntry = database.find(TPersistantRequirement.class)
-                        .where()
-                        .eq("uuid", entry.getKey())
-                        .eq("plugin", plugin.getName())
-                        .eq("withRequirement", getId()).findUnique();
+                TPersistantRequirement dbEntry = database.find(TPersistantRequirement.class).where()
+                        .eq("uuid", entry.getKey()).eq("plugin", plugin.getName()).eq("requirement", getId())
+                        .findUnique();
                 if (dbEntry == null) {
                     dbEntry = new TPersistantRequirement();
                     dbEntry.setPlugin(plugin.getName());
@@ -354,14 +360,13 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     @Override
     public void load() {
 
-        if (!isPersistant()) return;
+        if (!isPersistant())
+            return;
         if (getConfig().getRoot() instanceof ConfigurationBase) {
             BasePlugin plugin = ((ConfigurationBase) getConfig().getRoot()).getPlugin();
             EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
-            List<TPersistantRequirement> list = database.find(TPersistantRequirement.class)
-                    .where()
-                    .eq("plugin", plugin.getName())
-                    .eq("withRequirement", getId()).findList();
+            List<TPersistantRequirement> list = database.find(TPersistantRequirement.class).where()
+                    .eq("plugin", plugin.getName()).eq("requirement", getId()).findList();
             list.forEach(entry -> {
                 for (TPersistantRequirementMapping mapping : entry.getMappings()) {
                     setMapping(entry.getUuid(), mapping.getMappedKey(), mapping.getMappedValue());
@@ -373,15 +378,14 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     @Override
     public void delete(T entity) {
 
-        if (!isPersistant()) return;
+        if (!isPersistant())
+            return;
         if (entity instanceof Player && getConfig().getRoot() instanceof ConfigurationBase) {
             BasePlugin plugin = ((ConfigurationBase) getConfig().getRoot()).getPlugin();
             EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
-            List<TPersistantRequirement> list = database.find(TPersistantRequirement.class)
-                    .where()
-                    .eq("uuid", ((Player) entity).getUniqueId())
-                    .eq("plugin", plugin.getName())
-                    .eq("withRequirement", getId()).findList();
+            List<TPersistantRequirement> list = database.find(TPersistantRequirement.class).where()
+                    .eq("uuid", ((Player) entity).getUniqueId()).eq("plugin", plugin.getName())
+                    .eq("requirement", getId()).findList();
             database.delete(list);
         }
     }

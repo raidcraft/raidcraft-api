@@ -14,26 +14,18 @@ import org.bukkit.entity.Player;
 public class SetBlockAction implements Action<Player> {
 
     @Override
-    @Information(
-            value = "block.set",
-            desc = "Sets a block at the given x,y,z coordinates.",
-            conf = {
-                    "world: [current]",
-                    "x",
-                    "y",
-                    "z",
-                    "block: DIRT"
-            }
-    )
+    @Information(value = "block.set", desc = "Sets a block at the given x,y,z coordinates.", conf = {
+            "world: [current]", "x", "y", "z", "block: DIRT" })
     public void accept(Player player, ConfigurationSection config) {
 
         Location location = ConfigUtil.getLocationFromConfig(config, player);
         Material material = Material.matchMaterial(config.getString("block", "minecraft:air"));
         if (material == null) {
-            RaidCraft.LOGGER.warning("Unknown block material " + config.getString("block") + " in block.set withAction!");
+            RaidCraft.LOGGER.warning("Unknown block material " + config.getString("block") + " in block.set action!");
             return;
         }
-        if (location == null) return;
+        if (location == null)
+            return;
         location.getBlock().setType(material);
     }
 }

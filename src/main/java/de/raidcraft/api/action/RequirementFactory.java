@@ -23,7 +23,7 @@ public final class RequirementFactory<T> {
     private final Class<T> type;
     private final Map<String, Requirement<T>> requirements = new CaseInsensitiveMap<>();
     private final Map<String, ConfigGenerator.Information> requirementInformation = new CaseInsensitiveMap<>();
-    // key -> alias, value -> withRequirement identifier
+    // key -> alias, value -> requirement identifier
     private final Map<String, String> requirementAliases = new CaseInsensitiveMap<>();
 
     protected RequirementFactory(Class<T> type) {
@@ -53,20 +53,22 @@ public final class RequirementFactory<T> {
         return addAlias(plugin.getName().toLowerCase() + "." + requirement, alias);
     }
 
-    public RequirementFactory registerGlobalRequirement(@NonNull String identifier, @NonNull Requirement<T> requirement) {
+    public RequirementFactory registerGlobalRequirement(@NonNull String identifier,
+            @NonNull Requirement<T> requirement) {
 
         requirements.put(identifier, requirement);
         Optional<ConfigGenerator.Information> information = ConfigBuilder.getInformation(requirement);
         if (information.isPresent()) {
             requirementInformation.put(identifier, information.get());
         } else {
-            RaidCraft.LOGGER.warning("no @Information defined for withRequirement " + identifier);
+            RaidCraft.LOGGER.warning("no @Information defined for requirement " + identifier);
         }
-        RaidCraft.info("registered withRequirement: " + identifier, "withRequirement");
+        RaidCraft.info("registered requirement: " + identifier, "requirement");
         return this;
     }
 
-    public RequirementFactory registerRequirement(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Requirement<T> requirement) {
+    public RequirementFactory registerRequirement(@NonNull JavaPlugin plugin, @NonNull String identifier,
+            @NonNull Requirement<T> requirement) {
 
         identifier = plugin.getName() + "." + identifier;
         return registerGlobalRequirement(identifier, requirement);
@@ -75,19 +77,19 @@ public final class RequirementFactory<T> {
     public void unregisterRequirement(@NonNull JavaPlugin plugin, @NonNull String identifier) {
 
         Requirement<T> requirement = requirements.remove(identifier);
-        if (requirement == null) requirement = requirements.remove(plugin.getName() + "." + identifier);
+        if (requirement == null)
+            requirement = requirements.remove(plugin.getName() + "." + identifier);
         if (requirement != null) {
-            RaidCraft.info("removed withRequirement: " + identifier + " (" + plugin.getName() + ")", "withRequirement." + plugin.getName());
+            RaidCraft.info("removed requirement: " + identifier + " (" + plugin.getName() + ")",
+                    "requirement." + plugin.getName());
         }
     }
 
     public void unregisterRequirements(@NonNull JavaPlugin plugin) {
 
-        requirements.keySet().stream()
-                .filter(key -> key.startsWith(plugin.getName().toLowerCase()))
+        requirements.keySet().stream().filter(key -> key.startsWith(plugin.getName().toLowerCase()))
                 .forEach(requirements::remove);
-        RaidCraft.info("removed all requirements of: " + plugin.getName()
-                , "withRequirement." + plugin.getName());
+        RaidCraft.info("removed all requirements of: " + plugin.getName(), "requirement." + plugin.getName());
     }
 
     public Map<String, Requirement<T>> getRequirements() {
@@ -105,18 +107,21 @@ public final class RequirementFactory<T> {
         return requirements.containsKey(actionId) || requirementAliases.containsKey(actionId);
     }
 
-    public Optional<Requirement<T>> create(String id, @NonNull String requirement, @NonNull ConfigurationSection config) {
+    public Optional<Requirement<T>> create(String id, @NonNull String requirement,
+            @NonNull ConfigurationSection config) {
 
         if (!requirements.containsKey(requirement)) {
             // lets see if we find a matching alias
-            if (requirementAliases.containsKey(requirement) && requirements.containsKey(requirementAliases.get(requirement))) {
+            if (requirementAliases.containsKey(requirement)
+                    && requirements.containsKey(requirementAliases.get(requirement))) {
                 requirement = requirementAliases.get(requirement);
             } else {
                 ActionAPI.UNKNOWN_REQUIREMENTS.add(requirement);
                 return Optional.empty();
             }
         }
-        RequirementConfigWrapper<T> wrapper = new RequirementConfigWrapper<>(id, requirements.get(requirement), config, getType());
+        RequirementConfigWrapper<T> wrapper = new RequirementConfigWrapper<>(id, requirements.get(requirement), config,
+                getType());
         wrapper.load();
         return Optional.of(wrapper);
     }
@@ -124,7 +129,8 @@ public final class RequirementFactory<T> {
     @SuppressWarnings("unchecked")
     @Deprecated
     /**
-     * @deprecated use {@link ActionAPI#createRequirements(String, ConfigurationSection)}
+     * @deprecated use
+     *             {@link ActionAPI#createRequirements(String, ConfigurationSection)}
      * @see ActionAPI#createRequirements(String, ConfigurationSection)
      */
     public List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements) {
@@ -135,15 +141,15 @@ public final class RequirementFactory<T> {
         }
         // lets parse via flow first and continue if the key is a list
         List<Requirement<?>> flowRequirements = Flow.parseRequirements(requirements);
-        flowRequirements.stream()
-                .filter(requirement -> ActionAPI.matchesType(requirement, getType()))
-                .map(requirement -> (Requirement<T>) requirement)
-                .forEach(list::add);
+        flowRequirements.stream().filter(requirement -> ActionAPI.matchesType(requirement, getType()))
+                .map(requirement -> (Requirement<T>) requirement).forEach(list::add);
 
         for (String key : requirements.getKeys(false)) {
             // handled by flow
-            if (requirements.isList(key)) continue;
-            Optional<Requirement<T>> optional = create(id + "." + key, requirements.getString(key + ".type"), requirements.getConfigurationSection(key));
+            if (requirements.isList(key))
+                continue;
+            Optional<Requirement<T>> optional = create(id + "." + key, requirements.getString(key + ".type"),
+                    requirements.getConfigurationSection(key));
             if (optional.isPresent()) {
                 list.add(optional.get());
             }

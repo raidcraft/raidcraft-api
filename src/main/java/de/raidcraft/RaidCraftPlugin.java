@@ -95,7 +95,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             registerEvents(new InventorySync(this));
         }
 
-        // inizialize withAction API
+        // inizialize Action API
         registerActionAPI();
 
         // register random objects
@@ -115,10 +115,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
                     ActionAPI.UNKNOWN_ACTIONS.stream()
                             .filter(action -> !ActionAPI.isAction(action))
-                            .forEach(action -> RaidCraft.LOGGER.warning("unknown withAction: " + action));
+                            .forEach(action -> RaidCraft.LOGGER.warning("unknown action: " + action));
                     ActionAPI.UNKNOWN_REQUIREMENTS.stream()
                             .filter(requirement -> !ActionAPI.isRequirement(requirement))
-                            .forEach(requirement -> RaidCraft.LOGGER.warning("unknown withRequirement: " + requirement));
+                            .forEach(requirement -> RaidCraft.LOGGER.warning("unknown requirement: " + requirement));
                     ActionAPI.UNKNOWN_TRIGGER.stream()
                             .filter(trigger -> !ActionAPI.isRequirement(trigger))
                             .forEach(trigger -> RaidCraft.LOGGER.warning("unknown trigger: " + trigger));
@@ -234,7 +234,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public int actoionapiSyncDelay = 10;
         @Setting("hide-attributes")
         public boolean hideAttributes = true;
-        @Setting("withAction-api.parallel")
+        @Setting("action-api.parallel")
         public boolean parallelActionAPI = true;
         @Setting("heartbeat-ticks")
         @MultiComment({"prints a heartbeat message in this interval",
@@ -252,10 +252,10 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public String pastebinApiKey = "";
 
         @Comment("Enable GlobalPlayerTrigger, like interact, block.break, block.place, move, craft, death, join")
-        @Setting("withAction-api.enable-global-player-trigger")
+        @Setting("action-api.enable-global-player-trigger")
         private boolean actionApiGlobalPlayerTrigger = true;
         @Comment("Enable TimerTrigger, like tick, end, cancel")
-        @Setting("withAction-api.enable-time-trigger")
+        @Setting("action-api.enable-time-trigger")
         private boolean actionApiTimerTrigger = true;
         @Comment("Save and Load Player Inventories in Database, allow sharing with other servers")
         @Setting("enable-player-inventory-share")

@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 /**
  * @author Silthus
  */
-@ToString(of = {"identifier", "actions"})
-@EqualsAndHashCode(of = {"identifier", "actions"})
+@ToString(of = { "identifier", "actions" })
+@EqualsAndHashCode(of = { "identifier", "actions" })
 @Data
 public abstract class Trigger implements TriggerConfigGenerator {
 
@@ -34,7 +34,8 @@ public abstract class Trigger implements TriggerConfigGenerator {
         this.actions = actions;
     }
 
-    public final <T> void registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier, @NonNull ConfigurationSection config) {
+    public final <T> void registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier,
+            @NonNull ConfigurationSection config) {
 
         if (!registeredListeners.containsKey(triggerIdentifier)) {
             registeredListeners.put(triggerIdentifier, new ArrayList<>());
@@ -54,7 +55,8 @@ public abstract class Trigger implements TriggerConfigGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    protected final <T> void informListeners(@NonNull String action, @NonNull T triggeringEntity, @NonNull Predicate<ConfigurationSection> predicate) {
+    protected final <T> void informListeners(@NonNull String action, @NonNull T triggeringEntity,
+            @NonNull Predicate<ConfigurationSection> predicate) {
 
         RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         String identifier = getIdentifier() + "." + action;
@@ -68,9 +70,8 @@ public abstract class Trigger implements TriggerConfigGenerator {
             List<TriggerListenerConfigWrapper<T>> list = new ArrayList<>(registeredListeners.get(identifier)).stream()
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
-                            // first lets check all predicates and if we can execute at all
-                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
-                    .collect(Collectors.toList());
+                    // first lets check all predicates and if we can execute at all
+                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate)).collect(Collectors.toList());
             if (plugin.getConfig().debugTrigger && !list.isEmpty()) {
                 plugin.getLogger().info("TRIGGER " + identifier + " MATCHED TARGETS");
             }
@@ -83,7 +84,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
             list.stream().filter(wrapper -> wrapper.getTriggerDelay() <= 0)
                     // then lets process the trigger
                     .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity))
-                    // if we get true back we are ready for withAction processing
+                    // if we get true back we are ready for action processing
                     .forEach(wrapper -> wrapper.executeActions(triggeringEntity));
         }
     }

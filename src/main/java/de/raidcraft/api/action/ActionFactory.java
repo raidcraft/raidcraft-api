@@ -24,7 +24,7 @@ public final class ActionFactory<T> {
     private final Class<T> type;
     private final Map<String, Action<T>> actions = new CaseInsensitiveMap<>();
     private final Map<String, ConfigGenerator.Information> actionInformation = new CaseInsensitiveMap<>();
-    // key -> alias, value -> withAction identifier
+    // key -> alias, value -> action identifier
     private final Map<String, String> actionAliases = new CaseInsensitiveMap<>();
 
     protected ActionFactory(Class<T> type) {
@@ -61,13 +61,14 @@ public final class ActionFactory<T> {
         if (information.isPresent()) {
             actionInformation.put(identifier, information.get());
         } else {
-            RaidCraft.LOGGER.warning("no @Information defined for withAction " + identifier);
+            RaidCraft.LOGGER.warning("no @Information defined for action " + identifier);
         }
-        RaidCraft.info("registered withAction: " + identifier, "withAction");
+        RaidCraft.info("registered action: " + identifier, "action");
         return this;
     }
 
-    public ActionFactory registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier, @NonNull Action<T> action) {
+    public ActionFactory registerAction(@NonNull JavaPlugin plugin, @NonNull String identifier,
+            @NonNull Action<T> action) {
 
         identifier = plugin.getName() + "." + identifier;
         return registerGlobalAction(identifier, action);
@@ -76,18 +77,19 @@ public final class ActionFactory<T> {
     public void unregisterAction(@NonNull JavaPlugin plugin, @NonNull String identifier) {
 
         Action<T> requirement = actions.remove(identifier);
-        if (requirement == null) requirement = actions.remove(plugin.getName() + "." + identifier);
+        if (requirement == null)
+            requirement = actions.remove(plugin.getName() + "." + identifier);
         if (requirement != null) {
-            RaidCraft.info("removed withAction: " + identifier + " (" + plugin.getName() + ")", "withAction." + plugin.getName());
+            RaidCraft.info("removed action: " + identifier + " (" + plugin.getName() + ")",
+                    "action." + plugin.getName());
         }
     }
 
     public void unregisterActions(@NonNull JavaPlugin plugin) {
 
-        actions.keySet().stream()
-                .filter(key -> key.startsWith(plugin.getName().toLowerCase()))
+        actions.keySet().stream().filter(key -> key.startsWith(plugin.getName().toLowerCase()))
                 .forEach(actions::remove);
-        RaidCraft.info("removed all actions of: " + plugin.getName(), "withAction." + plugin.getName());
+        RaidCraft.info("removed all actions of: " + plugin.getName(), "action." + plugin.getName());
     }
 
     public Map<String, Action<T>> getActions() {
@@ -106,14 +108,13 @@ public final class ActionFactory<T> {
     }
 
     public boolean contains(Class<?> actionClass) {
-        if (actionClass == null) return false;
+        if (actionClass == null)
+            return false;
         String className = actionClass.getName().split("\\$")[0];
-        if (Strings.isNullOrEmpty(className)) return false;
-        return actions.values().stream()
-                .filter(Objects::nonNull)
-                .filter(action -> action.getClass() != null)
-                .map(action -> action.getClass().getName().split("\\$")[0])
-                .filter(name -> !Strings.isNullOrEmpty(name))
+        if (Strings.isNullOrEmpty(className))
+            return false;
+        return actions.values().stream().filter(Objects::nonNull).filter(action -> action.getClass() != null)
+                .map(action -> action.getClass().getName().split("\\$")[0]).filter(name -> !Strings.isNullOrEmpty(name))
                 .anyMatch(name -> name.equals(className));
     }
 
@@ -141,8 +142,10 @@ public final class ActionFactory<T> {
         return Optional.of(new ActionConfigWrapper<>(actions.get(identifier), config, getType()));
     }
 
-    public Optional<Action<T>> create(@NonNull Class<? extends Action> actionClass, @NonNull ConfigurationSection config) {
-        Optional<Action<T>> action = actions.values().stream().filter(a -> a.getClass().equals(actionClass)).findFirst();
+    public Optional<Action<T>> create(@NonNull Class<? extends Action> actionClass,
+            @NonNull ConfigurationSection config) {
+        Optional<Action<T>> action = actions.values().stream().filter(a -> a.getClass().equals(actionClass))
+                .findFirst();
 
         return action.map(a -> new ActionConfigWrapper<>(a, config, getType()));
     }
@@ -165,16 +168,14 @@ public final class ActionFactory<T> {
         }
         // lets parse our flow actions and add them
         List<Action<?>> flowActions = Flow.parseActions(actions);
-        flowActions.stream()
-                .filter(action -> ActionAPI.matchesType(action, getType()))
-                .map(action -> (Action<T>) action)
-                .forEach(list::add);
+        flowActions.stream().filter(action -> ActionAPI.matchesType(action, getType()))
+                .map(action -> (Action<T>) action).forEach(list::add);
 
         for (String key : actions.getKeys(false)) {
             // lists are handled by the flow parser
-            if (actions.isList(key)) continue;
-            create(actions.getString(key + ".type"), actions.getConfigurationSection(key))
-                    .ifPresent(list::add);
+            if (actions.isList(key))
+                continue;
+            create(actions.getString(key + ".type"), actions.getConfigurationSection(key)).ifPresent(list::add);
         }
         return list;
     }
