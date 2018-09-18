@@ -88,6 +88,7 @@ public class Skull {
 
     public static ItemStack getSkull(String skullOwner, int quantity) {
 
+        // TODO: allow base64 skulls
         String skullOwnerLC = skullOwner.toLowerCase();
 
         for (CustomSkullType skullType : CustomSkullType.values()) {
