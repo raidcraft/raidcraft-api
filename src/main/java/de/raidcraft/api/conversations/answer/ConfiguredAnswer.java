@@ -19,9 +19,8 @@ public abstract class ConfiguredAnswer extends SimpleAnswer {
 
     public ConfiguredAnswer(String type, ConfigurationSection config) {
 
-        super(type, config.getString("text"),
-                ActionAPI.createActions(config.getConfigurationSection("actions")),
-                ActionAPI.createRequirements(config.getName(), config.getConfigurationSection("requirement")));
+        super(type, config.getString("text"), ActionAPI.createActions(config.getConfigurationSection("actions")),
+                ActionAPI.createRequirements(config.getName(), config.getConfigurationSection("requirements")));
         load(config.getConfigurationSection("args"));
     }
 
@@ -33,7 +32,8 @@ public abstract class ConfiguredAnswer extends SimpleAnswer {
         super(text);
     }
 
-    public ConfiguredAnswer(String type, FancyMessage message, List<Action<?>> actions, List<Requirement<?>> requirements) {
+    public ConfiguredAnswer(String type, FancyMessage message, List<Action<?>> actions,
+            List<Requirement<?>> requirements) {
         super(type, message, actions, requirements);
     }
 

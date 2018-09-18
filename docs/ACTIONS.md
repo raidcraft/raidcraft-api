@@ -4,11 +4,6 @@ Eine Liste aller Actions lässt sich im Spiel mit dem Befehl `/actionapi` generi
 
 - [Vergabe von Items](#vergabe-von-items)
     - [player.give.item](#playergiveitem)
-- [Conversation Actions](#conversation-actions)
-    - [conversation.start](#conversationstart)
-    - [stage](#stage)
-    - [end](#end)
-    - [abort](#abort)
 - [Timer](#timer)
     - [timer.start](#timerstart)
     - [timer.add](#timeradd)
@@ -34,45 +29,6 @@ complete-actions:
     # Gibt dem Spieler einen Stack Birkenholz
     - '!player.give.item WOOD:5,64'
 ```
-
-## Conversation Actions
-
-Einer der am häufigsten verwendeten Actions in [Quests](https://git.faldoria.de/plugin-configs/quests) sind [Conversation](https://git.faldoria.de/raidcraft/conversations) Actions.
-
-### conversation.start
-
-Startet die angegebene Unterhaltung, optional mit einem Host und einer Stage.
-
-```yml
-actions:
-    # Startet die Unterhaltung mit der Config im selben Ordner und dem Dateinamen
-    # conv-template.conv.yml. Default wird die Stage 'start' gestartet.
-    - '!conversation.start this.conv-template'
-    # Startet die Unterhaltung aus einem Überordner mit dem Namen conv-template.conv.yml
-    # Als Host wird der NPC mit der Config im gleichen Ordner
-    # und dem Dateinamen host.host.yml verwendet.
-    - '!conversation.start ../conv-template this.host'
-    # Analog der anderen, mit dem Unterschied dass direkt die Stage 'stage1' gestartet wird.
-    - '!conversation.start conv:this.conv-template host:this.host stage:stage1'
-```
-
-### stage
-
-Mit der `stage` Action lässt es sich innerhalb einer Conversation die Stage wechseln.
-
-```yml
-actions:
-    # Wechselt in die Foobar Stage
-    - '!stage foobar'
-```
-
-### end
-
-Die Action `!end` beendet die aktuelle Conversation.
-
-### abort
-
-Die Action `!abort` bricht die aktuelle Conversation ab.
 
 ## Timer
 
