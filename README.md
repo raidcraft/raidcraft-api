@@ -1,4 +1,4 @@
-[![pipeline status](https://git.faldoria.de/raidcraft/raidcraft-api/badges/master/pipeline.svg)](https://git.faldoria.de/raidcraft/raidcraft-api/commits/master)
+[![pipeline status](https://git.faldoria.de/tof/plugins/raidcraft/raidcraft-api/badges/master/pipeline.svg)](https://git.faldoria.de/tof/plugins/raidcraft/raidcraft-api/commits/master)
 
 # RaidCraft API
 
@@ -26,5 +26,5 @@ Die meisten APIs können direkt über die statische `RaidCraft` Klasse referenzi
 Folgende APIs stehen dabei zentral im `RaidCraft API` Plugin zur Verfügung.
 
 * [**A**ctions **R**equirements **T**rigger API](docs/ART-API.md)
-* [Custom Items](https://git.faldoria.de/raidcraft/rcitems)
+* [Custom Items](https://git.faldoria.de/tof/plugins/raidcraft/rcitems)
 

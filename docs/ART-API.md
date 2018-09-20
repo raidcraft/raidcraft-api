@@ -23,7 +23,7 @@ Jedes Plugin hat die Möglichkeit eigene [Actions](#actions), [Requirements](#re
 
 ## Actions
 
-Actions sind, wie der Name sagt, Aktionen die durch die ART API ausgeführt werden können. Plugins können hierführ beliebige Aktionen durch kleine Code Schnippsel bereitstellen, z.B. das Teleportieren von einem Spieler oder die Vergabe von EXP im [eigenen Skill System](https://git.faldoria.de/raidcraft/rcskills).
+Actions sind, wie der Name sagt, Aktionen die durch die ART API ausgeführt werden können. Plugins können hierführ beliebige Aktionen durch kleine Code Schnippsel bereitstellen, z.B. das Teleportieren von einem Spieler oder die Vergabe von EXP im [eigenen Skill System](https://git.faldoria.de/tof/plugins/raidcraft/rcskills).
 
 Einige Beispiele und Erklärung zu [Actions findet man hier](ACTIONS.md).
 
@@ -61,7 +61,7 @@ public class TeleportPlayerAction implements Action<Player> {
 
 ```
 
-Die Action muss anschließend noch in der [RaidCraft API](https://git.faldoria.de/raidcraft/raidcraft-api) registriert werden. Dabei wird der Action ID der Name des Plugins vorrausgesetzt.
+Die Action muss anschließend noch in der [RaidCraft API](https://git.faldoria.de/tof/plugins/raidcraft/raidcraft-api) registriert werden. Dabei wird der Action ID der Name des Plugins vorrausgesetzt.
 
 Die Action `teleport.location` wird also z.B. zu `meinplugin.teleport.location`.
 
@@ -114,7 +114,7 @@ complete-actions:
 
 ## Requirements
 
-Requirements sind Vorrausetzungen für [Actions](#actions) und [Trigger](#trigger) um deren Ausführung zu steuern. Mehrere Requirements hintereinander werden dabei automatisch in einer `UND` Verknüpfung zusammengefügt. Zum Beispiel kann man mit Requirements prüfen ob der Spieler bereits eine bestimmte [Quest](https://git.faldoria.de/plugin-configs/quests) abgeschlossen oder das gewünschte Level erreicht hat.
+Requirements sind Vorrausetzungen für [Actions](#actions) und [Trigger](#trigger) um deren Ausführung zu steuern. Mehrere Requirements hintereinander werden dabei automatisch in einer `UND` Verknüpfung zusammengefügt. Zum Beispiel kann man mit Requirements prüfen ob der Spieler bereits eine bestimmte [Quest](https://git.faldoria.de/tof/plugin-configs/quests) abgeschlossen oder das gewünschte Level erreicht hat.
 
 Einige Beispiele inklusive Erklärungen zu wichtigen [Requirements gibt es hier](REQUIREMENTS.md).
 
@@ -205,7 +205,7 @@ public class LevelRequirement implements ReasonableRequirement<Player> {
 }
 ```
 
-Das Requirement muss anschließend noch in der [RaidCraft API](https://git.faldoria.de/raidcraft/raidcraft-api) registriert werden. Dabei wird der Requirement ID der Name des Plugins vorrausgesetzt.
+Das Requirement muss anschließend noch in der [RaidCraft API](https://git.faldoria.de/tof/plugins/raidcraft/raidcraft-api) registriert werden. Dabei wird der Requirement ID der Name des Plugins vorrausgesetzt.
 
 Das Requirement `objective.completed` wird also z.B. zu `rcquests.objective.completed`.
 
@@ -412,7 +412,7 @@ Wie auch [Actions](#action-parameter) und [Requirements](#requirement-parameter)
 
 ## Answers
 
-Eine spezielle Action in der `ART` API sind Antworten, welche in [Conversations](https://git.faldoria.de/raidcraft/conversations) verwendet werden. Diese Antworten sind für den Spieler anklickbar und bieten die Möglichkeit in Gesprächen zu interagieren.
+Eine spezielle Action in der `ART` API sind Antworten, welche in [Conversations](https://git.faldoria.de/tof/plugins/raidcraft/conversations) verwendet werden. Diese Antworten sind für den Spieler anklickbar und bieten die Möglichkeit in Gesprächen zu interagieren.
 
 Jede Antwort wird in der [Flow Syntax](#flow-syntax) mit einem <kbd>:</kbd> Präfix definiert.
 
@@ -464,8 +464,8 @@ Die Flow Syntax ist eine spezielle Art und Weise ART Konfigurationen zu schreibe
 
 Die Action API wird in den folgenden Plugins verwendet.
 
-* [Conversations](https://git.faldoria.de/raidcraft/conversations)
+* [Conversations](https://git.faldoria.de/tof/plugins/raidcraft/conversations)
 * [Achievements](https://git.faldoria.de/raidcraft/achievements)
-* [Quests](https://git.faldoria.de/raidcraft/rcquests)
+* [Quests](https://git.faldoria.de/tof/plugins/raidcraft/rcquests)
 * [Tips](https://git.faldoria.de/raidcraft/rctips)
-* [Skills](https://git.faldoria.de/raidcraft/rcskills)
+* [Skills](https://git.faldoria.de/tof/plugins/raidcraft/rcskills)
