@@ -1,7 +1,5 @@
 package de.raidcraft;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.SqlUpdate;
 import com.google.common.base.Strings;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
@@ -41,6 +39,8 @@ import de.raidcraft.tables.TActionApi;
 import de.raidcraft.tables.TListener;
 import de.raidcraft.tables.TLog;
 import de.raidcraft.util.*;
+import io.ebean.EbeanServer;
+import io.ebean.SqlUpdate;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
@@ -618,7 +618,7 @@ public class RaidCraft implements Listener {
                     .where()
                     .eq("name", key)
                     .eq("action_type", type.name().toLowerCase())
-                    .eq("server", server).findUnique();
+                    .eq("server", server).findOne();
             if (actionApi == null) {
                 actionApi = new TActionApi();
                 actionApi.setName(key);
@@ -653,7 +653,7 @@ public class RaidCraft implements Listener {
         String listenerName = listener.getClass().getName();
         String server = Bukkit.getServerName();
         TListener tListener = rPlugin.getDatabase().find(TListener.class)
-                .where().eq("listener", listenerName).eq("server", server).findUnique();
+                .where().eq("listener", listenerName).eq("server", server).findOne();
         if (tListener == null) {
             tListener = new TListener();
             tListener.setListener(listenerName);

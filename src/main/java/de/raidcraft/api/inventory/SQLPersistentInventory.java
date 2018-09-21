@@ -1,11 +1,11 @@
 package de.raidcraft.api.inventory;
 
-import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.ObjectStorage;
 import de.raidcraft.api.storage.StorageException;
+import io.ebean.EbeanServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;

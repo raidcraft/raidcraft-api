@@ -1,8 +1,8 @@
 package de.raidcraft.api.storage;
 
-import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
+import io.ebean.EbeanServer;
 
 /**
  * @author Silthus

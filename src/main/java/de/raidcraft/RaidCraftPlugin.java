@@ -1,6 +1,5 @@
 package de.raidcraft;
 
-import com.avaje.ebean.SqlUpdate;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -10,6 +9,8 @@ import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.ActionCommand;
 import de.raidcraft.api.action.GlobalAction;
 import de.raidcraft.api.action.GlobalRequirement;
+import de.raidcraft.api.action.action.GroupAction;
+import de.raidcraft.api.action.requirement.GroupRequirement;
 import de.raidcraft.api.action.requirement.global.IfElseRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
@@ -42,6 +43,7 @@ import de.raidcraft.tables.*;
 import de.raidcraft.util.BlockUtil;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
+import io.ebean.SqlUpdate;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
@@ -163,6 +165,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             actionAPI.trigger(new TimerTrigger());
         }
         actionAPI.requirement(new IfElseRequirement<>(), Object.class);
+        actionAPI.action(new GroupAction<>(), Object.class);
+        actionAPI.requirement(new GroupRequirement<>(), Object.class);
     }
 
     private void setupDatabase() {
@@ -175,7 +179,6 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         } catch (PersistenceException e) {
             e.printStackTrace();
             getLogger().warning("Installing database for " + getDescription().getName() + " due to first time usage");
-            installDDL();
         }
     }
 
@@ -342,7 +345,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             stat.setLogonValue(playerStat.getValue().getStatisticValue(player));
             getDatabase().save(stat);
         }
-        TPlayerLog addedLog = getDatabase().find(TPlayerLog.class).where().eq("player", player.getUniqueId()).eq("join_time", joinTime).findUnique();
+        TPlayerLog addedLog = getDatabase().find(TPlayerLog.class).where().eq("player", player.getUniqueId()).eq("join_time", joinTime).findOne();
         if (addedLog == null) {
             getLogger().warning("Could not find added log for " + player.getName());
         } else {
@@ -392,7 +395,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         String name = event.getName();
 
         TRcPlayer player = getDatabase().find(TRcPlayer.class)
-                .where().eq("uuid", uuid.toString()).findUnique();
+                .where().eq("uuid", uuid.toString()).findOne();
         // known player
         if (player != null) {
             // if displayName changed
@@ -409,7 +412,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }
         // new player
         player = getDatabase().find(TRcPlayer.class)
-                .where().ieq("last_name", name).findUnique();
+                .where().ieq("last_name", name).findOne();
         // check if displayName already in use
         if (player != null) {
             getLogger().warning("---- NEW UUID FOR NAME (" + name + ") FOUND !!! ----");

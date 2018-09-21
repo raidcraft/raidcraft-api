@@ -29,7 +29,7 @@ public class UUIDUtil {
     public static UUID convertPlayer(@NonNull String name) {
 
         TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase()
-                .find(TRcPlayer.class).where().eq("last_name", name).findUnique();
+                .find(TRcPlayer.class).where().eq("last_name", name).findOne();
         if (tPlayer != null) {
             return tPlayer.getUuid();
         }
@@ -50,7 +50,7 @@ public class UUIDUtil {
         }
 
         TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase()
-                .find(TRcPlayer.class).where().eq("uuid", uuid.toString()).findUnique();
+                .find(TRcPlayer.class).where().eq("uuid", uuid.toString()).findOne();
         if (tPlayer != null) {
             return tPlayer.getLastName();
         }
@@ -80,7 +80,7 @@ public class UUIDUtil {
     public static int getPlayerId(UUID uuid) {
 
         if (uuid == null) return 0;
-        TRcPlayer rcPlayer = RaidCraft.getDatabase(RaidCraftPlugin.class).find(TRcPlayer.class).where().eq("uuid", uuid).findUnique();
+        TRcPlayer rcPlayer = RaidCraft.getDatabase(RaidCraftPlugin.class).find(TRcPlayer.class).where().eq("uuid", uuid).findOne();
         if (rcPlayer != null) {
             return rcPlayer.getId();
         }

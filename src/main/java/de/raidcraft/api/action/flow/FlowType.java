@@ -11,7 +11,8 @@ public enum FlowType {
     REQUIREMENT('?'),
     TRIGGER('@'),
     DELAY('~'),
-    ANSWER(':');
+    ANSWER(':'),
+    EXPRESSION('%');
 
     private final char triggerChar;
 

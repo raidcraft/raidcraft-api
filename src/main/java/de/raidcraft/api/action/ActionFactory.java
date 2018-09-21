@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.CaseInsensitiveMap;
@@ -13,7 +12,9 @@ import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author Silthus
@@ -152,31 +153,5 @@ public final class ActionFactory<T> {
 
     public Optional<Action<T>> createWrapper(Action<T> action, ConfigurationSection config) {
         return Optional.of(new ActionConfigWrapper<>(action, config, getType()));
-    }
-
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    /**
-     * @deprecated use {@link ActionAPI#createActions(ConfigurationSection)}
-     * @see ActionAPI#createActions(ConfigurationSection)
-     */
-    public Collection<Action<T>> createActions(ConfigurationSection actions) {
-
-        ArrayList<Action<T>> list = new ArrayList<>();
-        if (actions == null) {
-            return list;
-        }
-        // lets parse our flow actions and add them
-        List<Action<?>> flowActions = Flow.parseActions(actions);
-        flowActions.stream().filter(action -> ActionAPI.matchesType(action, getType()))
-                .map(action -> (Action<T>) action).forEach(list::add);
-
-        for (String key : actions.getKeys(false)) {
-            // lists are handled by the flow parser
-            if (actions.isList(key))
-                continue;
-            create(actions.getString(key + ".type"), actions.getConfigurationSection(key)).ifPresent(list::add);
-        }
-        return list;
     }
 }

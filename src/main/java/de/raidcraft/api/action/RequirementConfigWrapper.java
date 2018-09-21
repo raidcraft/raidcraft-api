@@ -1,6 +1,5 @@
 package de.raidcraft.api.action;
 
-import com.avaje.ebean.EbeanServer;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.BasePlugin;
@@ -13,6 +12,7 @@ import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.config.ConfigurationBase;
 import de.raidcraft.util.ConfigUtil;
+import io.ebean.EbeanServer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
@@ -324,7 +324,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
             for (Map.Entry<UUID, Map<String, String>> entry : mappings.entrySet()) {
                 TPersistantRequirement dbEntry = database.find(TPersistantRequirement.class).where()
                         .eq("uuid", entry.getKey()).eq("plugin", plugin.getName()).eq("requirement", getId())
-                        .findUnique();
+                        .findOne();
                 if (dbEntry == null) {
                     dbEntry = new TPersistantRequirement();
                     dbEntry.setPlugin(plugin.getName());
