@@ -21,6 +21,7 @@ Die `player.give.item` Action ermöglicht es sowohl Custom als auch normale Item
 
 ```yml
 complete-actions:
+  flow:
     # Gibt dem Spieler das Custom Item 3x mit der ID 1337
     - '!player.give.item item:rc1337 amount:3'
     # Gibt dem Spieler das konfigurierte Item 1x im selben Order
@@ -40,6 +41,7 @@ Als erstes muss der Timer mit der `timer.start` Action gestartet werden. Dabei v
 
 ```yml
 actions:
+  flow:
     # Startet einen Countdown von 1 Minute 30 Sekunden 10 Ticks
     - '!timer.start id:mein-achievement duration:1m30s10
 ```
@@ -54,6 +56,7 @@ Wenn man `timer.add` mit dem Parameter `temporary:true` aufruft wird die Zeit nu
 
 ```yml
 actions:
+  flow:
     # Verlängert den Timer um 30s
     - '!timer.add id:mein-achievement time:30s'
     # "Verkürzt" den Timer um 30s, da die fortgeschrittene Zeit erhöht wird,
@@ -67,6 +70,7 @@ Um einen Timer frühzeitig zu beenden kann man die `timer.end` Action aufrufen. 
 
 ```yml
 actions:
+  flow:
     # Bricht den Countdown mit der ID mein-achievement ab.
     - '!timer.end id:mein-achievement
 ```
@@ -79,6 +83,7 @@ Es gibt die Möglichkeit laufende Timer durch die `timer.cancel` Action abzubrec
 
 ```yml
 actions:
+  flow:
     # Bricht den Countdown mit der ID mein-achievement ab.
     - '!timer.cancel id:mein-achievement
 ```
@@ -91,6 +96,7 @@ Die `timer.reset` Action startet den ausgewählten Timer neu.
 
 ```yml
 actions:
+  flow:
     # Bricht den Countdown mit der ID mein-achievement ab und startet ihn neu.
     - '!timer.reset id:mein-achievement
 ```

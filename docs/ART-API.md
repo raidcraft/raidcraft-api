@@ -83,6 +83,7 @@ Im folgenden Beispiel wird der Spieler nach Abschluss der Quest durch Verwendung
 
 ```yml
 complete-actions:
+  flow:
     - '!teleport.location 0,64,0,world'
 ```
 
@@ -92,6 +93,7 @@ Durch die Verwendung der deklarativen Parameter ist es außerdem möglich bestim
 
 ```yml
 complete-actions:
+  flow:
     - '!teleport.location x:0 y:64 z:0 pitch:90'
 ```
 
@@ -109,6 +111,7 @@ Neben den Parametern für die Action an sich, können der Action auch Parameter 
 
 ```yml
 complete-actions:
+  flow:
     - '!teleport.location(execute-once:true,delay:3s) x:0 y:64 z:0 pitch:90'
 ```
 
@@ -227,6 +230,7 @@ Jedes Requirement wird in der [Flow Syntax](#flow-syntax) mit einem <kbd>?</kbd>
 
 ```yml
 complete-actions:
+  flow:
     # Prüft ob der Spieler mindestens Level 10 erreicht hat.
     - '?hero.level 10'
     # Die Teleport Action wird nur ausgeführt wenn das Requirement zutrifft.
@@ -237,6 +241,7 @@ Mehrere Requirements hintereinander werden automatisch mit `UND` verknüpft und 
 
 ```yml
 complete-actions:
+  flow:
     # Prüft ob der Spieler mindestens Level 10 erreicht hat.
     - '?hero.level 10'
     # UND ob der Spieler die aktive Quest "foobar" hat
@@ -378,6 +383,7 @@ Jeder Trigger wird in der [Flow Syntax](#flow-syntax) mit einem <kbd>@</kbd> Pr�
 
 ```yml
 start-trigger:
+  flow:
     # Dieser Trigger wird ausgelöst wenn der Spieler den NPC Bob anklickt.
     - '@host.interact this.bob'
     # Anschließend kann man beliebige Actions ausführen.
@@ -389,6 +395,7 @@ Trigger können auch Requirements besitzen die dann jedesmal wenn der Trigger au
 
 ```yml
 trigger:
+  flow:
     # Dieser Trigger wird jedesmal ausgelöst wenn der Spieler am Töten eines Goblin beteiligt ist.
     '@rcmobs.mob.kill this.goblin'
     # Das Requirement wird jedesmal abgefragt wenn der Trigger ausgelöst wurde und zählt den Count hoch.
@@ -419,29 +426,30 @@ Jede Antwort wird in der [Flow Syntax](#flow-syntax) mit einem <kbd>:</kbd> Prä
 ```yml
 stages:
     start:
-        # Text den der NPC vor der Ausgabe der Antworten sagt.
-        - '!text "Hallo mein Freund. Was kann ich für dich tun?"'
-        # Antwortmöglichkeit 1
-        # Wenn nach der Antwort keine Actions stehen wird die Unterhaltung automatisch beendet.
-        - ':"Nichts, danke dir!"'
-        # Antwortmöglichkeit 2
-        - ':"Ich werde dich töten!."'
-        # Alle Actions unterhalb einer Antwort werden nacheinander ausgeführt.
-        - '!text "Das denke ich eher nicht..."'
-        # Die player.kill Action wird erst nach 2s ausgeführt.
-        - '~2s'
-        - '!player.kill'
-        # Erst wenn die nächste Antwort beginnt werden keine weitere Actions ausgeführt.
-        # Antwortmöglichkeit 3
-        - ':"Hast Du eine Quest für mich?"'
-        # Action die den Spieler in eine neue Conversation Stage bringt.
-        - '!stage quest-blubbi'
-        # Antworten können auch abhängig von Requirements eingeblendet werden.
-        - '?hero.level 5'
-        # Antwortmöglichkeit 4
-        - ':"Töte den Drachen!"'
-        - '!quest.start this.der-drache'
-        
+        actions:
+            flow:
+                # Text den der NPC vor der Ausgabe der Antworten sagt.
+                - '!text "Hallo mein Freund. Was kann ich für dich tun?"'
+                # Antwortmöglichkeit 1
+                # Wenn nach der Antwort keine Actions stehen wird die Unterhaltung automatisch beendet.
+                - ':"Nichts, danke dir!"'
+                # Antwortmöglichkeit 2
+                - ':"Ich werde dich töten!."'
+                # Alle Actions unterhalb einer Antwort werden nacheinander ausgeführt.
+                - '!text "Das denke ich eher nicht..."'
+                # Die player.kill Action wird erst nach 2s ausgeführt.
+                - '~2s'
+                - '!player.kill'
+                # Erst wenn die nächste Antwort beginnt werden keine weitere Actions ausgeführt.
+                # Antwortmöglichkeit 3
+                - ':"Hast Du eine Quest für mich?"'
+                # Action die den Spieler in eine neue Conversation Stage bringt.
+                - '!stage quest-blubbi'
+                # Antworten können auch abhängig von Requirements eingeblendet werden.
+                - '?hero.level 5'
+                # Antwortmöglichkeit 4
+                - ':"Töte den Drachen!"'
+                - '!quest.start this.der-drache'
 ```
 
 > Antworten besitzen keine globalen Parameter.
