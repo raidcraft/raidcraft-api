@@ -18,6 +18,7 @@ Jedes Plugin hat die Möglichkeit eigene [Actions](#actions), [Requirements](#re
     - [Verwendung von Triggern](#verwendung-von-triggern)
         - [Trigger Parameter](#trigger-parameter)
 - [Answers](#answers)
+- [Alias Groups](#alias-groups)
 - [Flow Syntax](#flow-syntax)
 - [Referenzen](#referenzen)
 
@@ -453,6 +454,39 @@ stages:
 ```
 
 > Antworten besitzen keine globalen Parameter.
+
+## Alias Groups
+
+Zusätzlich zu der normalen Auflistung von [Actions](#actions), [Requirements](#requirements) und [Triggern](#triggers) unterhalb des `flow` Blocks, gibt es die Möglichkeit Alias Gruppen für ein oder mehere Statements zu erstellen. Diese Gruppen können (aktuell) nur innerhalb des jeweiligen Blocks benutzt werden. Dies ist z.B. nützlich um verschiedene Actions zu gruppieren und dann auf einmal unterhalb eines Requirements auszuführen.
+
+> Ein Alias hat immer Vorrang und wird, wenn der Name gleich ist, anstatt der registrierten ID verwendet.
+
+```yml
+# Die unten definierten Aliase gelten nur innerhalb dieses Blocks
+actions:
+    # Alle aliase müssen unterhalb der groups Sektion definiert werden.
+    groups:
+        # Der Key gibt immer den Alias an und muss innerhalb des Blocks einzigartig sein
+        'held_und_geld':
+            # Unterhalb eines Alias können mehrere Actions oder Requirements gruppiert werden.
+            # Dabei zählen die gleichen Regeln wie in den normalen Flow Statements
+            - '?player.money.has 1g2s'
+            - '?rcskills.hero.level 5'
+        # Auch einzelne Aliase sind möglich, z.B. nützlich für Coordinaten
+        'held_tot': '!player.kill'
+        # Soll ein Action Alias mit vorrausgestelltem Requirement verwendet werden,
+        # MUSS vor dem Alias der Typ angegeben werden, also ein ! oder ? je nachdem.
+        '!held_tot_text':
+            - '?player.location 1,2,3'
+            - '~2s'
+            - '!text "Du bist tot..."'
+    flow:
+        # Die Alias Actions und Requirements können wie normale ART Statements verwendet werden.
+        - '?held_und_geld'
+        - '!held_tot_text'
+        - '?held_und_geld(negate:true)'
+        - '!held_tot'
+```
 
 ## Flow Syntax
 
