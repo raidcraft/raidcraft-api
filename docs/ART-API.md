@@ -478,6 +478,7 @@ actions:
         # MUSS vor dem Alias der Typ angegeben werden, also ein ! oder ? je nachdem.
         '!held_tot_text':
             - '?player.location 1,2,3'
+            # Innrhalb der Gruppen können auch Delays verwendet werden
             - '~2s'
             - '!text "Du bist tot..."'
     flow:
