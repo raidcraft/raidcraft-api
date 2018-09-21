@@ -1,7 +1,7 @@
 package de.raidcraft.api.items;
 
-import com.avaje.ebean.annotation.EnumValue;
 import de.raidcraft.util.EnumUtils;
+import io.ebean.annotation.EnumValue;
 
 /**
  * @author Silthus

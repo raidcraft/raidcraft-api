@@ -1,7 +1,7 @@
 package de.raidcraft.api.inventory.sync;
 
-import com.avaje.ebean.validation.NotNull;
 import de.raidcraft.api.storage.ObjectStorage;
+import io.ebean.annotation.NotNull;
 import lombok.Data;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

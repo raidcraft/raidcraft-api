@@ -29,7 +29,7 @@ public class PlayerPlacedBlock {
                 .eq("world", block.getWorld().getUID())
                 .eq("x", block.getX())
                 .eq("y", block.getY())
-                .eq("z", block.getZ()).findUnique() != null;
+                .eq("z", block.getZ()).findOne() != null;
     }
 
     public static List<PlayerPlacedBlock> getPlayerPlacedBlocks(ChunkLocation chunkLocation) {

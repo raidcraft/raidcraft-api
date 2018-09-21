@@ -1,8 +1,5 @@
 package de.raidcraft.api;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
@@ -18,6 +15,7 @@ import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.tables.RcLogLevel;
 import fr.zcraft.zlib.core.ZPlugin;
+import io.ebean.EbeanServer;
 import lombok.Getter;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -149,20 +147,6 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
      */
     public List<Class<?>> getDatabaseClasses() {
         return new ArrayList<Class<?>>();
-    }
-
-    protected void installDDL() {
-        SpiEbeanServer serv = (SpiEbeanServer) getDatabase();
-        DdlGenerator gen = serv.getDdlGenerator();
-
-        gen.runScript(false, gen.generateCreateDdl());
-    }
-
-    protected void removeDDL() {
-        SpiEbeanServer serv = (SpiEbeanServer) getDatabase();
-        DdlGenerator gen = serv.getDdlGenerator();
-
-        gen.runScript(true, gen.generateDropDdl());
     }
 
     public void reload() {

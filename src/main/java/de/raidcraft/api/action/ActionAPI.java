@@ -148,6 +148,28 @@ public final class ActionAPI {
     }
 
     @SuppressWarnings("unchecked")
+    public static <T extends Requirement<?>> T createRequirement(String id, Class<T> requirementClass, ConfigurationSection config) {
+        ConfigGenerator.Information information = null;
+        for (Method method : requirementClass.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
+                information = method.getAnnotation(ConfigGenerator.Information.class);
+            }
+        }
+        if (information == null) {
+            throw new UnsupportedOperationException(requirementClass.getCanonicalName() + " has not @Information annotation defined!");
+        }
+        for (RequirementFactory<?> factory : requirementFactories.values()) {
+            if (factory.contains(requirementClass)) {
+                Optional<? extends Requirement<?>> requirement = factory.create(id, requirementClass, config);
+                if (requirement.isPresent()) {
+                    return (T) requirement.get();
+                }
+            }
+        }
+        throw new UnsupportedOperationException("Could not find matching action for " + requirementClass.getCanonicalName() + " -> " + information.value());
+    }
+
+    @SuppressWarnings("unchecked")
     public static <T> List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) {
 
         return createRequirements(id, requirements).stream()
@@ -158,24 +180,7 @@ public final class ActionAPI {
 
     public static List<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) {
 
-        List<Requirement<?>> list = new ArrayList<>();
-        if (requirements == null) return list;
-        Set<String> keys = requirements.getKeys(false);
-        // we need to keep the order of the requirements inside flow statements
-        // therefor we are processing flow and block statements seperatly
-        for (String key : keys) {
-            if (requirements.isList(key)) {
-                list.addAll(Flow.parseRequirements(id + "." + key, requirements, key));
-            } else if (requirements.isConfigurationSection(key)) {
-                // process block statements by going thru the factories
-                for (RequirementFactory<?> requirementFactory : requirementFactories.values()) {
-                    requirementFactory
-                            .create(id + "." + key, requirements.getString(key + ".type"), requirements.getConfigurationSection(key))
-                            .ifPresent(list::add);
-                }
-            }
-        }
-        return list;
+        return Flow.parseRequirements(id, requirements);
     }
 
     @SuppressWarnings("unchecked")
@@ -198,9 +203,13 @@ public final class ActionAPI {
         return Optional.empty();
     }
 
-    @SuppressWarnings("unchecked")
     public static <T extends Action<?>> T createAction(Class<T> actionClass) {
 
+        return createAction(actionClass, new MemoryConfiguration());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Action<?>> T createAction(Class<T> actionClass, ConfigurationSection config) {
         ConfigGenerator.Information information = null;
         for (Method method : actionClass.getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -212,7 +221,7 @@ public final class ActionAPI {
         }
         for (ActionFactory<?> factory : actionFactories.values()) {
             if (factory.contains(actionClass)) {
-                Optional<? extends Action<?>> action = factory.create(actionClass, new MemoryConfiguration());
+                Optional<? extends Action<?>> action = factory.create(actionClass, config);
                 if (action.isPresent()) {
                     return (T) action.get();
                 }
@@ -222,7 +231,7 @@ public final class ActionAPI {
     }
 
     @SuppressWarnings("unchecked")
-    public static  <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
+    public static <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
 
         return createActions(actions).stream()
                 .filter(action -> matchesType(action, type))
@@ -230,26 +239,25 @@ public final class ActionAPI {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Creates a list of actions using flow syntax.
+     * Will search for a string list to parse as flow section in all sub sections.
+     * Valid config sections are as follows:
+     * actions:
+     *   group:
+     *     group1: !action
+     *     !group2:
+     *       - !foo
+     *       - !bar
+     *   flow:
+     *     - !foo
+     *
+     * @param actions config section to create action list from
+     * @return action list
+     */
     public static List<Action<?>> createActions(ConfigurationSection actions) {
 
-        List<Action<?>> list = new ArrayList<>();
-        if (actions == null) return list;
-        Set<String> keys = actions.getKeys(false);
-        // we need to keep the order of flow actions
-        // therefor we need to process flow and block actions seperatly
-        for (String key : keys) {
-            if (actions.isList(key)) {
-                // lets process the flow block as one and ignore the withAction factory types
-                list.addAll(Flow.parseActions(actions, key));
-            } else if (actions.isConfigurationSection(key)) {
-                // lets process our block actions normally by going thru all registered factories
-                for (ActionFactory<?> actionFactory : actionFactories.values()) {
-                    actionFactory.create(actions.getString(key + ".type"), actions.getConfigurationSection(key))
-                            .ifPresent(list::add);
-                }
-            }
-        }
-        return list;
+        return Flow.parseActions(actions);
     }
 
     public static TriggerFactory createTrigger(String identifier, ConfigurationSection config) {

@@ -20,7 +20,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Save Inventory (Player, Armor) to the database.
@@ -44,7 +47,7 @@ public class InventorySync implements Listener {
         return plugin.getDatabase().find(TPlayerInventory.class)
                 .where()
                 .eq("player", player.getUniqueId())
-                .findUnique();
+                .findOne();
     }
 
     private void createInventory(Player player) {
@@ -116,7 +119,7 @@ public class InventorySync implements Listener {
         TPlayerInventory inventory = plugin.getDatabase().find(TPlayerInventory.class)
                 .where()
                 .eq("player", event.getPlayer().getUniqueId())
-                .findUnique();
+                .findOne();
 
         // if player is the first time on the server or inventory were deleted
         if (inventory == null) {

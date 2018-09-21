@@ -1,6 +1,6 @@
 package de.raidcraft.api.items;
 
-import com.avaje.ebean.annotation.EnumValue;
+import io.ebean.annotation.EnumValue;
 import org.bukkit.ChatColor;
 
 /**

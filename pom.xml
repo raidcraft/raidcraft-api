@@ -9,7 +9,7 @@
     <parent>
         <groupId>de.faldoria</groupId>
         <artifactId>FaldoriaMasterPom</artifactId>
-        <version>1.12-0.3</version>
+        <version>1.12-0.10</version>
     </parent>
 
     <repositories>
@@ -17,17 +17,7 @@
             <id>faldoria-deps</id>
             <url>https://repo.faldoria.de/artifactory/faldoria-repo/</url>
         </repository>
-        <repository>
-            <id>zDevelopers</id>
-            <url>http://maven.carrade.eu/artifactory/snapshots</url>
-        </repository>
     </repositories>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -47,12 +37,6 @@
             <version>6.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>io.ebean</groupId>
-            <artifactId>ebean</artifactId>
-            <version>11.17.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>fr.zcraft</groupId>
             <artifactId>zlib</artifactId>
             <version>0.99-SNAPSHOT</version>
@@ -63,19 +47,19 @@
             <version>2.2.11</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>2.2.11</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.2.11</version>
-        </dependency>
-        <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
             <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.9.6</version>
         </dependency>
     </dependencies>
 
@@ -96,13 +80,11 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
+                                    <include>fr.zcraft:zlib</include>
                                     <include>io.ebean:*</include>
                                     <include>org.avaje:*</include>
-                                    <include>com.avaje:*</include>
-                                    <include>fr.zcraft:zlib</include>
-                                    <include>javax.xml.bind:jaxb-api</include>
-                                    <include>javax.xml.bind:jaxb-core</include>
-                                    <include>javax.xml.bind:jaxb-impl</include>
+                                    <include>org.slf4j:*</include>
+                                    <include>com.fasterxml.jackson.core:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

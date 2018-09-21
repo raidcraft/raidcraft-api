@@ -1,5 +1,6 @@
 package de.raidcraft.api.action;
 
+import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.action.flow.Flow;
@@ -107,6 +108,17 @@ public final class RequirementFactory<T> {
         return requirements.containsKey(actionId) || requirementAliases.containsKey(actionId);
     }
 
+    public boolean contains(Class<?> requirementClass) {
+        if (requirementClass == null)
+            return false;
+        String className = requirementClass.getName().split("\\$")[0];
+        if (Strings.isNullOrEmpty(className))
+            return false;
+        return requirements.values().stream().filter(Objects::nonNull).filter(requirement -> requirement.getClass() != null)
+                .map(requirement -> requirement.getClass().getName().split("\\$")[0]).filter(name -> !Strings.isNullOrEmpty(name))
+                .anyMatch(name -> name.equals(className));
+    }
+
     public Optional<Requirement<T>> create(String id, @NonNull String requirement,
             @NonNull ConfigurationSection config) {
 
@@ -124,6 +136,15 @@ public final class RequirementFactory<T> {
                 getType());
         wrapper.load();
         return Optional.of(wrapper);
+    }
+
+    public Optional<Requirement<T>> create(String id, Class<? extends Requirement> requirementClass, ConfigurationSection config) {
+
+        Optional<Requirement<T>> requirement = requirements.values().stream()
+                .filter(req -> req.getClass().equals(requirementClass))
+                .findFirst();
+
+        return requirement.map(req -> new RequirementConfigWrapper<>(id, req, config, getType()));
     }
 
     @SuppressWarnings("unchecked")

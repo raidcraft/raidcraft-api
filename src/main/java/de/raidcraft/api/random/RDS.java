@@ -58,7 +58,7 @@ public class RDS {
         object.setExcludeFromRandom(config.getBoolean("exclude-from-random", false));
         object.setProbability(config.getDouble("probability", 1));
         object.setRequirements(ActionAPI.createRequirements(
-                ConfigUtil.getFileName(config).replace("/", ".").replace("\\", "."), config.getConfigurationSection("requirements")));
+                ConfigUtil.getFileName(config), config.getConfigurationSection("requirements")));
         if (object instanceof RDSTable) {
             ((RDSTable) object).setCount(config.getInt("count", 1));
         }

@@ -1,17 +1,16 @@
 package de.raidcraft.api.ebean;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.EbeanServerFactory;
-import com.avaje.ebean.config.DataSourceConfig;
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.config.dbplatform.SQLitePlatform;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
-import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.util.EnumUtils;
+import io.ebean.EbeanServer;
+import io.ebean.EbeanServerFactory;
+import io.ebean.config.ServerConfig;
+import io.ebeaninternal.api.SpiEbeanServer;
+import io.ebeaninternal.dbmigration.DdlGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.lang.reflect.Field;
@@ -132,18 +131,17 @@ public class RaidCraftDatabase {
     }
 
     private void prepareDatabase(String driver, String url, String username, String password, String isolation) {
-        //Setup the data source
-        DataSourceConfig ds = new DataSourceConfig();
-        ds.setDriver(driver);
+
+        MysqlDataSource ds = new MysqlDataSource();
         ds.setUrl(replaceDatabaseString(url));
-        ds.setUsername(username);
+        ds.setUser(username);
         ds.setPassword(password);
-        ds.setIsolationLevel(TransactionIsolation.getLevel(isolation));
 
         //Setup the server configuration
         ServerConfig sc = new ServerConfig();
         sc.setDefaultServer(false);
         sc.setRegister(false);
+
         sc.setName(ds.getUrl().replaceAll("[^a-zA-Z0-9]", ""));
 
         //Get all persistent classes
@@ -158,20 +156,10 @@ public class RaidCraftDatabase {
         //Register them with the EbeanServer
         sc.setClasses(classes);
 
-        //Check if the SQLite JDBC supplied with Bukkit is being used
-        if (ds.getDriver().equalsIgnoreCase("org.sqlite.JDBC")) {
-            //Remember the database is a SQLite-database
-            usingSQLite = true;
-
-            //Modify the platform, as SQLite has no AUTO_INCREMENT field
-            sc.setDatabasePlatform(new SQLitePlatform());
-            sc.getDatabasePlatform().getDbDdlSyntax().setIdentity("");
-        }
-
         prepareDatabaseAdditionalConfig(ds, sc);
 
         //Finally the data source
-        sc.setDataSourceConfig(ds);
+        sc.setDataSource(ds);
 
         //Store the ServerConfig
         serverConfig = sc;
@@ -230,7 +218,7 @@ public class RaidCraftDatabase {
         for (int i = 0; i < classes.size(); i++) {
             try {
                 //Do a simple query which only throws an exception if the table does not exist
-                ebeanServer.find(classes.get(i)).findRowCount();
+                ebeanServer.find(classes.get(i)).findCount();
 
                 //Query passed without throwing an exception, a database therefore already exists
                 databaseExists = true;
@@ -247,7 +235,9 @@ public class RaidCraftDatabase {
 
         //Create a DDL generator
         SpiEbeanServer serv = (SpiEbeanServer) ebeanServer;
-        DdlGenerator gen = serv.getDdlGenerator();
+        DdlGenerator ddlGenerator = new DdlGenerator(serv, ((SpiEbeanServer) ebeanServer).getServerConfig());
+
+
 
         //Fire "before drop" event
         try {
@@ -259,21 +249,7 @@ public class RaidCraftDatabase {
             }
         }
 
-        //Generate a DropDDL-script
-        gen.runScript(true, gen.generateDropDdl());
-
-        //If SQLite is being used, the database has to reloaded to release all resources
-        if (usingSQLite) {
-            loadDatabase();
-        }
-
-        //Generate a CreateDDL-script
-        if (usingSQLite) {
-            //If SQLite is being used, the CreateDLL-script has to be validated and potentially fixed to be valid
-            gen.runScript(false, validateCreateDDLSqlite(gen.generateCreateDdl()));
-        } else {
-            gen.runScript(false, gen.generateCreateDdl());
-        }
+        ddlGenerator.execute(true);
 
         //Fire "after create" event
         try {
@@ -435,7 +411,7 @@ public class RaidCraftDatabase {
      * @param dataSourceConfig
      * @param serverConfig
      */
-    protected void prepareDatabaseAdditionalConfig(DataSourceConfig dataSourceConfig, ServerConfig serverConfig) {
+    protected void prepareDatabaseAdditionalConfig(DataSource dataSourceConfig, ServerConfig serverConfig) {
 
     }
 

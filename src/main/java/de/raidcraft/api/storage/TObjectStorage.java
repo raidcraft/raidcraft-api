@@ -1,6 +1,6 @@
 package de.raidcraft.api.storage;
 
-import com.avaje.ebean.validation.NotNull;
+import io.ebean.annotation.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

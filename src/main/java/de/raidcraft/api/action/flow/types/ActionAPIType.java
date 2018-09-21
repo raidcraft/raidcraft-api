@@ -16,6 +16,5 @@ public class ActionAPIType implements FlowExpression {
     private final FlowType flowType;
     private final FlowConfiguration configuration;
     private final String typeId;
-    private String id;
     private Class<?> type;
 }

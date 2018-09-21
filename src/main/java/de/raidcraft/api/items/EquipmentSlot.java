@@ -1,9 +1,9 @@
 package de.raidcraft.api.items;
 
-import com.avaje.ebean.annotation.EnumValue;
 import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.ItemID;
 import de.raidcraft.util.EnumUtils;
+import io.ebean.annotation.EnumValue;
 
 /**
  * @author Silthus
