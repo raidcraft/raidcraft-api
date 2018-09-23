@@ -183,33 +183,31 @@ public final class ActionAPI {
         return Flow.parseRequirements(id, requirements);
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> Optional<Action<T>> createAction(String identifier, ConfigurationSection config, Class<T> type) {
+    public static <T> Optional<ActionConfigWrapper<T>> createAction(String identifier, ConfigurationSection config, Class<T> type) {
 
         ActionFactory<?> actionFactory = actionFactories.get(type);
         if (actionFactory == null) return Optional.empty();
         return ((ActionFactory<T>) actionFactory).create(identifier, config);
     }
 
-    public static Optional<Action<?>> createAction(String identifier, ConfigurationSection config) {
+    public static Optional<ActionConfigWrapper<?>> createAction(String identifier, ConfigurationSection config) {
 
         Optional<ActionFactory<?>> factory = actionFactories.values().stream().filter(actionFactory -> actionFactory.contains(identifier)).findAny();
         if (factory.isPresent()) {
-            Optional<? extends Action<?>> action = factory.get().create(identifier, config);
-            if (action.isPresent()) {
-                return Optional.of(action.get());
+            Optional<? extends ActionConfigWrapper<?>> wrapper = factory.get().create(identifier, config);
+            if (wrapper.isPresent()) {
+                return Optional.of(wrapper.get());
             }
         }
         return Optional.empty();
     }
 
-    public static <T extends Action<?>> T createAction(Class<T> actionClass) {
+    public static <T extends Action<?>> ActionConfigWrapper<?> createAction(Class<T> actionClass) {
 
         return createAction(actionClass, new MemoryConfiguration());
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends Action<?>> T createAction(Class<T> actionClass, ConfigurationSection config) {
+    public static <T extends Action<?>> ActionConfigWrapper<?> createAction(Class<T> actionClass, ConfigurationSection config) {
         ConfigGenerator.Information information = null;
         for (Method method : actionClass.getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -221,9 +219,9 @@ public final class ActionAPI {
         }
         for (ActionFactory<?> factory : actionFactories.values()) {
             if (factory.contains(actionClass)) {
-                Optional<? extends Action<?>> action = factory.create(actionClass, config);
-                if (action.isPresent()) {
-                    return (T) action.get();
+                Optional<? extends ActionConfigWrapper<?>> configWrapper = factory.create(actionClass, config);
+                if (configWrapper.isPresent()) {
+                    return configWrapper.get();
                 }
             }
         }
@@ -231,7 +229,7 @@ public final class ActionAPI {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Collection<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
+    public static <T> List<Action<T>> createActions(ConfigurationSection actions, Class<T> type) {
 
         return createActions(actions).stream()
                 .filter(action -> matchesType(action, type))
@@ -293,6 +291,20 @@ public final class ActionAPI {
         }
         ActionFactory<?> actionFactory = actionFactories.get(type);
         return actionFactory != null && actionFactory.contains(action);
+    }
+
+    public static <T> List<Action<T>> filterActionTypes(Collection<Action<?>> actions, Class<T> type) {
+        return actions.stream()
+                .filter(action -> matchesType(action, type))
+                .map(action -> (Action<T>) action)
+                .collect(Collectors.toList());
+    }
+
+    public static <T> List<Requirement<T>> filterRequirementTypes(Collection<Requirement<?>> requirements, Class<T> type) {
+        return requirements.stream()
+                .filter(requirement -> matchesType(requirement, type))
+                .map(requirement -> (Requirement<T>) requirement)
+                .collect(Collectors.toList());
     }
 
     public static boolean matchesType(Requirement<?> requirement, Class<?> type) {

@@ -1,10 +1,7 @@
 package de.raidcraft.api.action.flow.parsers;
 
 import de.raidcraft.api.action.ActionAPI;
-import de.raidcraft.api.action.flow.FlowConfiguration;
-import de.raidcraft.api.action.flow.FlowException;
-import de.raidcraft.api.action.flow.FlowParser;
-import de.raidcraft.api.action.flow.FlowType;
+import de.raidcraft.api.action.flow.*;
 import de.raidcraft.api.action.flow.types.ActionAPIType;
 import de.raidcraft.api.action.flow.types.FlowDelay;
 import de.raidcraft.api.config.builder.ConfigGenerator;
@@ -17,6 +14,8 @@ import java.util.regex.Pattern;
  */
 public class ActionApiFlowParser extends FlowParser {
 
+    private FlowConfigParser configParser;
+
     public ActionApiFlowParser() {
 
         super(Pattern.compile("^([!@\\?~])([a-zA-Z\\-\\._\\d]+)([( ]?.*)$"));
@@ -26,45 +25,59 @@ public class ActionApiFlowParser extends FlowParser {
         // #3	(blubb: aaaa) world,1,2,3
     }
 
+    public ActionApiFlowParser(FlowConfigParser configParser) {
+        this();
+        this.configParser = configParser;
+    }
+
+    private Optional<FlowConfigParser> getConfigParser() {
+        return Optional.ofNullable(this.configParser);
+    }
+
     @Override
     public ActionAPIType parse() throws FlowException {
 
         // first we need to find out the flow type from group 1
         String typeSymbol = getMatcher().group(1);
-        Optional<FlowType> flowType = FlowType.fromString(typeSymbol);
-        if (!flowType.isPresent()) {
+        Optional<FlowType> optionalFlowType = FlowType.fromString(typeSymbol);
+        if (!optionalFlowType.isPresent()) {
             throw new FlowException("No flow type for the symbol " + typeSymbol + " found!");
         }
         FlowConfiguration configuration = new FlowConfiguration();
         String type = getMatcher().group(2);
+        FlowType flowType = optionalFlowType.get();
         Optional<ConfigGenerator.Information> information = Optional.empty();
-        switch (flowType.get()) {
+        switch (flowType) {
             case DELAY:
                 return new FlowDelay(type);
             case ACTION:
-                if (!ActionAPI.isAction(type)) {
+                if (!getConfigParser().filter(parser -> parser.hasAlias(FlowType.ACTION, type)).isPresent() && !ActionAPI.isAction(type)) {
                     ActionAPI.UNKNOWN_ACTIONS.add(type);
-                    throw new FlowException(flowType.get().name() + " " + type + " inside flow not found!");
+                    throw new FlowException(flowType.name() + " " + type + " inside flow not found!");
                 }
                 information = ActionAPI.getActionInformation(type);
                 break;
             case REQUIREMENT:
-                if (!ActionAPI.isRequirement(type)) {
+                if (!getConfigParser().filter(parser -> parser.hasAlias(FlowType.REQUIREMENT, type)).isPresent() && !ActionAPI.isRequirement(type)) {
                     ActionAPI.UNKNOWN_REQUIREMENTS.add(type);
-                    throw new FlowException(flowType.get().name() + " " + type + " inside flow not found!");
+                    throw new FlowException(flowType.name() + " " + type + " inside flow not found!");
                 }
                 information = ActionAPI.getRequirementInformation(type);
                 break;
             case TRIGGER:
                 if (!ActionAPI.isTrigger(type)) {
                     ActionAPI.UNKNOWN_TRIGGER.add(type);
-                    throw new FlowException(flowType.get().name() + " " + type + " inside flow not found!");
+                    throw new FlowException(flowType.name() + " " + type + " inside flow not found!");
                 }
                 information = ActionAPI.getTriggerInformation(type);
                 break;
         }
+        if (getConfigParser().filter(parser -> parser.hasAlias(flowType, type)).isPresent()) {
+            return new ActionAPIType(flowType, configuration, type);
+        }
+
         if (!information.isPresent()) {
-            throw new FlowException("ConfigInformation of type " + flowType.get().name() +  " is not present for " + type);
+            throw new FlowException("ConfigInformation of type " + flowType.name() + " is not present for " + type);
         }
         ConfigParser configParser = new ConfigParser(information.get());
         if (configParser.accept(getMatcher().group(3))) {
@@ -72,6 +85,6 @@ public class ActionApiFlowParser extends FlowParser {
             configuration = configParser.parse();
         }
         configuration.set("type", type);
-        return new ActionAPIType(flowType.get(), configuration, type);
+        return new ActionAPIType(flowType, configuration, type);
     }
 }

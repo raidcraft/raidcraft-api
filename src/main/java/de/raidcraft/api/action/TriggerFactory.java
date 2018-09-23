@@ -1,14 +1,16 @@
 package de.raidcraft.api.action;
 
+import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.TriggerListener;
+import de.raidcraft.api.action.trigger.TriggerListenerConfigWrapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Silthus
@@ -22,6 +24,8 @@ public class TriggerFactory {
     private final String identifier;
     private final ConfigurationSection config;
     private final Set<TriggerListener> registeredListeners = new HashSet<>();
+    private final List<Action<?>> actions = new ArrayList<>();
+    private final List<Requirement<?>> requirements = new ArrayList<>();
 
     protected TriggerFactory(TriggerManager manager, String identifier, ConfigurationSection config) {
 
@@ -30,9 +34,13 @@ public class TriggerFactory {
         this.config = config;
     }
 
-    public void registerListener(@NonNull TriggerListener<?> listener) {
+    public <T> void registerListener(@NonNull TriggerListener<T> listener) {
 
-        getManager().registerListener(listener, getIdentifier(), getConfig());
+        Optional<? extends TriggerListenerConfigWrapper<T>> wrapper = getManager().registerListener(listener, getIdentifier(), getConfig());
+        wrapper.ifPresent(trigger -> {
+            trigger.setActions(ActionAPI.filterActionTypes(actions, listener.getTriggerEntityType()));
+            trigger.setRequirements(ActionAPI.filterRequirementTypes(requirements, listener.getTriggerEntityType()));
+        });
         registeredListeners.add(listener);
     }
 
