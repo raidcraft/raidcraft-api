@@ -287,7 +287,7 @@ public final class ActionAPI {
     public static boolean matchesType(Action<?> action, Class<?> type) {
 
         if (action instanceof ActionConfigWrapper) {
-            return ((ActionConfigWrapper) action).getType().equals(type);
+            return ((ActionConfigWrapper) action).getType().isAssignableFrom(type);
         }
         ActionFactory<?> actionFactory = actionFactories.get(type);
         return actionFactory != null && actionFactory.contains(action);
@@ -310,7 +310,7 @@ public final class ActionAPI {
     public static boolean matchesType(Requirement<?> requirement, Class<?> type) {
 
         if (requirement instanceof RequirementConfigWrapper) {
-            return ((RequirementConfigWrapper) requirement).getType().equals(type);
+            return ((RequirementConfigWrapper) requirement).getType().isAssignableFrom(type);
         }
         RequirementFactory<?> requirementFactory = requirementFactories.get(type);
         return requirementFactory != null && requirementFactory.contains(requirement);
