@@ -15,7 +15,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -26,7 +25,7 @@ import java.util.function.Predicate;
 @ToString(of = {"triggerListener", "config"})
 @EqualsAndHashCode(of = {"triggerListener", "config"})
 @Data
-class TriggerListenerConfigWrapper<T> {
+public class TriggerListenerConfigWrapper<T> {
 
     private final TriggerListener<T> triggerListener;
     private final ConfigurationSection config;
@@ -35,8 +34,8 @@ class TriggerListenerConfigWrapper<T> {
     private final long triggerDelay;
     private final long actionDelay;
     private final List<String> worlds = new ArrayList<>();
-    private Collection<Action<T>> actions = new ArrayList<>();
-    private List<Requirement<T>> requirements = new ArrayList<>();
+    private final List<Action<T>> actions = new ArrayList<>();
+    private final List<Requirement<T>> requirements = new ArrayList<>();
 
     protected TriggerListenerConfigWrapper(TriggerListener<T> triggerListener, ConfigurationSection config) {
 
@@ -47,22 +46,42 @@ class TriggerListenerConfigWrapper<T> {
         this.triggerDelay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         this.actionDelay = TimeUtil.parseTimeAsTicks(config.getString("action-delay"));
         this.worlds.addAll(config.getStringList("worlds"));
-        this.actions = ActionAPI.createActions(config.getConfigurationSection("actions"), triggerListener.getTriggerEntityType());
-        this.requirements = ActionAPI.createRequirements(triggerListener.getListenerId(), config.getConfigurationSection("requirements"), triggerListener.getTriggerEntityType());
+        this.setActions(ActionAPI.createActions(config.getConfigurationSection("actions"), triggerListener.getTriggerEntityType()));
+        this.setRequirements(ActionAPI.createRequirements(triggerListener.getListenerId(), config.getConfigurationSection("requirements"), triggerListener.getTriggerEntityType()));
+    }
+
+    private void setExtraRequirements() {
         if (isExecuteOnce()) {
             // lets add our execute once requirement last
             // this requirement will return false after is has been checked once
-            Optional<Requirement<T>> optional = ActionAPI.Helper.createExecuteOnceRequirement(
-                    getTriggerListener().getListenerId(),
-                    getTriggerListener().getTriggerEntityType());
-            if (optional.isPresent()) this.requirements.add(optional.get());
+            getExecuteOnceRequirement().ifPresent(requirements::add);
         } else if (cooldown > 0) {
-            Optional<Requirement<T>> cooldownRequirement = ActionAPI.Helper.createCooldownRequirement(
-                    getTriggerListener().getListenerId(),
-                    cooldown,
-                    getTriggerListener().getTriggerEntityType());
-            if (cooldownRequirement.isPresent()) this.requirements.add(cooldownRequirement.get());
+            getCooldownRequirement().ifPresent(requirements::add);
         }
+    }
+
+    private Optional<Requirement<T>> getExecuteOnceRequirement() {
+        return ActionAPI.Helper.createExecuteOnceRequirement(
+                getTriggerListener().getListenerId(),
+                getTriggerListener().getTriggerEntityType());
+    }
+
+    private Optional<Requirement<T>> getCooldownRequirement() {
+        return ActionAPI.Helper.createCooldownRequirement(
+                getTriggerListener().getListenerId(),
+                cooldown,
+                getTriggerListener().getTriggerEntityType());
+    }
+
+    public void setActions(List<Action<T>> actions) {
+        this.actions.clear();
+        this.actions.addAll(actions);
+    }
+
+    public void setRequirements(List<Requirement<T>> requirements) {
+        this.requirements.clear();
+        this.requirements.addAll(requirements);
+        this.setExtraRequirements();
     }
 
     protected boolean test(T triggeringEntity, Predicate<ConfigurationSection> predicate) {

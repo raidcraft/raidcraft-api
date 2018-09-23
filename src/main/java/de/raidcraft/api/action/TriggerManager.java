@@ -5,6 +5,7 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.action.trigger.TriggerListener;
+import de.raidcraft.api.action.trigger.TriggerListenerConfigWrapper;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.CaseInsensitiveMap;
@@ -14,13 +15,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Silthus
@@ -117,7 +112,7 @@ public final class TriggerManager {
         RaidCraft.LOGGER.info("removed all trigger of: " + plugin.getName());
     }
 
-    public <T> Optional<Trigger> registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier, @NonNull ConfigurationSection config) {
+    public <T> Optional<TriggerListenerConfigWrapper<T>> registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier, @NonNull ConfigurationSection config) {
 
         // we need to check partial names because actions are not listed in the map
         if (!registeredTrigger.containsKey(triggerIdentifier)) {
@@ -129,9 +124,9 @@ public final class TriggerManager {
         }
         Trigger trigger = registeredTrigger.get(triggerIdentifier);
         if (trigger != null) {
-            trigger.registerListener(listener, triggerIdentifier, config);
+            return Optional.of(trigger.registerListener(listener, triggerIdentifier, config));
         }
-        return Optional.ofNullable(trigger);
+        return Optional.empty();
     }
 
     public <T> void unregisterListener(@NonNull TriggerListener<T> listener) {
@@ -151,17 +146,6 @@ public final class TriggerManager {
 
     public Collection<TriggerFactory> createTriggerFactories(ConfigurationSection trigger) {
 
-        List<TriggerFactory> list = new ArrayList<>();
-        // parse our flow trigger
-        list.addAll(Flow.parseTrigger(trigger));
-
-        if (trigger != null) {
-            for (String key : trigger.getKeys(false)) {
-                // handle via flow api
-                if (trigger.isList(key)) continue;
-                list.add(createTrigger(trigger.getString(key + ".type"), trigger.getConfigurationSection(key)));
-            }
-        }
-        return list;
+        return Flow.parseTrigger(trigger);
     }
 }

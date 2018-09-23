@@ -165,7 +165,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             actionAPI.trigger(new TimerTrigger());
         }
         actionAPI.requirement(new IfElseRequirement<>(), Object.class);
-        actionAPI.action(new GroupAction<>(), Object.class);
+        actionAPI.action(new GroupAction<>(), Player.class);
         actionAPI.requirement(new GroupRequirement<>(), Object.class);
     }
 

@@ -34,13 +34,15 @@ public abstract class Trigger implements TriggerConfigGenerator {
         this.actions = actions;
     }
 
-    public final <T> void registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier,
-            @NonNull ConfigurationSection config) {
+    public final <T> TriggerListenerConfigWrapper<T> registerListener(@NonNull TriggerListener<T> listener, @NonNull String triggerIdentifier,
+                                                                      @NonNull ConfigurationSection config) {
 
         if (!registeredListeners.containsKey(triggerIdentifier)) {
             registeredListeners.put(triggerIdentifier, new ArrayList<>());
         }
-        registeredListeners.get(triggerIdentifier).add(new TriggerListenerConfigWrapper<>(listener, config));
+        TriggerListenerConfigWrapper<T> wrapper = new TriggerListenerConfigWrapper<>(listener, config);
+        registeredListeners.get(triggerIdentifier).add(wrapper);
+        return wrapper;
     }
 
     public final <T> void unregisterListener(@NonNull TriggerListener<T> listener) {
