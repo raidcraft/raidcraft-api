@@ -35,7 +35,8 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
     private final long delay;
     private final long cooldown;
     private final boolean executeOnce;
-    private Optional<Player> player;
+    private Player player;
+    private List<Action<?>> actions = new ArrayList<>();
     private List<Requirement<?>> requirements = new ArrayList<>();
 
     protected ActionConfigWrapper(Action<T> action, ConfigurationSection config, Class<T> type) {
@@ -46,6 +47,7 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
         this.delay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         this.cooldown = TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
         this.executeOnce = config.getBoolean("execute-once", false);
+        this.actions = ActionAPI.createActions(config.getConfigurationSection("actions"));
         this.requirements = ActionAPI.createRequirements(getIdentifier(),
                 config.getConfigurationSection("requirements"));
         if (isExecuteOnce()) {
@@ -88,8 +90,12 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
     @Override
     public Action<T> withPlayer(Player player) {
 
-        this.player = Optional.of(player);
+        this.player = player;
         return this;
+    }
+
+    protected Optional<Player> getPlayer() {
+        return Optional.ofNullable(this.player);
     }
 
     @Override
@@ -116,10 +122,12 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
                 for (Requirement<?> requirement : requirements) {
                     if (!allMatch)
                         break;
-                    if (player.isPresent() && ActionAPI.matchesType(requirement, Player.class)) {
-                        allMatch = ((Requirement<Player>) requirement).test(player.get());
+                    if (getPlayer().isPresent() && ActionAPI.matchesType(requirement, Player.class)) {
+                        allMatch = ((Requirement<Player>) requirement).test(getPlayer().get());
                     } else if (ActionAPI.matchesType(requirement, getType())) {
                         allMatch = ((Requirement<T>) requirement).test(type);
+                    } else if (type instanceof Player && ActionAPI.matchesType(requirement, Player.class)) {
+                        allMatch = ((Requirement<Player>) requirement).test((Player) type);
                     }
                 }
                 if (plugin.getConfig().debugActions && !allMatch) {
@@ -129,6 +137,14 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
                     return;
             }
             action.accept(type, config);
+            for (Action<?> action : actions) {
+                if (ActionAPI.matchesType(action, Player.class)) {
+                    Optional<Player> player = getPlayer().or(() -> Optional.ofNullable((Player) type));
+                    player.ifPresent(((Action<Player>) action)::accept);
+                } else if (ActionAPI.matchesType(action, getType())) {
+                    ((Action<T>) action).accept(type);
+                }
+            }
             if (plugin.getConfig().debugActions) {
                 plugin.getLogger().info("ACTION EXECUTED: " + ActionAPI.getIdentifier(getAction()));
             }
@@ -139,7 +155,7 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
                     executeOnce.save();
                 }
             }
-            player = Optional.empty();
+            player = null;
         };
         if (delay > 0) {
             Bukkit.getScheduler().runTaskLater(plugin, runnable, delay);

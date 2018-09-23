@@ -129,7 +129,7 @@ public final class ActionFactory<T> {
         return Optional.empty();
     }
 
-    public Optional<Action<T>> create(@NonNull String identifier, @NonNull ConfigurationSection config) {
+    public Optional<ActionConfigWrapper<T>> create(@NonNull String identifier, @NonNull ConfigurationSection config) {
 
         if (!actions.containsKey(identifier)) {
             // lets see if we find a matching alias
@@ -143,12 +143,12 @@ public final class ActionFactory<T> {
         return Optional.of(new ActionConfigWrapper<>(actions.get(identifier), config, getType()));
     }
 
-    public Optional<Action<T>> create(@NonNull Class<? extends Action> actionClass,
-            @NonNull ConfigurationSection config) {
+    public Optional<ActionConfigWrapper<T>> create(@NonNull Class<? extends Action> actionClass,
+                                                   @NonNull ConfigurationSection config) {
         Optional<Action<T>> action = actions.values().stream().filter(a -> a.getClass().equals(actionClass))
                 .findFirst();
 
-        return action.map(a -> new ActionConfigWrapper<>(a, config, getType()));
+        return action.map(act -> new ActionConfigWrapper<>(act, config, getType()));
     }
 
     public Optional<Action<T>> createWrapper(Action<T> action, ConfigurationSection config) {

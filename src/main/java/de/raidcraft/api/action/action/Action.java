@@ -34,7 +34,7 @@ public interface Action<T> extends ActionConfigGenerator {
         };
     }
 
-    static <T extends Action<?>> T of(Class<T> actionClass) {
+    static <T extends Action<?>> ActionConfigWrapper<?> of(Class<T> actionClass) {
 
         for (Method method : actionClass.getDeclaredMethods()) {
             if (method.isAnnotationPresent(Information.class)) {

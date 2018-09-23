@@ -2,6 +2,7 @@ package de.raidcraft.api.action.flow;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.ActionConfigWrapper;
 import de.raidcraft.api.action.TriggerFactory;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.GroupAction;
@@ -31,11 +32,17 @@ import java.util.*;
 @Data
 public class FlowConfigParser {
 
-    private static final FlowParser[] parsers = {new ActionApiFlowParser(), new AnswerParser()};
+    private final FlowParser[] parsers = {new ActionApiFlowParser(this), new AnswerParser()};
 
     private final ConfigurationSection config;
 
-    private final Map<String, FlowAlias> aliasMap = new HashMap<>();
+    private final Map<FlowType, Map<String, FlowAlias>> aliasMap = Map.ofEntries(
+            Map.entry(FlowType.ACTION, new HashMap<>()),
+            Map.entry(FlowType.REQUIREMENT, new HashMap<>()),
+            Map.entry(FlowType.ANSWER, new HashMap<>()),
+            Map.entry(FlowType.TRIGGER, new HashMap<>()),
+            Map.entry(FlowType.EXPRESSION, new HashMap<>())
+    );
 
     public FlowConfigParser(ConfigurationSection config) {
         this.config = config;
@@ -56,7 +63,8 @@ public class FlowConfigParser {
                     throw new FlowException("Duplicate alias group with key: " + key);
                 } else if (section.isString(key)) {
                     if (parser.accept(section.getString(key))) {
-                        aliasMap.put(key, new FlowAlias(key, parser.parse()));
+                        FlowAlias alias = new FlowAlias(key, parser.parse());
+                        aliasMap.get(alias.getFlowType()).put(key, alias);
                     }
                 } else if (section.isList(key)) {
                     Optional<FlowType> flowType = FlowType.fromString(key.substring(0, 1));
@@ -69,7 +77,8 @@ public class FlowConfigParser {
                     if (expressions.isEmpty()) {
                         throw new FlowException("Invalid list of flow actions/requirements in group alias: " + key);
                     }
-                    aliasMap.put(key, new FlowAlias(flowType.orElse(expressions.get(0).getFlowType()), key, expressions));
+                    FlowAlias alias = new FlowAlias(flowType.orElse(expressions.get(0).getFlowType()), key, expressions);
+                    aliasMap.get(alias.getFlowType()).put(key, alias);
                 }
             } catch (FlowException e) {
                 e.printStackTrace();
@@ -136,8 +145,7 @@ public class FlowConfigParser {
                         FlowConfiguration configuration = expression.getConfiguration();
                         configuration.set("delay", delay);
 
-                        createGroupAction(expression)
-                                .or(() -> ActionAPI.createAction(expression.getTypeId(), configuration))
+                        createAction(expression)
                                 .map(action -> {
                                     if (!applicableRequirements.isEmpty()) {
                                         applicableRequirements.forEach(action::addRequirement);
@@ -159,8 +167,7 @@ public class FlowConfigParser {
 
                         String id = ConfigUtil.getFileName(getConfig()) + "." + key + "." + expression.getTypeId();
 
-                        createGroupRequirement(id, expression)
-                                .or(() -> ActionAPI.createRequirement(id, expression.getTypeId(), expression.getConfiguration()))
+                        createRequirement(id, expression)
                                 .ifPresentOrElse(applicableRequirements::add,
                                         () -> ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId()));
                         break;
@@ -172,36 +179,35 @@ public class FlowConfigParser {
     }
 
     @SuppressWarnings("unchecked")
-    private Optional<Action<?>> createGroupAction(ActionAPIType expression) {
+    private Optional<ActionConfigWrapper<?>> createGroupAction(ActionAPIType expression) {
 
-        if (aliasMap.containsKey(expression.getTypeId())) {
-            FlowAlias alias = aliasMap.get(expression.getTypeId());
-            // only add aliases that match the flow type
-            if (alias.getFlowType() == expression.getFlowType()) {
-                // create a group action from the recursive action list of our alias group
-                GroupAction groupAction = ActionAPI.createAction(GroupAction.class, expression.getConfiguration());
-                groupAction.getActions().addAll(parseActions(alias.getAlias(), alias.getExpressions()));
-                return Optional.of(groupAction);
-            }
+        if (!hasAlias(expression.getFlowType(), expression.getTypeId())) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        FlowAlias flowAlias = getAlias(expression.getFlowType(), expression.getTypeId());
+        List<Action<?>> actions = parseActions(flowAlias.getAlias(), flowAlias.getExpressions());
+
+        // create a group action from the recursive action list of our alias group
+        ActionConfigWrapper<?> configWrapper = ActionAPI.createAction(GroupAction.class, expression.getConfiguration());
+        configWrapper.getActions().addAll(actions);
+
+        return Optional.of(configWrapper);
     }
 
     @SuppressWarnings("unchecked")
     private Optional<Requirement<?>> createGroupRequirement(String id, ActionAPIType expression) {
 
-        if (aliasMap.containsKey(expression.getTypeId())) {
-            FlowAlias alias = aliasMap.get(expression.getTypeId());
-            // only add aliases that match the flow type
-            if (alias.getFlowType() == expression.getFlowType()) {
-                // recurse and add all requirements from our alias
-                GroupRequirement requirement = ActionAPI.createRequirement(id, GroupRequirement.class, expression.getConfiguration());
-                requirement.getRequirements().addAll(parseRequirements(id, alias.getExpressions()));
-                return Optional.of(requirement);
-            }
+        if (!hasAlias(expression.getFlowType(), expression.getTypeId())) {
+            return Optional.empty();
         }
-        return Optional.empty();
+
+        FlowAlias flowAlias = getAlias(expression.getFlowType(), expression.getTypeId());
+
+        // recurse and add all requirements from our alias
+        GroupRequirement requirement = ActionAPI.createRequirement(id, GroupRequirement.class, expression.getConfiguration());
+        requirement.getRequirements().addAll(parseRequirements(id, flowAlias.getExpressions()));
+        return Optional.of(requirement);
     }
 
     public List<TriggerFactory> parseTrigger() {
@@ -227,14 +233,11 @@ public class FlowConfigParser {
                 FlowConfiguration configuration = expression.getConfiguration();
                 switch (expression.getFlowType()) {
                     case TRIGGER:
-                        if (!applicableRequirements.isEmpty()) {
-                            for (ActionAPIType requirement : applicableRequirements) {
-                                configuration.set("requirements.flow-" + i++, requirement.getConfiguration());
-                            }
-                        }
+                        TriggerFactory trigger = ActionAPI.createTrigger(((ActionAPIType) flowExpression).getTypeId(), configuration);
+
+                        trigger.getRequirements().addAll(parseRequirements("", new ArrayList<>(applicableRequirements)));
                         applicableRequirements.clear();
-                        TriggerFactory trigger = ActionAPI
-                                .createTrigger(((ActionAPIType) flowExpression).getTypeId(), configuration);
+
                         activeTrigger = trigger;
                         factories.add(trigger);
                         // reset the delay when a new trigger starts
@@ -244,13 +247,14 @@ public class FlowConfigParser {
                         if (activeTrigger != null) {
                             String actionId = "actions.flow-" + i++;
                             configuration.set("delay", delay);
-                            if (!applicableRequirements.isEmpty()) {
-                                for (ActionAPIType requirement : applicableRequirements) {
-                                    configuration.set(actionId + ".requirements.flow-" + i++,
-                                            requirement.getConfiguration());
-                                }
+                            ArrayList<FlowExpression> expressions = new ArrayList<>();
+                            expressions.add(expression);
+                            List<Action<?>> actions = parseActions(actionId, expressions);
+                            for (Requirement<?> requirement : parseRequirements("", new ArrayList<>(applicableRequirements))) {
+                                actions.forEach(action -> action.addRequirement(requirement));
                             }
-                            activeTrigger.getConfig().set(actionId, configuration);
+                            applicableRequirements.clear();
+                            activeTrigger.getActions().addAll(actions);
                         }
                         break;
                     case REQUIREMENT:
@@ -288,14 +292,12 @@ public class FlowConfigParser {
                             continue;
                         configuration.set("delay", delay);
 
-                        createGroupAction(expression)
-                                .or(() -> ActionAPI.createAction(expression.getTypeId(), configuration))
+                        createAction(expression)
                                 .ifPresentOrElse(action -> requirements.get(requirements.size() - 1).addAction(action),
                                         () -> ActionAPI.UNKNOWN_ACTIONS.add(expression.getTypeId()));
                         break;
                     case REQUIREMENT:
-                        createGroupRequirement(id, expression)
-                                .or(() -> ActionAPI.createRequirement(id, expression.getTypeId(), expression.getConfiguration()))
+                        createRequirement(id, expression)
                                 .ifPresentOrElse(requirements::add,
                                         () -> ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId()));
                         break;
@@ -304,6 +306,16 @@ public class FlowConfigParser {
         }
 
         return requirements;
+    }
+
+    private Optional<ActionConfigWrapper<?>> createAction(ActionAPIType expression) {
+        return createGroupAction(expression)
+                .or(() -> ActionAPI.createAction(expression.getTypeId(), expression.getConfiguration()));
+    }
+
+    private Optional<Requirement<?>> createRequirement(String id, ActionAPIType expression) {
+        return createGroupRequirement(id, expression)
+                .or(() -> ActionAPI.createRequirement(id, expression.getTypeId(), expression.getConfiguration()));
     }
 
     public List<Answer> parseAnswers(StageTemplate template) {
@@ -316,8 +328,7 @@ public class FlowConfigParser {
         try {
             long delay = 0;
             List<FlowExpression> flowExpressions = parse(flowStatements.get().getValue());
-            List<Requirement<Player>> playerRequirements = new ArrayList<>();
-            List<Requirement<Conversation>> conversationRequirements = new ArrayList<>();
+            List<Requirement<?>> requirements = new ArrayList<>();
             Answer activeAnswer = null;
 
             for (FlowExpression flowExpression : flowExpressions) {
@@ -330,13 +341,17 @@ public class FlowConfigParser {
                     }
                     answers.add(answer.get());
                     activeAnswer = answer.get();
-                    if (!playerRequirements.isEmpty()) {
-                        playerRequirements.forEach(activeAnswer::addPlayerRequirement);
-                        playerRequirements.clear();
+
+                    for (Requirement<?> requirement : requirements) {
+                        if (ActionAPI.matchesType(requirement, Player.class)) {
+                            activeAnswer.addPlayerRequirement((Requirement<Player>) requirement);
+                        } else if (ActionAPI.matchesType(requirement, Conversation.class)) {
+                            activeAnswer.addConversationRequirement((Requirement<Conversation>) requirement);
+                        } else {
+                            activeAnswer.addRequirement(requirement);
+                        }
                     }
-                    if (!conversationRequirements.isEmpty()) {
-                        conversationRequirements.forEach(activeAnswer::addConversationRequirement);
-                    }
+                    requirements.clear();
                 } else if (flowExpression instanceof ActionAPIType) {
                     ActionAPIType expression = (ActionAPIType) flowExpression;
                     FlowConfiguration configuration = expression.getConfiguration();
@@ -345,43 +360,22 @@ public class FlowConfigParser {
                             if (activeAnswer == null)
                                 continue;
                             configuration.set("delay", delay);
-                            Optional<Action<Conversation>> convAction = ActionAPI
-                                    .createAction(expression.getTypeId(), configuration, Conversation.class);
-                            if (convAction.isPresent()) {
-                                Action<Conversation> action = convAction.get();
-                                activeAnswer.addConversationAction(action);
-                                if (!conversationRequirements.isEmpty()) {
-                                    conversationRequirements.forEach(action::addRequirement);
-                                }
+                            Action<?> action = createAction(expression)
+                                    .orElseThrow(() -> new FlowException("Could not find valid action type for " + expression.getTypeId()));
+
+                            if (ActionAPI.matchesType(action, Player.class)) {
+                                activeAnswer.addPlayerAction((Action<Player>) action);
+                            } else if (ActionAPI.matchesType(action, Conversation.class)) {
+                                activeAnswer.addConversationAction((Action<Conversation>) action);
                             } else {
-                                Optional<Action<Player>> playerAction = ActionAPI
-                                        .createAction(expression.getTypeId(), configuration, Player.class);
-                                if (playerAction.isPresent()) {
-                                    Action<Player> action = playerAction.get();
-                                    activeAnswer.addPlayerAction(action);
-                                    if (!playerRequirements.isEmpty()) {
-                                        playerRequirements.forEach(action::addRequirement);
-                                    }
-                                }
+                                activeAnswer.addActions(action);
                             }
+                            requirements.forEach(action::addRequirement);
+                            requirements.clear();
                             break;
                         case REQUIREMENT:
-                            Optional<Requirement<Player>> playerRequirement = ActionAPI.createRequirement(
-                                    ConfigUtil.getFileName(config) + key, expression.getTypeId(),
-                                    expression.getConfiguration(), Player.class);
-                            if (!playerRequirement.isPresent()) {
-                                Optional<Requirement<Conversation>> conversationRequirement = ActionAPI
-                                        .createRequirement(ConfigUtil.getFileName(config) + key,
-                                                expression.getTypeId(), expression.getConfiguration(),
-                                                Conversation.class);
-                                if (conversationRequirement.isPresent()) {
-                                    throw new FlowException(
-                                            "Could not find valid requirement type for " + expression.getTypeId());
-                                }
-                                conversationRequirements.add(conversationRequirement.get());
-                            } else {
-                                playerRequirements.add(playerRequirement.get());
-                            }
+                            requirements.add(createRequirement(ConfigUtil.getFileName(config) + key, expression)
+                                    .orElseThrow(() -> new FlowException("Could not find valid requirement type for " + expression.getTypeId())));
                             break;
                     }
                 }
@@ -411,5 +405,13 @@ public class FlowConfigParser {
             }
         }
         return expressions;
+    }
+
+    public boolean hasAlias(FlowType type, String alias) {
+        return aliasMap.get(type).containsKey(alias);
+    }
+
+    public FlowAlias getAlias(FlowType type, String alias) {
+        return aliasMap.get(type).get(alias);
     }
 }

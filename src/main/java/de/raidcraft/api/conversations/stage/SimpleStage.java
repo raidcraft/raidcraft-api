@@ -103,7 +103,9 @@ public class SimpleStage implements Stage {
         // lets clear all current answers to make new answers unique clickable
         activeAnswers.clear();
 
-        List<Answer> answers = this.answers.get(currentPage);
+        List<Answer> answers = this.answers.get(currentPage).stream()
+                .filter(answer -> answer.isMeetingAllRequirements(getConversation().getOwner()))
+                .collect(Collectors.toList());
         int i;
         for (i = 0; i < answers.size(); i++) {
             Answer answer = answers.get(i);
