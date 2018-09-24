@@ -124,20 +124,27 @@ public class ConfigUtil {
 
     public static String getFileName(ConfigurationSection config) {
 
+        return getConfigurationBase(config)
+                .map(configurationBase -> configurationBase.getFile().getAbsolutePath())
+                .orElseGet(() -> config.getRoot().getName());
+    }
+
+    public static Optional<ConfigurationBase> getConfigurationBase(ConfigurationSection config) {
         ConfigurationBase base = null;
         if (config instanceof ConfigurationBase) {
             base = (ConfigurationBase) config;
         } else {
             Configuration root = config.getRoot();
-            if (root != null && root instanceof ConfigurationBase) {
+            if (root instanceof ConfigurationBase) {
                 base = (ConfigurationBase) root;
             }
         }
-        if (base != null) {
-            return base.getFile().getAbsolutePath();
-        } else {
-            return config.getRoot().getName();
-        }
+        return Optional.ofNullable(base);
+    }
+
+    public static void saveConfig(ConfigurationSection config) {
+
+        getConfigurationBase(config).ifPresent(ConfigurationBase::save);
     }
 
     public static Object smartCast(Type genericType, Object value) {
