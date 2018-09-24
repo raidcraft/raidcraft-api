@@ -9,7 +9,7 @@
     <parent>
         <groupId>de.faldoria</groupId>
         <artifactId>FaldoriaMasterPom</artifactId>
-        <version>1.12-0.10</version>
+        <version>1.12-0.11</version>
     </parent>
 
     <repositories>
@@ -42,16 +42,6 @@
             <version>0.99-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.2.11</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
@@ -60,6 +50,26 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>2.9.6</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
 
@@ -84,6 +94,9 @@
                                     <include>io.ebean:*</include>
                                     <include>org.avaje:*</include>
                                     <include>org.slf4j:*</include>
+                                    <include>javax.xml.bind</include>
+                                    <include>com.sun.xml.bind</include>
+                                    <include>javax.activation</include>
                                     <include>com.fasterxml.jackson.core:*</include>
                                 </includes>
                             </artifactSet>
