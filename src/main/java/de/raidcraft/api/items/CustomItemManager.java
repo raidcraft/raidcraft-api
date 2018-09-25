@@ -20,7 +20,7 @@ public final class CustomItemManager implements Component {
     private final Map<Integer, CustomItem> customItems = new HashMap<>();
     private final Map<Integer, Gem> loadedGems = new HashMap<>();
     // item alias | item id
-    private final Map<String, Integer> customItemAliases = Map.of();
+    private final Map<String, Integer> customItemAliases = new CaseInsensitiveMap<>();
     private final Map<String, CustomItem> namedCustomItems = new CaseInsensitiveMap<>();
     // minecraft item id | possible list of custom items
     private final Map<Material, List<CustomItem>> mappedMinecraftItems = new HashMap<>();
@@ -162,7 +162,6 @@ public final class CustomItemManager implements Component {
 
     public void registerNamedCustomItem(String name, CustomItem item) throws DuplicateCustomItemException {
 
-        name = name.toLowerCase();
         if (namedCustomItems.containsKey(name)) {
             throw new DuplicateCustomItemException("The custom item with the displayName" + name + " is already registered.");
         }
@@ -171,7 +170,6 @@ public final class CustomItemManager implements Component {
 
     public void registerCustomItemAlias(int id, String alias) throws DuplicateCustomItemException {
 
-        alias = alias.toLowerCase();
         if (customItemAliases.containsKey(alias) || namedCustomItems.containsKey(alias)) {
             throw new DuplicateCustomItemException("A named custom item with the id " + alias + " already exists.");
         }
