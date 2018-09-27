@@ -126,20 +126,20 @@ public final class ActionAPI {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Optional<Requirement<T>> createRequirement(String id, String requirement, ConfigurationSection config, Class<T> type) {
+    public static <T> Optional<RequirementConfigWrapper<T>> createRequirement(String id, String requirement, ConfigurationSection config, Class<T> type) {
 
         RequirementFactory<?> requirementFactory = requirementFactories.get(type);
         if (requirementFactory == null) return Optional.empty();
         return ((RequirementFactory<T>) requirementFactory).create(id, requirement, config);
     }
 
-    public static Optional<Requirement<?>> createRequirement(String id, String type, ConfigurationSection config) {
+    public static Optional<RequirementConfigWrapper<?>> createRequirement(String id, String type, ConfigurationSection config) {
 
         Optional<RequirementFactory<?>> factory = requirementFactories.values().stream()
                 .filter(requirementFactory -> requirementFactory.contains(type))
                 .findAny();
         if (factory.isPresent()) {
-            Optional<? extends Requirement<?>> requirement = factory.get().create(id, type, config);
+            Optional<? extends RequirementConfigWrapper<?>> requirement = factory.get().create(id, type, config);
             if (requirement.isPresent()) {
                 return Optional.of(requirement.get());
             }
@@ -147,8 +147,7 @@ public final class ActionAPI {
         return Optional.empty();
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends Requirement<?>> T createRequirement(String id, Class<T> requirementClass, ConfigurationSection config) {
+    public static <T extends Requirement<?>> RequirementConfigWrapper<?> createRequirement(String id, Class<T> requirementClass, ConfigurationSection config) {
         ConfigGenerator.Information information = null;
         for (Method method : requirementClass.getDeclaredMethods()) {
             if (method.isAnnotationPresent(ConfigGenerator.Information.class)) {
@@ -160,27 +159,26 @@ public final class ActionAPI {
         }
         for (RequirementFactory<?> factory : requirementFactories.values()) {
             if (factory.contains(requirementClass)) {
-                Optional<? extends Requirement<?>> requirement = factory.create(id, requirementClass, config);
+                Optional<? extends RequirementConfigWrapper<?>> requirement = factory.create(id, requirementClass, config);
                 if (requirement.isPresent()) {
-                    return (T) requirement.get();
+                    return requirement.get();
                 }
             }
         }
         throw new UnsupportedOperationException("Could not find matching action for " + requirementClass.getCanonicalName() + " -> " + information.value());
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> List<Requirement<T>> createRequirements(String id, ConfigurationSection requirements, Class<T> type) {
 
         return createRequirements(id, requirements).stream()
                 .filter(requirement -> matchesType(requirement, type))
-                .map(requirement -> (Requirement<T>) requirement)
+                .map(requirement -> (RequirementConfigWrapper<T>) requirement)
                 .collect(Collectors.toList());
     }
 
     public static List<Requirement<?>> createRequirements(String id, ConfigurationSection requirements) {
 
-        return Flow.parseRequirements(id, requirements);
+        return new ArrayList<>(Flow.parseRequirements(id, requirements));
     }
 
     public static <T> Optional<ActionConfigWrapper<T>> createAction(String identifier, ConfigurationSection config, Class<T> type) {
@@ -464,7 +462,7 @@ public final class ActionAPI {
                 return factory.get().create(
                         id + "." + GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
                         GlobalRequirement.EXECUTE_ONCE_TRIGGER.getId(),
-                        configuration);
+                        configuration).map(wrapper -> wrapper);
             }
             return Optional.empty();
         }
@@ -479,7 +477,7 @@ public final class ActionAPI {
                 return factory.get().create(
                         id + "." + GlobalRequirement.COOLDOWN.getId(),
                         GlobalRequirement.COOLDOWN.getId(),
-                        configuration);
+                        configuration).map(wrapper -> wrapper);
             }
             return Optional.empty();
         }

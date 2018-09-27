@@ -119,7 +119,7 @@ public final class RequirementFactory<T> {
                 .anyMatch(name -> name.equals(className));
     }
 
-    public Optional<Requirement<T>> create(String id, @NonNull String requirement,
+    public Optional<RequirementConfigWrapper<T>> create(String id, @NonNull String requirement,
             @NonNull ConfigurationSection config) {
 
         if (!requirements.containsKey(requirement)) {
@@ -138,7 +138,7 @@ public final class RequirementFactory<T> {
         return Optional.of(wrapper);
     }
 
-    public Optional<Requirement<T>> create(String id, Class<? extends Requirement> requirementClass, ConfigurationSection config) {
+    public Optional<RequirementConfigWrapper<T>> create(String id, Class<? extends Requirement> requirementClass, ConfigurationSection config) {
 
         Optional<Requirement<T>> requirement = requirements.values().stream()
                 .filter(req -> req.getClass().equals(requirementClass))
@@ -161,7 +161,7 @@ public final class RequirementFactory<T> {
             return list;
         }
         // lets parse via flow first and continue if the key is a list
-        List<Requirement<?>> flowRequirements = Flow.parseRequirements(requirements);
+        List<RequirementConfigWrapper<?>> flowRequirements = Flow.parseRequirements(requirements);
         flowRequirements.stream().filter(requirement -> ActionAPI.matchesType(requirement, getType()))
                 .map(requirement -> (Requirement<T>) requirement).forEach(list::add);
 
@@ -169,7 +169,7 @@ public final class RequirementFactory<T> {
             // handled by flow
             if (requirements.isList(key))
                 continue;
-            Optional<Requirement<T>> optional = create(id + "." + key, requirements.getString(key + ".type"),
+            Optional<RequirementConfigWrapper<T>> optional = create(id + "." + key, requirements.getString(key + ".type"),
                     requirements.getConfigurationSection(key));
             if (optional.isPresent()) {
                 list.add(optional.get());

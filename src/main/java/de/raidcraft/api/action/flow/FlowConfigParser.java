@@ -3,6 +3,7 @@ package de.raidcraft.api.action.flow;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.ActionConfigWrapper;
+import de.raidcraft.api.action.RequirementConfigWrapper;
 import de.raidcraft.api.action.TriggerFactory;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.GroupAction;
@@ -24,6 +25,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Parses a given config section for all flow statements and returns a list of actions, requirements or triggers.
@@ -196,7 +198,7 @@ public class FlowConfigParser {
     }
 
     @SuppressWarnings("unchecked")
-    private Optional<Requirement<?>> createGroupRequirement(String id, ActionAPIType expression) {
+    private Optional<RequirementConfigWrapper<?>> createGroupRequirement(String id, ActionAPIType expression) {
 
         if (!hasAlias(expression.getFlowType(), expression.getTypeId())) {
             return Optional.empty();
@@ -205,7 +207,7 @@ public class FlowConfigParser {
         FlowAlias flowAlias = getAlias(expression.getFlowType(), expression.getTypeId());
 
         // recurse and add all requirements from our alias
-        GroupRequirement requirement = ActionAPI.createRequirement(id, GroupRequirement.class, expression.getConfiguration());
+        RequirementConfigWrapper<?> requirement = ActionAPI.createRequirement(id, GroupRequirement.class, expression.getConfiguration());
         requirement.getRequirements().addAll(parseRequirements(id, flowAlias.getExpressions()));
         return Optional.of(requirement);
     }
@@ -267,14 +269,14 @@ public class FlowConfigParser {
         return factories;
     }
 
-    public List<Requirement<?>> parseRequirements(String id) {
+    public List<RequirementConfigWrapper<?>> parseRequirements(String id) {
         return getFlowStatements()
                 .map(stringListPair -> parseRequirements(id + "." + stringListPair.getKey(), parse(stringListPair.getValue())))
                 .orElse(new ArrayList<>());
     }
 
-    public List<Requirement<?>> parseRequirements(String id, List<FlowExpression> expressions) {
-        List<Requirement<?>> requirements = new ArrayList<>();
+    public List<RequirementConfigWrapper<?>> parseRequirements(String id, List<FlowExpression> expressions) {
+        List<RequirementConfigWrapper<?>> requirements = new ArrayList<>();
 
         long delay = 0;
 
@@ -313,7 +315,7 @@ public class FlowConfigParser {
                 .or(() -> ActionAPI.createAction(expression.getTypeId(), expression.getConfiguration()));
     }
 
-    private Optional<Requirement<?>> createRequirement(String id, ActionAPIType expression) {
+    private Optional<RequirementConfigWrapper<?>> createRequirement(String id, ActionAPIType expression) {
         return createGroupRequirement(id, expression)
                 .or(() -> ActionAPI.createRequirement(id, expression.getTypeId(), expression.getConfiguration()));
     }

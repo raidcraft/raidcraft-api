@@ -1,5 +1,6 @@
 package de.raidcraft.api.action.flow;
 
+import de.raidcraft.api.action.RequirementConfigWrapper;
 import de.raidcraft.api.action.TriggerFactory;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
@@ -30,11 +31,11 @@ public final class Flow {
         return new FlowConfigParser(config).parseTrigger();
     }
 
-    public static List<Requirement<?>> parseRequirements(String id, ConfigurationSection config) {
+    public static List<RequirementConfigWrapper<?>> parseRequirements(String id, ConfigurationSection config) {
         return new FlowConfigParser(config).parseRequirements(id);
     }
 
-    public static List<Requirement<?>> parseRequirements(ConfigurationSection config) {
+    public static List<RequirementConfigWrapper<?>> parseRequirements(ConfigurationSection config) {
 
         return new FlowConfigParser(config).parseRequirements(ConfigUtil.getFileName(config));
     }

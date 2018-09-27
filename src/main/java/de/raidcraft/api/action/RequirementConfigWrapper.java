@@ -51,6 +51,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     private final ConfigurationSection config;
     private final List<Action<T>> successActions;
     private final List<Action<T>> failureActions;
+    private final List<Requirement<?>> requirements;
     private final Map<UUID, Map<String, String>> mappings = new HashMap<>();
 
     @SuppressWarnings("unchecked")
@@ -72,6 +73,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
         this.countText = config.getString("count-text");
         this.description = config.getString("description");
         this.optional = config.getBoolean("optional", false);
+        this.requirements = ActionAPI.createRequirements(getId(), config.getConfigurationSection("requirements"));
         this.successActions = ActionAPI.createActions(config.getConfigurationSection("success")).stream()
                 .filter(action -> ActionAPI.matchesType(action, getType())).map(action -> (Action<T>) action)
                 .collect(Collectors.toList());
