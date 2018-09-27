@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,11 +19,15 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -260,6 +265,66 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
                         && playerLocation.getBlockY() == location.getBlockY()
                         && playerLocation.getBlockZ() == location.getBlockZ();
             }
+        });
+    }
+
+
+    @Information(
+            value = "player.milk",
+            desc = "Triggers if the player holds an empty bucket and right clicks the defined entity (default: COW).",
+            conf = {
+                    "entity: COW",
+                    "item: BUCKET",
+                    "return: MILK_BUCKET"
+            }
+    )
+    @EventHandler
+    public void onPlayerMilk(PlayerInteractEntityEvent event) {
+
+        informListeners("milk", event.getPlayer(), config -> {
+
+            EntityType entityType = EntityType.valueOf(config.getString("entity", "COW"));
+            Material material = Material.getMaterial(config.getString("item", Material.BUCKET.name()));
+            Optional<ItemStack> returnItem = RaidCraft.getItem(config.getString("return", Material.MILK_BUCKET.name()));
+
+            if (material == null) {
+                RaidCraft.LOGGER.warning("item: " + config.getString("item") + " does not exist! " + ConfigUtil.getFileName(config));
+                return false;
+            }
+            if (!returnItem.isPresent()) {
+                RaidCraft.LOGGER.warning("return: " + config.getString("return") + " does not exist! " + ConfigUtil.getFileName(config));
+                return false;
+            }
+
+            if (!event.getRightClicked().getType().equals(entityType)) {
+                return false;
+            }
+
+            EquipmentSlot hand = event.getHand();
+            ItemStack item;
+            switch (hand) {
+                case OFF_HAND:
+                    item = event.getPlayer().getInventory().getItemInOffHand();
+                    break;
+                default:
+                    item = event.getPlayer().getInventory().getItemInMainHand();
+                    break;
+            }
+
+            if (item != null && item.getType().equals(material)) {
+                event.setCancelled(true);
+                switch (hand) {
+                    case OFF_HAND:
+
+                        event.getPlayer().getInventory().setItemInOffHand(returnItem.get());
+                        break;
+                    default:
+                        event.getPlayer().getInventory().setItemInMainHand(returnItem.get());
+                        break;
+                }
+                return true;
+            }
+            return false;
         });
     }
 
