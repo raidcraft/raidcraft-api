@@ -116,6 +116,12 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     }
 
     @Override
+    public void clearConversation(@NonNull Player player) {
+
+        playerConversations.getOrDefault(player.getUniqueId(), new ArrayList<>()).clear();
+    }
+
+    @Override
     public Optional<Conversation> startConversation(Player player) {
 
         Optional<ConversationTemplate> conversation = getConversation(player);

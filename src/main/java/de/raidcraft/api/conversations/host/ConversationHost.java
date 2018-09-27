@@ -148,6 +148,8 @@ ConversationHost<T> {
      */
     boolean unsetConversation(@NonNull Player player, @NonNull ConversationTemplate conversation);
 
+    void clearConversation(@NonNull Player player);
+
     /**
      * Gets the conversation from {@link #getConversation(Player)} and calls {@link ConversationTemplate#startConversation(Player, ConversationHost)}.
      *
