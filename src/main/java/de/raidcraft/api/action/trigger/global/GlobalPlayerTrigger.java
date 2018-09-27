@@ -2,6 +2,7 @@ package de.raidcraft.api.action.trigger.global;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.trigger.Trigger;
+import de.raidcraft.api.config.Config;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.LocationUtil;
@@ -10,8 +11,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,10 +22,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,7 +37,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
 
     public GlobalPlayerTrigger() {
 
-        super("player", "interact", "block.break", "block.place", "move", "craft", "death", "join");
+        super("player", "interact", "block.break", "block.place", "move", "craft", "death", "join", "shear", "milk");
     }
 
     @Information(
@@ -325,6 +325,40 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
                 return true;
             }
             return false;
+        });
+    }
+
+    @Information(
+            value = "player.shear",
+            desc = "Triggers if the player shears a sheep.",
+            conf = {
+                    "item: item to drop (if not defined drops default)",
+            }
+    )
+    @EventHandler
+    public void onPlayerShear(PlayerShearEntityEvent event) {
+
+        informListeners("shear", event.getPlayer(), config -> {
+
+            EntityType entityType = EntityType.valueOf(config.getString("entity", EntityType.SHEEP.name()));
+
+            if (!event.getEntity().getType().equals(entityType)) return false;
+
+            if (!config.isSet("item")) {
+                return true;
+            }
+
+            Optional<ItemStack> item = RaidCraft.getItem(config.getString("item"));
+
+            item.ifPresentOrElse(itemStack -> {
+                event.setCancelled(true);
+                if (event.getEntity() instanceof Sheep) {
+                    ((Sheep) event.getEntity()).setSheared(true);
+                }
+                event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), itemStack);
+            }, () -> RaidCraft.LOGGER.warning("Invalid item " + config.getString("item") + " inside " + ConfigUtil.getFileName(config)));
+
+            return true;
         });
     }
 
