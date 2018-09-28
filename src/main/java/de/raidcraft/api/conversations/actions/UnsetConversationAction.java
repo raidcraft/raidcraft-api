@@ -31,7 +31,9 @@ public class UnsetConversationAction implements Action<Player> {
             return;
         }
         Optional<ConversationHost<?>> conversationHost = Conversations.getConversationHost(config.getString("host"));
-        conversationHost.ifPresentOrElse(host -> host.unsetConversation(player, conversationTemplate.get()),
-                () -> RaidCraft.LOGGER.warning("Invalid host " + config.getString("host") + " in " + ConfigUtil.getFileName(config)));
+        conversationHost.ifPresent(host -> host.unsetConversation(player, conversationTemplate.get()));
+        if (!conversationHost.isPresent()) {
+            RaidCraft.LOGGER.warning("Invalid host " + config.getString("host") + " in " + ConfigUtil.getFileName(config));
+        }
     }
 }

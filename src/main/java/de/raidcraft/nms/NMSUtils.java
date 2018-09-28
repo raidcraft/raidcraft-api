@@ -1,7 +1,6 @@
 package de.raidcraft.nms;
 
 import net.minecraft.server.v1_12_R1.*;
-import net.minecraft.server.v1_12_R1.BiomeBase.BiomeMeta;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
 import org.bukkit.entity.EntityType;
@@ -67,7 +66,7 @@ public class NMSUtils {
                 BiomeBase[] array = biome.getNMSBiomeArray();
                 for (BiomeBase base : array) {
                     @SuppressWarnings("unchecked")
-                    List<BiomeMeta> list = (List<BiomeMeta>) field.get(base);
+                    List<BiomeBase.BiomeMeta> list = (List<BiomeBase.BiomeMeta>) field.get(base);
                     list.add(data);
                     field.set(base, list);
                 }
@@ -106,7 +105,7 @@ public class NMSUtils {
                 BiomeBase[] array = biome.getNMSBiomeArray();
                 for (BiomeBase base : array) {
                     @SuppressWarnings("unchecked")
-                    List<BiomeMeta> list = (List<BiomeMeta>) field.get(base);
+                    List<BiomeBase.BiomeMeta> list = (List<BiomeBase.BiomeMeta>) field.get(base);
                     list.add(data);
                     field.set(base, list);
                 }
@@ -174,8 +173,8 @@ public class NMSUtils {
             for (Biome biome : biomes) {
                 BiomeBase[] array = biome.getNMSBiomeArray();
                 for (BiomeBase base : array) {
-                    List<BiomeMeta> list = (List<BiomeMeta>) field.get(base);
-                    for (BiomeMeta meta : list) {
+                    List<BiomeBase.BiomeMeta> list = (List<BiomeBase.BiomeMeta>) field.get(base);
+                    for (BiomeBase.BiomeMeta meta : list) {
                         if (meta.b == type.getNMSClass()) {
                             meta.b = (Class<? extends EntityInsentient>) customClass;
                             break;
@@ -214,8 +213,8 @@ public class NMSUtils {
         try {
             field.setAccessible(true);
             for (BiomeBase base : NMSUtils.BIOMES) {
-                List<BiomeMeta> list = (List<BiomeMeta>) field.get(base);
-                for (BiomeMeta meta : list) {
+                List<BiomeBase.BiomeMeta> list = (List<BiomeBase.BiomeMeta>) field.get(base);
+                for (BiomeBase.BiomeMeta meta : list) {
                     if (meta.b == type.getNMSClass()) {
                         meta.b = (Class<? extends EntityInsentient>) customClass;
                         break;
@@ -886,7 +885,7 @@ public class NMSUtils {
         }
     }
 
-    public static class SpawnData extends BiomeMeta {
+    public static class SpawnData extends BiomeBase.BiomeMeta {
 
         /**
          * Creates a new instance of SpawnData, and at the same time, a new instanceof BiomeMeta, used to add random

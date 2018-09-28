@@ -364,7 +364,7 @@ public class RaidCraft implements Listener {
 
     public static EbeanServer getDatabase(Class<? extends BasePlugin> clazz) {
 
-        return RaidCraft.getComponent(clazz).getDatabase();
+        return RaidCraft.getComponent(clazz).getRcDatabase();
     }
 
     public static CustomItemStack getCustomItem(CustomItem customItem) {
@@ -596,7 +596,7 @@ public class RaidCraft implements Listener {
     public static void trackActionApi() {
         // deacative all
         SqlUpdate deactiveUpdate = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class)
-                .getDatabase().createSqlUpdate("UPDATE rc_actionapi SET active = 0 WHERE server = :server");
+                .getRcDatabase().createSqlUpdate("UPDATE rc_actionapi SET active = 0 WHERE server = :server");
         deactiveUpdate.setParameter("server", Bukkit.getServerName());
         deactiveUpdate.execute();
 
@@ -607,7 +607,7 @@ public class RaidCraft implements Listener {
 
     public static <T extends ConfigGenerator> void trackActionApi(FlowType type, Map<String, T> map) {
 
-        EbeanServer db = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getDatabase();
+        EbeanServer db = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getRcDatabase();
         String server = Bukkit.getServerName();
         for (String key : map.keySet()) {
             T entry = map.get(key);
@@ -652,17 +652,17 @@ public class RaidCraft implements Listener {
         RaidCraftPlugin rPlugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         String listenerName = listener.getClass().getName();
         String server = Bukkit.getServerName();
-        TListener tListener = rPlugin.getDatabase().find(TListener.class)
+        TListener tListener = rPlugin.getRcDatabase().find(TListener.class)
                 .where().eq("listener", listenerName).eq("server", server).findOne();
         if (tListener == null) {
             tListener = new TListener();
             tListener.setListener(listenerName);
             tListener.setPlugin(plugin.getName());
             tListener.setServer(server);
-            rPlugin.getDatabase().save(tListener);
+            rPlugin.getRcDatabase().save(tListener);
         }
         tListener.setLastLoaded(new Date());
-        rPlugin.getDatabase().update(tListener);
+        rPlugin.getRcDatabase().update(tListener);
         Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 
@@ -682,7 +682,7 @@ public class RaidCraft implements Listener {
         log.setCategory(category);
         log.setLevel(level);
         log.setLog(message);
-        RaidCraft.getComponent(RaidCraftPlugin.class).getDatabase().save(log);
+        RaidCraft.getComponent(RaidCraftPlugin.class).getRcDatabase().save(log);
     }
 
     public static void registerPlayerStatisticProvider(BasePlugin plugin, String name, PlayerStatisticProvider provider) {

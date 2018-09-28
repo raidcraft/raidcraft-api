@@ -139,8 +139,8 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
             action.accept(type, config);
             for (Action<?> action : actions) {
                 if (ActionAPI.matchesType(action, Player.class)) {
-                    Optional<Player> player = getPlayer().or(() -> Optional.ofNullable((Player) type));
-                    player.ifPresent(((Action<Player>) action)::accept);
+                    Player player = getPlayer().orElse((Player) type);
+                    ((Action<Player>) action).accept(player);
                 } else if (ActionAPI.matchesType(action, getType())) {
                     ((Action<T>) action).accept(type);
                 }

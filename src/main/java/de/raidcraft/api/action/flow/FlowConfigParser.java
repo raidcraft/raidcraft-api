@@ -19,13 +19,12 @@ import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.ConfigUtil;
-import javafx.util.Pair;
+import de.raidcraft.util.Tuple;
 import lombok.Data;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * Parses a given config section for all flow statements and returns a list of actions, requirements or triggers.
@@ -38,16 +37,15 @@ public class FlowConfigParser {
 
     private final ConfigurationSection config;
 
-    private final Map<FlowType, Map<String, FlowAlias>> aliasMap = Map.ofEntries(
-            Map.entry(FlowType.ACTION, new HashMap<>()),
-            Map.entry(FlowType.REQUIREMENT, new HashMap<>()),
-            Map.entry(FlowType.ANSWER, new HashMap<>()),
-            Map.entry(FlowType.TRIGGER, new HashMap<>()),
-            Map.entry(FlowType.EXPRESSION, new HashMap<>())
-    );
+    private final Map<FlowType, Map<String, FlowAlias>> aliasMap = new HashMap<>();
 
     public FlowConfigParser(ConfigurationSection config) {
         this.config = config;
+        this.aliasMap.put(FlowType.ACTION, new HashMap<>());
+        this.aliasMap.put(FlowType.REQUIREMENT, new HashMap<>());
+        this.aliasMap.put(FlowType.ANSWER, new HashMap<>());
+        this.aliasMap.put(FlowType.TRIGGER, new HashMap<>());
+        this.aliasMap.put(FlowType.EXPRESSION, new HashMap<>());
         getVariableGroupSection().ifPresent(this::loadVariableGroups);
     }
 
@@ -105,7 +103,7 @@ public class FlowConfigParser {
         return Optional.empty();
     }
 
-    private Optional<Pair<String, List<String>>> getFlowStatements() {
+    private Optional<Tuple<String, List<String>>> getFlowStatements() {
         if (getConfig() == null) return Optional.empty();
         Set<String> keys = getConfig().getKeys(false);
 
@@ -113,7 +111,7 @@ public class FlowConfigParser {
 
         for (String key : keys) {
             if (getConfig().isList(key)) {
-                return Optional.of(new Pair<>(key, getConfig().getStringList(key)));
+                return Optional.of(new Tuple<>(key, getConfig().getStringList(key)));
             }
         }
 
@@ -122,7 +120,7 @@ public class FlowConfigParser {
 
     public List<Action<?>> parseActions() {
         return getFlowStatements()
-                .map(pair -> new Pair<>(pair.getKey(), parse(pair.getValue())))
+                .map(pair -> new Tuple<>(pair.getKey(), parse(pair.getValue())))
                 .map(pair -> parseActions(pair.getKey(), pair.getValue()))
                 .orElse(new ArrayList<>());
     }
@@ -154,7 +152,7 @@ public class FlowConfigParser {
                                     }
                                     return action;
                                 })
-                                .ifPresentOrElse(actions::add, () -> ActionAPI.UNKNOWN_ACTIONS.add(expression.getTypeId()));
+                                .ifPresent(actions::add);
 
                         if (!applicableRequirements.isEmpty()) {
                             resetRequirements = true;
@@ -170,8 +168,7 @@ public class FlowConfigParser {
                         String id = ConfigUtil.getFileName(getConfig()) + "." + key + "." + expression.getTypeId();
 
                         createRequirement(id, expression)
-                                .ifPresentOrElse(applicableRequirements::add,
-                                        () -> ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId()));
+                                .ifPresent(applicableRequirements::add);
                         break;
                 }
             }
@@ -215,7 +212,7 @@ public class FlowConfigParser {
     public List<TriggerFactory> parseTrigger() {
 
         ArrayList<TriggerFactory> factories = new ArrayList<>();
-        Optional<Pair<String, List<String>>> flowStatements = getFlowStatements();
+        Optional<Tuple<String, List<String>>> flowStatements = getFlowStatements();
         if (!flowStatements.isPresent()) return new ArrayList<>();
 
         long delay = 0;
@@ -295,13 +292,11 @@ public class FlowConfigParser {
                         configuration.set("delay", delay);
 
                         createAction(expression)
-                                .ifPresentOrElse(action -> requirements.get(requirements.size() - 1).addAction(action),
-                                        () -> ActionAPI.UNKNOWN_ACTIONS.add(expression.getTypeId()));
+                                .ifPresent(action -> requirements.get(requirements.size() - 1).addAction(action));
                         break;
                     case REQUIREMENT:
                         createRequirement(id, expression)
-                                .ifPresentOrElse(requirements::add,
-                                        () -> ActionAPI.UNKNOWN_REQUIREMENTS.add(expression.getTypeId()));
+                                .ifPresent(requirements::add);
                         break;
                 }
             }
@@ -311,19 +306,19 @@ public class FlowConfigParser {
     }
 
     private Optional<ActionConfigWrapper<?>> createAction(ActionAPIType expression) {
-        return createGroupAction(expression)
-                .or(() -> ActionAPI.createAction(expression.getTypeId(), expression.getConfiguration()));
+        return Optional.ofNullable(createGroupAction(expression)
+                .orElseGet(() -> ActionAPI.createAction(expression.getTypeId(), expression.getConfiguration()).orElse(null)));
     }
 
     private Optional<RequirementConfigWrapper<?>> createRequirement(String id, ActionAPIType expression) {
-        return createGroupRequirement(id, expression)
-                .or(() -> ActionAPI.createRequirement(id, expression.getTypeId(), expression.getConfiguration()));
+        return Optional.ofNullable(createGroupRequirement(id, expression)
+                .orElseGet(() -> ActionAPI.createRequirement(id, expression.getTypeId(), expression.getConfiguration()).orElse(null)));
     }
 
     public List<Answer> parseAnswers(StageTemplate template) {
 
         ArrayList<Answer> answers = new ArrayList<>();
-        Optional<Pair<String, List<String>>> flowStatements = getFlowStatements();
+        Optional<Tuple<String, List<String>>> flowStatements = getFlowStatements();
         if (!flowStatements.isPresent()) return new ArrayList<>();
         String key = flowStatements.get().getKey();
 

@@ -44,7 +44,7 @@ public class InventorySync implements Listener {
     }
 
     private TPlayerInventory getPlayerInventory(Player player) {
-        return plugin.getDatabase().find(TPlayerInventory.class)
+        return plugin.getRcDatabase().find(TPlayerInventory.class)
                 .where()
                 .eq("player", player.getUniqueId())
                 .findOne();
@@ -64,7 +64,7 @@ public class InventorySync implements Listener {
         tPlayerInventory.setLevel(player.getLevel());
         tPlayerInventory.setCreatedAt(new Date(System.currentTimeMillis()));
         tPlayerInventory.setLocked(false);
-        plugin.getDatabase().save(tPlayerInventory);
+        plugin.getRcDatabase().save(tPlayerInventory);
     }
 
     private void saveInventoryAndRemoveLock(Player player) {
@@ -96,7 +96,7 @@ public class InventorySync implements Listener {
         player.setExp(0);
         player.setLevel(0);
         tPlayerInventory.setLocked(false);
-        plugin.getDatabase().update(tPlayerInventory);
+        plugin.getRcDatabase().update(tPlayerInventory);
     }
 
 
@@ -116,7 +116,7 @@ public class InventorySync implements Listener {
 
         loginLockCache.add(event.getPlayer().getUniqueId());
 
-        TPlayerInventory inventory = plugin.getDatabase().find(TPlayerInventory.class)
+        TPlayerInventory inventory = plugin.getRcDatabase().find(TPlayerInventory.class)
                 .where()
                 .eq("player", event.getPlayer().getUniqueId())
                 .findOne();
@@ -177,7 +177,7 @@ public class InventorySync implements Listener {
                 }
                 inventory.setLocked(true);
                 finished = true;
-                plugin.getDatabase().update(inventory);
+                plugin.getRcDatabase().update(inventory);
                 loginLockCache.remove(player.getUniqueId());
             }
 

@@ -3,9 +3,12 @@ package de.raidcraft.api.conversations.actions;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.util.ConfigUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+
+import java.util.Optional;
 
 public class ClearConversationAction implements Action<Player> {
 
@@ -20,10 +23,10 @@ public class ClearConversationAction implements Action<Player> {
     @Override
     public void accept(Player player, ConfigurationSection config) {
 
-        Conversations.getConversationHost(config.getString("host")).ifPresentOrElse(
-                host -> host.clearConversation(player),
-                () -> RaidCraft.LOGGER.warning("Invalid host " + config.getString("host") + " in " + ConfigUtil.getFileName(config))
-        );
-
+        Optional<ConversationHost<?>> optionalHost = Conversations.getConversationHost(config.getString("host"));
+        optionalHost.ifPresent(host -> host.clearConversation(player));
+        if (!optionalHost.isPresent()) {
+            RaidCraft.LOGGER.warning("Unknow host " + config.getString("host") + " in " + ConfigUtil.getFileName(config));
+        }
     }
 }

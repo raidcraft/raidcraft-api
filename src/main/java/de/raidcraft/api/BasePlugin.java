@@ -6,8 +6,6 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
-import de.raidcraft.api.database.Database;
-import de.raidcraft.api.database.Table;
 import de.raidcraft.api.ebean.DatabaseConfig;
 import de.raidcraft.api.ebean.RaidCraftDatabase;
 import de.raidcraft.api.language.ConfigTranslationProvider;
@@ -49,11 +47,10 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
 
     // member variables
     private final Map<String, QueuedCommand> queuedCommands = new HashMap<>();
-    private Database database;
-    private RaidCraftDatabase ebeanDatabase;
     private TranslationProvider translationProvider;
     private CommandsManager<CommandSender> commands;
     private CommandsManagerRegistration commandRegistration;
+    private RaidCraftDatabase database;
 
     public final void onEnable() {
 
@@ -99,7 +96,7 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
         this.commandRegistration = new CommandsManagerRegistration(this, this, this.commands);
         // check if the database needs to be setup
         if (getDatabaseClasses().size() > 0) {
-            getDatabase();
+            getRcDatabase();
         }
         // call the sub plugins to enable
         enable();
@@ -130,14 +127,14 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
 
     public abstract void disable();
 
-    public EbeanServer getDatabase() {
+    public EbeanServer getRcDatabase() {
 
-        if (this.ebeanDatabase == null) {
-            this.ebeanDatabase = new RaidCraftDatabase(this);
-            DatabaseConfig config = configure(new DatabaseConfig(this));
-            this.ebeanDatabase.initializeDatabase(config);
+        if (database == null) {
+            this.database = new RaidCraftDatabase(this);
+            this.database.initializeDatabase(new DatabaseConfig(this));
         }
-        return this.ebeanDatabase.getDatabase();
+
+        return this.database.getDatabase();
     }
 
     /**
@@ -231,15 +228,6 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
         }
 
         return (chat != null);
-    }
-
-
-    public final void registerTable(Class<? extends Table> clazz, Table table) {
-
-        if (database == null) {
-            database = new Database();
-        }
-        database.registerTable(clazz, table);
     }
 
     public final void registerCommands(Class<?> clazz) {

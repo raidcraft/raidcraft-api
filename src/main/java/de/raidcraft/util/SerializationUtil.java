@@ -7,12 +7,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,11 +114,23 @@ public class SerializationUtil {
             oos.flush();
 
             // toHexString
-            return new HexBinaryAdapter().marshal(baos.toByteArray());
+            return bytesToHex(baos.toByteArray());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
     /**
@@ -152,7 +159,7 @@ public class SerializationUtil {
     public static Map<String, Object> mapFromByteStream(String hex) {
 
         // create streams
-        byte[] bytes = new HexBinaryAdapter().unmarshal(hex);
+        byte[] bytes = hexStringToByteArray(hex);
 
         try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes)) {
             ObjectInputStream ois = new ObjectInputStream(bais);
@@ -161,6 +168,16 @@ public class SerializationUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i + 1), 16));
+        }
+        return data;
     }
 
     /**

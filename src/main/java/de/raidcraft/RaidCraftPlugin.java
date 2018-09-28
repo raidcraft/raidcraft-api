@@ -173,7 +173,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         try {
             // delete all commands
-            SqlUpdate deleteCommands = getDatabase().createSqlUpdate("DELETE FROM rc_commands WHERE server = :server");
+            SqlUpdate deleteCommands = getRcDatabase().createSqlUpdate("DELETE FROM rc_commands WHERE server = :server");
             deleteCommands.setParameter("server", Bukkit.getServerName());
             deleteCommands.execute();
         } catch (PersistenceException e) {
@@ -328,14 +328,14 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         log.setPlayer(player.getUniqueId());
         log.setName(player.getName());
         log.setWorld(player.getLocation().getWorld().getName());
-        getDatabase().save(log);
+        getRcDatabase().save(log);
         for (Statistic statistic : Statistic.values()) {
             if (!statistic.isSubstatistic()) {
                 TPlayerLogStatistic stat = new TPlayerLogStatistic();
                 stat.setLog(log);
                 stat.setStatistic(statistic.name());
                 stat.setLogonValue(player.getStatistic(statistic));
-                getDatabase().save(stat);
+                getRcDatabase().save(stat);
             }
         }
         for (Map.Entry<String, PlayerStatisticProvider> playerStat : RaidCraft.getStatisticProviders().entrySet()) {
@@ -343,9 +343,9 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             stat.setLog(log);
             stat.setStatistic(playerStat.getKey());
             stat.setLogonValue(playerStat.getValue().getStatisticValue(player));
-            getDatabase().save(stat);
+            getRcDatabase().save(stat);
         }
-        TPlayerLog addedLog = getDatabase().find(TPlayerLog.class).where().eq("player", player.getUniqueId()).eq("join_time", joinTime).findOne();
+        TPlayerLog addedLog = getRcDatabase().find(TPlayerLog.class).where().eq("player", player.getUniqueId()).eq("join_time", joinTime).findOne();
         if (addedLog == null) {
             getLogger().warning("Could not find added log for " + player.getName());
         } else {
@@ -357,13 +357,13 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         if (player == null || player.getUniqueId() == null || !playerLogs.containsKey(player.getUniqueId())) return;
         int id = playerLogs.remove(player.getUniqueId());
-        TPlayerLog log = getDatabase().find(TPlayerLog.class, id);
+        TPlayerLog log = getRcDatabase().find(TPlayerLog.class, id);
         if (log == null) {
             getLogger().warning("Could not find player log with id " + id);
             return;
         }
         log.setQuitTime(Timestamp.from(Instant.now()));
-        getDatabase().update(log);
+        getRcDatabase().update(log);
         Set<String> stats = Arrays.asList(Statistic.values()).stream().map(s -> s.name()).collect(Collectors.toSet());
         List<TPlayerLogStatistic> statistics = log.getStatistics();
         for (TPlayerLogStatistic statistic : statistics) {
@@ -375,7 +375,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                     statistic.setLogoffValue(provider.getStatisticValue(player));
                 }
             }
-            getDatabase().update(statistic);
+            getRcDatabase().update(statistic);
         }
     }
 
@@ -394,7 +394,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         UUID uuid = event.getUniqueId();
         String name = event.getName();
 
-        TRcPlayer player = getDatabase().find(TRcPlayer.class)
+        TRcPlayer player = getRcDatabase().find(TRcPlayer.class)
                 .where().eq("uuid", uuid.toString()).findOne();
         // known player
         if (player != null) {
@@ -407,11 +407,11 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                         "You changed your playername. Contact raid-craft.de to reactivate.");
             }
             player.setLastJoined(new Date());
-            getDatabase().save(player);
+            getRcDatabase().save(player);
             return;
         }
         // new player
-        player = getDatabase().find(TRcPlayer.class)
+        player = getRcDatabase().find(TRcPlayer.class)
                 .where().ieq("last_name", name).findOne();
         // check if displayName already in use
         if (player != null) {
@@ -428,7 +428,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         Date currentTime = new Date();
         player.setFirstJoined(currentTime);
         player.setLastJoined(currentTime);
-        getDatabase().save(player);
+        getRcDatabase().save(player);
     }
 
     /**
@@ -452,7 +452,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
                 }
                 continue;
             }
-            getDatabase().save(TCommand.parseCommand(method, host, baseClass));
+            getRcDatabase().save(TCommand.parseCommand(method, host, baseClass));
         }
     }
 

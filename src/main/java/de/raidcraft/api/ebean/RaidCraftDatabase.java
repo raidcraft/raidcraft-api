@@ -6,8 +6,6 @@ import de.raidcraft.util.EnumUtils;
 import io.ebean.EbeanServer;
 import io.ebean.EbeanServerFactory;
 import io.ebean.config.ServerConfig;
-import io.ebeaninternal.api.SpiEbeanServer;
-import io.ebeaninternal.dbmigration.DdlGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.sql.DataSource;
@@ -109,19 +107,15 @@ public class RaidCraftDatabase {
 
             //Prepare the database
             prepareDatabase(
-                    driver.getDriver(),
-                    url,
+                    config.getString("database", "minecraft"),
                     config.getString("username", "minecraft"),
                     config.getString("password", "password"),
-                    config.getString("isolation", "SERIALIZABLE"));
+                    config.getString("server", "localhost:3306"));
 
             config.save();
 
             //Load the database
             loadDatabase();
-
-            //Create all tables
-            installDatabase(config.getBoolean("rebuild", false));
         } catch (Exception ex) {
             throw new RuntimeException("An exception has occured while initializing the database", ex);
         } finally {
@@ -130,17 +124,27 @@ public class RaidCraftDatabase {
         }
     }
 
-    private void prepareDatabase(String driver, String url, String username, String password, String isolation) {
+    private void prepareDatabase(String database, String username, String password, String server) {
 
         MysqlDataSource ds = new MysqlDataSource();
-        ds.setUrl(replaceDatabaseString(url));
+        ds.setDatabaseName(database);
         ds.setUser(username);
         ds.setPassword(password);
+        String[] split = server.split(":");
+        if (split.length > 1) {
+            ds.setPort(Integer.parseInt(split[1]));
+        } else {
+            ds.setPort(3306);
+        }
+        ds.setServerName(split[0]);
 
         //Setup the server configuration
         ServerConfig sc = new ServerConfig();
-        sc.setDefaultServer(false);
-        sc.setRegister(false);
+        sc.setDefaultServer(true);
+        sc.setRegister(true);
+        sc.setRunMigration(true);
+        sc.setDdlGenerate(true);
+        sc.setDdlRun(true);
 
         sc.setName(ds.getUrl().replaceAll("[^a-zA-Z0-9]", ""));
 
@@ -204,58 +208,6 @@ public class RaidCraftDatabase {
             } catch (Exception e) {
                 System.out.println("Failed to revert the \"defaultUseCaches\"-field back to its original value, URLConnection-caching remains disabled.");
             }
-        }
-    }
-
-    private void installDatabase(boolean rebuild) {
-        //Check if the database already (partially) exists
-        boolean databaseExists = false;
-
-        List<Class<?>> classes = getDatabaseClasses();
-
-        if (classes.size() < 1) return;
-
-        for (int i = 0; i < classes.size(); i++) {
-            try {
-                //Do a simple query which only throws an exception if the table does not exist
-                ebeanServer.find(classes.get(i)).findCount();
-
-                //Query passed without throwing an exception, a database therefore already exists
-                databaseExists = true;
-                break;
-            } catch (Exception ex) {
-                //Do nothing
-            }
-        }
-
-        //Check if the database has to be created or rebuilt
-        if (!rebuild && databaseExists) {
-            return;
-        }
-
-        //Create a DDL generator
-        SpiEbeanServer serv = (SpiEbeanServer) ebeanServer;
-        DdlGenerator ddlGenerator = new DdlGenerator(serv, ((SpiEbeanServer) ebeanServer).getServerConfig());
-
-
-
-        //Fire "before drop" event
-        try {
-            beforeDropDatabase();
-        } catch (Exception ex) {
-            //If the database exists, dropping has to be canceled to prevent data-loss
-            if (databaseExists) {
-                throw new RuntimeException("An unexpected exception occured", ex);
-            }
-        }
-
-        ddlGenerator.execute(true);
-
-        //Fire "after create" event
-        try {
-            afterCreateDatabase();
-        } catch (Exception ex) {
-            throw new RuntimeException("An unexpected exception occured", ex);
         }
     }
 

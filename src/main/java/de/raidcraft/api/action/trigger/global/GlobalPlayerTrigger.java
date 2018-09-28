@@ -2,7 +2,6 @@ package de.raidcraft.api.action.trigger.global;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.trigger.Trigger;
-import de.raidcraft.api.config.Config;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.LocationUtil;
@@ -11,7 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
@@ -350,13 +348,18 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
 
             Optional<ItemStack> item = RaidCraft.getItem(config.getString("item"));
 
-            item.ifPresentOrElse(itemStack -> {
+            item.ifPresent(itemStack -> {
                 event.setCancelled(true);
                 if (event.getEntity() instanceof Sheep) {
                     ((Sheep) event.getEntity()).setSheared(true);
                 }
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), itemStack);
-            }, () -> RaidCraft.LOGGER.warning("Invalid item " + config.getString("item") + " inside " + ConfigUtil.getFileName(config)));
+            });
+
+            if (!item.isPresent()) {
+                RaidCraft.LOGGER.warning("Invalid item " + config.getString("item") + " inside " + ConfigUtil.getFileName(config));
+                return false;
+            }
 
             return true;
         });

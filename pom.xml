@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>raidcraft-api</artifactId>
     <packaging>jar</packaging>
-    <version>1.12-0.3-SNAPSHOT</version>
+    <version>1.12-0.5-SNAPSHOT</version>
     <name>RaidCraft-API</name>
 
     <parent>
         <groupId>de.faldoria</groupId>
         <artifactId>FaldoriaMasterPom</artifactId>
-        <version>1.12-0.11</version>
+        <version>1.12-0.15</version>
     </parent>
 
     <repositories>
@@ -21,15 +21,27 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.comphenix.packetwrapper</groupId>
-            <artifactId>PacketWrapper</artifactId>
-            <version>1.12.1-R0.1-SNAPSHOT</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.persistence</groupId>
+                    <artifactId>persistence-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.6</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>de.slikey</groupId>
@@ -40,36 +52,18 @@
             <groupId>fr.zcraft</groupId>
             <artifactId>zlib</artifactId>
             <version>0.99-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.9.6</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.2.11</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-            <version>2.2.11</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>2.2.11</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.2.0</version>
+            <type>maven-plugin</type>
         </dependency>
     </dependencies>
 
@@ -80,7 +74,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -94,11 +88,11 @@
                                     <include>io.ebean:*</include>
                                     <include>org.avaje:*</include>
                                     <include>org.slf4j:*</include>
-                                    <include>javax.xml.bind</include>
-                                    <include>com.sun.xml.bind</include>
-                                    <include>javax.activation</include>
                                     <include>com.fasterxml.jackson.core:*</include>
                                 </includes>
+                                <excludes>
+                                    <exclude>javax.persistence:persistence-api</exclude>
+                                </excludes>
                             </artifactSet>
                         </configuration>
                     </execution>
