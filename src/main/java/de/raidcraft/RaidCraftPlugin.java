@@ -280,7 +280,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TRcPlayer.class);
         classes.add(TListener.class);
         classes.add(TLog.class);
-        classes.add(TPlugin_.class);
+        classes.add(TPlugin.class);
         classes.add(TPlayerLog.class);
         classes.add(TPlayerLogStatistic.class);
         classes.add(TPlayerInventory.class);

@@ -12,11 +12,12 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "rc_plugin")
-public class TPlugin_ {
+public class TPlugin {
 
     @Id
     private int id;
     private String name;
+    private String description;
     private String version;
     private String author;
     private Date lastActive;

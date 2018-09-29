@@ -3,7 +3,7 @@
     <changeSet type="apply">
         <createTable name="rc_player_placed_blocks" pkName="pk_rc_player_placed_blocks">
             <column name="id" type="integer" primaryKey="true"/>
-            <column name="world" type="uuid(40)"/>
+            <column name="world" type="uuid"/>
             <column name="chunk_x" type="integer" notnull="true"/>
             <column name="chunk_z" type="integer" notnull="true"/>
             <column name="x" type="integer" notnull="true"/>
@@ -62,7 +62,7 @@
             <column name="id" type="integer" primaryKey="true"/>
             <column name="plugin" type="varchar"/>
             <column name="requirement" type="varchar"/>
-            <column name="uuid" type="uuid(40)"/>
+            <column name="uuid" type="uuid"/>
         </createTable>
         <createTable name="raidcraft_persistant_requirement_mappings"
                      pkName="pk_raidcraft_persistant_requirement_mappings">
@@ -89,7 +89,7 @@
         </createTable>
         <createTable name="rc_player_inventories" pkName="pk_rc_player_inventories">
             <column name="id" type="integer" primaryKey="true"/>
-            <column name="player" type="uuid(40)" notnull="true"/>
+            <column name="player" type="uuid" notnull="true"/>
             <column name="inventory_id" type="integer" notnull="true"/>
             <column name="object_helmet" type="integer" notnull="true"/>
             <column name="object_chestplate" type="integer" notnull="true"/>
@@ -104,7 +104,7 @@
         </createTable>
         <createTable name="rc_player_logs" pkName="pk_rc_player_logs">
             <column name="id" type="integer" primaryKey="true"/>
-            <column name="player" type="uuid(40)"/>
+            <column name="player" type="uuid"/>
             <column name="name" type="varchar"/>
             <column name="join_time" type="timestamp"/>
             <column name="quit_time" type="timestamp"/>
@@ -121,13 +121,14 @@
         <createTable name="rc_plugin" pkName="pk_rc_plugin">
             <column name="id" type="integer" primaryKey="true"/>
             <column name="name" type="varchar"/>
+            <column name="description" type="varchar"/>
             <column name="version" type="varchar"/>
             <column name="author" type="varchar"/>
             <column name="last_active" type="timestamp"/>
         </createTable>
         <createTable name="rc_players" pkName="pk_rc_players">
             <column name="id" type="integer" primaryKey="true"/>
-            <column name="uuid" type="uuid(40)"/>
+            <column name="uuid" type="uuid"/>
             <column name="last_name" type="varchar"/>
             <column name="last_joined" type="timestamp"/>
             <column name="first_joined" type="timestamp"/>

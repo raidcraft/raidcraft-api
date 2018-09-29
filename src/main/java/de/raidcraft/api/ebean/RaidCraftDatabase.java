@@ -5,6 +5,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.util.EnumUtils;
 import io.ebean.EbeanServer;
 import io.ebean.EbeanServerFactory;
+import io.ebean.config.DbMigrationConfig;
 import io.ebean.config.ServerConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -143,8 +144,9 @@ public class RaidCraftDatabase {
         sc.setDefaultServer(true);
         sc.setRegister(true);
         sc.setRunMigration(true);
-        sc.setDdlGenerate(true);
-        sc.setDdlRun(true);
+        DbMigrationConfig migrationConfig = new DbMigrationConfig();
+        migrationConfig.setMigrationPath("dbmigration/" + plugin.getName());
+        sc.setMigrationConfig(migrationConfig);
 
         sc.setName(ds.getUrl().replaceAll("[^a-zA-Z0-9]", ""));
 
