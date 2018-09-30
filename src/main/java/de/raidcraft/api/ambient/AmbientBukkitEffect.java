@@ -1,7 +1,6 @@
 package de.raidcraft.api.ambient;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.EnumUtils;
 import org.bukkit.Effect;
@@ -28,8 +27,7 @@ public class AmbientBukkitEffect extends AbstractAmbientEffect {
         this.speed = (float) config.getDouble("speed", 1.0);
         this.particleCount = config.getInt("particle-count", 10);
         if (effectType == null) {
-            RaidCraft.log("Invalid bukkit effect type: " + config.getString("effect") + " in " + ConfigUtil.getFileName(config),
-                    "AmbientBukkitEffect", RcLogLevel.WARNING);
+            RaidCraft.LOGGER.warning("Invalid bukkit effect type: " + config.getString("effect") + " in " + ConfigUtil.getFileName(config));
         }
     }
 

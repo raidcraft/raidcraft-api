@@ -2,7 +2,6 @@ package de.raidcraft.api.ambient;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import de.raidcraft.RaidCraft;
-import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.EnumUtils;
 import org.bukkit.Location;
@@ -28,8 +27,7 @@ public class AmbientParticleEffect extends AbstractAmbientEffect {
         this.yOffset = (float) config.getDouble("y-offset", 0.25);
         this.zOffset = (float) config.getDouble("z-offset", 0.25);
         if (particleEffect == null) {
-            RaidCraft.log("Invalid particle effect type: " + config.getString("effect") + " in " + ConfigUtil.getFileName(config),
-                    "AmbientParticleEffect", RcLogLevel.WARNING);
+            RaidCraft.LOGGER.warning("Invalid particle effect type: " + config.getString("effect") + " in " + ConfigUtil.getFileName(config));
         }
     }
 

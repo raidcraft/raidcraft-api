@@ -5,7 +5,7 @@ import de.raidcraft.api.BasePlugin;
 import de.raidcraft.util.EnumUtils;
 import io.ebean.EbeanServer;
 import io.ebean.EbeanServerFactory;
-import io.ebean.config.DbMigrationConfig;
+import io.ebean.config.ClassLoadConfig;
 import io.ebean.config.ServerConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -111,7 +111,8 @@ public class RaidCraftDatabase {
                     config.getString("database", "minecraft"),
                     config.getString("username", "minecraft"),
                     config.getString("password", "password"),
-                    config.getString("server", "localhost:3306"));
+                    config.getString("server", "localhost:3306"),
+                    config.getBoolean("rebuild", false));
 
             config.save();
 
@@ -125,7 +126,7 @@ public class RaidCraftDatabase {
         }
     }
 
-    private void prepareDatabase(String database, String username, String password, String server) {
+    private void prepareDatabase(String database, String username, String password, String server, boolean rebuild) {
 
         MysqlDataSource ds = new MysqlDataSource();
         ds.setDatabaseName(database);
@@ -142,13 +143,11 @@ public class RaidCraftDatabase {
         //Setup the server configuration
         ServerConfig sc = new ServerConfig();
         sc.setDefaultServer(true);
-        sc.setRegister(true);
         sc.setRunMigration(true);
-        DbMigrationConfig migrationConfig = new DbMigrationConfig();
-        migrationConfig.setMigrationPath("dbmigration/" + plugin.getName());
-        sc.setMigrationConfig(migrationConfig);
+        sc.setClassLoadConfig(new ClassLoadConfig(classLoader));
+        sc.setClasses(getDatabaseClasses());
 
-        sc.setName(ds.getUrl().replaceAll("[^a-zA-Z0-9]", ""));
+//        sc.setName(ds.getUrl().replaceAll("[^a-zA-Z0-9]", ""));
 
         //Get all persistent classes
         List<Class<?>> classes = getDatabaseClasses();

@@ -14,7 +14,6 @@ import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.host.ConversationHostFactory;
 import de.raidcraft.api.conversations.stage.Stage;
 import de.raidcraft.api.conversations.stage.StageTemplate;
-import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.fanciful.FancyMessage;
 import org.bukkit.ChatColor;
@@ -409,7 +408,7 @@ public class Conversations {
 
         conv.sendMessage(ChatColor.RED + error);
         conv.abort(ConversationEndReason.ERROR);
-        RaidCraft.log(error, "Conversation::" + conv.getIdentifier(), RcLogLevel.WARNING);
+        RaidCraft.LOGGER.warning(error);
     }
 
     public static void registerConversationType(String type, Class<? extends Conversation> conversation) {

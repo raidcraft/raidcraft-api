@@ -1,21 +1,29 @@
 package de.raidcraft.util;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
-import de.raidcraft.tables.TRcPlayer;
+import de.raidcraft.api.player.PlayerResolver;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * @author Silthus
  */
 public class UUIDUtil {
+
+    private static PlayerResolver _resolver;
+
+    private static Optional<PlayerResolver> getPlayerResolver() {
+        if (_resolver == null) {
+            _resolver = RaidCraft.getComponent(PlayerResolver.class);
+        }
+        return Optional.ofNullable(_resolver);
+    }
 
     public static <T> UUID getUUIDfrom(T type) {
 
@@ -28,13 +36,9 @@ public class UUIDUtil {
 
     public static UUID convertPlayer(@NonNull String name) {
 
-        TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getRcDatabase()
-                .find(TRcPlayer.class).where().eq("last_name", name).findOne();
-        if (tPlayer != null) {
-            return tPlayer.getUuid();
-        }
-        // if we are here there is no player for this displayName -> must be a npc
-        return Bukkit.getOfflinePlayer(name).getUniqueId();
+        return getPlayerResolver()
+                .map(playerResolver -> playerResolver.convertPlayer(name))
+                .orElseGet(() -> Bukkit.getOfflinePlayer(name).getUniqueId());
     }
 
     public static String getUUIDStringFromName(String name) {
@@ -49,17 +53,9 @@ public class UUIDUtil {
             return null;
         }
 
-        TRcPlayer tPlayer = RaidCraft.getComponent(RaidCraftPlugin.class).getRcDatabase()
-                .find(TRcPlayer.class).where().eq("uuid", uuid.toString()).findOne();
-        if (tPlayer != null) {
-            return tPlayer.getLastName();
-        }
-
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-        if(offlinePlayer == null) {
-            return null;
-        }
-        return offlinePlayer.getName();
+        return getPlayerResolver()
+                .map(playerResolver -> playerResolver.getNameFromUUID(uuid))
+                .orElseGet(() -> Bukkit.getOfflinePlayer(uuid).getName());
     }
 
     public static String getNameFromUUID(String uuid) {
@@ -79,20 +75,15 @@ public class UUIDUtil {
 
     public static int getPlayerId(UUID uuid) {
 
-        if (uuid == null) return 0;
-        TRcPlayer rcPlayer = RaidCraft.getDatabase(RaidCraftPlugin.class).find(TRcPlayer.class).where().eq("uuid", uuid).findOne();
-        if (rcPlayer != null) {
-            return rcPlayer.getId();
-        }
-        return 0;
+        return getPlayerResolver()
+                .map(playerResolver -> playerResolver.getPlayerId(uuid))
+                .orElse(0);
     }
 
     public static UUID getUuidFromPlayerId(int id) {
 
-        TRcPlayer rcPlayer = RaidCraft.getDatabase(RaidCraftPlugin.class).find(TRcPlayer.class, id);
-        if (rcPlayer != null) {
-            return rcPlayer.getUuid();
-        }
-        return null;
+        return getPlayerResolver()
+                .map(playerResolver -> playerResolver.getUuidFromPlayerId(id))
+                .orElse(null);
     }
 }

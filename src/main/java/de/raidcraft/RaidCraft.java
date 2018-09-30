@@ -5,10 +5,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.Component;
 import de.raidcraft.api.RaidCraftException;
-import de.raidcraft.api.action.ActionAPI;
-import de.raidcraft.api.action.flow.FlowType;
 import de.raidcraft.api.bukkit.BukkitPlayer;
-import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.conversation.ConversationVariable;
@@ -34,13 +31,8 @@ import de.raidcraft.api.player.UnknownPlayerException;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
 import de.raidcraft.api.trades.TradeProvider;
-import de.raidcraft.tables.RcLogLevel;
-import de.raidcraft.tables.TActionApi;
-import de.raidcraft.tables.TListener;
-import de.raidcraft.tables.TLog;
 import de.raidcraft.util.*;
 import io.ebean.EbeanServer;
-import io.ebean.SqlUpdate;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.chat.Chat;
@@ -64,6 +56,7 @@ import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -359,7 +352,10 @@ public class RaidCraft implements Listener {
 
     public static boolean isPlayerPlacedBlock(Block block) {
 
-        return BlockUtil.isPlayerPlacedBlock(block);
+        BlockTracker component = RaidCraft.getComponent(BlockTracker.class);
+        if (component == null) return false;
+
+        return component.isPlayerPlacedBlock(block);
     }
 
     public static EbeanServer getDatabase(Class<? extends BasePlugin> clazz) {
@@ -593,76 +589,8 @@ public class RaidCraft implements Listener {
         return RaidCraft.getComponent(InventoryManager.class).createInventory(title, size);
     }
 
-    public static void trackActionApi() {
-        // deacative all
-        SqlUpdate deactiveUpdate = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class)
-                .getRcDatabase().createSqlUpdate("UPDATE rc_actionapi SET active = 0 WHERE server = :server");
-        deactiveUpdate.setParameter("server", Bukkit.getServerName());
-        deactiveUpdate.execute();
-
-        trackActionApi(FlowType.ACTION, ActionAPI.getActions());
-        trackActionApi(FlowType.REQUIREMENT, ActionAPI.getRequirements());
-        trackActionApi(FlowType.TRIGGER, ActionAPI.getTrigger());
-    }
-
-    public static <T extends ConfigGenerator> void trackActionApi(FlowType type, Map<String, T> map) {
-
-        EbeanServer db = RaidCraftPlugin.getPlugin(RaidCraftPlugin.class).getRcDatabase();
-        String server = Bukkit.getServerName();
-        for (String key : map.keySet()) {
-            T entry = map.get(key);
-            if (entry == null) {
-                continue;
-            }
-            TActionApi actionApi = db.find(TActionApi.class)
-                    .where()
-                    .eq("name", key)
-                    .eq("action_type", type.name().toLowerCase())
-                    .eq("server", server).findOne();
-            if (actionApi == null) {
-                actionApi = new TActionApi();
-                actionApi.setName(key);
-                actionApi.setAction_type(type.name().toLowerCase());
-                actionApi.setServer(server);
-                Optional<ConfigGenerator.Information> information = Optional.empty();
-                switch (type) {
-                    case ACTION:
-                        information = ActionAPI.getActionInformation(key);
-                        break;
-                    case REQUIREMENT:
-                        information = ActionAPI.getRequirementInformation(key);
-                        break;
-                    case TRIGGER:
-                        information = ActionAPI.getTriggerInformation(key);
-                        break;
-                }
-                if (information.isPresent()) {
-                    actionApi.setDescription(information.get().desc());
-                    actionApi.setConf(String.join(";", information.get().conf()));
-                }
-            }
-            actionApi.setActive(true);
-            actionApi.setLastActive(new Date());
-            db.save(actionApi);
-        }
-    }
-
     public static void registerEvents(Listener listener, Plugin plugin) {
 
-        RaidCraftPlugin rPlugin = RaidCraft.getComponent(RaidCraftPlugin.class);
-        String listenerName = listener.getClass().getName();
-        String server = Bukkit.getServerName();
-        TListener tListener = rPlugin.getRcDatabase().find(TListener.class)
-                .where().eq("listener", listenerName).eq("server", server).findOne();
-        if (tListener == null) {
-            tListener = new TListener();
-            tListener.setListener(listenerName);
-            tListener.setPlugin(plugin.getName());
-            tListener.setServer(server);
-            rPlugin.getRcDatabase().save(tListener);
-        }
-        tListener.setLastLoaded(new Date());
-        rPlugin.getRcDatabase().update(tListener);
         Bukkit.getPluginManager().registerEvents(listener, plugin);
     }
 
@@ -671,18 +599,12 @@ public class RaidCraft implements Listener {
      */
     public static void info(String message, String category) {
 
-        log(message, category, RcLogLevel.INFO);
+        RaidCraft.LOGGER.info(message);
     }
 
-    public static void log(String message, String category, RcLogLevel level) {
+    public static void log(String message, String category, Level level) {
 
-        TLog log = new TLog();
-        log.setLast(new Date());
-        log.setServer(Bukkit.getServerName());
-        log.setCategory(category);
-        log.setLevel(level);
-        log.setLog(message);
-        RaidCraft.getComponent(RaidCraftPlugin.class).getRcDatabase().save(log);
+        RaidCraft.LOGGER.log(level, message);
     }
 
     public static void registerPlayerStatisticProvider(BasePlugin plugin, String name, PlayerStatisticProvider provider) {

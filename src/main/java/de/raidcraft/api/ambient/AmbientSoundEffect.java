@@ -1,7 +1,6 @@
 package de.raidcraft.api.ambient;
 
 import de.raidcraft.RaidCraft;
-import de.raidcraft.tables.RcLogLevel;
 import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.EnumUtils;
 import org.bukkit.Location;
@@ -24,8 +23,7 @@ public class AmbientSoundEffect extends AbstractAmbientEffect {
         this.volume = (float) config.getDouble("volume", 1.0);
         this.pitch = (float) config.getDouble("pitch", 1.0);
         if (sound == null) {
-            RaidCraft.log("Invalid sound effect type: " + config.getString("effect") + " in " + ConfigUtil.getFileName(config),
-                    "AmbientSoundEffect", RcLogLevel.WARNING);
+            RaidCraft.LOGGER.warning("Invalid sound effect type: " + config.getString("effect") + " in " + ConfigUtil.getFileName(config));
         }
     }
 

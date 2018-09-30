@@ -1,9 +1,6 @@
 package de.raidcraft.util;
 
 import com.sk89q.worldedit.blocks.BlockType;
-import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
-import de.raidcraft.tables.PlayerPlacedBlock;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -191,21 +188,5 @@ public final class BlockUtil {
             }
         }
         return null;
-    }
-
-    public static void addPlayerPlacedBlock(Block block) {
-
-        if (!RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().checkPlayerBlockPlacement || isPlayerPlacedBlock(block)) {
-            return;
-        }
-        RaidCraft.getDatabase(RaidCraftPlugin.class).save(new PlayerPlacedBlock(block));
-    }
-
-    public static boolean isPlayerPlacedBlock(Block block) {
-
-        if (!RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().checkPlayerBlockPlacement) {
-            return false;
-        }
-        return PlayerPlacedBlock.isPlayerPlaced(block);
     }
 }

@@ -3,7 +3,6 @@ package de.raidcraft.api;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
 import de.raidcraft.api.ebean.DatabaseConfig;
@@ -11,7 +10,6 @@ import de.raidcraft.api.ebean.RaidCraftDatabase;
 import de.raidcraft.api.language.ConfigTranslationProvider;
 import de.raidcraft.api.language.TranslationProvider;
 import de.raidcraft.api.player.RCPlayer;
-import de.raidcraft.tables.RcLogLevel;
 import fr.zcraft.zlib.core.ZPlugin;
 import io.ebean.EbeanServer;
 import lombok.Getter;
@@ -33,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 /**
  * @author Silthus
@@ -240,7 +239,6 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
         if (host == null) {
             host = this.getName();
         }
-        RaidCraft.getComponent(RaidCraftPlugin.class).trackCommand(clazz, host, null);
         commandRegistration.register(clazz);
     }
 
@@ -274,33 +272,29 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
 
     public void severe(String message) {
 
-        log(message, null, RcLogLevel.SEVERE);
+        log(message, null, Level.SEVERE);
         getLogger().severe(message);
     }
 
     public void warning(String message) {
 
-        log(message, null, RcLogLevel.WARNING);
+        log(message, null, Level.WARNING);
         getLogger().warning(message);
     }
 
     public void info(String message) {
 
-        info(message, null);
+        getLogger().info(message);
     }
 
     public void info(String message, String category) {
 
-        log(message, category, RcLogLevel.INFO);
+        getLogger().info(message);
     }
 
-    public void log(String message, String category, RcLogLevel level) {
+    public void log(String message, String category, Level level) {
 
-        String tcategory = getName();
-        if (category != null && !category.equals("")) {
-            tcategory += "." + category;
-        }
-        RaidCraft.log(message, tcategory, level);
+        RaidCraft.LOGGER.log(level, message);
     }
 
 }
