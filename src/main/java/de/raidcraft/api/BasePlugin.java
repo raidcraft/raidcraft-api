@@ -130,7 +130,7 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
 
         if (database == null) {
             this.database = new RaidCraftDatabase(this);
-            this.database.initializeDatabase(new DatabaseConfig(this));
+            this.database.initializeDatabase(configure(new DatabaseConfig(this)));
         }
 
         return this.database.getDatabase();

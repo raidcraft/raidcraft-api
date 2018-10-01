@@ -10,6 +10,8 @@ import de.raidcraft.api.action.GlobalRequirement;
 import de.raidcraft.api.action.action.GroupAction;
 import de.raidcraft.api.action.requirement.GroupRequirement;
 import de.raidcraft.api.action.requirement.global.IfElseRequirement;
+import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
+import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
 import de.raidcraft.api.action.trigger.global.TimerTrigger;
 import de.raidcraft.api.commands.ConfirmCommand;
@@ -19,7 +21,10 @@ import de.raidcraft.api.config.MultiComment;
 import de.raidcraft.api.config.Setting;
 import de.raidcraft.api.events.PlayerSignInteractEvent;
 import de.raidcraft.api.inventory.InventoryManager;
+import de.raidcraft.api.inventory.TPersistentInventory;
+import de.raidcraft.api.inventory.TPersistentInventorySlot;
 import de.raidcraft.api.inventory.sync.InventorySync;
+import de.raidcraft.api.inventory.sync.TPlayerInventory;
 import de.raidcraft.api.items.CustomItemManager;
 import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.npc.NPC_Manager;
@@ -30,6 +35,7 @@ import de.raidcraft.api.random.objects.ItemLootObject;
 import de.raidcraft.api.random.objects.MoneyLootObject;
 import de.raidcraft.api.random.objects.RandomMoneyLootObject;
 import de.raidcraft.api.random.tables.ConfiguredRDSTable;
+import de.raidcraft.api.storage.TObjectStorage;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
 import io.ebean.SqlUpdate;
@@ -45,6 +51,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
 import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
@@ -141,6 +149,19 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         actionAPI.requirement(new IfElseRequirement<>(), Object.class);
         actionAPI.action(new GroupAction<>(), Player.class);
         actionAPI.requirement(new GroupRequirement<>(), Object.class);
+    }
+
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+
+        List<Class<?>> classes = new ArrayList<>();
+        classes.add(TObjectStorage.class);
+        classes.add(TPersistentInventory.class);
+        classes.add(TPersistentInventorySlot.class);
+        classes.add(TPersistantRequirement.class);
+        classes.add(TPersistantRequirementMapping.class);
+        classes.add(TPlayerInventory.class);
+        return classes;
     }
 
     private void setupDatabase() {
