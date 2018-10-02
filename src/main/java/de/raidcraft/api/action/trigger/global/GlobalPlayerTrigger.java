@@ -346,7 +346,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
 
             Optional<RDSTable> lootTable = RDS.getTable(config.getString("loot-table"));
             lootTable.ifPresent(rdsTable -> {
-                for (RDSObject object : rdsTable.getResult()) {
+                for (RDSObject object : rdsTable.loot()) {
                     if (object instanceof Spawnable) {
                         ((Spawnable) object).spawn(event.getEntity().getLocation());
                     } else if (object instanceof Obtainable) {
@@ -396,7 +396,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
         informListeners("fish", event.getPlayer(), config -> {
             Optional<RDSTable> lootTable = RDS.getTable(config.getString("loot-table"));
             lootTable.ifPresent(rdsTable -> {
-                for (RDSObject object : rdsTable.getResult()) {
+                for (RDSObject object : rdsTable.loot()) {
                     if (object instanceof ItemLootObject) {
                         item.setItemStack(((ItemLootObject) object).getItemStack());
                     } else if (object instanceof Obtainable) {

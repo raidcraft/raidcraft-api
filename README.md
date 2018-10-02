@@ -4,7 +4,7 @@
 
 Die RaidCraft API ist das Kernstück für alle RaidCraft Plugins. In ihr befinden sich grundlegende Methoden und APIs für den Zugriff auf Minecraft Schnittstellen.
 
-** CURRENT MIGRATION: 1.22 on DragonTravelPlus **
+** CURRENT MIGRATION: 1.25 on RCLoot **
 
 ## Getting Started
 

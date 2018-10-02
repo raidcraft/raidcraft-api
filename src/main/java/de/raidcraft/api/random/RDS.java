@@ -7,9 +7,9 @@ import de.raidcraft.util.CaseInsensitiveMap;
 import de.raidcraft.util.ConfigUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author mdoering
@@ -84,6 +84,7 @@ public class RDS {
             registeredTables.put(plugin.getName(), new CaseInsensitiveMap<>());
         }
         // load the properties
+        table.setId(name);
         table.setEnabled(config.getBoolean("enabled", true));
         table.setAlways(config.getBoolean("always", false));
         table.setUnique(config.getBoolean("unique", false));
@@ -113,5 +114,16 @@ public class RDS {
             }
         }
         return Optional.empty();
+    }
+
+    public static Collection<RDSTable> getLootTables() {
+
+        Collection<RDSTable> tables = new ArrayList<>();
+        for (Map<String, RDSTable> stringRDSTableMap : registeredTables.values()) {
+            for (String key : stringRDSTableMap.keySet()) {
+                tables.add(stringRDSTableMap.get(key));
+            }
+        }
+        return tables;
     }
 }

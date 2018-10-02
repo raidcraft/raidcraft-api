@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +25,8 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
     }
 
     private final Collection<RDSObject> contents;
+    private Collection<RDSObject> cachedResult;
+    private String id;
     private int count;
 
     public GenericRDSTable() {
@@ -54,6 +53,11 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
             this.contents = contents;
         }
         this.count = count;
+    }
+
+    @Override
+    public Optional<String> getId() {
+        return Optional.ofNullable(id);
     }
 
     @Override
@@ -100,7 +104,7 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
 
             if (!(object instanceof RDSNullValue)) {
                 if (object instanceof RDSTable) {
-                    result.addAll(((RDSTable) object).getResult());
+                    result.addAll(((RDSTable) object).loot());
                 } else {
                     // INSTANCECHECK
                     // Check if the object to add implements IRDSObjectCreator.
@@ -121,6 +125,9 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
 
     @Override
     public Collection<RDSObject> getResult() {
+
+        // TODO: discuss if caching makes sense
+        if (cachedResult != null) return cachedResult;
 
         // The return value, a list of hit objects
         List<RDSObject> result = new ArrayList<>();
@@ -178,6 +185,13 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
         }
 
         // Return the set now
+        this.cachedResult = result;
         return result;
+    }
+
+    @Override
+    public Collection<RDSObject> loot() {
+        this.cachedResult = null;
+        return getResult();
     }
 }
