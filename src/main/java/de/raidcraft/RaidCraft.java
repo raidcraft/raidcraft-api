@@ -450,7 +450,7 @@ public class RaidCraft implements Listener {
             itemStack.setAmount(amount);
             return Optional.of(itemStack);
         } catch (CustomItemException | NumberFormatException | StorageException e) {
-            e.printStackTrace();
+            LOGGER.warning(e.getMessage());
         }
         return Optional.empty();
     }
