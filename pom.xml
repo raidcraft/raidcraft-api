@@ -111,6 +111,15 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources/</directory>
+                <targetPath>.</targetPath>
+                <excludes>
+                    <exclude>ebean.mf</exclude>
+                </excludes>
+            </resource>
+        </resources>
     </build>
     
     <distributionManagement>

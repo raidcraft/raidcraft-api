@@ -3,12 +3,14 @@ package de.raidcraft.api.conversations.events;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 @RequiredArgsConstructor
-public class ConversationHostInteractEvent extends Event {
+public class ConversationHostInteractEvent extends Event implements Cancellable {
 
     @Getter
     private final String hostIdentifier;
@@ -16,6 +18,9 @@ public class ConversationHostInteractEvent extends Event {
     private final ConversationHost<?> questHost;
     @Getter
     private final Player player;
+    @Getter
+    @Setter
+    private boolean cancelled;
 
     // Bukkit stuff
     private static final HandlerList handlers = new HandlerList();
@@ -29,5 +34,4 @@ public class ConversationHostInteractEvent extends Event {
 
         return handlers;
     }
-
 }
