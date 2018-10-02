@@ -287,7 +287,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             Optional<ItemStack> returnItem = RaidCraft.getItem(config.getString("return", Material.MILK_BUCKET.name()));
 
             if (material == null) {
-                RaidCraft.LOGGER.warning("item: " + config.getString("item") + " does not exist! " + ConfigUtil.getFileName(config));
+                RaidCraft.LOGGER.warning("item: " + config.getString("item") + " does not exist in @player.milk! " + ConfigUtil.getFileName(config));
                 return false;
             }
             if (!returnItem.isPresent()) {
