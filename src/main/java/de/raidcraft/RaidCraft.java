@@ -28,6 +28,8 @@ import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.PlayerStatisticProvider;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
+import de.raidcraft.api.quests.QuestProvider;
+import de.raidcraft.api.quests.Quests;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
 import de.raidcraft.api.trades.TradeProvider;
@@ -68,6 +70,7 @@ import java.util.regex.Pattern;
  * @author Silthus
  */
 public class RaidCraft implements Listener {
+
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
@@ -394,6 +397,20 @@ public class RaidCraft implements Listener {
     public static boolean isCustomItem(ItemStack itemStack) {
 
         return CustomItemUtil.isCustomItem(itemStack);
+    }
+
+    /**
+     * Checks if the given {@link ItemStack} is of type {@link ItemType#QUEST}.
+     *
+     * @param item to check
+     * @return true if item is a quest item
+     */
+    public static boolean isQuestItem(ItemStack item) {
+        if (RaidCraft.isCustomItem(item)) {
+            CustomItemStack customItem = RaidCraft.getCustomItem(item);
+            return customItem.getItem().getType() == ItemType.QUEST;
+        }
+        return false;
     }
 
     /**
