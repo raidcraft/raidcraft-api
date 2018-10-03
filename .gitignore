@@ -23,7 +23,7 @@ target
 # Databases #
 #############
 *.db
-*.sql
+
 *.sqlite
 
 # Packages #
