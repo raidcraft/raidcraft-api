@@ -270,6 +270,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         public boolean debugTrigger = true;
         @Setting("debug.requirements")
         public boolean debugRequirements = true;
+        @Setting("debug.excluded-trigger")
+        public List<String> excludedTrigger = new ArrayList<>();
 
         @Setting("pastebin.apikey")
         @Comment("Get your pastebin api key from: https://pastebin.com/api")

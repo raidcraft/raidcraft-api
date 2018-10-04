@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -62,7 +63,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
 
         RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         String identifier = getIdentifier() + "." + action;
-        if (plugin.getConfig().debugTrigger) {
+        if (plugin.getConfig().debugTrigger && !plugin.getConfig().excludedTrigger.contains(identifier)) {
             plugin.getLogger().info("TRIGGER " + identifier + " fired for " + triggeringEntity);
         }
         if (registeredListeners.containsKey(identifier)) {
