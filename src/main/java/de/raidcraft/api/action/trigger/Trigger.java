@@ -67,7 +67,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
             plugin.getLogger().info("TRIGGER " + identifier + " fired for " + triggeringEntity);
         }
         if (registeredListeners.containsKey(identifier)) {
-            if (plugin.getConfig().debugTrigger) {
+            if (plugin.getConfig().debugTrigger && !plugin.getConfig().excludedTrigger.contains(identifier)) {
                 plugin.getLogger().info("TRIGGER " + identifier + " VALID");
             }
             List<TriggerListenerConfigWrapper<T>> list = new ArrayList<>(registeredListeners.get(identifier)).stream()
@@ -75,7 +75,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
                     // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate)).collect(Collectors.toList());
-            if (plugin.getConfig().debugTrigger && !list.isEmpty()) {
+            if (plugin.getConfig().debugTrigger && !list.isEmpty() && !plugin.getConfig().excludedTrigger.contains(identifier)) {
                 plugin.getLogger().info("TRIGGER " + identifier + " MATCHED TARGETS");
             }
             list.stream().filter(wrapper -> wrapper.getTriggerDelay() > 0)
