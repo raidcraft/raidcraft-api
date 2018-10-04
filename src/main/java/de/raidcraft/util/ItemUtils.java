@@ -38,14 +38,7 @@ public final class ItemUtils {
         if (Strings.isNullOrEmpty(name)) {
             return null;
         }
-        if (name.contains(":")) {
-            name = name.split(":")[0];
-        }
-        try {
-            return getItem(Integer.parseInt(name));
-        } catch (NumberFormatException e) {
-            return Material.matchMaterial(name);
-        }
+        return Material.matchMaterial(name);
     }
 
     public static ItemStack getItemStackByString(String name) {
@@ -60,11 +53,6 @@ public final class ItemUtils {
             }
         }
         return new ItemStack(material, 1, subid);
-    }
-
-    public static Material getItem(int id) {
-
-        return Material.getMaterial(id);
     }
 
     public static short getItemData(String item) {
@@ -93,16 +81,6 @@ public final class ItemUtils {
             return Item.getItemByMaterial(material).getFriendlyName(language);
         }
         return getFriendlyName(material);
-    }
-
-    public static String getFriendlyName(int id, Language language) {
-
-        return getFriendlyName(Material.getMaterial(id), language);
-    }
-
-    public static String getFriendlyName(int id) {
-
-        return getFriendlyName(Material.getMaterial(id));
     }
 
     public static boolean isStackValid(ItemStack item) {

@@ -283,7 +283,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
         informListeners("milk", event.getPlayer(), config -> {
 
             EntityType entityType = EntityType.valueOf(config.getString("entity", "COW"));
-            Material material = Material.getMaterial(config.getString("item", Material.BUCKET.name()));
+            Material material = Material.matchMaterial(config.getString("item", Material.BUCKET.name()));
             Optional<ItemStack> returnItem = RaidCraft.getItem(config.getString("return", Material.MILK_BUCKET.name()));
 
             if (material == null) {
