@@ -142,11 +142,11 @@ public class RaidCraftDatabase {
 
         //Setup the server configuration
         ServerConfig sc = new ServerConfig();
-        sc.setDefaultServer(true);
+        sc.setDefaultServer(false);
+        sc.setRegister(true);
         sc.setRunMigration(true);
         sc.setClassLoadConfig(new ClassLoadConfig(classLoader));
         sc.setClasses(getDatabaseClasses());
-
 //        sc.setName(ds.getUrl().replaceAll("[^a-zA-Z0-9]", ""));
 
         //Get all persistent classes

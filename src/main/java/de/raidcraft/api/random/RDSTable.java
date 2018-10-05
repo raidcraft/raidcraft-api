@@ -1,11 +1,27 @@
 package de.raidcraft.api.random;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * This interface describes a table of IRDSObjects. One (or more) of them is/are picked as the result set.
  */
 public interface RDSTable extends RDSObject {
+
+    /**
+     * Sets the id of the loot-table.
+     *
+     * @param id as given by the config loader.
+     */
+    void setId(String id);
+
+    /**
+     * Unique id of the loot-table. The id is based on the location of the loot-table.
+     * Can be empty if the table was not created by loading a config.
+     *
+     * @return unique id of the table or empty if not loaded from a config.
+     */
+    Optional<String> getId();
 
     /**
      * The maximum number of entries expected in the Result. The final count of items in the result may be lower
@@ -44,11 +60,19 @@ public interface RDSTable extends RDSObject {
     RDSTable addEntry(RDSObject object, double probability, boolean enabled, boolean always, boolean unique);
 
     /**
-     * Gets the result. Calling this method will startStage the random pick process and generate the result.
+     * Gets the result. Calling this method will start the random pick process and generate the result.
      * This result remains constant for the lifetime of this table object.
-     * Use the ResetResult method to clear the result and create a new one.
+     * Use the {@link #loot()} method to clear the result and create a new one.
      *
      * @return calculated random result of this table
      */
     Collection<RDSObject> getResult();
+
+    /**
+     * Will reset the last cached result and
+     * generate a new result by calling {@link #getResult()}.
+     *
+     * @return fresh random result
+     */
+    Collection<RDSObject> loot();
 }

@@ -30,7 +30,7 @@ public class Font {
         WIDTHS = new int[0xFFFF];
 
         try {
-            InputStream in = RaidCraft.getComponent(RaidCraftPlugin.class).getResource("defaults/font.bin");
+            InputStream in = RaidCraft.getComponent(RaidCraftPlugin.class).getResource("font.bin");
             for (int i = 0; i < WIDTHS.length; i++) {
                 WIDTHS[i] = in.read();
             }

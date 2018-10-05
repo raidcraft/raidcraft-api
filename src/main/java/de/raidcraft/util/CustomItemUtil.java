@@ -577,6 +577,16 @@ public final class CustomItemUtil {
         return tooltips;
     }
 
+    public static FancyMessage getFormattedItemTooltip(ItemStack itemStack) {
+        if (itemStack instanceof CustomItemStack) {
+            return getFormattedItemTooltip(new FancyMessage(), (CustomItemStack) itemStack);
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        return new FancyMessage("[").color(ChatColor.DARK_AQUA)
+                .then(itemMeta.getDisplayName()).color(ChatColor.WHITE)
+                .then("]").color(ChatColor.DARK_AQUA);
+    }
+
     public static FancyMessage getFormattedItemTooltip(FancyMessage msg, CustomItem item) {
 
         return getFormattedItemTooltip(msg, item.createNewItem());

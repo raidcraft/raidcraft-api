@@ -3,6 +3,9 @@ package de.raidcraft.api.action.trigger.global;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.api.random.*;
+import de.raidcraft.api.random.objects.ItemLootObject;
+import de.raidcraft.api.random.objects.MoneyLootObject;
 import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
@@ -10,9 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -35,7 +36,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
 
     public GlobalPlayerTrigger() {
 
-        super("player", "interact", "block.break", "block.place", "move", "craft", "death", "join", "shear", "milk");
+        super("player", "interact", "block.break", "block.place", "move", "craft", "death", "join", "shear", "milk", "fish");
     }
 
     @Information(
@@ -282,11 +283,11 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
         informListeners("milk", event.getPlayer(), config -> {
 
             EntityType entityType = EntityType.valueOf(config.getString("entity", "COW"));
-            Material material = Material.getMaterial(config.getString("item", Material.BUCKET.name()));
+            Material material = Material.matchMaterial(config.getString("item", Material.BUCKET.name()));
             Optional<ItemStack> returnItem = RaidCraft.getItem(config.getString("return", Material.MILK_BUCKET.name()));
 
             if (material == null) {
-                RaidCraft.LOGGER.warning("item: " + config.getString("item") + " does not exist! " + ConfigUtil.getFileName(config));
+                RaidCraft.LOGGER.warning("item: " + config.getString("item") + " does not exist in @player.milk! " + ConfigUtil.getFileName(config));
                 return false;
             }
             if (!returnItem.isPresent()) {
@@ -331,6 +332,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             desc = "Triggers if the player shears a sheep.",
             conf = {
                     "item: item to drop (if not defined drops default)",
+                    "loot-table: allows specifying a loot-table for the shear event"
             }
     )
     @EventHandler
@@ -341,6 +343,18 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             EntityType entityType = EntityType.valueOf(config.getString("entity", EntityType.SHEEP.name()));
 
             if (!event.getEntity().getType().equals(entityType)) return false;
+
+            Optional<RDSTable> lootTable = RDS.getTable(config.getString("loot-table"));
+            lootTable.ifPresent(rdsTable -> {
+                for (RDSObject object : rdsTable.loot()) {
+                    if (object instanceof Spawnable) {
+                        ((Spawnable) object).spawn(event.getEntity().getLocation());
+                    } else if (object instanceof Obtainable) {
+                        ((Obtainable) object).addTo(event.getPlayer());
+                    }
+                }
+            });
+            if (lootTable.isPresent()) return true;
 
             if (!config.isSet("item")) {
                 return true;
@@ -360,6 +374,41 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
                 RaidCraft.LOGGER.warning("Invalid item " + config.getString("item") + " inside " + ConfigUtil.getFileName(config));
                 return false;
             }
+
+            return true;
+        });
+    }
+
+    @Information(
+            value = "player.fish",
+            desc = "Triggers if the player fishes.",
+            conf = {
+                    "item: item to drop (if not defined drops default)",
+                    "loot-table: specify a loot-table to drop items from (overrides item config)"
+            }
+    )
+    @EventHandler
+    public void onPlayerFish(PlayerFishEvent event) {
+
+        if (!(event.getCaught() instanceof Item)) return;
+        Item item = (Item) event.getCaught();
+
+        informListeners("fish", event.getPlayer(), config -> {
+            Optional<RDSTable> lootTable = RDS.getTable(config.getString("loot-table"));
+            lootTable.ifPresent(rdsTable -> {
+                for (RDSObject object : rdsTable.loot()) {
+                    if (object instanceof ItemLootObject) {
+                        item.setItemStack(((ItemLootObject) object).getItemStack());
+                    } else if (object instanceof Obtainable) {
+                        ((Obtainable) object).addTo(event.getPlayer());
+                    } else if (object instanceof Spawnable) {
+                        ((Spawnable) object).spawn(event.getHook().getLocation());
+                    }
+                }
+            });
+            if (lootTable.isPresent()) return true;
+
+            RaidCraft.getItem(config.getString("item")).ifPresent(item::setItemStack);
 
             return true;
         });

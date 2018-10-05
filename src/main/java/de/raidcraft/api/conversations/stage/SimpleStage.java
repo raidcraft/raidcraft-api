@@ -214,7 +214,7 @@ public class SimpleStage implements Stage {
                     getConversation().sendMessage(ChatColor.AQUA + text[0]);
                 }
                 for (int i = 1; i < text.length; i++) {
-                    getConversation().sendMessage(text[i]);
+                    getConversation().sendMessage(ChatColor.AQUA + text[i]);
                 }
             }
         }

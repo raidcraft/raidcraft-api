@@ -27,6 +27,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import javax.persistence.OneToMany;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +54,10 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
     private RaidCraftDatabase database;
 
     public final void onEnable() {
+
+        Class<OneToMany> klass = OneToMany.class;
+        URL resource = klass.getResource('/' + klass.getName().replace('.', '/') + ".class");
+        getLogger().info(resource.toString());
 
         super.onEnable();
 
@@ -130,7 +136,7 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
 
         if (database == null) {
             this.database = new RaidCraftDatabase(this);
-            this.database.initializeDatabase(new DatabaseConfig(this));
+            this.database.initializeDatabase(configure(new DatabaseConfig(this)));
         }
 
         return this.database.getDatabase();

@@ -28,6 +28,8 @@ import de.raidcraft.api.player.PlayerComponent;
 import de.raidcraft.api.player.PlayerStatisticProvider;
 import de.raidcraft.api.player.RCPlayer;
 import de.raidcraft.api.player.UnknownPlayerException;
+import de.raidcraft.api.quests.QuestProvider;
+import de.raidcraft.api.quests.Quests;
 import de.raidcraft.api.storage.ItemStorage;
 import de.raidcraft.api.storage.StorageException;
 import de.raidcraft.api.trades.TradeProvider;
@@ -68,6 +70,7 @@ import java.util.regex.Pattern;
  * @author Silthus
  */
 public class RaidCraft implements Listener {
+
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
@@ -397,6 +400,20 @@ public class RaidCraft implements Listener {
     }
 
     /**
+     * Checks if the given {@link ItemStack} is of type {@link ItemType#QUEST}.
+     *
+     * @param item to check
+     * @return true if item is a quest item
+     */
+    public static boolean isQuestItem(ItemStack item) {
+        if (RaidCraft.isCustomItem(item)) {
+            CustomItemStack customItem = RaidCraft.getCustomItem(item);
+            return customItem.getItem().getType() == ItemType.QUEST;
+        }
+        return false;
+    }
+
+    /**
      * Parses the given Item String and tries to resolve it as one of the given items:
      * - Custom Item: rci[0-9]+, e.g. rci1337
      * - Stored Item: so[0-9]+, eg. so1234
@@ -450,7 +467,7 @@ public class RaidCraft implements Listener {
             itemStack.setAmount(amount);
             return Optional.of(itemStack);
         } catch (CustomItemException | NumberFormatException | StorageException e) {
-            e.printStackTrace();
+            LOGGER.warning(e.getMessage());
         }
         return Optional.empty();
     }
@@ -464,56 +481,35 @@ public class RaidCraft implements Listener {
      * @return created itemstack out of the id
      *
      * @throws CustomItemException is thrown if nothing matched
-     * @deprecated use {@link #getItem(String)} for safe item creation and amount support
      */
-    @Deprecated
     public static ItemStack getSafeItem(String id) throws CustomItemException {
-        if (id == null || id.equals("")) return null;
-        try {
-            id = id.toLowerCase().split("#")[0];
-            if (id.startsWith(CUSTOM_ITEM_IDENTIFIER)) {
-                // its a custom item
-                return getCustomItemStack(Integer.parseInt(id.replace(CUSTOM_ITEM_IDENTIFIER, "")));
-            } else if (id.startsWith(STORED_OBJECT_IDENTIFIER)) {
-                // its a stored item object
-                return new ItemStorage("API").getObject(Integer.parseInt(id.replace(STORED_OBJECT_IDENTIFIER, "")));
-            } else {
-                // maybe it is a named custom item
-                Optional<CustomItem> customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(id);
-                if (customItem.isPresent()) {
-                    return customItem.get().createNewItem();
-                } else {
-                    // or a normal minecraft item
-                    Material item = ItemUtils.getItem(id);
-                    if (item != null && (item == Material.SKULL_ITEM || item == Material.SKULL)) {
-                        return Skull.getSkull(id);
-                    } else if (item != null) {
-                        return new ItemStack(item, 1, ItemUtils.getItemData(id));
-                    }
-                }
-            }
-        } catch (StorageException | IndexOutOfBoundsException | NumberFormatException e) {
-            throw new CustomItemException(e.getMessage());
-        }
-        throw new CustomItemException("Unknown item type specified: " + id);
+        return getItem(id).orElseThrow(() -> new CustomItemException("Unknown item with id " + id));
     }
 
     /**
      * @deprecated use {@link #getItem(String)} for safe item creation and amount support
      */
-    @Deprecated
     public static ItemStack getSafeItem(String id, int amount) throws CustomItemException {
 
-        ItemStack item = getSafeItem(id);
-        item.setAmount(amount);
-        return item;
+        return getItem(id).map(itemStack -> {
+            itemStack.setAmount(amount);
+            return itemStack;
+        }).orElseThrow(() -> new CustomItemException("Unknown item with id " + id));
     }
 
+    /**
+     * @deprecated use {@link #getItem(String)}
+     */
+    @Deprecated
     public static ItemStack getUnsafeItem(String id) {
 
         return getItem(id).orElse(null);
     }
 
+    /**
+     * @deprecated use {@link #getItem(String)}
+     */
+    @Deprecated
     public static ItemStack getUnsafeItem(String id, int amount) {
 
         ItemStack item = getUnsafeItem(id);

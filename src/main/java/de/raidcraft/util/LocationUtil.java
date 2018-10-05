@@ -16,12 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Silthus, Me4502
@@ -360,5 +355,32 @@ public final class LocationUtil {
     public static Vector getDirection(Location from, Location to) {
 
         return to.toVector().subtract(from.toVector());
+    }
+
+    /**
+     * Gets all blocks in a radius around the given location, including the block at the current location.
+     * Excludes liquid and empty blocks.
+     *
+     * @param location center to start searching
+     * @param radius to search for blocks
+     * @return list of blocks that are neither empty or liquid
+     */
+    public static Collection<Block> getNearbyBlocks(Location location, int radius) {
+        ArrayList<Block> blocks = new ArrayList<>();
+        final Block block = location.getBlock();
+        for (int x = -(radius); x <= radius; x ++)
+        {
+            for (int y = -(radius); y <= radius; y ++)
+            {
+                for (int z = -(radius); z <= radius; z ++)
+                {
+                    Block relative = block.getRelative(x, y, z);
+                    if (relative != null && !relative.isEmpty() && !relative.isLiquid()) {
+                        blocks.add(relative);
+                    }
+                }
+            }
+        }
+        return blocks;
     }
 }
