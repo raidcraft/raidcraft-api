@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author mdoering
  */
 @Data
-@EqualsAndHashCode(callSuper = false, of = {"identifier", "conversationTemplate"})
+@EqualsAndHashCode(callSuper = false, of = {"identifier", "conversationTemplate", "answers", "actions", "requirements", "randomActions"})
 public abstract class AbstractStageTemplate implements StageTemplate {
 
     private final String identifier;

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @author mdoering
  */
 @Data
-@EqualsAndHashCode(callSuper = false, of = {"conversation", "template"})
+@EqualsAndHashCode(callSuper = false, of = {"conversation", "template", "answers"})
 public class SimpleStage implements Stage {
 
     private final Conversation conversation;

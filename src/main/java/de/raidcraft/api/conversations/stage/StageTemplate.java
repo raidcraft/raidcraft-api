@@ -18,7 +18,7 @@ public interface StageTemplate extends RequirementHolder, ActionHolder {
 
     String START_STAGE = "start";
     String DEFAULT_STAGE_TEMPLATE = "default";
-    int MAX_ANSWERS = 5;
+    int MAX_ANSWERS = 6;
 
     /**
      * Gets the unique identifier/displayName of this stage.

@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author mdoering
  */
 @Data
-@EqualsAndHashCode(callSuper = false, of = {"type", "text", "actions", "requirements"})
+@EqualsAndHashCode(callSuper = false, of = {"type", "text", "actions", "requirements", "message"})
 public class SimpleAnswer implements Answer {
 
     private final String type;
@@ -107,8 +107,7 @@ public class SimpleAnswer implements Answer {
     public <T> Answer addActionToAnswer(Action<T> action) {
 
         this.actions.add(action);
-        return this
-                ;
+        return this;
     }
 
     @Override
@@ -136,6 +135,8 @@ public class SimpleAnswer implements Answer {
                 ((Action<Player>) action).accept(conversation.getOwner());
             } else if (ActionAPI.matchesType(action, Conversation.class)) {
                 ((Action<Conversation>) action).withPlayer(conversation.getOwner()).accept(conversation);
+            } else {
+                action.accept(null);
             }
         }
     }

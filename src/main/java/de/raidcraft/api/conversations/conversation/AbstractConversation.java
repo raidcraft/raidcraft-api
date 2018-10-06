@@ -149,24 +149,26 @@ public abstract class AbstractConversation extends DataMap implements Conversati
     }
 
     @Override
-    public Optional<Answer> answer(String answer, boolean executeActions) {
+    public Optional<Answer> answer(String input, boolean executeActions) {
 
         Optional<Stage> stage = getCurrentStage();
         if (!stage.isPresent()) {
             return Optional.empty();
         }
 
-        Optional<Answer> optional = stage.get().processAnswer(answer);
-        if (optional.isPresent() && executeActions) {
-            optional.get().executeActions(this);
+        Optional<Answer> answer = stage.get().processAnswer(input);
+        if (answer.isPresent() && executeActions) {
+            answer.get().executeActions(this);
         }
 
-        if (getTemplate().isAutoEnding() && getStages().size() < 2) {
+        boolean changedStage = getCurrentStage().map(nextStage -> !nextStage.equals(stage.get())).orElse(false);
+
+        if (getTemplate().isAutoEnding() && answer.isPresent() && !changedStage) {
             // auto end the conversation if no other stages are present
             // and after the player had a chance to answer
             end(ConversationEndReason.SILENT);
         }
-        return optional;
+        return answer;
     }
 
     @Override
