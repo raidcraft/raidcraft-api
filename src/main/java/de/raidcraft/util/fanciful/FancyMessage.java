@@ -91,7 +91,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
 	 * Creates a JSON message without withText.
      */
     public FancyMessage() {
-        this.builder = new ComponentBuilder(new TextComponent());
+        this.builder = new ComponentBuilder("");
     }
 
     /**
@@ -487,7 +487,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      */
     public FancyMessage formattedTooltip(FancyMessage... lines) {
 
-        ComponentBuilder componentBuilder = new ComponentBuilder(new TextComponent());
+        ComponentBuilder componentBuilder = new ComponentBuilder("");
 
         for (FancyMessage line : lines) {
             componentBuilder.append(line.create());
