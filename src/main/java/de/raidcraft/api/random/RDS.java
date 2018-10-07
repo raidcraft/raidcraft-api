@@ -48,8 +48,7 @@ public class RDS {
 
         Optional<RDSObjectFactory> creator = getObjectCreator(type);
         if (!creator.isPresent()) return Optional.empty();
-        ConfigurationSection args = config.isConfigurationSection("args") ? config.getConfigurationSection("args") : new MemoryConfiguration();
-        RDSObject object = creator.get().createInstance(args);
+        RDSObject object = creator.get().createInstance(config);
 
         object.setType(type);
         object.setEnabled(config.getBoolean("enabled", true));
@@ -63,9 +62,9 @@ public class RDS {
             ((RDSTable) object).setCount(config.getInt("count", 1));
         }
         if (load && object instanceof Loadable) {
-            ((Loadable) object).load(args);
+            ((Loadable) object).load(config);
         }
-        return Optional.ofNullable(object);
+        return Optional.of(object);
     }
 
     public static Optional<RDSObject> createObject(String type, ConfigurationSection config) {

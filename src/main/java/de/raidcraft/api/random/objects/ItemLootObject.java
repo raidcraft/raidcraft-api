@@ -2,14 +2,10 @@ package de.raidcraft.api.random.objects;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.items.CustomItem;
+import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemStack;
-import de.raidcraft.api.random.Dropable;
-import de.raidcraft.api.random.GenericRDSValue;
-import de.raidcraft.api.random.Obtainable;
-import de.raidcraft.api.random.RDSObject;
-import de.raidcraft.api.random.RDSObjectCreator;
-import de.raidcraft.api.random.RDSObjectFactory;
-import de.raidcraft.api.random.Spawnable;
+import de.raidcraft.api.random.*;
+import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.InventoryUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,10 +26,15 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
         @Override
         public RDSObject createInstance(ConfigurationSection config) {
 
-            if (config.isSet("price")) {
-                return new ItemLootObject(config.getString("item"), config.getInt("amount", 1), config.getDouble("price"));
-            } else {
-                return new ItemLootObject(config.getString("item"), config.getInt("amount", 1));
+            try {
+                if (config.isSet("price")) {
+                    return new ItemLootObject(config.getString("item"), config.getInt("amount", 1), config.getDouble("price"));
+                } else {
+                    return new ItemLootObject(config.getString("item"), config.getInt("amount", 1));
+                }
+            } catch (CustomItemException e) {
+                RaidCraft.LOGGER.warning("Invalid item " + config.getString("item") + " in loot-table " + ConfigUtil.getFileName(config));
+                return new RDSNullValue(0);
             }
         }
 
@@ -43,14 +44,14 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
     @Setter
     private double price;
 
-    public ItemLootObject(String item, int amount) {
+    public ItemLootObject(String item, int amount) throws CustomItemException {
 
-        this(RaidCraft.getUnsafeItem(item, amount));
+        this(RaidCraft.getSafeItem(item, amount));
     }
 
-    public ItemLootObject(String item, int amount, double price) {
+    public ItemLootObject(String item, int amount, double price) throws CustomItemException {
 
-        this(RaidCraft.getUnsafeItem(item, amount));
+        this(RaidCraft.getSafeItem(item, amount));
         this.price = price;
     }
 

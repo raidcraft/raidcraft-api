@@ -57,6 +57,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -486,9 +487,7 @@ public class RaidCraft implements Listener {
         return getItem(id).orElseThrow(() -> new CustomItemException("Unknown item with id " + id));
     }
 
-    /**
-     * @deprecated use {@link #getItem(String)} for safe item creation and amount support
-     */
+
     public static ItemStack getSafeItem(String id, int amount) throws CustomItemException {
 
         return getItem(id).map(itemStack -> {
@@ -497,19 +496,13 @@ public class RaidCraft implements Listener {
         }).orElseThrow(() -> new CustomItemException("Unknown item with id " + id));
     }
 
-    /**
-     * @deprecated use {@link #getItem(String)}
-     */
-    @Deprecated
+    @Nullable
     public static ItemStack getUnsafeItem(String id) {
 
         return getItem(id).orElse(null);
     }
 
-    /**
-     * @deprecated use {@link #getItem(String)}
-     */
-    @Deprecated
+    @Nullable
     public static ItemStack getUnsafeItem(String id, int amount) {
 
         ItemStack item = getUnsafeItem(id);
