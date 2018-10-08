@@ -20,16 +20,17 @@ public class TagRequirement implements Requirement<Player> {
             aliases = {"tag"},
             desc = "Checks if the player has the given tag.",
             conf = {
-                    "tag: id of the tag"
+                    "tag: id of the tag",
+                    "ignore-duration: ignores the duration and only checks the existance (default: false)"
             }
     )
     @Override
     public boolean test(Player player, ConfigurationSection config) {
 
         return TPlayerTag.findTag(player.getUniqueId(), config.getString("tag")).map(tag -> {
-            if (!Strings.isNullOrEmpty(tag.getDuration())) {
+            if (!Strings.isNullOrEmpty(tag.getDuration()) && !config.getBoolean("ignore-duration", false)) {
                 // check if the tag has expired
-                return tag.getWhenCreated().plusMillis(TimeUtil.parseTimeAsMillis(tag.getDuration())).isAfter(Instant.now());
+                return tag.getWhenModified().plusMillis(TimeUtil.parseTimeAsMillis(tag.getDuration())).isAfter(Instant.now());
             }
             return true;
         }).orElse(false);

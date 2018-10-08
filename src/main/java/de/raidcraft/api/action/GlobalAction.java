@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.global.DoorAction;
 import de.raidcraft.api.action.action.global.PlayerTagAction;
+import de.raidcraft.api.action.action.global.RemovePlayerTag;
 import de.raidcraft.api.action.action.global.SetBlockAction;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
@@ -52,7 +53,7 @@ public enum GlobalAction {
         @Override
         @Information(value = "player.give.item", desc = "Gives the player the item or drops it if inventory is full.", conf = {
                 "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
-                "amount: [1]" }, aliases = { "player.item.give" })
+                "amount: [1]"}, aliases = {"player.item.give"})
         public void accept(Player player, ConfigurationSection config) {
 
             try {
@@ -67,7 +68,7 @@ public enum GlobalAction {
         @Override
         @Information(value = "player.remove.item", desc = "Removes the item from the player, will also search in the quest inventory if it is a quest item.", conf = {
                 "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
-                "amount: [1]" }, aliases = { "player.item.remove" })
+                "amount: [1]"}, aliases = {"player.item.remove"})
         public void accept(Player player, ConfigurationSection config) {
 
             try {
@@ -102,7 +103,7 @@ public enum GlobalAction {
     }), GIVE_MONEY("player.give.money", new Action<Player>() {
         @Override
         @Information(value = "player.give.money", desc = "Gives the player the given amount of money.", conf = {
-                "amount: <1g5s3k/1g/5g3k>|<50.0>" })
+                "amount: <1g5s3k/1g/5g3k>|<50.0>"})
         public void accept(Player player, ConfigurationSection config) {
 
             if (!config.isSet("amount"))
@@ -118,7 +119,7 @@ public enum GlobalAction {
     }), TAKE_MONEY("player.remove.money", new Action<Player>() {
         @Override
         @Information(value = "player.remove.money", desc = "Removes the given amount of money from the player.", conf = {
-                "amount: <1g5s3k/1g/5g3k>|<50.0>" })
+                "amount: <1g5s3k/1g/5g3k>|<50.0>"})
         public void accept(Player player, ConfigurationSection config) {
 
             if (!config.isSet("amount"))
@@ -142,7 +143,7 @@ public enum GlobalAction {
     }), MESSAGE_PLAYER("player.message", new Action<Player>() {
         @Override
         @Information(value = "player.message", desc = "Sends the given message to the player. Multiline splitting with |.", conf = {
-                "text: <First line.|Second line.>" })
+                "text: <First line.|Second line.>"})
         public void accept(Player player, ConfigurationSection config) {
 
             String[] text = config.getString("text").split("\\|");
@@ -153,7 +154,7 @@ public enum GlobalAction {
     }), TEXT("text", new Action<Player>() {
         @Override
         @Information(value = "text", desc = "Sends the given text to the player prepended by the given NPC displayName.", conf = {
-                "text: <First line.|Second line.>", "npc: displayName" })
+                "text: <First line.|Second line.>", "npc: displayName"})
         @SuppressWarnings("unchecked")
         public void accept(Player player, ConfigurationSection config) {
 
@@ -184,7 +185,7 @@ public enum GlobalAction {
     }), TEXT_PLAYER("text.player", new Action<Player>() {
         @Override
         @Information(value = "text.player", desc = "Sends the given text to the player prepended by the player displayName.", conf = {
-                "text: <First line.|Second line.>" })
+                "text: <First line.|Second line.>"})
         public void accept(Player player, ConfigurationSection config) {
 
             String[] text = config.getString("text").split("\\|");
@@ -197,7 +198,7 @@ public enum GlobalAction {
     }), TEXT_INFO("text.info", new Action<Player>() {
         @Override
         @Information(value = "text.info", desc = "Sends the given text to the player formatted in DARK AQUA.", conf = {
-                "text: <First line.|Second line.>" })
+                "text: <First line.|Second line.>"})
         public void accept(Player player, ConfigurationSection config) {
 
             String[] text = config.getString("text").split("\\|");
@@ -209,7 +210,7 @@ public enum GlobalAction {
     }), TOGGLE_DOOR("door.toggle", new DoorAction()), GIVE_COMPASS("player.give.compass", new Action<Player>() {
         @Override
         @Information(value = "player.give.compass", desc = "Gives the player a compass that points to the given location and names it.", conf = {
-                "x", "y", "z", "world: [current]", "displayName: [Compass]" })
+                "x", "y", "z", "world: [current]", "displayName: [Compass]"})
         public void accept(Player player, ConfigurationSection config) {
 
             ItemStack item = ItemUtils.createItem(Material.COMPASS, config.getString("name", "Compass"));
@@ -220,7 +221,7 @@ public enum GlobalAction {
     }), REMOVE_COMPASS("player.remove.compass", new Action<Player>() {
         @Override
         @Information(value = "player.remove.compass", desc = "Removes the compass with the given displayName from the player.", conf = {
-                "displayName: [Compass]" })
+                "displayName: [Compass]"})
         public void accept(Player player, ConfigurationSection config) {
 
             String name = config.getString("name", "Compass");
@@ -234,7 +235,7 @@ public enum GlobalAction {
     }), PLAYER_HEAL("player.heal", new Action<Player>() {
         @Override
         @Information(value = "player.heal", desc = "Heals the player by the given amount or to max.", conf = {
-                "amount: defaults to max", "from-max: false" })
+                "amount: defaults to max", "from-max: false"})
         public void accept(Player player, ConfigurationSection config) {
 
             if (!config.isSet("amount")) {
@@ -266,8 +267,8 @@ public enum GlobalAction {
         }
     }), TELEPORT_COORDS("teleport.location", new Action<Player>() {
         @Override
-        @Information(value = "teleport.location", desc = "Teleports the player to the given location.", conf = { "x",
-                "y", "z", "world: [current]", "yaw", "pitch" })
+        @Information(value = "teleport.location", desc = "Teleports the player to the given location.", conf = {"x",
+                "y", "z", "world: [current]", "yaw", "pitch"})
         public void accept(Player player, ConfigurationSection config) {
 
             player.teleport(ConfigUtil.getLocationFromConfig(config, player));
@@ -279,16 +280,16 @@ public enum GlobalAction {
                 "end-actions: block of actions that are executed when the timer ends - you can also use the timer.end trigger",
                 "cancel-actions: block of actions that are executed when the timer is cancelled - you can also use the timer.cancel trigger",
                 "type: [interval] - defaults to a normal timer that runs out", "delay: interval mode only",
-                "interval: interval mode only - use the timer.tick trigger" })
+                "interval: interval mode only - use the timer.tick trigger"})
         public void accept(Player type, ConfigurationSection config) {
 
             Timer.startTimer(type, config);
         }
     }), ADD_TIMER_TIME("timer.add", new Action<Player>() {
         @Override
-        @Information(value = "timer.add", desc = "Adds time to a running timer.", conf = { "id: unique id of the timer",
+        @Information(value = "timer.add", desc = "Adds time to a running timer.", conf = {"id: unique id of the timer",
                 "time: 10s2 -> 10secs 2 ticks to add",
-                "temporary: true/<false> - calling timer.add multiple times with temporary true will not add up" })
+                "temporary: true/<false> - calling timer.add multiple times with temporary true will not add up"})
         public void accept(Player type, ConfigurationSection config) {
 
             Optional<Timer> timer = Timer.getActiveTimer(type, config.getString("id"));
@@ -303,7 +304,7 @@ public enum GlobalAction {
     }), ABORT_TIMER("timer.cancel", new Action<Player>() {
         @Override
         @Information(value = "timer.cancel", desc = "Cancels the given timer calling the timer.cancel trigger.", conf = {
-                "id: unique id of the timer" })
+                "id: unique id of the timer"})
         public void accept(Player type, ConfigurationSection config) {
 
             Timer.cancelTimer(type, config.getString("id"));
@@ -311,7 +312,7 @@ public enum GlobalAction {
     }), END_TIMER("timer.end", new Action<Player>() {
         @Override
         @Information(value = "timer.end", desc = "Ends the timer calling the trigger timer.end", conf = {
-                "id: unique id of the timer" })
+                "id: unique id of the timer"})
         public void accept(Player type, ConfigurationSection config) {
 
             Timer.endTimer(type, config.getString("id"));
@@ -319,12 +320,13 @@ public enum GlobalAction {
     }), RESET_TIMER("timer.reset", new Action<Player>() {
         @Override
         @Information(value = "timer.reset", desc = "Resets the given timer cancelling it and then starting it again. Will also trigger timer.cancel!", conf = {
-                "id: unique id of the timer" })
+                "id: unique id of the timer"})
         public void accept(Player type, ConfigurationSection config) {
 
             Timer.resetTimer(type, config.getString("id"));
         }
-    }), PLAYER_TAG("player.tag", new PlayerTagAction());
+    }), PLAYER_TAG("player.tag", new PlayerTagAction()),
+    PLAYER_TAG_REMOVE("player.tag.remove", new RemovePlayerTag());
 
     private static final float DEFAULT_WALK_SPEED = 0.1F * 2.0F;
     private static final float DEFAULT_FLY_SPEED = 0.05F * 2.0F;
