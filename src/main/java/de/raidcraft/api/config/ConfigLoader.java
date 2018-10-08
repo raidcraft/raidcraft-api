@@ -19,6 +19,8 @@ public abstract class ConfigLoader implements Comparable<ConfigLoader> {
     private int priority = 1;
     @Setter
     private String path;
+    @Setter
+    private boolean generateId = false;
 
     public ConfigLoader(BasePlugin plugin) {
         this.plugin = plugin;

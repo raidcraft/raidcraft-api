@@ -266,7 +266,11 @@ public class ConfigUtil {
                     loader.setPath(path);
                     String id = (path + "." + file.getName().toLowerCase()).replace(loader.getSuffix(), "");
                     if (id.startsWith(".")) id = id.replaceFirst("\\.", "");
-                    ConfigurationSection configFile = loader.getPlugin().configure(new SimpleConfiguration<>(loader.getPlugin(), file));
+                    SimpleConfiguration configFile = loader.getPlugin().configure(new SimpleConfiguration<>(loader.getPlugin(), file));
+                    if (loader.isGenerateId() && !configFile.isSet("id")) {
+                        configFile.set("id", UUID.randomUUID().toString());
+                        configFile.save();
+                    }
 
                     loader.loadConfig(id, configFile);
                 }
