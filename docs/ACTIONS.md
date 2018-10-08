@@ -2,14 +2,17 @@
 
 Eine Liste aller Actions lässt sich im Spiel mit dem Befehl `/actionapi` generieren.
 
-- [Vergabe von Items](#vergabe-von-items)
-    - [player.give.item](#playergiveitem)
-- [Timer](#timer)
-    - [timer.start](#timerstart)
-    - [timer.add](#timeradd)
-    - [timer.end](#timerend)
-    - [timer.cancel](#timercancel)
-    - [timer.reset](#timerreset)
+* [Vergabe von Items](#vergabe-von-items)
+  * [player.give.item](#playergiveitem)
+* [Tags](#tags)
+  * [player.tag](#playertag)
+  * [player.tag.remove](#playertagremove)
+* [Timer](#timer)
+  * [timer.start](#timerstart)
+  * [timer.add](#timeradd)
+  * [timer.end](#timerend)
+  * [timer.cancel](#timercancel)
+  * [timer.reset](#timerreset)
 
 ## Vergabe von Items
 
@@ -29,6 +32,40 @@ complete-actions:
     - '!player.give.item this.custom-quest-item'
     # Gibt dem Spieler einen Stack Birkenholz
     - '!player.give.item WOOD:5,64'
+```
+
+## Tags
+
+In [Quests](https://git.faldoria.de/tof/configs/quests/) kann es z.B. sehr praktisch sein bestimmte Entscheidungen des Spielers zu tracken. Dafür gibt es Tags.
+Tags werden für Spieler individuell gespeichert und können dann mit dem [`?player.tag` Requirement](REQUIREMENTS.md#tags) abgefragt werden.
+Zusätzlich dazu können Tags auch optional eine `duration` verpasst bekommen. Dann sind sie nur solange gültig bis die Dauer des Tags erreicht ist.
+
+> Tags die bereits existieren werden ohne Warnung überschrieben. Für die `duration` zählt immer das letzte Update des Tags.
+
+### player.tag
+
+Fügt dem aktuellen Spieler einen Tag mit der entsprechenden ID hinzu.
+
+```yml
+actions:
+  flow:
+    # Setzt den Tag mein.foobar.tag der 14 Tage lang hält
+    - '!player.tag mein.foobar.tag,14d'
+    # Setzt den Tag foobar, der unendlich lang hält
+    - '!player.tag foobar'
+    # Setzt den Tag mein.foobar.tag nochmal und überschreibt die Dauer.
+    - '!player.tag tag:mein.foobar.tag duration:24h'
+```
+
+### player.tag.remove
+
+Entfernt den angegebenen Tag vom Spieler. Wenn der Tag nicht existiert passiert nichts.
+
+```yml
+actions:
+  flow:
+    # Entfernt den foobar tag
+    - '!player.tag.remove foobar'
 ```
 
 ## Timer
