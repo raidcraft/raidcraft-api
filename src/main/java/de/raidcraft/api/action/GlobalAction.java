@@ -3,6 +3,7 @@ package de.raidcraft.api.action;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.global.DoorAction;
+import de.raidcraft.api.action.action.global.PlayerTagAction;
 import de.raidcraft.api.action.action.global.SetBlockAction;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
@@ -323,7 +324,7 @@ public enum GlobalAction {
 
             Timer.resetTimer(type, config.getString("id"));
         }
-    });
+    }), PLAYER_TAG("player.tag", new PlayerTagAction());
 
     private static final float DEFAULT_WALK_SPEED = 0.1F * 2.0F;
     private static final float DEFAULT_FLY_SPEED = 0.05F * 2.0F;

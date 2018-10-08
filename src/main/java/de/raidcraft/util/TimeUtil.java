@@ -207,4 +207,12 @@ public final class TimeUtil {
         }
         return ticks;
     }
+
+    public static long parseTimeAsMillis(String input) {
+        return ticksToMillis(parseTimeAsTicks(input));
+    }
+
+    public static double parseTimeAsSeconds(String input) {
+        return ticksToSeconds(parseTimeAsTicks(input));
+    }
 }

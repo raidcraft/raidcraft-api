@@ -3,6 +3,7 @@ package de.raidcraft.api.action;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.requirement.ContextualRequirement;
 import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.api.action.requirement.global.TagRequirement;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.quests.QuestProvider;
 import de.raidcraft.api.quests.Quests;
@@ -131,7 +132,7 @@ public enum GlobalRequirement {
 
             return Timer.isActive(type, config.getString("id"));
         }
-    });
+    }), PLAYER_TAG("player.tag", new TagRequirement());
 
     private final String id;
     private final Requirement<Player> requirement;
