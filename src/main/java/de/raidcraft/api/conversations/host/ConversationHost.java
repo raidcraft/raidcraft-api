@@ -148,6 +148,11 @@ ConversationHost<T> {
      */
     boolean unsetConversation(@NonNull Player player, @NonNull ConversationTemplate conversation);
 
+    /**
+     * @see #unsetConversation(Player, ConversationTemplate)
+     */
+    boolean unsetConversation(@NonNull UUID playerId, ConversationTemplate conversation);
+
     void clearConversation(@NonNull Player player);
 
     /**

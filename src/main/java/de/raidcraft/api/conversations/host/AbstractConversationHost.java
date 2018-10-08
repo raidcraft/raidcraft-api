@@ -112,7 +112,13 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     @Override
     public boolean unsetConversation(@NonNull Player player, ConversationTemplate conversation) {
 
-        return playerConversations.getOrDefault(player.getUniqueId(), new ArrayList<>()).remove(conversation);
+        return unsetConversation(player.getUniqueId(), conversation);
+    }
+
+    @Override
+    public boolean unsetConversation(@NonNull UUID playerId, ConversationTemplate conversation) {
+
+        return playerConversations.getOrDefault(playerId, new ArrayList<>()).remove(conversation);
     }
 
     @Override
