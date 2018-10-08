@@ -111,26 +111,22 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      */
     public FancyMessage style(ChatColor... styles) {
         for (final ChatColor style : styles) {
-            if (!style.isFormat()) {
-                throw new IllegalArgumentException(style.name() + " is not a style");
-            } else {
-                switch (style) {
-                    case STRIKETHROUGH:
-                        this.builder.strikethrough(true);
-                        break;
-                    case BOLD:
-                        this.builder.bold(true);
-                        break;
-                    case ITALIC:
-                        this.builder.italic(true);
-                        break;
-                    case UNDERLINE:
-                        this.builder.underlined(true);
-                        break;
-                    case RESET:
-                        this.builder.reset();
-                        break;
-                }
+            switch (style) {
+                case STRIKETHROUGH:
+                    this.builder.strikethrough(true);
+                    break;
+                case BOLD:
+                    this.builder.bold(true);
+                    break;
+                case ITALIC:
+                    this.builder.italic(true);
+                    break;
+                case UNDERLINE:
+                    this.builder.underlined(true);
+                    break;
+                case RESET:
+                    this.builder.reset();
+                    break;
             }
         }
         return this;

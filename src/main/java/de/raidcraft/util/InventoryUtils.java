@@ -4,7 +4,9 @@ package de.raidcraft.util;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * @author Dragonfire
@@ -22,7 +24,8 @@ public class InventoryUtils {
      */
     public static void addOrDropItems(Player player, ItemStack... items) {
 
-        HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(items);
+        if (items == null) return;
+        HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(Arrays.stream(items).filter(Objects::nonNull).toArray(ItemStack[]::new));
         leftovers.values().forEach(item -> player.getWorld().dropItem(player.getLocation(), item));
     }
 
@@ -37,6 +40,7 @@ public class InventoryUtils {
      */
     public static void setAndDropOrAddItem(Player player, ItemStack item, int slot) {
 
+        if (item == null) return;
         ItemStack previousItem = player.getInventory().getItem(slot);
         player.getInventory().setItem(slot, item);
         if (previousItem != null) addOrDropItems(player, previousItem);
