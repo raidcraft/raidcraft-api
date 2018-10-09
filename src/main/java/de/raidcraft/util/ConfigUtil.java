@@ -124,17 +124,21 @@ public class ConfigUtil {
 
     public static String getFileName(ConfigurationSection config) {
 
+        if (config == null) return "NO-FILE";
+
         return getConfigurationBase(config)
                 .map(configurationBase -> configurationBase.getFile().getAbsolutePath())
-                .orElseGet(() -> config.getRoot().getName());
+                .orElseGet(() -> config.getRoot() != null ? config.getRoot().getName() : "UNKNOWN-ROOT");
     }
 
     public static Optional<ConfigurationBase> getConfigurationBase(ConfigurationSection config) {
+        if (config == null) return Optional.empty();
         ConfigurationBase base = null;
         if (config instanceof ConfigurationBase) {
             base = (ConfigurationBase) config;
         } else {
             Configuration root = config.getRoot();
+            if (root == null) return Optional.empty();
             if (root instanceof ConfigurationBase) {
                 base = (ConfigurationBase) root;
             }

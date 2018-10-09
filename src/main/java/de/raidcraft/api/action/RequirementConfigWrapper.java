@@ -58,7 +58,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config,
             Class<T> type) {
 
-        this.id = config.isSet("id") ? config.getString("id") : id;
+        this.id = config.getString("id", id);
         this.requirement = requirement;
         this.type = type;
         if (requirement instanceof Reasonable) {
@@ -318,44 +318,43 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     @Override
     public void save() {
 
-        if (!isPersistant())
+        if (!isPersistant()) {
             return;
-        if (getConfig().getRoot() instanceof ConfigurationBase) {
-            BasePlugin plugin = ((ConfigurationBase) getConfig().getRoot()).getPlugin();
-            EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
-            for (Map.Entry<UUID, Map<String, String>> entry : mappings.entrySet()) {
-                TPersistantRequirement dbEntry = database.find(TPersistantRequirement.class).where()
-                        .eq("uuid", entry.getKey()).eq("plugin", plugin.getName()).eq("requirement", getId())
-                        .findOne();
-                if (dbEntry == null) {
-                    dbEntry = new TPersistantRequirement();
-                    dbEntry.setPlugin(plugin.getName());
-                    dbEntry.setRequirement(getId());
-                    dbEntry.setUuid(entry.getKey());
-                    database.save(dbEntry);
-                }
-                Map<String, String> values = new HashMap<>(entry.getValue());
-                List<TPersistantRequirementMapping> dbEntryMappings = dbEntry.getMappings();
-                // update the existing values
-                dbEntryMappings.forEach(mapping -> {
-                    if (values.containsKey(mapping.getMappedKey())) {
-                        mapping.setMappedValue(values.remove(mapping.getMappedKey()));
-                    } else {
-                        database.delete(mapping);
-                    }
-                });
-                // add the remaining values
-                for (Map.Entry<String, String> valueEntry : values.entrySet()) {
-                    TPersistantRequirementMapping mapping = new TPersistantRequirementMapping();
-                    mapping.setRequirement(dbEntry);
-                    mapping.setMappedKey(valueEntry.getKey());
-                    mapping.setMappedValue(valueEntry.getValue());
-                    dbEntryMappings.add(mapping);
-                }
-                database.save(dbEntryMappings);
-                dbEntry.setMappings(dbEntryMappings);
-                database.update(dbEntry);
+        }
+
+        EbeanServer database = RaidCraft.getDatabase(RaidCraftPlugin.class);
+        for (Map.Entry<UUID, Map<String, String>> entry : mappings.entrySet()) {
+            TPersistantRequirement dbEntry = database.find(TPersistantRequirement.class).where()
+                    .eq("uuid", entry.getKey())
+                    .eq("requirement", getId())
+                    .findOne();
+            if (dbEntry == null) {
+                dbEntry = new TPersistantRequirement();
+                dbEntry.setRequirement(getId());
+                dbEntry.setUuid(entry.getKey());
+                database.save(dbEntry);
             }
+            Map<String, String> values = new HashMap<>(entry.getValue());
+            List<TPersistantRequirementMapping> dbEntryMappings = dbEntry.getMappings();
+            // update the existing values
+            dbEntryMappings.forEach(mapping -> {
+                if (values.containsKey(mapping.getMappedKey())) {
+                    mapping.setMappedValue(values.remove(mapping.getMappedKey()));
+                } else {
+                    database.delete(mapping);
+                }
+            });
+            // add the remaining values
+            for (Map.Entry<String, String> valueEntry : values.entrySet()) {
+                TPersistantRequirementMapping mapping = new TPersistantRequirementMapping();
+                mapping.setRequirement(dbEntry);
+                mapping.setMappedKey(valueEntry.getKey());
+                mapping.setMappedValue(valueEntry.getValue());
+                dbEntryMappings.add(mapping);
+            }
+            database.saveAll(dbEntryMappings);
+            dbEntry.setMappings(dbEntryMappings);
+            database.update(dbEntry);
         }
     }
 
@@ -388,7 +387,8 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
             List<TPersistantRequirement> list = database.find(TPersistantRequirement.class).where()
                     .eq("uuid", ((Player) entity).getUniqueId()).eq("plugin", plugin.getName())
                     .eq("requirement", getId()).findList();
-            database.delete(list);
+            database.deleteAll(
+                    list);
         }
     }
 }

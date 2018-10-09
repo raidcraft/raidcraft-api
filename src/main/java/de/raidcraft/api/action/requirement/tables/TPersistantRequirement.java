@@ -24,7 +24,6 @@ public class TPersistantRequirement {
 
     @Id
     private int id;
-    private String plugin;
     private String requirement;
     private UUID uuid;
     @OneToMany(cascade = CascadeType.REMOVE)

@@ -36,11 +36,18 @@ public class FlowConfigParser {
     private final FlowParser[] parsers = {new ActionApiFlowParser(this), new AnswerParser()};
 
     private final ConfigurationSection config;
+    private final String baseId;
 
     private final Map<FlowType, Map<String, FlowAlias>> aliasMap = new HashMap<>();
 
     public FlowConfigParser(ConfigurationSection config) {
         this.config = config;
+        this.baseId = ConfigUtil.getFileName(getConfig())
+                .replace("/", ".")
+                .replace("\\", ".")
+                .replace(".yml", "")
+                .replace(" ", "-")
+                .toLowerCase() + config.getCurrentPath();
         this.aliasMap.put(FlowType.ACTION, new HashMap<>());
         this.aliasMap.put(FlowType.REQUIREMENT, new HashMap<>());
         this.aliasMap.put(FlowType.ANSWER, new HashMap<>());
@@ -165,7 +172,7 @@ public class FlowConfigParser {
                             resetRequirements = false;
                         }
 
-                        String id = ConfigUtil.getFileName(getConfig()) + "." + key + "." + expression.getTypeId();
+                        String id = getBaseId() + "." + key + "." + expression.getTypeId();
 
                         createRequirement(id, expression)
                                 .ifPresent(applicableRequirements::add);
@@ -233,8 +240,9 @@ public class FlowConfigParser {
                 switch (expression.getFlowType()) {
                     case TRIGGER:
                         TriggerFactory trigger = ActionAPI.createTrigger(((ActionAPIType) flowExpression).getTypeId(), configuration);
+                        String triggerId = getBaseId() + "." + "trigger.flow-" + i++;
 
-                        trigger.getRequirements().addAll(parseRequirements("", new ArrayList<>(applicableRequirements)));
+                        trigger.getRequirements().addAll(parseRequirements(triggerId, new ArrayList<>(applicableRequirements)));
                         applicableRequirements.clear();
 
                         activeTrigger = trigger;
@@ -244,12 +252,12 @@ public class FlowConfigParser {
                         break;
                     case ACTION:
                         if (activeTrigger != null) {
-                            String actionId = "actions.flow-" + i++;
+                            String actionId = getBaseId() + "." + "actions.flow-" + i++;
                             configuration.set("delay", delay);
                             ArrayList<FlowExpression> expressions = new ArrayList<>();
                             expressions.add(expression);
                             List<Action<?>> actions = parseActions(actionId, expressions);
-                            for (Requirement<?> requirement : parseRequirements("", new ArrayList<>(applicableRequirements))) {
+                            for (Requirement<?> requirement : parseRequirements(actionId, new ArrayList<>(applicableRequirements))) {
                                 actions.forEach(action -> action.addRequirement(requirement));
                             }
                             applicableRequirements.clear();
@@ -371,7 +379,7 @@ public class FlowConfigParser {
                             requirements.clear();
                             break;
                         case REQUIREMENT:
-                            requirements.add(createRequirement(ConfigUtil.getFileName(config) + key, expression)
+                            requirements.add(createRequirement(getBaseId() + ".requirement." + key, expression)
                                     .orElseThrow(() -> new FlowException("Could not find valid requirement type for " + expression.getTypeId())));
                             break;
                     }
