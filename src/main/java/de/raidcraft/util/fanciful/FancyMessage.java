@@ -87,6 +87,34 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
         return this;
     }
 
+    public FancyMessage color(final net.md_5.bungee.api.ChatColor color) {
+        this.builder.color(color);
+        return this;
+    }
+
+    public FancyMessage style(final net.md_5.bungee.api.ChatColor... styles) {
+        for (final net.md_5.bungee.api.ChatColor style : styles) {
+            switch (style) {
+                case STRIKETHROUGH:
+                    this.builder.strikethrough(true);
+                    break;
+                case BOLD:
+                    this.builder.bold(true);
+                    break;
+                case ITALIC:
+                    this.builder.italic(true);
+                    break;
+                case UNDERLINE:
+                    this.builder.underlined(true);
+                    break;
+                case RESET:
+                    this.builder.reset();
+                    break;
+            }
+        }
+        return this;
+    }
+
     /**
      * Sets the color of the current editing component to a value.
      *
