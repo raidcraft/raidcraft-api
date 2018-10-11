@@ -24,15 +24,18 @@ import java.util.*;
 public abstract class AbstractConversationHost<T> implements ConversationHost<T> {
 
     private final UUID uniqueId;
-    private final Optional<String> identifier;
+    private final String identifier;
     private final T type;
     private final List<ConversationTemplate> defaultConversations = new ArrayList<>();
     private final Map<UUID, List<ConversationTemplate>> playerConversations = new HashMap<>();
-    private Optional<String> name = Optional.empty();
+    private String name;
 
-    public void setName(String name) {
+    public Optional<String> getIdentifier() {
+        return Optional.ofNullable(this.identifier);
+    }
 
-        this.name = Optional.ofNullable(name);
+    public Optional<String> getName() {
+        return Optional.ofNullable(this.name);
     }
 
     @Override
@@ -131,19 +134,13 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     public Optional<Conversation> startConversation(Player player) {
 
         Optional<ConversationTemplate> conversation = getConversation(player);
-        if (conversation.isPresent()) {
-            return Optional.of(conversation.get().startConversation(player, this));
-        }
-        return Optional.empty();
+        return conversation.map(conversationTemplate -> conversationTemplate.startConversation(player, this));
     }
 
     @Override
     public Optional<Conversation> startConversation(Player player, String conversation) {
 
         Optional<ConversationTemplate> template = Conversations.getConversationTemplate(conversation);
-        if (!template.isPresent()) {
-            return Optional.empty();
-        }
-        return Optional.of(template.get().startConversation(player, this));
+        return template.map(conversationTemplate -> conversationTemplate.startConversation(player, this));
     }
 }
