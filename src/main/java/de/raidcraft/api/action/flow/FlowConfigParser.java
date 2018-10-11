@@ -25,6 +25,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Parses a given config section for all flow statements and returns a list of actions, requirements or triggers.
@@ -92,7 +93,8 @@ public class FlowConfigParser {
             }
         }
 
-        RaidCraft.LOGGER.info("Loaded " + aliasMap.size() + " alias groups for " + ConfigUtil.getFileName(getConfig()) + " -> " + section.getName());
+        int groupCount = aliasMap.entrySet().stream().mapToInt(flowTypeMapEntry -> flowTypeMapEntry.getValue().size()).sum();
+        RaidCraft.LOGGER.info("Loaded " + groupCount + " alias groups for " + ConfigUtil.getFileName(getConfig()) + " -> " + section.getCurrentPath());
     }
 
     private Optional<ConfigurationSection> getVariableGroupSection() {
