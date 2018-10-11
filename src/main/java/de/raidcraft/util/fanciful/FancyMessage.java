@@ -115,6 +115,15 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
         return this;
     }
 
+    public FancyMessage append(FancyMessage message) {
+        this.builder.append(message.create());
+        return this;
+    }
+
+    public FancyMessage then(FancyMessage message) {
+        return this.append(message);
+    }
+
     /**
      * Sets the color of the current editing component to a value.
      *
@@ -412,10 +421,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * Sends this message to a player. The player will receive the fully-fledged formatted display of this message.
      *
      * @param player The player who will receive the message.
-     *
-     * @deprecated Use {@link Player.Spigot#sendMessage(BaseComponent...)} after creating your ChatMessage with {@link #create()}.
      */
-    @Deprecated
     public void send(Player player) {
         player.spigot().sendMessage(builder.create());
     }
@@ -426,10 +432,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * Otherwise, they will receive a version of this message with less formatting.
      *
      * @param sender The command sender who will receive the message.
-     *
-     * @deprecated Use {@link Player.Spigot#sendMessage(BaseComponent...)} after creating your ChatMessage with {@link #create()}.
      */
-    @Deprecated
     public void send(CommandSender sender) {
         sender.spigot().sendMessage(create());
     }
