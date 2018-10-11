@@ -23,7 +23,7 @@ import java.util.function.Predicate;
  * @author Silthus
  */
 @ToString(of = {"triggerListener", "config"})
-@EqualsAndHashCode(of = {"triggerListener", "config"})
+@EqualsAndHashCode(of = {"triggerListener", "config", "actions", "requirements"})
 @Data
 public class TriggerListenerConfigWrapper<T> {
 

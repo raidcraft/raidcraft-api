@@ -36,6 +36,10 @@ public class TriggerFactory {
 
     public <T> void registerListener(@NonNull TriggerListener<T> listener) {
 
+        if (registeredListeners.contains(listener)) {
+            return;
+        }
+
         Optional<? extends TriggerListenerConfigWrapper<T>> wrapper = getManager().registerListener(listener, getIdentifier(), getConfig());
         wrapper.ifPresent(trigger -> {
             trigger.setActions(ActionAPI.filterActionTypes(actions, listener.getTriggerEntityType()));
