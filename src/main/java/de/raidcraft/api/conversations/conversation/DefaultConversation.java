@@ -25,20 +25,22 @@ public final class DefaultConversation {
      * <example>
      *     # Pass this section into the method for parsing.
      *     default-convs:
-     *       'host-name': 'conversation-name'
-     *       'second-host': 'same-conversation'
+     *       - 'host-name:conversation-name'
+     *       - 'second-host:same-conversation'
      * </example>
      *
-     * @param section to extract conversation mappings from
+     * @param defaultConvs list of strings to parse
      * @return list of {@link DefaultConversation} or empty list of no mappings were found
      */
-    public static Collection<DefaultConversation> fromConfig(@Nullable ConfigurationSection section) {
+    public static Collection<DefaultConversation> fromConfig(List<String> defaultConvs) {
 
         ArrayList<DefaultConversation> conversations = new ArrayList<>();
-        if (section == null) return conversations;
+        if (defaultConvs == null) return conversations;
 
-        for (String hostId : section.getKeys(false)) {
-            create(hostId, section.getString(hostId)).ifPresent(conversations::add);
+        for (String conv : defaultConvs) {
+            String[] split = conv.split(":");
+            if (split.length < 2) continue;
+            create(split[0], split[1]).ifPresent(conversations::add);
         }
 
         return conversations;
