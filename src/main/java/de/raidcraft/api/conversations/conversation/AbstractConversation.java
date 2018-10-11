@@ -1,6 +1,9 @@
 package de.raidcraft.api.conversations.conversation;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
+import de.raidcraft.api.action.ActionConfigWrapper;
+import de.raidcraft.api.action.action.ActionHolder;
 import de.raidcraft.api.config.DataMap;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.answer.Answer;
@@ -14,6 +17,7 @@ import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.fanciful.FancyMessage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
@@ -164,9 +168,18 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         boolean changedStage = getCurrentStage().map(nextStage -> !nextStage.equals(stage.get())).orElse(false);
 
         if (getTemplate().isAutoEnding() && answer.isPresent() && !changedStage) {
-            // auto end the conversation if no other stages are present
-            // and after the player had a chance to answer
-            end(ConversationEndReason.SILENT);
+            Optional<Long> delay = answer.map(ActionHolder::getActions)
+                    .map(actions -> actions.stream()
+                            .filter(action -> action instanceof ActionConfigWrapper)
+                            .mapToLong(value -> ((ActionConfigWrapper<?>) value).getDelay()).sum());
+            if (delay.isPresent() && delay.get() > 0) {
+                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> end(ConversationEndReason.SILENT), delay.get());
+            } else {
+                // auto end the conversation if no other stages are present
+                // and after the player had a chance to answer
+                end(ConversationEndReason.SILENT);
+            }
+
         }
         return answer;
     }

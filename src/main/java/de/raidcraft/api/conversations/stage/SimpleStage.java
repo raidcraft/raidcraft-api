@@ -1,7 +1,9 @@
 package de.raidcraft.api.conversations.stage;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.api.action.ActionConfigWrapper;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.conversations.answer.Answer;
@@ -12,6 +14,7 @@ import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.fanciful.FancyMessage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -253,8 +256,17 @@ public class SimpleStage implements Stage {
         if (getConversation().getTemplate().isAutoEnding()
                 && getConversation().getStages().size() < 2
                 && getAnswers().size() < 1) {
-            // automatically end the conversation silently if one one stage is defined and auto-end == true
-            getConversation().end(ConversationEndReason.SILENT);
+            long delay = getActions().stream()
+                    .filter(action -> action instanceof ActionConfigWrapper)
+                    .mapToLong(value -> ((ActionConfigWrapper<?>) value).getDelay())
+                    .sum();
+            if (delay > 0) {
+                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> getConversation().end(ConversationEndReason.SILENT), delay);
+            } else {
+                // automatically end the conversation silently if one one stage is defined and auto-end == true
+                getConversation().end(ConversationEndReason.SILENT);
+            }
+
         }
         return this;
     }
