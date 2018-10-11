@@ -370,10 +370,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * @return This builder instance.
      */
     public FancyMessage then() {
-        if (!latest().hasText()) {
-            throw new IllegalStateException("previous message part has no text");
-        }
-        this.builder.append(new BaseComponent[]{});
+        this.builder.append(new BaseComponent[]{}, ComponentBuilder.FormatRetention.NONE);
         return this;
     }
 
