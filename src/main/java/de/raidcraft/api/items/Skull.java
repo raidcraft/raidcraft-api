@@ -2,6 +2,7 @@ package de.raidcraft.api.items;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import de.raidcraft.util.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +15,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
@@ -21,14 +23,22 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * @author Philip
  */
 public class Skull {
+
+    private static final Pattern Base64Matcher = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
+
+    public static boolean isBase64(String base64String) {
+        return Base64Matcher.matcher(base64String).matches();
+    }
 
     public static boolean addHead(Player player, String skullOwner) {
 
@@ -83,7 +93,25 @@ public class Skull {
         if (skullOwner.contains(":")) {
             skullOwner = skullOwner.split(":")[1];
         }
+        if (isBase64(skullOwner)) {
+            return getSkullWithCustomSkin(skullOwner);
+        }
         return getSkull(skullOwner, 1);
+    }
+
+    public static ItemStack getSkullWithCustomSkin(String base64Url) {
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        PropertyMap propertyMap = profile.getProperties();
+        if (propertyMap == null) {
+            throw new IllegalStateException("Profile doesn't contain a property map");
+        }
+        propertyMap.put("textures", new Property("textures", base64Url));
+        ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        ItemMeta headMeta = head.getItemMeta();
+        Class<?> headMetaClass = headMeta.getClass();
+        ReflectionUtil.getField(headMetaClass, "profile", GameProfile.class).set(headMeta, profile);
+        head.setItemMeta(headMeta);
+        return head;
     }
 
     public static ItemStack getSkull(String skullOwner, int quantity) {
