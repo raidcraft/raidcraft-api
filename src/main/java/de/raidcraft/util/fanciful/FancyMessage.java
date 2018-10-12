@@ -370,7 +370,7 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
      * @return This builder instance.
      */
     public FancyMessage then() {
-        this.builder.append(new BaseComponent[]{}, ComponentBuilder.FormatRetention.NONE);
+        this.builder.append("", ComponentBuilder.FormatRetention.NONE);
         return this;
     }
 
