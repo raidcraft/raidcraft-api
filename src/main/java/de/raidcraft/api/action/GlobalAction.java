@@ -279,7 +279,7 @@ public enum GlobalAction {
         }
     }), TELEPORT_COORDS("teleport.location", new Action<Player>() {
         @Override
-        @Information(value = "teleport.location", desc = "Teleports the player to the given location.", conf = {"x",
+        @Information(value = "teleport.location", aliases = {"teleport"}, desc = "Teleports the player to the given location.", conf = {"x",
                 "y", "z", "world: [current]", "yaw", "pitch"})
         public void accept(Player player, ConfigurationSection config) {
 

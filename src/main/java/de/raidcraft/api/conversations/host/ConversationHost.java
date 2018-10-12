@@ -82,6 +82,14 @@ ConversationHost<T> {
     <TTrait extends Trait> Optional<TTrait> getTrait(Class<TTrait> traitClass);
 
     /**
+     * Checks if the given {@link ConversationHost} has the given trait.
+     *
+     * @param traitClass to check for
+     * @return true if host has trait
+     */
+    boolean hasTrait(Class<? extends Trait> traitClass);
+
+    /**
      * Gets the default conversation of this conversation host. If no default
      * conversation exists an empty {@link Optional} will be returned.
      * A host can have multiple default conversations and picks the one that will meet all

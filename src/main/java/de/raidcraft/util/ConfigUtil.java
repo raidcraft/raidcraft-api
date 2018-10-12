@@ -88,12 +88,12 @@ public class ConfigUtil {
             basePath = "";
             for (int i = sections.length; i >= 0; --i) {
                 if (value.startsWith("../")) {
-                    value = value.replace("\\.\\./", "");
+                    value = value.replaceFirst("\\.\\./", "");
                 } else {
                     basePath = sections[i] + "." + basePath;
                 }
             }
-            value = basePath + value;
+            value = basePath + "." + value.replace("\\", ".");
         }
         return value;
     }

@@ -3,12 +3,14 @@ package de.raidcraft.api.conversations.events;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 @RequiredArgsConstructor
-public class ConversationHostProximityEvent extends Event {
+public class ConversationHostProximityEvent extends Event implements Cancellable {
 
     @Getter
     private final String hostIdentifier;
@@ -18,6 +20,9 @@ public class ConversationHostProximityEvent extends Event {
     private final int radius;
     @Getter
     private final Player player;
+    @Getter
+    @Setter
+    private boolean cancelled;
 
     // Bukkit stuff
     private static final HandlerList handlers = new HandlerList();

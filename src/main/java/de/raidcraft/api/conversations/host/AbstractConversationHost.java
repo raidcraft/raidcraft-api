@@ -74,6 +74,11 @@ public abstract class AbstractConversationHost<T> implements ConversationHost<T>
     }
 
     @Override
+    public boolean hasTrait(Class<? extends Trait> traitClass) {
+        return false;
+    }
+
+    @Override
     public Optional<ConversationTemplate> getDefaultConversation() {
 
         if (defaultConversations.isEmpty()) return Optional.empty();
