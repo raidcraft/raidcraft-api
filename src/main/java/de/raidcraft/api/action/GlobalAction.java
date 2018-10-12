@@ -207,6 +207,18 @@ public enum GlobalAction {
                 player.sendMessage(ChatColor.DARK_AQUA + line);
             }
         }
+    }), TEXT_THINK("text.think", new Action<Player>() {
+        @Override
+        @Information(value = "text.think", desc = "Sends the given text to the player formatted in GRAY ITALIC.", conf = {
+                "text: <First line.|Second line.>"})
+        public void accept(Player player, ConfigurationSection config) {
+
+            String[] text = config.getString("text").split("\\|");
+            for (String line : text) {
+                line = RaidCraft.replaceVariables(player, line);
+                player.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + line);
+            }
+        }
     }), TOGGLE_DOOR("door.toggle", new DoorAction()), GIVE_COMPASS("player.give.compass", new Action<Player>() {
         @Override
         @Information(value = "player.give.compass", desc = "Gives the player a compass that points to the given location and names it.", conf = {
