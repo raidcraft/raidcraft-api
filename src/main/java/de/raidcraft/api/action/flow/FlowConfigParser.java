@@ -1,6 +1,7 @@
 package de.raidcraft.api.action.flow;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.ActionConfigWrapper;
 import de.raidcraft.api.action.RequirementConfigWrapper;
@@ -94,7 +95,9 @@ public class FlowConfigParser {
         }
 
         int groupCount = aliasMap.entrySet().stream().mapToInt(flowTypeMapEntry -> flowTypeMapEntry.getValue().size()).sum();
-        RaidCraft.LOGGER.info("Loaded " + groupCount + " alias groups for " + ConfigUtil.getFileName(getConfig()) + " -> " + section.getCurrentPath());
+        if (RaidCraft.getComponent(RaidCraftPlugin.class).getConfig().debugFlowParser) {
+            RaidCraft.LOGGER.info("Loaded " + groupCount + " alias groups for " + ConfigUtil.getFileName(getConfig()) + " -> " + section.getCurrentPath());
+        }
     }
 
     private Optional<ConfigurationSection> getVariableGroupSection() {

@@ -266,6 +266,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         @MultiComment({"prints a heartbeat message in this interval",
                 "-1: off, 20: each second"})
         public long heartbeatTicks = -1;
+        @Setting("debug.flow")
+        public boolean debugFlowParser = false;
         @Setting("debug.actions")
         public boolean debugActions = true;
         @Setting("debug.trigger")
