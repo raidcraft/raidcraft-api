@@ -8,6 +8,7 @@ import de.raidcraft.api.action.action.global.RemovePlayerTag;
 import de.raidcraft.api.action.action.global.SetBlockAction;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
+import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.economy.AccountType;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
@@ -164,7 +165,10 @@ public enum GlobalAction {
                 Optional<String> name = activeConversation.get().getHost().getName();
                 npc = name.orElse(null);
             } else {
-                npc = config.getString("npc");
+                npc = Conversations.getConversationHost(config.getString("npc"))
+                        .map(ConversationHost::getName)
+                        .map(name -> name.orElse(null))
+                        .orElse(config.getString("npc"));
             }
             String[] text = config.getString("text").split("\\|");
             for (String line : text) {
