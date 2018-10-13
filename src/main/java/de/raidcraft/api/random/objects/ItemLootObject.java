@@ -6,7 +6,9 @@ import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.CustomItemStack;
 import de.raidcraft.api.random.*;
 import de.raidcraft.util.ConfigUtil;
+import de.raidcraft.util.CustomItemUtil;
 import de.raidcraft.util.InventoryUtils;
+import de.raidcraft.util.ItemUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -27,11 +29,11 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
         public RDSObject createInstance(ConfigurationSection config) {
 
             try {
-                if (config.isSet("price")) {
-                    return new ItemLootObject(config.getString("item"), config.getInt("amount", 1), config.getDouble("price"));
-                } else {
-                    return new ItemLootObject(config.getString("item"), config.getInt("amount", 1));
-                }
+                ItemLootObject lootObject = new ItemLootObject(RaidCraft.getSafeItem(config.getString("item"), config.getInt("amount", 1)));
+                lootObject.setMinAmount(config.getInt("min-amount", -1));
+                lootObject.setMaxAmount(config.getInt("max-amount", -1));
+                lootObject.setPrice(RaidCraft.getEconomy().parseCurrencyInput(config.getString("price", "0")));
+                return lootObject;
             } catch (CustomItemException e) {
                 RaidCraft.LOGGER.warning("Invalid item " + config.getString("item") + " in loot-table " + ConfigUtil.getFileName(config));
                 return new RDSNullValue(0);
@@ -43,6 +45,12 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
     @Getter
     @Setter
     private double price;
+    @Getter
+    @Setter
+    private int minAmount = -1;
+    @Getter
+    @Setter
+    private int maxAmount = -1;
 
     public ItemLootObject(String item, int amount) throws CustomItemException {
 
@@ -83,7 +91,11 @@ public class ItemLootObject extends GenericRDSValue<ItemStack> implements RDSObj
         if (!getValue().isPresent()) {
             return new GenericRDSValue<>();
         }
-        return new ItemLootObject(getValue().get().clone(), price);
+        ItemStack itemStack = getValue().get().clone();
+        if (getMinAmount() > -1 && getMaxAmount() > -1) {
+            itemStack.setAmount(RDSRandom.getIntValue(getMinAmount(), getMaxAmount()));
+        }
+        return new ItemLootObject(itemStack, price);
     }
 
     @Override
