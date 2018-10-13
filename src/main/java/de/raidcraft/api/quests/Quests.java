@@ -1,12 +1,14 @@
 package de.raidcraft.api.quests;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.config.ConfigLoader;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author Silthus

@@ -63,6 +63,12 @@ public abstract class ConfigLoader implements Comparable<ConfigLoader> {
         return file.getName().toLowerCase().endsWith(getSuffix());
     }
 
+    /**
+     * Gets called when all files with this suffix are loaded.
+     * Can be used in config loaders that depend on configs loaded by itself.
+     */
+    public void onLoadingComplete() {}
+
     @Override
     public boolean equals(Object o) {
 
