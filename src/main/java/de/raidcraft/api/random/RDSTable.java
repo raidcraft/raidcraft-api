@@ -1,5 +1,7 @@
 package de.raidcraft.api.random;
 
+import org.bukkit.entity.Player;
+
 import java.util.Collection;
 import java.util.Optional;
 
@@ -48,6 +50,8 @@ public interface RDSTable extends RDSObject {
      */
     Collection<RDSObject> getContents();
 
+    Optional<Player> getLootingPlayer();
+
     /**
      * Clears all contents of the {@link RDSTable}.
      */
@@ -75,4 +79,13 @@ public interface RDSTable extends RDSObject {
      * @return fresh random result
      */
     Collection<RDSObject> loot();
+
+    /**
+     * Will reset the cache and loot the object in a player context.
+     * This means that requirements get evaluated. Otherwise requirements will all be true.
+     *
+     * @param player that is looting
+     * @return random loot with evaluated requirements
+     */
+    Collection<RDSObject> loot(Player player);
 }

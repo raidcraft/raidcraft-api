@@ -1,8 +1,8 @@
 package de.raidcraft.api.random;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +28,9 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
     private Collection<RDSObject> cachedResult;
     private String id;
     private int count;
+    @Setter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.NONE)
+    private Player lootingPlayer;
 
     public GenericRDSTable() {
 
@@ -58,6 +61,11 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
     @Override
     public Optional<String> getId() {
         return Optional.ofNullable(id);
+    }
+
+    @Override
+    public Optional<Player> getLootingPlayer() {
+        return Optional.ofNullable(lootingPlayer);
     }
 
     @Override
@@ -104,7 +112,7 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
 
             if (!(object instanceof RDSNullValue)) {
                 if (object instanceof RDSTable) {
-                    result.addAll(((RDSTable) object).loot());
+                    result.addAll(((RDSTable) object).loot(getLootingPlayer().orElse(null)));
                 } else {
                     // INSTANCECHECK
                     // Check if the object to add implements IRDSObjectCreator.
@@ -129,6 +137,12 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
         // TODO: discuss if caching makes sense
         if (cachedResult != null) return cachedResult;
 
+        // If a player is set we need to check the requirements of this table
+        // otherwise the table will always be active
+        if (!getLootingPlayer().map(this::isMeetingAllRequirements).orElse(true)) {
+            return new ArrayList<>();
+        }
+
         // The return value, a list of hit objects
         List<RDSObject> result = new ArrayList<>();
         uniqueDrops = new HashSet<>();
@@ -143,6 +157,7 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
         // drop, even if the count says only 3.
         getContents().stream()
                 .filter(entry -> entry.isAlways() && entry.isEnabled())
+                .filter(object -> getLootingPlayer().map(object::isMeetingAllRequirements).orElse(true))
                 .forEach(entry -> addToResult(result, entry));
         
         long realDropCount = getCount();
@@ -157,6 +172,7 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
                 Collection<RDSObject> dropables = getContents().stream()
                         .filter(object -> !object.isExcludeFromRandom())
                         .filter(RDSObject::isEnabled)
+                        .filter(object -> getLootingPlayer().map(object::isMeetingAllRequirements).orElse(true))
                         .collect(Collectors.toList());
 
                 // This is the magic random number that will decide, which object is hit now
@@ -193,5 +209,13 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
     public Collection<RDSObject> loot() {
         this.cachedResult = null;
         return getResult();
+    }
+
+    @Override
+    public Collection<RDSObject> loot(Player player) {
+        setLootingPlayer(player);
+        Collection<RDSObject> result = loot();
+        setLootingPlayer(null);
+        return result;
     }
 }
