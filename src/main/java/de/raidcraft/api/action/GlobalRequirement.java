@@ -5,6 +5,7 @@ import de.raidcraft.api.action.requirement.ContextualRequirement;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.requirement.global.TagRequirement;
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.api.locations.Locations;
 import de.raidcraft.api.quests.QuestProvider;
 import de.raidcraft.api.quests.Quests;
 import de.raidcraft.util.ConfigUtil;
@@ -88,20 +89,7 @@ public enum GlobalRequirement {
                 "x", "y", "z", "world: [current]", "radius: [0]" })
         public boolean test(Player player, ConfigurationSection config) {
 
-            Location location = player.getLocation();
-            World world = Bukkit.getWorld(config.getString("world", player.getWorld().getName()));
-            if (config.isSet("world") && world == null)
-                return false;
-
-            if (config.isSet("x") && config.isSet("y") && config.isSet("z") && config.isSet("world")) {
-                if (config.isSet("radius")) {
-                    return LocationUtil.isWithinRadius(location, ConfigUtil.getLocationFromConfig(config, player),
-                            config.getInt("radius"));
-                }
-                return config.getInt("x") == location.getBlockX() && config.getInt("y") == location.getBlockY()
-                        && config.getInt("z") == location.getBlockZ() && world.equals(location.getWorld());
-            }
-            return false;
+            return Locations.fromConfig(config, player).map(location -> location.isInRange(player.getLocation())).orElse(false);
         }
     }), HAS_ITEM("player.has-item", new Requirement<Player>() {
         @Override

@@ -3,6 +3,7 @@ package de.raidcraft.api.action.trigger.global;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.items.CustomItemException;
+import de.raidcraft.api.locations.Locations;
 import de.raidcraft.api.random.*;
 import de.raidcraft.api.random.objects.ItemLootObject;
 import de.raidcraft.api.random.objects.MoneyLootObject;
@@ -53,19 +54,11 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        informListeners("interact", event.getPlayer(), config -> {
-
+        informListeners("interact", event.getPlayer(), config -> Locations.fromConfig(config, event.getPlayer()).map(location -> {
             Block block = event.getClickedBlock();
-            if (config.isSet("x") && config.isSet("y") && config.isSet("z")) {
-                Location blockLocation = block.getLocation();
-                World world = config.isSet("world") ? Bukkit.getWorld(config.getString("world")) : event.getPlayer().getWorld();
-                if (blockLocation.getBlockX() != config.getInt("x")
-                        || blockLocation.getBlockY() != config.getInt("y")
-                        || blockLocation.getBlockZ() != config.getInt("z")
-                        || !blockLocation.getWorld().equals(world)) {
-                    return false;
-                }
-            }
+
+            if (!location.isBlockEquals(block.getLocation())) return false;
+
             Set<Material> blocks = new HashSet<>();
             if (config.isList("blocks")) {
                 config.getStringList("blocks").forEach(b -> {
@@ -79,7 +72,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
                 return blocks.contains(block.getType());
             }
             return !config.isSet("block") || Material.matchMaterial(config.getString("block", "AIR")) == block.getType();
-        });
+        }).orElse(false));
     }
 
     @Information(
@@ -131,17 +124,11 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
 
         informListeners("block.break", event.getPlayer(), config -> {
 
-            if (config.isSet("x")) {
-                Location location = ConfigUtil.getLocationFromConfig(config, event.getPlayer());
-                Location playerLocation = event.getPlayer().getLocation();
-                World world = config.isSet("world") ? Bukkit.getWorld(config.getString("world")) : event.getPlayer().getWorld();
-                if (!location.getWorld().equals(world)
-                        || location.getBlockX() != playerLocation.getBlockX()
-                        || location.getBlockY() != playerLocation.getBlockY()
-                        || location.getBlockZ() != playerLocation.getBlockZ()) {
-                    return false;
-                }
-            }
+            boolean matches = Locations.fromConfig(config, event.getPlayer())
+                    .map(location -> location.isBlockEquals(event.getBlock().getLocation()))
+                    .orElse(false);
+
+            if (!matches) return false;
 
             Set<Material> blocks = new HashSet<>();
             if (config.isList("blocks")) {
@@ -181,17 +168,11 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
 
         informListeners("block.place", event.getPlayer(), config -> {
 
-            if (config.isSet("x")) {
-                Location location = ConfigUtil.getLocationFromConfig(config, event.getPlayer());
-                Location playerLocation = event.getPlayer().getLocation();
-                World world = config.isSet("world") ? Bukkit.getWorld(config.getString("world")) : event.getPlayer().getWorld();
-                if (!location.getWorld().equals(world)
-                        || location.getBlockX() != playerLocation.getBlockX()
-                        || location.getBlockY() != playerLocation.getBlockY()
-                        || location.getBlockZ() != playerLocation.getBlockZ()) {
-                    return false;
-                }
-            }
+            boolean matches = Locations.fromConfig(config, event.getPlayer())
+                    .map(location -> location.isBlockEquals(event.getBlockPlaced().getLocation()))
+                    .orElse(false);
+
+            if (!matches) return false;
 
             Set<Material> blocks = new HashSet<>();
             if (config.isList("blocks")) {
@@ -242,29 +223,9 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
 
         // if no coordinates are defined always return true
         // otherwise check the coordinates and the radius
-        informListeners("move", event.getPlayer(), config -> {
-
-            World world;
-            if (config.isSet("world")) {
-                world = Bukkit.getWorld(config.getString("world"));
-            } else {
-                world = event.getPlayer().getWorld();
-            }
-            if (world == null || !world.equals(event.getPlayer().getWorld())) {
-                return false;
-            }
-            Location location = new Location(world, config.getInt("x"), config.getInt("y"), config.getInt("z"));
-            int radius = config.getInt("radius", 0);
-            Location playerLocation = event.getPlayer().getLocation();
-            if (radius > 0) {
-                return LocationUtil.isWithinRadius(playerLocation, location, radius);
-            } else {
-                return playerLocation.getWorld().equals(location.getWorld())
-                        && playerLocation.getBlockX() == location.getBlockX()
-                        && playerLocation.getBlockY() == location.getBlockY()
-                        && playerLocation.getBlockZ() == location.getBlockZ();
-            }
-        });
+        informListeners("move", event.getPlayer(),
+                config -> Locations.fromConfig(config, event.getPlayer())
+                        .map(location -> location.isInRange(event.getTo())).orElse(false));
     }
 
 

@@ -37,7 +37,12 @@ public final class Locations {
         if (config.isConfigurationSection("location")) return fromConfig(config.getConfigurationSection("location"));
         if (config.isSet("x") && config.isSet("y") && config.isSet("z")) {
             World world = Bukkit.getWorld(config.getString("world", "world"));
-            if (world == null) return Optional.empty();
+            if (world == null) {
+                Optional<World> any = Bukkit.getWorlds().stream().findAny();
+                if (!any.isPresent()) return Optional.empty();
+                config.set("world", any.get().getName());
+            }
+
             return Optional.of(new ConfiguredLocation(config));
         }
         return Optional.empty();

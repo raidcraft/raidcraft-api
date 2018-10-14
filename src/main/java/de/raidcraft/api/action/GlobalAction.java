@@ -13,6 +13,7 @@ import de.raidcraft.api.economy.AccountType;
 import de.raidcraft.api.economy.Economy;
 import de.raidcraft.api.items.CustomItemException;
 import de.raidcraft.api.items.ItemType;
+import de.raidcraft.api.locations.Locations;
 import de.raidcraft.api.quests.QuestProvider;
 import de.raidcraft.api.quests.Quests;
 import de.raidcraft.util.*;
@@ -230,8 +231,7 @@ public enum GlobalAction {
         public void accept(Player player, ConfigurationSection config) {
 
             ItemStack item = ItemUtils.createItem(Material.COMPASS, config.getString("name", "Compass"));
-            Location location = ConfigUtil.getLocationFromConfig(config, player);
-            player.setCompassTarget(location);
+            Locations.fromConfig(config, player).ifPresent(location -> player.setCompassTarget(location.getLocation()));
             InventoryUtils.addOrDropItems(player, item);
         }
     }), REMOVE_COMPASS("player.remove.compass", new Action<Player>() {
@@ -287,7 +287,7 @@ public enum GlobalAction {
                 "y", "z", "world: [current]", "yaw", "pitch"})
         public void accept(Player player, ConfigurationSection config) {
 
-            player.teleport(ConfigUtil.getLocationFromConfig(config, player));
+            Locations.fromConfig(config, player).ifPresent(location -> player.teleport(location.getLocation()));
         }
     }), START_TIMER("timer.start", new Action<Player>() {
         @Override
