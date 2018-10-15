@@ -423,7 +423,7 @@ Wie auch [Actions](#action-parameter) und [Requirements](#requirement-parameter)
 
 ## Trigger Gruppen
 
-Zusätzlich zu den normalen Trigger können durch extra `.trigger.yml` Dateien neue gruppierte Trigger angelegt werden. Der Dateiname wird dabei zur neuen Trigger ID. Wenn die Bedingungen für alle Trigger in der Trigger Gruppe zu treffen wird der neue Trigger ausgelöst. Das Feature wurde mit 
+Zusätzlich zu den normalen Trigger können durch extra `.trigger.yml` Dateien neue gruppierte Trigger angelegt werden. Der Dateiname wird dabei zur neuen Trigger ID. Wenn die Bedingungen für alle Trigger in der Trigger Gruppe zu treffen wird der neue Trigger ausgelöst. Das Feature wurde mit https://git.faldoria.de/tof/plugins/raidcraft/raidcraft-api/issues/20 implementiert.
 
 ```yml
 desc: Optionale Beschreibung die dann ins Web Interface synchronisiert wird.
