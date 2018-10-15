@@ -18,8 +18,9 @@ public interface TriggerListener<T>  {
      * be executed and the processing failed.
      *
      * @param entity to process
+     * @param trigger that is being processed
      *
      * @return true if actions should execute
      */
-    boolean processTrigger(T entity);
+    boolean processTrigger(T entity, Trigger trigger);
 }

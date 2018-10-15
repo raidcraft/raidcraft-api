@@ -52,6 +52,11 @@ public final class TriggerManager {
         for (String action : trigger.getActions()) {
             registeredTrigger.put(trigger.getIdentifier() + "." + action, trigger);
         }
+
+        if (trigger.getActions().length < 1) {
+            registeredTrigger.put(trigger.getIdentifier(), trigger);
+        }
+
         ConfigBuilder.getInformations(trigger).forEach(information -> {
             triggerInformation.put(information.value(), information);
             Arrays.stream(information.aliases()).forEach(alias -> aliases.put(alias, information.value()));
@@ -67,10 +72,16 @@ public final class TriggerManager {
         String triggerName;
         String identifier = plugin.getName() + "." + trigger.getIdentifier();
         trigger.setIdentifier(identifier);
+
         for (String action : trigger.getActions()) {
             triggerName = identifier + "." + action;
             registeredTrigger.put(triggerName, trigger);
         }
+
+        if (trigger.getActions().length < 1) {
+            registeredTrigger.put(identifier, trigger);
+        }
+
         ConfigBuilder.getInformations(trigger).forEach(information -> {
             triggerInformation.put(plugin.getName() + "." + information.value(), information);
             Arrays.stream(information.aliases()).forEach(alias -> aliases.put(alias, plugin.getName() + "." + information.value()));
