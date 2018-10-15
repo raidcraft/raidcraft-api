@@ -423,7 +423,35 @@ Wie auch [Actions](#action-parameter) und [Requirements](#requirement-parameter)
 
 ## Trigger Gruppen
 
+Zusätzlich zu den normalen Trigger können durch extra `.trigger.yml` Dateien neue gruppierte Trigger angelegt werden. Der Dateiname wird dabei zur neuen Trigger ID. Wenn die Bedingungen für alle Trigger in der Trigger Gruppe zu treffen wird der neue Trigger ausgelöst. Das Feature wurde mit 
 
+```yml
+desc: Optionale Beschreibung die dann ins Web Interface synchronisiert wird.
+# Ermöglicht es eine Anzahl an Triggern festzulegen die ausgelöst werden müssen.
+required: -1
+# Wenn true werden die Trigger nacheinander aktiviert und erst wenn der letzte Trigger
+# aktiviert wurde wird dieser Trigger ausgelöst.
+# Wenn false dann werden alle Trigger parallel ausgeführt.
+# Wenn dann required nicht gesetzt ist wird der Trigger bei jedem Auslösen eines anderen Triggers ausgelöst.
+# Ansonsten wird mitgezählt welche der Trigger bereits ausgelöst haben.
+ordered: false
+trigger:
+  flow:
+    # z.B. zieht den Hebel in der Schmiede
+    - '@player.interact x,y,z'
+    # maximales delay zwischen den Triggern, danach muss der Spieler wieder beim ersten Trigger anfangen
+    - '~5s'
+    # Sobald der nächste Trigger ausgeführt wurde gilt das delay nicht mehr und muss ggf. neu definiert werden
+    # Der Spieler soll drei Eisenbarren in die Schmiede werfen
+    - '@player.drop.item item:this.eisenbarren amount:3 location:this.schmiede'
+    # Trigger können nach wie vor ihre direkten Actions haben
+    - '!item.remove item:this.eisenbarren amount:3 location:this.schmiede'
+    # Der Trigger muss zweimal ausgeführt werden
+    - '@player.interact(count:2) '
+    # Das Ende des Triggers, daher wird nun der Trigger @schmiede ausgelöst,
+    # bzw. wenn die Datei in einem Unterordner ist: @this.schmiede
+
+```
 
 ## Answers
 
