@@ -17,6 +17,7 @@ Jedes Plugin hat die Möglichkeit eigene [Actions](#actions), [Requirements](#re
     - [Entwicklung von Triggern](#entwicklung-von-triggern)
     - [Verwendung von Triggern](#verwendung-von-triggern)
         - [Trigger Parameter](#trigger-parameter)
+- [Trigger Gruppen](#trigger-gruppen)
 - [Answers](#answers)
 - [Alias Groups](#alias-groups)
 - [Flow Syntax](#flow-syntax)
@@ -410,15 +411,19 @@ trigger:
 
 Wie auch [Actions](#action-parameter) und [Requirements](#requirement-parameter) haben Trigger spezielle globale Parameter die das Ausführen des Triggers beinflussen.
 
-| Parameter    | Beschreibung                                                        | Beispiel                                       |
-| ------------ | ------------------------------------------------------------------- | ---------------------------------------------- |
-| execute-once | Der Trigger wird nur einmal ausgeführt.                             | `@player.location(execute-once:true)`          |
-| cooldown     | Der Trigger wird erst nach Ablauf des `cooldown` wieder ausgeführt. | `@player.death(cooldown:2d)`                   |
-| delay        | Die Prüfung des Triggers wird erst nach dem `delay` durchgeführt.   | `@item.pickup(delay:2s)`                       |
-| action-delay | Actions werden erst nach dem `action-delay` ausgeführt.             | `@objective.started(action-delay:10s)`         |
-| worlds       | Welten in denen der Trigger aktiv ist.                              | `@player.join(worlds:["world","world_nether"])` |
-| count        | Erst wenn der `count` des Triggers erreicht wurde löst der Trigger aus. Das stellt eine Kurzform des dummy(count:XX) requirements dar. | `@rcmobs.mob.kill(count:5)` |
-| count-text   | Das Gegenstück zu `count` ermöglicht es bei jeder Erhöhung des `count` den Text auszugeben. Siehe das `dummy` Requirement für Details. | `@rcmobs.mob.kill(count:5,count-text:"%current% von %count% Mobs getötet.")`|
+| Parameter    | Beschreibung                                                                                                                           | Beispiel                                                                     |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| execute-once | Der Trigger wird nur einmal ausgeführt.                                                                                                | `@player.location(execute-once:true)`                                        |
+| cooldown     | Der Trigger wird erst nach Ablauf des `cooldown` wieder ausgeführt.                                                                    | `@player.death(cooldown:2d)`                                                 |
+| delay        | Die Prüfung des Triggers wird erst nach dem `delay` durchgeführt.                                                                      | `@item.pickup(delay:2s)`                                                     |
+| action-delay | Actions werden erst nach dem `action-delay` ausgeführt.                                                                                | `@objective.started(action-delay:10s)`                                       |
+| worlds       | Welten in denen der Trigger aktiv ist.                                                                                                 | `@player.join(worlds:["world","world_nether"])`                              |
+| count        | Erst wenn der `count` des Triggers erreicht wurde löst der Trigger aus. Das stellt eine Kurzform des dummy(count:XX) requirements dar. | `@rcmobs.mob.kill(count:5)`                                                  |
+| count-text   | Das Gegenstück zu `count` ermöglicht es bei jeder Erhöhung des `count` den Text auszugeben. Siehe das `dummy` Requirement für Details. | `@rcmobs.mob.kill(count:5,count-text:"%current% von %count% Mobs getötet.")` |
+
+## Trigger Gruppen
+
+
 
 ## Answers
 

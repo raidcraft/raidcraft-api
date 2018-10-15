@@ -16,7 +16,7 @@ import de.raidcraft.api.action.requirement.global.IfElseRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.requirement.tables.TPlayerTag;
-import de.raidcraft.api.action.trigger.ConfiguredTriggerGroup;
+import de.raidcraft.api.action.trigger.TriggerGroup;
 import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
 import de.raidcraft.api.action.trigger.global.TimerTrigger;
 import de.raidcraft.api.commands.ConfirmCommand;
@@ -63,10 +63,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 
-import javax.persistence.OneToMany;
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
@@ -124,7 +122,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             @Override
             public void loadConfig(String id, ConfigurationSection config) {
                 ActionAPI.register(RaidCraftPlugin.this).global()
-                        .trigger(new ConfiguredTriggerGroup(id, config));
+                        .trigger(new TriggerGroup(id, config));
             }
         });
 
@@ -132,7 +130,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             @Override
             public void loadConfig(String id, ConfigurationSection config) {
                 ActionAPI.register(RaidCraftPlugin.this).global()
-                        .trigger(new ConfiguredTriggerGroup(id, config));
+                        .trigger(new TriggerGroup(id, config));
             }
         }), 1L);
 

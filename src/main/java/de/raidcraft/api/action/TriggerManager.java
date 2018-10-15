@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.flow.Flow;
 import de.raidcraft.api.action.trigger.Trigger;
+import de.raidcraft.api.action.trigger.TriggerGroup;
 import de.raidcraft.api.action.trigger.TriggerListener;
 import de.raidcraft.api.action.trigger.TriggerListenerConfigWrapper;
 import de.raidcraft.api.config.builder.ConfigBuilder;
@@ -11,8 +12,12 @@ import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.util.CaseInsensitiveMap;
 import lombok.NonNull;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -20,7 +25,7 @@ import java.util.*;
 /**
  * @author Silthus
  */
-public final class TriggerManager {
+public final class TriggerManager implements Listener {
 
     private final Map<String, Trigger> registeredTrigger = new CaseInsensitiveMap<>();
     private final Map<String, ConfigGenerator.Information> triggerInformation = new CaseInsensitiveMap<>();
@@ -28,7 +33,7 @@ public final class TriggerManager {
     private final Map<String, String> aliases = new CaseInsensitiveMap<>();
 
     protected TriggerManager() {
-
+        RaidCraft.registerEvents(this, RaidCraft.getComponent(RaidCraftPlugin.class));
     }
 
     public boolean contains(String identifier) {
@@ -158,5 +163,19 @@ public final class TriggerManager {
     public List<TriggerFactory> createTriggerFactories(ConfigurationSection trigger) {
 
         return Flow.parseTrigger(trigger);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        registeredTrigger.values().stream()
+                .filter(trigger -> trigger instanceof TriggerGroup)
+                .forEach(trigger -> ((TriggerGroup) trigger).registerPlayer(event.getPlayer()));
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        registeredTrigger.values().stream()
+                .filter(trigger -> trigger instanceof TriggerGroup)
+                .forEach(trigger -> ((TriggerGroup) trigger).unregisterPlayer(event.getPlayer()));
     }
 }

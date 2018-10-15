@@ -7,6 +7,7 @@ import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
+import lombok.Getter;
 import lombok.NonNull;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.configuration.ConfigurationSection;
