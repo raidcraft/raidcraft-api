@@ -453,7 +453,13 @@ trigger:
 
 ```
 
-Wenn diese Datei im RaidCraft-API Plugin unterhalb von `trigger
+Wenn diese Datei im RaidCraft-API Plugin unterhalb von `trigger/` angelegt wurde kann der Trigger mit dem eindeutigen Pfad zur Datei referenziert werden. In diesem Ordner **muss** das `.trigger.yml` Suffix weggelassen werden.
+
+> Eine Trigger Gruppe unterhalb von `trigger/ankanor/explosion.yml` kann dann in allen anderen Plugins mit `@ankanor.explosion` referenziert werden.
+
+Außerdem können Trigger Gruppen auch direkt in den Ordnern des Quest Plugins angelegt werden. Dort muss eine Trigger Gruppe dann die Dateiendung `.trigger.yml` besitzen. Wie bei allen Quest Dateien kann dann mit Hilfe von `this.` auf die Datei referenziert werden.
+
+> Eine Datei in der Quest `quests/ankanor/hauptquest/1-neuer-start/bruecke.trigger.yml` kann innerhalb des `1-neuer-start` Ordners mit `@this.bruecke` referenziert werden.
 
 ## Answers
 
