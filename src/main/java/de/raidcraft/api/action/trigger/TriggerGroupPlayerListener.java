@@ -29,14 +29,21 @@ public class TriggerGroupPlayerListener implements TriggerListener<Player> {
     private BukkitTask resetTask = null;
 
     private final TriggerGroup triggerGroup;
+    private final Player player;
 
-    public TriggerGroupPlayerListener(TriggerGroup triggerGroup) {
+    public TriggerGroupPlayerListener(TriggerGroup triggerGroup, Player player) {
         this.triggerGroup = triggerGroup;
+        this.player = player;
     }
 
     @Override
     public Class<Player> getTriggerEntityType() {
         return Player.class;
+    }
+
+    @Override
+    public Optional<Player> getEntity() {
+        return Optional.ofNullable(getPlayer());
     }
 
     public Optional<TriggerListenerConfigWrapper> getCurrentTriggerWrapper() {

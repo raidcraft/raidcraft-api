@@ -82,6 +82,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
             List<TriggerListenerConfigWrapper<T>> list = new ArrayList<>(registeredListeners.get(identifier)).stream()
                     .map(wrapper -> (TriggerListenerConfigWrapper<T>) wrapper)
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
+                    .filter(wrapper -> wrapper.getTriggerListener().getEntity().map(entity -> entity.equals(triggeringEntity)).orElse(true))
                     // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate)).collect(Collectors.toList());
             if (plugin.getConfig().debugTrigger && !list.isEmpty() && !plugin.getConfig().excludedTrigger.contains(identifier)) {

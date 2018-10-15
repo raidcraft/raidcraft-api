@@ -1,5 +1,7 @@
 package de.raidcraft.api.action.trigger;
 
+import java.util.Optional;
+
 /**
  * @author Silthus
  */
@@ -11,6 +13,10 @@ public interface TriggerListener<T>  {
     }
 
     Class<T> getTriggerEntityType();
+
+    default Optional<T> getEntity() {
+        return Optional.empty();
+    }
 
     /**
      * Passes the entity to process the trigger. Should return true if processing was

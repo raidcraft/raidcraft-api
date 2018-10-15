@@ -33,7 +33,7 @@ public class TriggerGroup extends Trigger {
 
     public void registerPlayer(Player player) {
         if (!playerListeners.containsKey(player.getUniqueId())) {
-            TriggerGroupPlayerListener listener = new TriggerGroupPlayerListener(this);
+            TriggerGroupPlayerListener listener = new TriggerGroupPlayerListener(this, player);
             playerListeners.put(player.getUniqueId(), listener);
             listener.registerListeners();
         }
