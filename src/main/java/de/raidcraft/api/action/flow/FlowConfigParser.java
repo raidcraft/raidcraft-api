@@ -244,6 +244,9 @@ public class FlowConfigParser {
                 FlowConfiguration configuration = expression.getConfiguration();
                 switch (expression.getFlowType()) {
                     case TRIGGER:
+                        // invalidate the trigger after the delay if set
+                        // only for ordered triggers
+                        configuration.set("valid", delay);
                         TriggerFactory trigger = ActionAPI.createTrigger(((ActionAPIType) flowExpression).getTypeId(), configuration);
                         String triggerId = getBaseId() + "." + "trigger.flow-" + i++;
 

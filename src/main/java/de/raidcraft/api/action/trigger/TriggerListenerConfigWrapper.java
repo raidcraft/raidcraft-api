@@ -34,6 +34,9 @@ public class TriggerListenerConfigWrapper<T> {
     private final long cooldown;
     private final long triggerDelay;
     private final long actionDelay;
+    // the time this trigger is valid and other triggers after him can be executed
+    // only relevant for ordered triggers.
+    private final long valid;
     private final int count;
     private final String countText;
     private final List<String> worlds = new ArrayList<>();
@@ -49,6 +52,7 @@ public class TriggerListenerConfigWrapper<T> {
         this.cooldown = TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
         this.triggerDelay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         this.actionDelay = TimeUtil.parseTimeAsTicks(config.getString("action-delay"));
+        this.valid = TimeUtil.parseTimeAsTicks(config.getString("valid"));
         this.count = config.getInt("count");
         this.countText = config.getString("count-text");
         this.worlds.addAll(config.getStringList("worlds"));
