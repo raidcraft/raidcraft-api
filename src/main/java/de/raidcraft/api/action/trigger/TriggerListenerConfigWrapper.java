@@ -22,11 +22,12 @@ import java.util.function.Predicate;
 /**
  * @author Silthus
  */
-@ToString(of = {"triggerListener", "config"})
-@EqualsAndHashCode(of = {"triggerListener", "config", "actions", "requirements"})
+@ToString(of = {"identifier", "triggerListener", "config"})
+@EqualsAndHashCode(of = {"identifier", "triggerListener", "config", "actions", "requirements", "worlds"})
 @Data
 public class TriggerListenerConfigWrapper<T> {
 
+    private final String identifier;
     private final TriggerListener<T> triggerListener;
     private final ConfigurationSection config;
     private final boolean executeOnce;
@@ -39,8 +40,9 @@ public class TriggerListenerConfigWrapper<T> {
     private final List<Action<T>> actions = new ArrayList<>();
     private final List<Requirement<T>> requirements = new ArrayList<>();
 
-    protected TriggerListenerConfigWrapper(TriggerListener<T> triggerListener, ConfigurationSection config) {
+    protected TriggerListenerConfigWrapper(String identifier, TriggerListener<T> triggerListener, ConfigurationSection config) {
 
+        this.identifier = identifier;
         this.triggerListener = triggerListener;
         this.config = config;
         this.executeOnce = config.getBoolean("execute-once", false);

@@ -42,7 +42,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
         if (!registeredListeners.containsKey(triggerIdentifier)) {
             registeredListeners.put(triggerIdentifier, new ArrayList<>());
         }
-        TriggerListenerConfigWrapper<T> wrapper = new TriggerListenerConfigWrapper<>(listener, config);
+        TriggerListenerConfigWrapper<T> wrapper = new TriggerListenerConfigWrapper<>(triggerIdentifier, listener, config);
         registeredListeners.get(triggerIdentifier).add(wrapper);
         return wrapper;
     }
@@ -89,13 +89,13 @@ public abstract class Trigger implements TriggerConfigGenerator {
             }
             list.stream().filter(wrapper -> wrapper.getTriggerDelay() > 0)
                     .forEach(wrapper -> Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                        if (wrapper.getTriggerListener().processTrigger(triggeringEntity, this)) {
+                        if (wrapper.getTriggerListener().processTrigger(triggeringEntity, wrapper)) {
                             wrapper.executeActions(triggeringEntity);
                         }
                     }, wrapper.getTriggerDelay()));
             list.stream().filter(wrapper -> wrapper.getTriggerDelay() <= 0)
                     // then lets process the trigger
-                    .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity, this))
+                    .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity, wrapper))
                     // if we get true back we are ready for action processing
                     .forEach(wrapper -> wrapper.executeActions(triggeringEntity));
         }

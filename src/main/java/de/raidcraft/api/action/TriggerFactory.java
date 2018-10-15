@@ -23,7 +23,7 @@ public class TriggerFactory {
     private final TriggerManager manager;
     private final String identifier;
     private final ConfigurationSection config;
-    private final Set<TriggerListener> registeredListeners = new HashSet<>();
+    private final Map<TriggerListener, TriggerListenerConfigWrapper> registeredListeners = new HashMap<>();
     private final List<Action<?>> actions = new ArrayList<>();
     private final List<Requirement<?>> requirements = new ArrayList<>();
 
@@ -34,18 +34,21 @@ public class TriggerFactory {
         this.config = config;
     }
 
-    public <T> void registerListener(@NonNull TriggerListener<T> listener) {
+    @SuppressWarnings("unchecked")
+    public <T> Optional<TriggerListenerConfigWrapper<T>> registerListener(@NonNull TriggerListener<T> listener) {
 
-        if (registeredListeners.contains(listener)) {
-            return;
+        if (registeredListeners.containsKey(listener)) {
+            return Optional.ofNullable(registeredListeners.get(listener));
         }
 
         Optional<? extends TriggerListenerConfigWrapper<T>> wrapper = getManager().registerListener(listener, getIdentifier(), getConfig());
         wrapper.ifPresent(trigger -> {
             trigger.setActions(ActionAPI.filterActionTypes(actions, listener.getTriggerEntityType()));
             trigger.setRequirements(ActionAPI.filterRequirementTypes(requirements, listener.getTriggerEntityType()));
+            registeredListeners.put(listener, wrapper.get());
         });
-        registeredListeners.add(listener);
+
+        return (Optional<TriggerListenerConfigWrapper<T>>) wrapper;
     }
 
     public void unregisterListener(@NonNull TriggerListener<?> listener) {

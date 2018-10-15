@@ -22,5 +22,5 @@ public interface TriggerListener<T>  {
      *
      * @return true if actions should execute
      */
-    boolean processTrigger(T entity, Trigger trigger);
+    boolean processTrigger(T entity, TriggerListenerConfigWrapper trigger);
 }

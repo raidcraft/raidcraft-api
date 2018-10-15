@@ -261,7 +261,7 @@ public final class ActionAPI {
         return triggerManager.createTrigger(identifier, config);
     }
 
-    public static Collection<TriggerFactory> createTrigger(ConfigurationSection trigger) {
+    public static List<TriggerFactory> createTrigger(ConfigurationSection trigger) {
 
         return triggerManager.createTriggerFactories(trigger);
     }

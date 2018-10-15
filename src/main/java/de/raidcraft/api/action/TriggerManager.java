@@ -155,7 +155,7 @@ public final class TriggerManager {
         return new HashMap<>(registeredTrigger);
     }
 
-    public Collection<TriggerFactory> createTriggerFactories(ConfigurationSection trigger) {
+    public List<TriggerFactory> createTriggerFactories(ConfigurationSection trigger) {
 
         return Flow.parseTrigger(trigger);
     }

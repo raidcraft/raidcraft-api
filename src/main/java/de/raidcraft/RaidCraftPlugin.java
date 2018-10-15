@@ -16,13 +16,11 @@ import de.raidcraft.api.action.requirement.global.IfElseRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.requirement.tables.TPlayerTag;
+import de.raidcraft.api.action.trigger.ConfiguredTriggerGroup;
 import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
 import de.raidcraft.api.action.trigger.global.TimerTrigger;
 import de.raidcraft.api.commands.ConfirmCommand;
-import de.raidcraft.api.config.Comment;
-import de.raidcraft.api.config.ConfigurationBase;
-import de.raidcraft.api.config.MultiComment;
-import de.raidcraft.api.config.Setting;
+import de.raidcraft.api.config.*;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.api.events.PlayerSignInteractEvent;
 import de.raidcraft.api.inventory.InventoryManager;
@@ -35,6 +33,7 @@ import de.raidcraft.api.items.attachments.ItemAttachmentManager;
 import de.raidcraft.api.npc.NPC_Manager;
 import de.raidcraft.api.player.PlayerResolver;
 import de.raidcraft.api.player.PlayerStatisticProvider;
+import de.raidcraft.api.quests.Quests;
 import de.raidcraft.api.random.GenericRDSTable;
 import de.raidcraft.api.random.RDS;
 import de.raidcraft.api.random.RDSNullValue;
@@ -47,6 +46,7 @@ import de.raidcraft.tables.*;
 import de.raidcraft.tracking.BlockTracking;
 import de.raidcraft.util.BlockTracker;
 import de.raidcraft.util.BukkitPlayerResolver;
+import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.TimeUtil;
 import de.raidcraft.util.bossbar.BarAPI;
 import io.ebean.EbeanServer;
@@ -55,6 +55,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -118,6 +119,22 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         RDS.registerObject(new RDSNullValue.RDSNullFactory());
         RDS.registerObject(new GenericRDSTable.GenericTableFactory());
         RDS.registerObject(new ConfiguredRDSTable.TableFactory());
+
+        Quests.registerQuestLoader(new ConfigLoader(this, "trigger", -5) {
+            @Override
+            public void loadConfig(String id, ConfigurationSection config) {
+                ActionAPI.register(RaidCraftPlugin.this).global()
+                        .trigger(new ConfiguredTriggerGroup(id, config));
+            }
+        });
+
+        Bukkit.getScheduler().runTaskLater(this, () -> ConfigUtil.loadRecursiveConfigs(this, "trigger", new ConfigLoader(this) {
+            @Override
+            public void loadConfig(String id, ConfigurationSection config) {
+                ActionAPI.register(RaidCraftPlugin.this).global()
+                        .trigger(new ConfiguredTriggerGroup(id, config));
+            }
+        }), 1L);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
