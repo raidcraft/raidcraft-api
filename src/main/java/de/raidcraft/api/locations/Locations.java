@@ -33,7 +33,7 @@ public final class Locations {
      */
     public static Optional<ConfiguredLocation> fromConfig(ConfigurationSection config) {
         if (config == null) return Optional.empty();
-        if (config.isString("location")) return fromString(config.getString("location"));
+        if (config.isString("location") || config.isString("x")) return fromString(config.getString("location", config.getString("x")));
         if (config.isConfigurationSection("location")) return fromConfig(config.getConfigurationSection("location"));
         if (config.isSet("x") && config.isSet("y") && config.isSet("z")) {
             World world = Bukkit.getWorld(config.getString("world", "world"));
@@ -58,7 +58,7 @@ public final class Locations {
      */
     public static Optional<ConfiguredLocation> fromConfig(ConfigurationSection config, Player player) {
         if (config == null) return Optional.empty();
-        if (config.isString("location")) return fromString(config.getString("location"), player);
+        if (config.isString("location") || config.isString("x")) return fromString(config.getString("location", config.getString("x")), player);
 
         if (player != null) {
             String prefix = config.isConfigurationSection("location") ? "location." : "";
