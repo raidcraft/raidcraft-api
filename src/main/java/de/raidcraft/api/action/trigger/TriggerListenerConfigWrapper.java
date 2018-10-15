@@ -33,6 +33,8 @@ public class TriggerListenerConfigWrapper<T> {
     private final long cooldown;
     private final long triggerDelay;
     private final long actionDelay;
+    private final int count;
+    private final String countText;
     private final List<String> worlds = new ArrayList<>();
     private final List<Action<T>> actions = new ArrayList<>();
     private final List<Requirement<T>> requirements = new ArrayList<>();
@@ -45,6 +47,8 @@ public class TriggerListenerConfigWrapper<T> {
         this.cooldown = TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
         this.triggerDelay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         this.actionDelay = TimeUtil.parseTimeAsTicks(config.getString("action-delay"));
+        this.count = config.getInt("count");
+        this.countText = config.getString("count-text");
         this.worlds.addAll(config.getStringList("worlds"));
         this.setActions(ActionAPI.createActions(config.getConfigurationSection("actions"), triggerListener.getTriggerEntityType()));
         this.setRequirements(ActionAPI.createRequirements(triggerListener.getListenerId(), config.getConfigurationSection("requirements"), triggerListener.getTriggerEntityType()));
@@ -57,6 +61,9 @@ public class TriggerListenerConfigWrapper<T> {
             getExecuteOnceRequirement().ifPresent(requirements::add);
         } else if (cooldown > 0) {
             getCooldownRequirement().ifPresent(requirements::add);
+        }
+        if (getCount() > 0) {
+            getCountRequirement().ifPresent(requirements::add);
         }
     }
 
@@ -71,6 +78,15 @@ public class TriggerListenerConfigWrapper<T> {
                 getTriggerListener().getListenerId(),
                 cooldown,
                 getTriggerListener().getTriggerEntityType());
+    }
+
+    private Optional<Requirement<T>> getCountRequirement() {
+        return ActionAPI.Helper.createCountRequirement(
+                getTriggerListener().getListenerId(),
+                getCount(),
+                getCountText(),
+                getTriggerListener().getTriggerEntityType()
+        );
     }
 
     public void setActions(List<Action<T>> actions) {

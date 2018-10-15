@@ -481,5 +481,19 @@ public final class ActionAPI {
             }
             return Optional.empty();
         }
+
+        public static <T> Optional<Requirement<T>> createCountRequirement(String id, int count, String countText, Class<T> type) {
+            MemoryConfiguration config = new MemoryConfiguration();
+            config.set("count", count);
+            config.set("count-text", countText);
+            config.set("persistent", true);
+            Optional<RequirementFactory<T>> factory = ActionAPI.getRequirementFactory(type);
+            if (factory.isPresent()) {
+                return factory.get().create(id + "." + GlobalRequirement.DUMMY.getId(),
+                        GlobalRequirement.DUMMY.getId(),
+                        config).map(wrapper -> wrapper);
+            }
+            return Optional.empty();
+        }
     }
 }

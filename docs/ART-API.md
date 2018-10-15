@@ -416,7 +416,9 @@ Wie auch [Actions](#action-parameter) und [Requirements](#requirement-parameter)
 | cooldown     | Der Trigger wird erst nach Ablauf des `cooldown` wieder ausgeführt. | `@player.death(cooldown:2d)`                   |
 | delay        | Die Prüfung des Triggers wird erst nach dem `delay` durchgeführt.   | `@item.pickup(delay:2s)`                       |
 | action-delay | Actions werden erst nach dem `action-delay` ausgeführt.             | `@objective.started(action-delay:10s)`         |
-| worlds       | Welten in denen der Trigger aktiv ist.                              | `player.join(worlds:["world","world_nether"])` |
+| worlds       | Welten in denen der Trigger aktiv ist.                              | `@player.join(worlds:["world","world_nether"])` |
+| count        | Erst wenn der `count` des Triggers erreicht wurde löst der Trigger aus. Das stellt eine Kurzform des dummy(count:XX) requirements dar. | `@rcmobs.mob.kill(count:5)` |
+| count-text   | Das Gegenstück zu `count` ermöglicht es bei jeder Erhöhung des `count` den Text auszugeben. Siehe das `dummy` Requirement für Details. | `@rcmobs.mob.kill(count:5,count-text:"%current% von %count% Mobs getötet.")`|
 
 ## Answers
 
