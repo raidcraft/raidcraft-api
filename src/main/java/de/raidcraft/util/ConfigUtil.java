@@ -93,7 +93,7 @@ public class ConfigUtil {
                     basePath = sections[i] + "." + basePath;
                 }
             }
-            value = basePath + "." + value.replace("\\", ".");
+            value = basePath + "." + value.replace("(?<!\\.\\.)\\/", ".");
         }
         return value;
     }
