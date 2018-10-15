@@ -453,6 +453,8 @@ trigger:
 
 ```
 
+Wenn diese Datei im RaidCraft-API Plugin unterhalb von `trigger
+
 ## Answers
 
 Eine spezielle Action in der `ART` API sind Antworten, welche in [Conversations](https://git.faldoria.de/tof/plugins/raidcraft/conversations) verwendet werden. Diese Antworten sind für den Spieler anklickbar und bieten die Möglichkeit in Gesprächen zu interagieren.
