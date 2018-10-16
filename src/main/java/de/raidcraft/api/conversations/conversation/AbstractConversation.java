@@ -168,12 +168,15 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         boolean changedStage = getCurrentStage().map(nextStage -> !nextStage.equals(stage.get())).orElse(false);
 
         if (getTemplate().isAutoEnding() && answer.isPresent() && !changedStage) {
-            Optional<Long> delay = answer.map(ActionHolder::getActions)
+            long delay = answer.map(ActionHolder::getActions)
                     .map(actions -> actions.stream()
                             .filter(action -> action instanceof ActionConfigWrapper)
-                            .mapToLong(value -> ((ActionConfigWrapper<?>) value).getDelay()).sum());
-            if (delay.isPresent() && delay.get() > 0) {
-                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> end(ConversationEndReason.SILENT), delay.get());
+                            .reduce((first, second) -> second)
+                            .orElse(null))
+                    .map(action -> ((ActionConfigWrapper<?>) action).getDelay())
+                    .orElse(0L);
+            if (delay > 0) {
+                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> end(ConversationEndReason.SILENT), delay);
             } else {
                 // auto end the conversation if no other stages are present
                 // and after the player had a chance to answer
