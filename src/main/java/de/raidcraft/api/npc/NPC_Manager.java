@@ -2,6 +2,7 @@ package de.raidcraft.api.npc;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.util.CaseInsensitiveMap;
+import de.raidcraft.util.EntityMetaData;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
@@ -281,7 +282,7 @@ public class NPC_Manager {
 
     public boolean isNPC(Entity entity) {
 
-        return entity.hasMetadata("NPC");
+        return entity.hasMetadata(EntityMetaData.NPC);
     }
 
     /**
