@@ -258,8 +258,9 @@ public class SimpleStage implements Stage {
                 && getAnswers().size() < 1) {
             long delay = getActions().stream()
                     .filter(action -> action instanceof ActionConfigWrapper)
-                    .mapToLong(value -> ((ActionConfigWrapper<?>) value).getDelay())
-                    .sum();
+                    .reduce((first, second) -> second)
+                    .map(action -> ((ActionConfigWrapper<?>) action).getDelay())
+                    .orElse(0L);
             if (delay > 0) {
                 Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> getConversation().end(ConversationEndReason.SILENT), delay);
             } else {
