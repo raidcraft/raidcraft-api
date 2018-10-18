@@ -17,6 +17,7 @@ public enum TooltipSlot {
     ENCHANTMENTS(17, TooltipSlotType.FIXED_MULTI_LINE),
     LORE(8, TooltipSlotType.FIXED_MULTI_LINE),
     ATTACHMENT(9, TooltipSlotType.FIXED_MULTI_LINE),
+    CONSUMEABLE(18, TooltipSlotType.VARIABLE_MULTI_LINE),
     SPACER(10, TooltipSlotType.SINGLE),
     REQUIREMENT(11, TooltipSlotType.FIXED_MULTI_LINE),
     SELL_PRICE(12, TooltipSlotType.SINGLE),
