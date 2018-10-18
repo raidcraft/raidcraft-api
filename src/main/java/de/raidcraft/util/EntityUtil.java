@@ -49,7 +49,7 @@ public class EntityUtil {
         if (rare) sb.append(ChatColor.BLUE).append(RARE_SYMBOL);
 
         if (elite || rare) sb.append(" ");
-        sb.append(ChatColor.DARK_PURPLE).append("[").append(color).append(level).append(ChatColor.DARK_PURPLE).append("] ");
+        if (level > 0) sb.append(ChatColor.DARK_PURPLE).append("[").append(color).append(level).append(ChatColor.DARK_PURPLE).append("] ");
         sb.append(color).append(name);
         if (elite || rare) sb.append(" ");
 
