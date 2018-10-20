@@ -7,6 +7,8 @@ public class EntityMetaData {
     public static final String RCMOBS_RARE = "RCMOBS_RARE_MOB";
     public static final String RCMOBS_CUSTOM_MOB = "RCMOBS_CUSTOM_MOB";
     public static final String RCMOBS_MOB_ID = "RCMOBS_MOB_ID";
+    public static final String RCMOBS_NAME_TAG = "RCMOBS_NAME_TAG";
+    public static final String RCMOBS_HEALTH_TAG = "RCMOBS_HEALTH_TAG";
 
     public static final String GHOST = "GHOST";
 
