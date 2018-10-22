@@ -55,7 +55,7 @@ public enum GlobalAction {
         @Override
         @Information(value = "player.give.item", desc = "Gives the player the item or drops it if inventory is full.", conf = {
                 "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
-                "amount: [1]"}, aliases = {"player.item.give"})
+                "amount: [1]"}, aliases = {"player.item.give", "item.give"})
         public void accept(Player player, ConfigurationSection config) {
 
             try {
@@ -70,7 +70,7 @@ public enum GlobalAction {
         @Override
         @Information(value = "player.remove.item", desc = "Removes the item from the player, will also search in the quest inventory if it is a quest item.", conf = {
                 "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
-                "amount: [1]"}, aliases = {"player.item.remove"})
+                "amount: [1]"}, aliases = {"player.item.remove", "item.remove"})
         public void accept(Player player, ConfigurationSection config) {
 
             try {
@@ -105,7 +105,7 @@ public enum GlobalAction {
     }), GIVE_MONEY("player.give.money", new Action<Player>() {
         @Override
         @Information(value = "player.give.money", desc = "Gives the player the given amount of money.", conf = {
-                "amount: <1g5s3k/1g/5g3k>|<50.0>"})
+                "amount: <1g5s3k/1g/5g3k>|<50.0>"}, aliases = {"money.give", "money.add"})
         public void accept(Player player, ConfigurationSection config) {
 
             if (!config.isSet("amount"))
@@ -121,7 +121,7 @@ public enum GlobalAction {
     }), TAKE_MONEY("player.remove.money", new Action<Player>() {
         @Override
         @Information(value = "player.remove.money", desc = "Removes the given amount of money from the player.", conf = {
-                "amount: <1g5s3k/1g/5g3k>|<50.0>"})
+                "amount: <1g5s3k/1g/5g3k>|<50.0>"}, aliases = {"money.remove"})
         public void accept(Player player, ConfigurationSection config) {
 
             if (!config.isSet("amount"))
@@ -251,7 +251,7 @@ public enum GlobalAction {
     }), PLAYER_HEAL("player.heal", new Action<Player>() {
         @Override
         @Information(value = "player.heal", desc = "Heals the player by the given amount or to max.", conf = {
-                "amount: defaults to max", "from-max: false"})
+                "amount: defaults to max", "from-max: false"}, aliases = {"heal"})
         public void accept(Player player, ConfigurationSection config) {
 
             if (!config.isSet("amount")) {
@@ -283,7 +283,7 @@ public enum GlobalAction {
         }
     }), TELEPORT_COORDS("teleport.location", new Action<Player>() {
         @Override
-        @Information(value = "teleport.location", aliases = {"teleport", "player.teleport"}, desc = "Teleports the player to the given location.", conf = {"x",
+        @Information(value = "teleport.location", aliases = {"teleport", "player.teleport", "tp"}, desc = "Teleports the player to the given location.", conf = {"x",
                 "y", "z", "world: [current]", "yaw", "pitch"})
         public void accept(Player player, ConfigurationSection config) {
 
