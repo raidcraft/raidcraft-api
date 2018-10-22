@@ -23,7 +23,7 @@ public enum ArmorType {
                 case RARE:
                     return (itemLevel * 1.19 + 5.1) * 1.1;
                 case EPIC:
-                    return ((itemLevel * 1.19 + 5.1) * 1.1) * 1.25;
+                    return (itemLevel * 1.19 + 5.1) * 1.375;
                 default:
                     return itemLevel;
             }
