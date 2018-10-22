@@ -7,9 +7,11 @@ import de.raidcraft.api.items.attachments.ItemAttachment;
 import de.raidcraft.api.items.attachments.RequiredItemAttachment;
 import de.raidcraft.api.items.tooltip.*;
 import de.raidcraft.util.CustomItemUtil;
+import de.raidcraft.util.ItemUtils;
 import de.raidcraft.util.items.EnchantGlow;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -318,6 +320,8 @@ public class CustomItemStack extends ItemStack {
             }
         }
         itemMeta.setLore(lore);
+        itemMeta.setUnbreakable(true);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_DESTROYS);
         setItemMeta(itemMeta);
     }
 
