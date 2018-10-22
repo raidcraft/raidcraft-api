@@ -68,8 +68,7 @@ public class ConfigUtil {
                 List<String> stringList = section.getStringList(key);
                 List<String> newList = new ArrayList<>();
                 for (String item : stringList) {
-                    item = THIS_PATH_PATTERN.matcher(item).replaceAll(basePath + ".");
-                    item = PREVIOUS_FOLDER_PATTERN.matcher(item).replaceAll(previousBasePath);
+                    item = replacePathReference(item, basePath);
                     item = replaceRefrences(basePath, item);
                     newList.add(item);
                 }
@@ -103,9 +102,6 @@ public class ConfigUtil {
 
         if (value == null || value.equals("")) {
             return value;
-        }
-        if (basePath.startsWith(".")) {
-            basePath = basePath.replaceFirst("\\.", "");
         }
         Matcher matcher = VARIABLE_PATTERN.matcher(value);
         if (matcher.matches()) {
