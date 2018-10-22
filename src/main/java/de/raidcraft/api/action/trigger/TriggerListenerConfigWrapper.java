@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -58,6 +59,11 @@ public class TriggerListenerConfigWrapper<T> {
         this.worlds.addAll(config.getStringList("worlds"));
         this.setActions(ActionAPI.createActions(config.getConfigurationSection("actions"), triggerListener.getTriggerEntityType()));
         this.setRequirements(ActionAPI.createRequirements(triggerListener.getListenerId(), config.getConfigurationSection("requirements"), triggerListener.getTriggerEntityType()));
+    }
+
+    public ConfigurationSection getArgs() {
+        ConfigurationSection args = getConfig().getConfigurationSection("args");
+        return args == null ? getConfig().createSection("args") : args;
     }
 
     private void setExtraRequirements() {
@@ -118,10 +124,8 @@ public class TriggerListenerConfigWrapper<T> {
                 if (Bukkit.getWorlds().stream().filter(world -> worlds.contains(world.getName())).count() < 1) return false;
             }
         }
-        ConfigurationSection args = config.getConfigurationSection("args");
-        if (args == null) args = config.createSection("args");
         return triggerListener.getTriggerEntityType().isAssignableFrom(triggeringEntity.getClass())
-                && predicate.test(args)
+                && predicate.test(getArgs())
                 && requirements.stream().allMatch(requirement -> requirement.test(triggeringEntity));
     }
 

@@ -90,7 +90,7 @@ public class FlowConfigParser {
                     aliasMap.get(alias.getFlowType()).put(key, alias);
                 }
             } catch (FlowException e) {
-                e.printStackTrace();
+                RaidCraft.LOGGER.warning(e.getMessage());
             }
         }
 

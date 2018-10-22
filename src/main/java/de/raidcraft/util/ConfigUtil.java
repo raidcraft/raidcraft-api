@@ -81,19 +81,20 @@ public class ConfigUtil {
 
     public static String replacePathReference(String value, String basePath) {
 
+        value = value.replaceAll("(?<!\\.\\.)/", ".");
         if (value.startsWith("this.")) {
-            value = value.replaceFirst("this", basePath);
+            value = value.replaceFirst("this", basePath).replaceFirst("^\\.", "");
         } else if (value.startsWith("../")) {
             String[] sections = basePath.split("\\.");
             basePath = "";
-            for (int i = sections.length; i >= 0; --i) {
+            for (int i = sections.length - 1; i >= 0; --i) {
                 if (value.startsWith("../")) {
                     value = value.replaceFirst("\\.\\./", "");
                 } else {
-                    basePath = sections[i] + "." + basePath;
+                    basePath = sections[i] + "." + basePath.replaceFirst("^\\.", "");
                 }
             }
-            value = basePath + "." + value.replace("(?<!\\.\\.)\\/", ".");
+            value = basePath.replaceFirst("\\.$", "") + "." + value.replaceFirst("^\\.", "");
         }
         return value;
     }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -66,9 +67,14 @@ public abstract class Trigger implements TriggerConfigGenerator {
         informListeners(action, triggeringEntity, config -> true);
     }
 
+    protected final <T> void informListeners(String action, @NonNull T triggeringEntity,
+                                             @NonNull Predicate<ConfigurationSection> predicate) {
+        informListeners(action, triggeringEntity, predicate, null);
+    }
+
     @SuppressWarnings("unchecked")
     protected final <T> void informListeners(String action, @NonNull T triggeringEntity,
-            @NonNull Predicate<ConfigurationSection> predicate) {
+                                             @NonNull Predicate<ConfigurationSection> predicate, Consumer<ConfigurationSection> onTrigger) {
 
         RaidCraftPlugin plugin = RaidCraft.getComponent(RaidCraftPlugin.class);
         String identifier = Strings.isNullOrEmpty(action) ? getIdentifier() :  getIdentifier() + "." + action;
@@ -98,7 +104,10 @@ public abstract class Trigger implements TriggerConfigGenerator {
                     // then lets process the trigger
                     .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity, wrapper))
                     // if we get true back we are ready for action processing
-                    .forEach(wrapper -> wrapper.executeActions(triggeringEntity));
+                    .forEach(wrapper -> {
+                        if (onTrigger != null) onTrigger.accept(wrapper.getArgs());
+                        wrapper.executeActions(triggeringEntity);
+                    });
         }
     }
 }
