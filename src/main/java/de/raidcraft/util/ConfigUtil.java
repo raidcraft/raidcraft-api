@@ -21,14 +21,14 @@ import java.io.File;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConfigUtil {
 
     private final static Pattern VARIABLE_PATTERN = Pattern.compile(".*#([\\w\\d\\s]+):([\\w\\d\\s]+)#.*");
-    private final static Pattern THIS_PATH_PATTERN = Pattern.compile("(this\\.)");
-    private final static Pattern PREVIOUS_FOLDER_PATTERN = Pattern.compile("(\\.\\./)");
+    private final static Pattern THIS_PATH_PATTERN = Pattern.compile("^(.*)((this\\.)|(\\.\\./)[\\w\\-_.\\n/]+)( ?.*)$");
     private static final List<TypeConversion> typeConversions = new ArrayList<>(
             Arrays.asList(new SameTypeConversion(),
                     new StringTypeConversion(),
@@ -54,23 +54,26 @@ public class ConfigUtil {
         if (basePath.startsWith(".")) {
             basePath = basePath.replaceFirst("\\.", "");
         }
-        String[] paths = basePath.split("\\.");
-        String previousBasePath = "";
-        for (int i = 0; i < paths.length - 1; i++) {
-            previousBasePath += paths[i] + ".";
-        }
+        final String path = basePath;
+
+        final Function<String, String> replacer = (input) -> {
+
+            input = input.replaceAll("(?<!\\.\\.)/", ".");
+            Matcher thisMatcher;
+            while ((thisMatcher = THIS_PATH_PATTERN.matcher(input)).matches()) {
+                input = thisMatcher.group(1) + thisMatcher.replaceFirst(replacePathReference(thisMatcher.group(2), path)) + thisMatcher.group(5);
+            }
+            return replaceVariableRefrences(path, input);
+        };
+
         for (String key : section.getKeys(true)) {
             if (section.isString(key)) {
-                String value = replacePathReference(section.getString(key), basePath);
-                value = replaceRefrences(basePath, value);
-                section.set(key, value);
+                section.set(key, replacer.apply(section.getString(key)));
             } else if (section.isList(key)) {
                 List<String> stringList = section.getStringList(key);
                 List<String> newList = new ArrayList<>();
                 for (String item : stringList) {
-                    item = replacePathReference(item, basePath);
-                    item = replaceRefrences(basePath, item);
-                    newList.add(item);
+                    newList.add(replacer.apply(item));
                 }
                 section.set(key, newList);
             }
@@ -98,7 +101,7 @@ public class ConfigUtil {
         return value;
     }
 
-    public static String replaceRefrences(String basePath, String value) {
+    public static String replaceVariableRefrences(String basePath, String value) {
 
         if (value == null || value.equals("")) {
             return value;

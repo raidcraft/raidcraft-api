@@ -1,0 +1,41 @@
+text1: 'config.tests.foobar'
+text2: 'config.foobar.barfoo'
+text3: 'foobar.barfoo'
+text4: 'config.tests.foo config.foobar foo'
+trigger1: '@config.tests.foo'
+trigger2: '@config.foo'
+trigger3: '@foo'
+trigger4: '@foobar config.tests.foo config.foobar fofo'
+action1: '!config.tests.foo'
+action2: '!config.foo'
+action3: '!foo'
+requirement1: '?config.tests.foo'
+requirement2: '?config.foo'
+requirement3: '?foo'
+brackets1: '[config.tests.foobar]'
+brackets2: '[config.foobar]'
+brackets3: '[config.bar.foobar]'
+brackets4: '[bar.foobar]'
+brackets4: '[bar.foobar]'
+brackets5: '"Text bla blabla [config.tests.item] dsdsaodaso [config.item] adsad"'
+list:
+  - 'config.tests.foobar'
+  - 'config.foobar.barfoo'
+  - 'foobar.barfoo'
+  - 'config.tests.foo config.foobar foo'
+  - '"Text bla blabla [config.tests.item] dsdsaodaso [config.item] adsad"'
+depply:
+  nested:
+    config:
+      sections:
+        text1: 'config.tests.foobar'
+        text2: 'config.foobar.barfoo'
+        text3: 'foobar.barfoo'
+        text4: 'config.tests.foo config.foobar foo'
+        with:
+          lists:
+            - 'config.tests.foobar'
+            - 'config.foobar.barfoo'
+            - 'foobar.barfoo'
+            - 'config.tests.foo config.foobar foo'
+            - '"Text bla blabla [config.tests.item] dsdsaodaso [config.item] adsad"'

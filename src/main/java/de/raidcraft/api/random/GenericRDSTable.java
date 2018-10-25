@@ -25,7 +25,7 @@ public class GenericRDSTable extends GenericRDSObject implements RDSTable {
     }
 
     private final Collection<RDSObject> contents;
-    private Collection<RDSObject> cachedResult;
+    private Collection<RDSObject> cachedResult = new ArrayList<>();
     private String id;
     private int count;
     @Setter(AccessLevel.PROTECTED)

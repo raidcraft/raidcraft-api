@@ -1,0 +1,41 @@
+text1: 'this.foobar'
+text2: '../foobar/barfoo'
+text3: 'foobar/barfoo'
+text4: 'this.foo ../foobar foo'
+trigger1: '@this.foo'
+trigger2: '@../foo'
+trigger3: '@foo'
+trigger4: '@foobar this.foo ../foobar fofo'
+action1: '!this.foo'
+action2: '!../foo'
+action3: '!foo'
+requirement1: '?this.foo'
+requirement2: '?../foo'
+requirement3: '?foo'
+brackets1: '[this.foobar]'
+brackets2: '[../foobar]'
+brackets3: '[../bar/foobar]'
+brackets4: '[bar/foobar]'
+brackets4: '[bar.foobar]'
+brackets5: '"Text bla blabla [this.item] dsdsaodaso [../item] adsad"'
+list:
+  - 'this.foobar'
+  - '../foobar/barfoo'
+  - 'foobar/barfoo'
+  - 'this.foo ../foobar foo'
+  - '"Text bla blabla [this.item] dsdsaodaso [../item] adsad"'
+depply:
+  nested:
+    config:
+      sections:
+        text1: 'this.foobar'
+        text2: '../foobar/barfoo'
+        text3: 'foobar/barfoo'
+        text4: 'this.foo ../foobar foo'
+        with:
+          lists:
+            - 'this.foobar'
+            - '../foobar/barfoo'
+            - 'foobar/barfoo'
+            - 'this.foo ../foobar foo'
+            - '"Text bla blabla [this.item] dsdsaodaso [../item] adsad"'
