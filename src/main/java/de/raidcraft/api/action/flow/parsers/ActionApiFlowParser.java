@@ -77,14 +77,10 @@ public class ActionApiFlowParser extends FlowParser {
             return new ActionAPIType(flowType, configuration, type);
         }
 
-        if (!information.isPresent()) {
-            RaidCraft.LOGGER.warning("ConfigInformation of type " + flowType.name() + " is not present for " + type);
-        } else {
-            ConfigParser configParser = new ConfigParser(information.get());
-            if (configParser.accept(getMatcher().group(3))) {
-                // if the parser does not match the config is empty
-                configuration = configParser.parse();
-            }
+        ConfigParser configParser = information.map(ConfigParser::new).orElseGet(ConfigParser::new);
+        if (configParser.accept(getMatcher().group(3))) {
+            // if the parser does not match the config is empty
+            configuration = configParser.parse();
         }
 
         configuration.set("type", type);

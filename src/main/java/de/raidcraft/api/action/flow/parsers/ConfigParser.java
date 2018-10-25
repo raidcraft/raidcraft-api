@@ -19,7 +19,11 @@ public class ConfigParser extends FlowParser {
 
     private static final Pattern KEY_VALUE_PATTERN = Pattern.compile("^(([\\w\\d_\\-\\.]+):)?(((\"(.*)\")|([öäüß\\w\\d_\\-\\.]+)|(\\{(.*)\\})|(\\[(.*)\\]))[ ,]?(.*))$");
 
-    private final ConfigGenerator.Information configInformation;
+    private ConfigGenerator.Information configInformation;
+
+    public ConfigParser() {
+        super(Pattern.compile("^(\\(?(.*)\\))?(.*)$"));
+    }
 
     public ConfigParser(ConfigGenerator.Information configInformation) {
 
@@ -28,8 +32,12 @@ public class ConfigParser extends FlowParser {
         // #1	(blubb: aaaa)
         // #2	blubb: aaaa
         // #3	 world:azuran,1,2,3
-        super(Pattern.compile("^(\\(?(.*)\\))?(.*)$"));
+        this();
         this.configInformation = configInformation;
+    }
+
+    public Optional<ConfigGenerator.Information> getConfigInformation() {
+        return Optional.ofNullable(this.configInformation);
     }
 
     @Override
@@ -85,6 +93,9 @@ public class ConfigParser extends FlowParser {
         String key = matcher.group(2);
         // if the key is null we need to extract the key from the config information
         if (key == null) {
+            if (!getConfigInformation().isPresent()) {
+                throw new FlowException("Could not extract config key " + configInformation.value() + " from position " + (position - 1) + " because not @Information tag is specified!");
+            }
             Optional<String> optionalKey = extractKeyFromInformation(configInformation, position++);
             if (!optionalKey.isPresent()) {
                 throw new FlowException("Could not extract config key " + configInformation.value() + " from position " + (position - 1));
