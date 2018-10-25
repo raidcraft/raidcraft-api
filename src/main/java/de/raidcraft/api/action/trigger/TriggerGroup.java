@@ -31,6 +31,10 @@ public class TriggerGroup extends Trigger {
         trigger = ActionAPI.createTrigger(config.getConfigurationSection("trigger"));
     }
 
+    @Information(
+            value = "trigger.group",
+            desc = "Internal dynamic trigger group based on configs."
+    )
     public void registerPlayer(Player player) {
         if (!playerListeners.containsKey(player.getUniqueId())) {
             TriggerGroupPlayerListener listener = new TriggerGroupPlayerListener(this, player);
