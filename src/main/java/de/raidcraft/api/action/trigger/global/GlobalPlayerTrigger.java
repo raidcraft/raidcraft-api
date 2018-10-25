@@ -48,7 +48,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
                     "y",
                     "z",
                     "world",
-                    "type: DIRT"
+                    "block: DIRT"
             }
     )
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

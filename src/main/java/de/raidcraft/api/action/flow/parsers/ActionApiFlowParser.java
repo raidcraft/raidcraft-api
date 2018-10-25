@@ -1,5 +1,6 @@
 package de.raidcraft.api.action.flow.parsers;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.flow.*;
 import de.raidcraft.api.action.flow.types.ActionAPIType;
@@ -77,13 +78,15 @@ public class ActionApiFlowParser extends FlowParser {
         }
 
         if (!information.isPresent()) {
-            throw new FlowException("ConfigInformation of type " + flowType.name() + " is not present for " + type);
+            RaidCraft.LOGGER.warning("ConfigInformation of type " + flowType.name() + " is not present for " + type);
+        } else {
+            ConfigParser configParser = new ConfigParser(information.get());
+            if (configParser.accept(getMatcher().group(3))) {
+                // if the parser does not match the config is empty
+                configuration = configParser.parse();
+            }
         }
-        ConfigParser configParser = new ConfigParser(information.get());
-        if (configParser.accept(getMatcher().group(3))) {
-            // if the parser does not match the config is empty
-            configuration = configParser.parse();
-        }
+
         configuration.set("type", type);
         return new ActionAPIType(flowType, configuration, type);
     }

@@ -67,15 +67,15 @@ public class TriggerListenerConfigWrapper<T> {
     }
 
     private void setExtraRequirements() {
+        if (getCount() > 0) {
+            getCountRequirement().ifPresent(requirements::add);
+        }
         if (isExecuteOnce()) {
             // lets add our execute once requirement last
             // this requirement will return false after is has been checked once
             getExecuteOnceRequirement().ifPresent(requirements::add);
         } else if (cooldown > 0) {
             getCooldownRequirement().ifPresent(requirements::add);
-        }
-        if (getCount() > 0) {
-            getCountRequirement().ifPresent(requirements::add);
         }
     }
 

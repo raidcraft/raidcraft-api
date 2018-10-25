@@ -3,6 +3,7 @@ package de.raidcraft.api.action.trigger;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.TriggerFactory;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Data
+@EqualsAndHashCode(callSuper = true, of = {"trigger"})
 public class TriggerGroup extends Trigger {
 
     private final String description;
@@ -31,10 +33,6 @@ public class TriggerGroup extends Trigger {
         trigger = ActionAPI.createTrigger(config.getConfigurationSection("trigger"));
     }
 
-    @Information(
-            value = "trigger.group",
-            desc = "Internal dynamic trigger group based on configs."
-    )
     public void registerPlayer(Player player) {
         if (!playerListeners.containsKey(player.getUniqueId())) {
             TriggerGroupPlayerListener listener = new TriggerGroupPlayerListener(this, player);

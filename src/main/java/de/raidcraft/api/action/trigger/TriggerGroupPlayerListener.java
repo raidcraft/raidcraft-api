@@ -5,6 +5,7 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.requirement.Requirement;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Data
+@EqualsAndHashCode(of = {"triggerGroup", "player"})
 public class TriggerGroupPlayerListener implements TriggerListener<Player> {
 
     // this set is used to track the requirement count of executed triggers
@@ -101,7 +103,6 @@ public class TriggerGroupPlayerListener implements TriggerListener<Player> {
 
     private void updateListeners() {
         if (getTriggerGroup().getTrigger().size() < 1) return;
-        if (currentTriggerIndex < 0 || currentTriggerIndex >= getTriggerGroup().getTrigger().size()) return;
 
         unregisterListener(getCurrentTriggerIndex());
 
@@ -119,8 +120,12 @@ public class TriggerGroupPlayerListener implements TriggerListener<Player> {
     @SuppressWarnings("unchecked")
     public boolean processTrigger(Player player, TriggerListenerConfigWrapper trigger) {
 
-        if (getTriggerGroup().isEnabled()) {
+        if (!getTriggerGroup().isEnabled()) {
             unregisterListeners();
+            return false;
+        }
+
+        if (getTriggerGroup().isOrdered() && !getCurrentTriggerWrapper().map(wrapper -> wrapper.equals(trigger)).orElse(false)) {
             return false;
         }
 
