@@ -105,6 +105,9 @@ public abstract class AbstractConversationTemplate implements ConversationTempla
             if (activeConversation.get().getTemplate().isBlockingConversationStart()) {
                 return activeConversation.get();
             }
+            if (activeConversation.get().getHost().equals(host)) {
+                return activeConversation.get();
+            }
             if (!activeConversation.get().getTemplate().equals(this)) {
                 activeConversation.get().abort(ConversationEndReason.START_NEW_CONVERSATION);
             } else {
