@@ -22,6 +22,7 @@ import de.raidcraft.api.action.trigger.global.TimerTrigger;
 import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.*;
 import de.raidcraft.api.config.builder.ConfigGenerator;
+import de.raidcraft.api.disguise.Disguise;
 import de.raidcraft.api.events.PlayerSignInteractEvent;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.TPersistentInventory;
@@ -209,6 +210,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TPlayerLog.class);
         classes.add(TPlayerLogStatistic.class);
         classes.add(TPlayerTag.class);
+        classes.add(Disguise.class);
         return classes;
     }
 

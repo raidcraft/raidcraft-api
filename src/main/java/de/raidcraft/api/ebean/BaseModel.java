@@ -1,7 +1,7 @@
 package de.raidcraft.api.ebean;
 
+import io.ebean.EbeanServer;
 import io.ebean.Model;
-import io.ebean.annotation.DbDefault;
 import io.ebean.annotation.WhenCreated;
 import io.ebean.annotation.WhenModified;
 import lombok.Data;
@@ -26,4 +26,46 @@ public abstract class BaseModel extends Model {
 
     @WhenModified
     Instant whenModified;
+
+    protected abstract EbeanServer database();
+
+    @Override
+    public void markAsDirty() {
+        database().markAsDirty(this);
+    }
+
+    @Override
+    public void save() {
+        database().save(this);
+    }
+
+    @Override
+    public void flush() {
+        database().flush();
+    }
+
+    @Override
+    public void update() {
+        database().update(this);
+    }
+
+    @Override
+    public void insert() {
+        database().insert(this);
+    }
+
+    @Override
+    public boolean delete() {
+        return database().delete(this);
+    }
+
+    @Override
+    public boolean deletePermanent() {
+        return database().deletePermanent(this);
+    }
+
+    @Override
+    public void refresh() {
+        database().refresh(this);
+    }
 }

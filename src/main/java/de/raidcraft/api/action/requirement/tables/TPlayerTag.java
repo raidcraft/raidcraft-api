@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.ebean.BaseModel;
+import io.ebean.EbeanServer;
 import io.ebean.annotation.NotNull;
 import lombok.Data;
 
@@ -35,17 +36,7 @@ public class TPlayerTag extends BaseModel {
     private String duration = null;
 
     @Override
-    public void save() {
-        RaidCraft.getDatabase(RaidCraftPlugin.class).save(this);
-    }
-
-    @Override
-    public void update() {
-        RaidCraft.getDatabase(RaidCraftPlugin.class).update(this);
-    }
-
-    @Override
-    public boolean delete() {
-        return RaidCraft.getDatabase(RaidCraftPlugin.class).delete(this);
+    protected EbeanServer database() {
+        return RaidCraft.getDatabase(RaidCraftPlugin.class);
     }
 }
