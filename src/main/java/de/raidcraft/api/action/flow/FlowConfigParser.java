@@ -21,6 +21,7 @@ import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.ConfigUtil;
 import de.raidcraft.util.Tuple;
+import io.ebeaninternal.server.expression.Op;
 import lombok.Data;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -35,10 +36,14 @@ import java.util.stream.Collectors;
 @Data
 public class FlowConfigParser {
 
+    private static final String VARIABLE_GROUPS_SECTION = "groups";
+    private static final String FLOW_SECTION = "flow";
+
     private final FlowParser[] parsers = {new ActionApiFlowParser(this), new AnswerParser()};
 
     private final ConfigurationSection config;
     private final String baseId;
+    private GlobalFlowParameters globalParameters;
 
     private final Map<FlowType, Map<String, FlowAlias>> aliasMap = new HashMap<>();
 
@@ -56,6 +61,13 @@ public class FlowConfigParser {
         this.aliasMap.put(FlowType.TRIGGER, new HashMap<>());
         this.aliasMap.put(FlowType.EXPRESSION, new HashMap<>());
         getVariableGroupSection().ifPresent(this::loadVariableGroups);
+        if (config.isConfigurationSection("options")) {
+            this.globalParameters = new GlobalFlowParameters(getConfig().getConfigurationSection("options"));
+        }
+    }
+
+    public Optional<GlobalFlowParameters> getGlobalParameters() {
+        return Optional.ofNullable(this.globalParameters);
     }
 
     /**
@@ -104,37 +116,20 @@ public class FlowConfigParser {
         if (getConfig() == null) return Optional.empty();
         Set<String> keys = getConfig().getKeys(false);
 
-        if (keys == null || keys.isEmpty()) return Optional.empty();
+        if (keys == null || keys.isEmpty() || !getConfig().isConfigurationSection(VARIABLE_GROUPS_SECTION)) return Optional.empty();
 
-        for (String key : keys) {
-            if (getConfig().isConfigurationSection(key)) {
-                return Optional.ofNullable(getConfig().getConfigurationSection(key));
-            }
-        }
-
-        return Optional.empty();
+        return Optional.of(getConfig().getConfigurationSection(VARIABLE_GROUPS_SECTION));
     }
 
-    private Optional<Tuple<String, List<String>>> getFlowStatements() {
-        if (getConfig() == null) return Optional.empty();
-        Set<String> keys = getConfig().getKeys(false);
+    private List<String> getFlowStatements() {
 
-        if (keys == null || keys.isEmpty()) return Optional.empty();
+        if (getConfig() == null || !getConfig().isList(FLOW_SECTION)) return new ArrayList<>();
 
-        for (String key : keys) {
-            if (getConfig().isList(key)) {
-                return Optional.of(new Tuple<>(key, getConfig().getStringList(key)));
-            }
-        }
-
-        return Optional.empty();
+        return getConfig().getStringList(FLOW_SECTION);
     }
 
     public List<Action<?>> parseActions() {
-        return getFlowStatements()
-                .map(pair -> new Tuple<>(pair.getKey(), parse(pair.getValue())))
-                .map(pair -> parseActions(pair.getKey(), pair.getValue()))
-                .orElse(new ArrayList<>());
+        return parseActions(FLOW_SECTION, parse(getFlowStatements()));
     }
 
     public List<Action<?>> parseActions(String key, List<FlowExpression> expressions) {
@@ -224,11 +219,11 @@ public class FlowConfigParser {
     public List<TriggerFactory> parseTrigger() {
 
         ArrayList<TriggerFactory> factories = new ArrayList<>();
-        Optional<Tuple<String, List<String>>> flowStatements = getFlowStatements();
-        if (!flowStatements.isPresent()) return new ArrayList<>();
+        List<String> flowStatements = getFlowStatements();
+        if (flowStatements.isEmpty()) return new ArrayList<>();
 
         long delay = 0;
-        List<FlowExpression> flowExpressions = parse(flowStatements.get().getValue());
+        List<FlowExpression> flowExpressions = parse(flowStatements);
         // we are gonna add all requirements to this list until an action is added
         List<ActionAPIType> applicableRequirements = new ArrayList<>();
         TriggerFactory activeTrigger = null;
@@ -283,9 +278,7 @@ public class FlowConfigParser {
     }
 
     public List<RequirementConfigWrapper<?>> parseRequirements(String id) {
-        return getFlowStatements()
-                .map(stringListPair -> parseRequirements(id + "." + stringListPair.getKey(), parse(stringListPair.getValue())))
-                .orElse(new ArrayList<>());
+        return parseRequirements(id + "." + FLOW_SECTION, parse(getFlowStatements()));
     }
 
     public List<RequirementConfigWrapper<?>> parseRequirements(String id, List<FlowExpression> expressions) {
@@ -334,13 +327,13 @@ public class FlowConfigParser {
     public List<Answer> parseAnswers(StageTemplate template) {
 
         ArrayList<Answer> answers = new ArrayList<>();
-        Optional<Tuple<String, List<String>>> flowStatements = getFlowStatements();
-        if (!flowStatements.isPresent()) return new ArrayList<>();
-        String key = flowStatements.get().getKey();
+        List<String> flowStatements = getFlowStatements();
+        if (flowStatements.isEmpty()) return new ArrayList<>();
+        String key = FLOW_SECTION;
 
         try {
             long delay = 0;
-            List<FlowExpression> flowExpressions = parse(flowStatements.get().getValue());
+            List<FlowExpression> flowExpressions = parse(flowStatements);
             List<Requirement<?>> requirements = new ArrayList<>();
             Answer activeAnswer = null;
 
@@ -409,7 +402,14 @@ public class FlowConfigParser {
             try {
                 for (FlowParser parser : parsers) {
                     if (parser.accept(line)) {
-                        expressions.add(parser.parse());
+                        FlowExpression expression = parser.parse();
+                        if (expression instanceof ActionAPIType) {
+                            getGlobalParameters().ifPresent(params -> {
+                                ((ActionAPIType) expression).getConfiguration().set("worlds", params.getWorlds());
+                                ((ActionAPIType) expression).getConfiguration().set("regions", params.getRegions());
+                            });
+                        }
+                        expressions.add(expression);
                     }
                 }
             } catch (FlowException e) {
