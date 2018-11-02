@@ -11,6 +11,7 @@
 package de.raidcraft.api.disguise;
 
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
+import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.Component;
@@ -18,6 +19,7 @@ import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +48,7 @@ public class DisguiseManager implements Component {
      * @param disguiseName can be null. Then a random name will be generated.
      * @return created disguise or empty optional if game profile had no textures.
      */
-    public Optional<Disguise> createDisguise(Player player, String disguiseName) {
+    public Optional<Disguise> createDisguise(Player player, @Nullable String disguiseName, @Nullable String description) {
         Validate.notNull(player);
 
         Disguise disguise = null;
@@ -56,6 +58,7 @@ public class DisguiseManager implements Component {
         for (String data : profileProperties.keySet()) {
             for (WrappedSignedProperty wrappedSignedProperty : profileProperties.get(data)) {
                 disguise = new Disguise(disguiseName, wrappedSignedProperty.getValue(), wrappedSignedProperty.getSignature());
+                disguise.setDescription(description);
             }
         }
         Optional<Disguise> optionalDisguise = Optional.ofNullable(disguise);
@@ -63,9 +66,17 @@ public class DisguiseManager implements Component {
         return optionalDisguise;
     }
 
-    public Disguise createDisguise(String alias, String texture, String signature) {
+    public Optional<Disguise> createDisguise(Player player, @Nullable String disguiseName) {
+        return createDisguise(player, disguiseName, null);
+    }
 
+    public Disguise createDisguise(String alias, String texture, String signature) {
+        return createDisguise(alias, texture, signature, null);
+    }
+
+    public Disguise createDisguise(String alias, String texture, String signature, @Nullable String description) {
         Disguise disguise = new Disguise(alias, texture, signature);
+        disguise.setDescription(description);
         disguise.save();
         return disguise;
     }
@@ -78,9 +89,15 @@ public class DisguiseManager implements Component {
      */
     public Optional<Disguise> getDisguise(String alias) {
 
+        if (Strings.isNullOrEmpty(alias)) return Optional.empty();
+
         return RaidCraft.getDatabase(RaidCraftPlugin.class).find(Disguise.class).where()
-                .eq("alias", alias)
+                .eq("alias", alias.toLowerCase())
                 .findOneOrEmpty();
+    }
+
+    public Collection<Disguise> getAllDisguises() {
+        return plugin.getRcDatabase().find(Disguise.class).findList();
     }
 
     /**

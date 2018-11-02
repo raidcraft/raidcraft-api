@@ -23,6 +23,8 @@ import de.raidcraft.api.commands.ConfirmCommand;
 import de.raidcraft.api.config.*;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import de.raidcraft.api.disguise.Disguise;
+import de.raidcraft.api.disguise.DisguiseCommand;
+import de.raidcraft.api.disguise.DisguiseManager;
 import de.raidcraft.api.events.PlayerSignInteractEvent;
 import de.raidcraft.api.inventory.InventoryManager;
 import de.raidcraft.api.inventory.TPersistentInventory;
@@ -84,6 +86,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
     private WorldGuardPlugin worldGuardPlugin;
     private BlockTracker blockTracker;
     private PlayerResolver playerResolver;
+    private DisguiseManager disguiseManager;
     private final Map<UUID, Integer> playerLogs = new HashMap<>();
 
     @Override
@@ -93,6 +96,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         this.config = configure(new LocalConfiguration(this));
         this.blockTracker = new BlockTracking(this);
         this.playerResolver = new BukkitPlayerResolver(this);
+        this.disguiseManager = new DisguiseManager(this);
         registerEvents(this);
         registerEvents(new RaidCraft());
         registerEvents(new BarAPI(this));
@@ -100,6 +104,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registeerChildListener();
         registerCommands(ConfirmCommand.class, getName());
         registerCommands(ActionCommand.class, getName());
+        registerCommands(DisguiseCommand.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));

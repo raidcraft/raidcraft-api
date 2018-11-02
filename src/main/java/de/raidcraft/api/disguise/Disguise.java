@@ -7,11 +7,13 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.ebean.BaseModel;
 import io.ebean.EbeanServer;
 import lombok.Data;
+import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
 import me.libraryaddict.disguise.disguisetypes.TargetedDisguise;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Optional;
@@ -27,22 +29,25 @@ public class Disguise extends BaseModel {
     }
 
     private String alias;
+    @Column(length = 4196)
     private String skinTexture;
+    @Column(length = 4196)
     private String skinSignature;
     private String skinOwner;
     private String skinUrl;
+    private String description;
 
     public Disguise() {
     }
 
     public Disguise(String skinTexture, String skinSignature) {
-        this.alias = UUID.randomUUID().toString();
+        this.alias = UUID.randomUUID().toString().toLowerCase();
         this.skinTexture = skinTexture;
         this.skinSignature = skinSignature;
     }
 
     public Disguise(String alias, String skinTexture, String skinSignature) {
-        this.alias = alias;
+        this.alias = alias.toLowerCase();
         this.skinTexture = skinTexture;
         this.skinSignature = skinSignature;
     }
@@ -75,6 +80,7 @@ public class Disguise extends BaseModel {
         TargetedDisguise disguise = getDisguise(player);
         disguise.setEntity(player);
         disguise.startDisguise();
+        DisguiseAPI.disguiseToAll(player, disguise);
         return disguise;
     }
 
@@ -82,6 +88,7 @@ public class Disguise extends BaseModel {
         TargetedDisguise disguise = getDisguise(entity);
         disguise.setEntity(entity);
         disguise.startDisguise();
+        DisguiseAPI.disguiseToAll(entity, disguise);
         return disguise;
     }
 

@@ -1,5 +1,6 @@
 package de.raidcraft.api.items;
 
+import com.google.common.base.Strings;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
@@ -37,6 +38,7 @@ public class Skull {
     private static final Pattern Base64Matcher = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
 
     public static boolean isBase64(String base64String) {
+        if (Strings.isNullOrEmpty(base64String)) return false;
         return Base64Matcher.matcher(base64String).matches();
     }
 

@@ -10,6 +10,7 @@
  *************************************************************** */
 package de.raidcraft.api.disguise;
 
+import com.google.common.base.Strings;
 import com.sk89q.minecraft.util.commands.*;
 
 import java.util.ArrayList;
@@ -20,11 +21,13 @@ import java.util.UUID;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.items.Skull;
+import de.raidcraft.util.PaginatedResult;
 import de.raidcraft.util.StringUtils;
 import lombok.Data;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import xyz.upperlevel.spigot.book.BookUtil;
 
 /**
  *
@@ -35,7 +38,7 @@ public class DisguiseCommand {
     public DisguiseCommand(RaidCraftPlugin plugin) {}
 
     @Command(
-            aliases = {"cdisguise", "cdisg", "cd", "skin"},
+            aliases = {"skin"},
             desc = "Allows saving of skins."
     )
     @NestedCommand(SubCommands.class)
@@ -45,22 +48,30 @@ public class DisguiseCommand {
     }
 
     @Data
-    public class SubCommands {
+    public static class SubCommands {
 
         private final RaidCraftPlugin plugin;
-        private final DisguiseManager disguiseManager;
+        private DisguiseManager disguiseManager;
 
         public SubCommands(RaidCraftPlugin plugin) {
             this.plugin = plugin;
-            this.disguiseManager = RaidCraft.getComponent(DisguiseManager.class);
+        }
+
+        private DisguiseManager getDisguiseManager() {
+            if (this.disguiseManager == null) {
+                this.disguiseManager = RaidCraft.getComponent(DisguiseManager.class);
+            }
+            return this.disguiseManager;
         }
 
         @Command(
                 aliases = {"save"},
                 desc = "Saves the current player skin into the database.",
-                max = 1,
-                usage = "[Alias]",
-                help = "Specify an optional alias to save the skin under."
+                min = 1,
+                max = 3,
+                flags = "d:",
+                usage = "[-d <Description>] [Alias] [<Texture> <Signature>]",
+                help = "Specify an optional alias and texture signature to save the skin under. You can specify a description for the disguise with the -d flag."
         )
         @CommandPermissions("faldoria.disguise.save")
         public void disguise(CommandContext args, CommandSender sender) throws CommandException {
@@ -69,13 +80,22 @@ public class DisguiseCommand {
 
             Player player = (Player) sender;
 
-            String disguiseName = args.getString(0);
+            String disguiseName = args.getString(0, null);
 
             if (getDisguiseManager().isAlreadyTaken(disguiseName)) {
                 throw new CommandException("Es gibt bereits einen Skin mit dem Namen " + disguiseName);
             }
 
-            Optional<Disguise> disguise = getDisguiseManager().createDisguise(player, disguiseName);
+            Optional<Disguise> disguise = Optional.empty();
+
+            if (args.argsLength() < 2) {
+                disguise = getDisguiseManager().createDisguise(player, disguiseName, args.getFlag('d', null));
+            } else if (args.argsLength() > 2) {
+                if (!Skull.isBase64(args.getString(1)) || !Skull.isBase64(args.getString(2))) {
+                    throw new CommandException("Skin texture and signature must be base64 encoded.");
+                }
+                disguise = Optional.of(getDisguiseManager().createDisguise(disguiseName, args.getString(1), args.getString(2), args.getFlag('d', null)));
+            }
 
             if (disguise.isPresent()) {
                 sender.sendMessage(ChatColor.GREEN + "Disguise wurde erfolgreich unter dem Namen " + ChatColor.AQUA + disguise.get().getAlias() + ChatColor.GREEN + " gespeichert.");
@@ -85,28 +105,24 @@ public class DisguiseCommand {
         }
 
         @Command(
-                aliases = {"signature"},
-                desc = "Saves the encoded skin texture into the database.",
-                max = 3,
-                usage = "<Alias> <Texture> <Signature>",
-                help = "Provide the encoded texture and signature strings to save a skin directly into the database."
+                aliases = "list",
+                desc = "Lists all existing disguises.",
+                flags = "p:",
+                help = "[-p <page>]"
         )
-        @CommandPermissions("faldoria.disguise.save")
-        public void saveUrl(CommandContext args, CommandSender sender) throws CommandException {
+        @CommandPermissions("faldoria.disguise.list")
+        public void list(CommandContext args, CommandSender sender) throws CommandException {
 
-            String alias = args.getString(0);
-
-            if (getDisguiseManager().isAlreadyTaken(alias)) {
-                throw new CommandException("Es gibt bereits einen Skin mit dem Namen " + alias);
-            }
-
-            if (!Skull.isBase64(args.getString(1)) || !Skull.isBase64(args.getString(2))) {
-                throw new CommandException("Texture oder Signature ist kein Base64 String.");
-            }
-
-            Disguise disguise = getDisguiseManager().createDisguise(alias, args.getString(1), args.getString(2));
-
-            sender.sendMessage(ChatColor.GREEN + "Disguise wurde erfolgreich unter dem Namen " + ChatColor.AQUA + disguise.getAlias() + ChatColor.GREEN + " gespeichert.");
+            new PaginatedResult<Disguise>("Disguises") {
+                @Override
+                public String format(Disguise entry) {
+                    String name = ChatColor.YELLOW + "[" + ChatColor.AQUA + entry.getAlias() + " " + ChatColor.GRAY + "(ID:" + entry.getId() + ")" + ChatColor.YELLOW + "]";
+                    if (!Strings.isNullOrEmpty(entry.getDescription())) {
+                        name += ChatColor.BLUE + ": " + ChatColor.GRAY + entry.getDescription();
+                    }
+                    return name;
+                }
+            }.display(sender, getDisguiseManager().getAllDisguises(), args.getFlagInteger('p', 1));
         }
 
         @Command(
