@@ -90,7 +90,9 @@ public abstract class Trigger implements TriggerConfigGenerator {
                     .filter(wrapper -> wrapper != null && wrapper.getTriggerListener() != null)
                     .filter(wrapper -> wrapper.getTriggerListener().getEntity().map(entity -> entity.equals(triggeringEntity)).orElse(true))
                     // first lets check all predicates and if we can execute at all
-                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate)).collect(Collectors.toList());
+                    .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
+                    .sorted()
+                    .collect(Collectors.toList());
             if (plugin.getConfig().debugTrigger && !list.isEmpty() && !plugin.getConfig().excludedTrigger.contains(identifier)) {
                 plugin.getLogger().info("TRIGGER " + identifier + " MATCHED TARGETS");
             }
@@ -100,14 +102,13 @@ public abstract class Trigger implements TriggerConfigGenerator {
                             wrapper.executeActions(triggeringEntity);
                         }
                     }, wrapper.getTriggerDelay()));
-            list.stream().filter(wrapper -> wrapper.getTriggerDelay() <= 0)
-                    // then lets process the trigger
-                    .filter(wrapper -> wrapper.getTriggerListener().processTrigger(triggeringEntity, wrapper))
-                    // if we get true back we are ready for action processing
-                    .forEach(wrapper -> {
-                        if (onTrigger != null) onTrigger.accept(wrapper.getArgs());
-                        wrapper.executeActions(triggeringEntity);
-                    });
+            for (TriggerListenerConfigWrapper<T> wrapper : list.stream().filter(wrapper -> wrapper.getTriggerDelay() <= 0).collect(Collectors.toList())) {
+                if (wrapper.getTriggerListener().processTrigger(triggeringEntity, wrapper)) {
+                    onTrigger.accept(wrapper.getArgs());
+                    wrapper.executeActions(triggeringEntity);
+                    if (wrapper.isCancel()) break;
+                }
+            }
         }
     }
 }

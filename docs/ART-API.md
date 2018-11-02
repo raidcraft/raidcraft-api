@@ -418,8 +418,25 @@ Wie auch [Actions](#action-parameter) und [Requirements](#requirement-parameter)
 | delay        | Die Prüfung des Triggers wird erst nach dem `delay` durchgeführt.                                                                      | `@item.pickup(delay:2s)`                                                     |
 | action-delay | Actions werden erst nach dem `action-delay` ausgeführt.                                                                                | `@objective.started(action-delay:10s)`                                       |
 | worlds       | Welten in denen der Trigger aktiv ist.                                                                                                 | `@player.join(worlds:["world","world_nether"])`                              |
+| regions      | Regionen in denen der Trigger aktiv ist.                                                                                               | `@player.death(regions:["foobar"])`                                          |
 | count        | Erst wenn der `count` des Triggers erreicht wurde löst der Trigger aus. Das stellt eine Kurzform des dummy(count:XX) requirements dar. | `@rcmobs.mob.kill(count:5)`                                                  |
 | count-text   | Das Gegenstück zu `count` ermöglicht es bei jeder Erhöhung des `count` den Text auszugeben. Siehe das `dummy` Requirement für Details. | `@rcmobs.mob.kill(count:5,count-text:"%current% von %count% Mobs getötet.")` |
+| priority     | Trigger werden basierend auf ihrer Priorität (lowest first) nacheinander ausgeführt (Dateiübergreifend). Default `priority: 100`       | `@player.fish(priority:5)`                                                   |
+| cancel       | Stoppt die Ausführung von weiteren Triggern (Dateiübergreifend). Besonders hilfreich wenn es zusammen mit `priority` genutzt wird.     | `@player.fish(priority:5,cancel:true) loot-table:this.foobar`                |
+
+Zusätzlich zu der oben genannten Parameter Methode kann der `worlds` und `regions` Parameter auch global für alle Trigger angegeben werden. Dafür vor dem `flow` Block `options` definieren.
+
+```yaml
+trigger:
+  options:
+    worlds:
+      - world
+    regions:
+      - foobar
+  # Alle folgenden Trigger sind nur in der Welt "world" und in der WorldGuard Region "foobar" aktiv.
+  flow:
+    - '@foobar'
+```
 
 ## Trigger Gruppen
 

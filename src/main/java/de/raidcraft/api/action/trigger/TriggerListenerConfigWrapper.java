@@ -1,5 +1,8 @@
 package de.raidcraft.api.action.trigger;
 
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionAPI;
@@ -26,12 +29,14 @@ import java.util.function.Predicate;
 @ToString(of = {"identifier", "triggerListener", "config"})
 @EqualsAndHashCode(of = {"identifier", "triggerListener", "config", "actions", "requirements", "worlds"})
 @Data
-public class TriggerListenerConfigWrapper<T> {
+public class TriggerListenerConfigWrapper<T> implements Comparable<TriggerListenerConfigWrapper> {
 
     private final String identifier;
     private final TriggerListener<T> triggerListener;
     private final ConfigurationSection config;
     private final boolean executeOnce;
+    private final boolean cancel;
+    private final int priority;
     private final long cooldown;
     private final long triggerDelay;
     private final long actionDelay;
@@ -41,6 +46,7 @@ public class TriggerListenerConfigWrapper<T> {
     private final int count;
     private final String countText;
     private final List<String> worlds = new ArrayList<>();
+    private final List<String> regions = new ArrayList<>();
     private final List<Action<T>> actions = new ArrayList<>();
     private final List<Requirement<T>> requirements = new ArrayList<>();
 
@@ -50,6 +56,8 @@ public class TriggerListenerConfigWrapper<T> {
         this.triggerListener = triggerListener;
         this.config = config;
         this.executeOnce = config.getBoolean("execute-once", false);
+        this.cancel = config.getBoolean("cancel", false);
+        this.priority = config.getInt("priority", 100);
         this.cooldown = TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
         this.triggerDelay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         this.actionDelay = TimeUtil.parseTimeAsTicks(config.getString("action-delay"));
@@ -57,6 +65,7 @@ public class TriggerListenerConfigWrapper<T> {
         this.count = config.getInt("count");
         this.countText = config.getString("count-text");
         this.worlds.addAll(config.getStringList("worlds"));
+        this.regions.addAll(config.getStringList("regions"));
         this.setActions(ActionAPI.createActions(config.getConfigurationSection("actions"), triggerListener.getTriggerEntityType()));
         this.setRequirements(ActionAPI.createRequirements(triggerListener.getListenerId(), config.getConfigurationSection("requirements"), triggerListener.getTriggerEntityType()));
     }
@@ -124,6 +133,14 @@ public class TriggerListenerConfigWrapper<T> {
                 if (Bukkit.getWorlds().stream().filter(world -> worlds.contains(world.getName())).count() < 1) return false;
             }
         }
+        if (!regions.isEmpty() && triggeringEntity instanceof Player && RaidCraft.getWorldGuard() != null) {
+            ApplicableRegionSet applicableRegions = RaidCraft.getWorldGuard()
+                    .getRegionManager(((Player) triggeringEntity).getWorld())
+                    .getApplicableRegions(((Player) triggeringEntity).getLocation());
+            if (applicableRegions.getRegions().stream().map(ProtectedRegion::getId).noneMatch(regions::contains)) {
+                return false;
+            }
+        }
         return triggerListener.getTriggerEntityType().isAssignableFrom(triggeringEntity.getClass())
                 && predicate.test(getArgs())
                 && requirements.stream().allMatch(requirement -> requirement.test(triggeringEntity));
@@ -150,5 +167,10 @@ public class TriggerListenerConfigWrapper<T> {
         } else {
             runnable.run();
         }
+    }
+
+    @Override
+    public int compareTo(TriggerListenerConfigWrapper o) {
+        return Integer.compare(getPriority(), o.getPriority());
     }
 }
