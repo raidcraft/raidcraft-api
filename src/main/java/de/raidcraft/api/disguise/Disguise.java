@@ -6,6 +6,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.ebean.BaseModel;
 import io.ebean.EbeanServer;
+import io.ebean.annotation.DbDefault;
 import lombok.Data;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
@@ -34,8 +35,11 @@ public class Disguise extends BaseModel {
     @Column(length = 4196)
     private String skinSignature;
     private String skinOwner;
+    private String skinOwnerName;
     private String skinUrl;
     private String description;
+    @DbDefault("0")
+    private int mineskinId = 0;
 
     public Disguise() {
     }
