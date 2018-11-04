@@ -51,7 +51,7 @@ public class Disguise extends BaseModel {
     }
 
     public Disguise(String alias, String skinTexture, String skinSignature) {
-        this.alias = alias.toLowerCase();
+        this.alias = alias == null ? UUID.randomUUID().toString() : alias;
         this.skinTexture = skinTexture;
         this.skinSignature = skinSignature;
     }

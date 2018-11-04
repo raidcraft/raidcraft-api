@@ -92,7 +92,7 @@ public class DisguiseManager implements Component {
         if (Strings.isNullOrEmpty(alias)) return Optional.empty();
 
         return RaidCraft.getDatabase(RaidCraftPlugin.class).find(Disguise.class).where()
-                .eq("alias", alias.toLowerCase())
+                .ieq("alias", alias)
                 .findOneOrEmpty();
     }
 
