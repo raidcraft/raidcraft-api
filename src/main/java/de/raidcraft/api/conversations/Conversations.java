@@ -347,6 +347,11 @@ public class Conversations {
         return provider.createConversationHost(host, config);
     }
 
+    public static void removeConversationHost(String holder, String id) {
+        if (provider == null) return;
+        provider.removeConversationHost(holder, id);
+    }
+
     public static Stage createStage(Conversation conversation, String text, Answer... answers) {
 
         return provider.createStage(conversation, text, answers);
@@ -366,9 +371,7 @@ public class Conversations {
 
         if (provider == null) return;
         Optional<Conversation> activeConversation = provider.getActiveConversation(player);
-        if (activeConversation.isPresent()) {
-            activeConversation.get().end(reason);
-        }
+        activeConversation.ifPresent(conversation -> conversation.end(reason));
     }
 
     public static void changeStage(Player player, String stage) {
@@ -377,9 +380,7 @@ public class Conversations {
         Optional<Conversation> activeConversation = provider.getActiveConversation(player);
         if (activeConversation.isPresent()) {
             Optional<Stage> stageOptional = activeConversation.get().getStage(stage);
-            if (stageOptional.isPresent()) {
-                stageOptional.get().changeTo();
-            }
+            stageOptional.ifPresent(Stage::changeTo);
         }
     }
 
@@ -392,9 +393,7 @@ public class Conversations {
     public static void message(Player player, String message) {
 
         Optional<Conversation> activeConversation = getActiveConversation(player);
-        if (activeConversation.isPresent()) {
-            activeConversation.get().sendMessage(message.split("\\|"));
-        }
+        activeConversation.ifPresent(conversation -> conversation.sendMessage(message.split("\\|")));
     }
 
     /**
@@ -492,5 +491,10 @@ public class Conversations {
     private static void buildInputStage(StageBuilder stageBuilder, String text, String nextStage, List<String> output) {
         stageBuilder.withInput(text, inputBuilder -> inputBuilder.withInputListener(output::add)
                 .withAction(Action.changeStage(nextStage)));
+    }
+
+    public static void unloadConversation(String id) {
+        if (provider == null) return;
+        provider.unregisterConversationTemplate(id);
     }
 }

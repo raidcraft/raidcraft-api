@@ -2,6 +2,7 @@ package de.raidcraft.api.disguise;
 
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.comphenix.protocol.wrappers.WrappedSignedProperty;
+import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.ebean.BaseModel;
@@ -27,6 +28,10 @@ public class Disguise extends BaseModel {
 
     public static Optional<Disguise> fromAlias(String alias) {
         return RaidCraft.getComponent(DisguiseManager.class).getDisguise(alias);
+    }
+
+    public static Optional<Disguise> fromId(int id) {
+        return RaidCraft.getComponent(DisguiseManager.class).getDisguise(id);
     }
 
     private String alias;
@@ -97,7 +102,9 @@ public class Disguise extends BaseModel {
     }
 
     public WrappedGameProfile toGameProfile() {
-        WrappedGameProfile gameProfile = new WrappedGameProfile(UUID.randomUUID(), getAlias());
+        UUID owner = UUID.randomUUID();
+        if (!Strings.isNullOrEmpty(getSkinOwner())) owner = UUID.fromString(getSkinOwner());
+        WrappedGameProfile gameProfile = new WrappedGameProfile(owner, getAlias());
         gameProfile.getProperties().clear();
         gameProfile.getProperties().put(DisguiseManager.GAME_PROFILE_TEXTURE_PROPERTY, getTextureProperty());
         return gameProfile;

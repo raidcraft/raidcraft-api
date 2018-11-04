@@ -96,6 +96,16 @@ public class DisguiseManager implements Component {
                 .findOneOrEmpty();
     }
 
+    /**
+     * Queries the database for a disguise with the given id.
+     *
+     * @param id of the disguise
+     * @return disguise if it exists
+     */
+    public Optional<Disguise> getDisguise(int id) {
+        return Optional.ofNullable(RaidCraft.getDatabase(RaidCraftPlugin.class).find(Disguise.class, id));
+    }
+
     public Collection<Disguise> getAllDisguises() {
         return plugin.getRcDatabase().find(Disguise.class).findList();
     }

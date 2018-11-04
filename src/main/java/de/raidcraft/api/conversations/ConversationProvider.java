@@ -217,6 +217,8 @@ public interface ConversationProvider {
      */
     <T> Optional<ConversationHost<T>> createConversationHost(T host, ConfigurationSection config);
 
+    void removeConversationHost(String holder, String id);
+
     /**
      * Gets a loaded and cached {@link ConversationHost} that has already been created with
      * {@link #createConversationHost(String, ConfigurationSection)}.
@@ -271,6 +273,8 @@ public interface ConversationProvider {
      * @return loaded conversation template or empty {@link Optional} if template was not found
      */
     Optional<ConversationTemplate> loadConversation(String identifier, ConfigurationSection config);
+
+    void unregisterConversationTemplate(String id);
 
     ConversationTemplate registerConversationTemplate(ConversationTemplate template);
 

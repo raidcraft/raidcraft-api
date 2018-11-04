@@ -48,6 +48,14 @@ public abstract class ConfigLoader implements Comparable<ConfigLoader> {
      */
     public abstract void loadConfig(String id, ConfigurationSection config);
 
+    /**
+     * Override this method and unload the loaded config.
+     * This will be called to reload or unload configurations.
+     *
+     * @param id of the config
+     */
+    public void unloadConfig(String id) {}
+
     public String replaceReference(String key) {
 
         throw new UnsupportedOperationException();
