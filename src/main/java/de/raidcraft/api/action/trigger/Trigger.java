@@ -104,7 +104,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
                     }, wrapper.getTriggerDelay()));
             for (TriggerListenerConfigWrapper<T> wrapper : list.stream().filter(wrapper -> wrapper.getTriggerDelay() <= 0).collect(Collectors.toList())) {
                 if (wrapper.getTriggerListener().processTrigger(triggeringEntity, wrapper)) {
-                    onTrigger.accept(wrapper.getArgs());
+                    if (onTrigger != null) onTrigger.accept(wrapper.getArgs());
                     wrapper.executeActions(triggeringEntity);
                     if (wrapper.isCancel()) break;
                 }
