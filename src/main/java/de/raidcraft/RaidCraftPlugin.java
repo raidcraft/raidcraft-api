@@ -276,7 +276,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             super(plugin, "config.yml");
         }
 
-        @Setting("server-startStage-delay")
+        @Setting("server-start-delay")
         public double startDelay = 10.0;
         @Setting("pre-login-kicker")
         public boolean preLoginKicker = true;

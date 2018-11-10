@@ -3,6 +3,7 @@ package de.raidcraft.api;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
+import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.config.Config;
 import de.raidcraft.api.ebean.DatabaseConfig;
@@ -245,6 +246,7 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
         if (host == null) {
             host = this.getName();
         }
+        getPlugin(RaidCraftPlugin.class).trackCommand(clazz, host, null);
         commandRegistration.register(clazz);
     }
 
