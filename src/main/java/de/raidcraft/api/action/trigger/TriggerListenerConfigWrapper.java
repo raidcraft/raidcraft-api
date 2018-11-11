@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 @ToString(of = {"identifier", "triggerListener", "config"})
 @EqualsAndHashCode(of = {"identifier", "triggerListener", "config", "actions", "requirements", "worlds"})
 @Data
-public class TriggerListenerConfigWrapper<T> implements Comparable<TriggerListenerConfigWrapper> {
+public class TriggerListenerConfigWrapper<T> {
 
     private final String identifier;
     private final TriggerListener<T> triggerListener;
@@ -169,8 +169,5 @@ public class TriggerListenerConfigWrapper<T> implements Comparable<TriggerListen
         }
     }
 
-    @Override
-    public int compareTo(TriggerListenerConfigWrapper o) {
-        return Integer.compare(getPriority(), o.getPriority());
-    }
+
 }

@@ -73,11 +73,14 @@ public class ActionApiFlowParser extends FlowParser {
                 information = ActionAPI.getTriggerInformation(type);
                 break;
         }
+        ConfigParser configParser;
+
         if (getConfigParser().filter(parser -> parser.hasAlias(flowType, type)).isPresent()) {
-            return new ActionAPIType(flowType, configuration, type);
+            configParser = new ConfigParser();
+        } else {
+            configParser = information.map(ConfigParser::new).orElseGet(ConfigParser::new);
         }
 
-        ConfigParser configParser = information.map(ConfigParser::new).orElseGet(ConfigParser::new);
         if (configParser.accept(getMatcher().group(3))) {
             // if the parser does not match the config is empty
             configuration = configParser.parse();

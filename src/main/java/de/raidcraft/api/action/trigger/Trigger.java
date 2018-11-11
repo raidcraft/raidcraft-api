@@ -11,10 +11,7 @@ import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -91,7 +88,7 @@ public abstract class Trigger implements TriggerConfigGenerator {
                     .filter(wrapper -> wrapper.getTriggerListener().getEntity().map(entity -> entity.equals(triggeringEntity)).orElse(true))
                     // first lets check all predicates and if we can execute at all
                     .filter(wrapper -> wrapper.test(triggeringEntity, predicate))
-                    .sorted()
+                    .sorted(Comparator.comparingInt(TriggerListenerConfigWrapper::getPriority))
                     .collect(Collectors.toList());
             if (plugin.getConfig().debugTrigger && !list.isEmpty() && !plugin.getConfig().excludedTrigger.contains(identifier)) {
                 plugin.getLogger().info("TRIGGER " + identifier + " MATCHED TARGETS");
