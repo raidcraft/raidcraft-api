@@ -98,7 +98,7 @@ public class ConfigUtil {
             }
             value = basePath.replaceFirst("\\.$", "") + "." + value.replaceFirst("^\\.", "");
         }
-        return value;
+        return value.replaceFirst("^\\.", "");
     }
 
     public static String replaceVariableRefrences(String basePath, String value) {
@@ -119,7 +119,7 @@ public class ConfigUtil {
                 }
             }
         }
-        return value;
+        return value.replaceFirst("^\\.", "");
     }
 
     public static String getFileName(ConfigurationSection config) {
