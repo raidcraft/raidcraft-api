@@ -1,12 +1,15 @@
 package de.raidcraft.util;
 
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.api.items.CustomItemStack;
+import de.raidcraft.api.quests.QuestProvider;
+import de.raidcraft.api.quests.Quests;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Dragonfire
@@ -25,6 +28,20 @@ public class InventoryUtils {
     public static void addOrDropItems(Player player, ItemStack... items) {
 
         if (items == null) return;
+
+        Optional<QuestProvider> questProvider = Quests.getQuestProvider();
+        if (questProvider.isPresent()) {
+            Arrays.stream(items).filter(Objects::nonNull)
+                    .filter(RaidCraft::isCustomItem)
+                    .map(RaidCraft::getCustomItem)
+                    .filter(CustomItemStack::isQuestItem)
+                    .forEach(itemStack -> questProvider.get().addQuestItem(player, itemStack));
+
+            items = Arrays.stream(items).filter(Objects::nonNull)
+                    .filter(itemStack -> !RaidCraft.isCustomItem(itemStack) || !(RaidCraft.getCustomItem(itemStack).isQuestItem()))
+                    .toArray(ItemStack[]::new);
+        }
+
         HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(Arrays.stream(items).filter(Objects::nonNull).toArray(ItemStack[]::new));
         leftovers.values().forEach(item -> player.getWorld().dropItem(player.getLocation(), item));
     }

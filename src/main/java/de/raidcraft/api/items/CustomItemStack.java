@@ -88,6 +88,10 @@ public class CustomItemStack extends ItemStack {
                 && ((BindTooltip) getTooltip(TooltipSlot.BIND_TYPE)).getOwner() != null;
     }
 
+    public boolean isQuestItem() {
+        return getItem().getType() == ItemType.QUEST;
+    }
+
     public void setOwner(Player player) {
 
         try {

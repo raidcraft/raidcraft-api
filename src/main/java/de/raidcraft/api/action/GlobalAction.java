@@ -86,10 +86,7 @@ public enum GlobalAction {
                     }
                     if (CustomItemUtil.isCustomItem(item)
                             && RaidCraft.getCustomItem(item).getItem().getType() == ItemType.QUEST) {
-                        Optional<QuestProvider> questProvider = Quests.getQuestProvider();
-                        if (questProvider.isPresent()) {
-                            questProvider.get().removeQuestItem(player, item);
-                        }
+                        Quests.getQuestProvider().ifPresent(questProvider -> questProvider.removeQuestItem(player, item));
                     } else {
                         player.getInventory().removeItem(item);
                     }
