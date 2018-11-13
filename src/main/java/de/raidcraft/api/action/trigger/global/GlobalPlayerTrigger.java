@@ -307,6 +307,10 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
 
             Optional<RDSTable> lootTable = RDS.getTable(config.getString("loot-table"));
             lootTable.ifPresent(rdsTable -> {
+                event.setCancelled(true);
+                if (event.getEntity() instanceof Sheep) {
+                    ((Sheep) event.getEntity()).setSheared(true);
+                }
                 for (RDSObject object : rdsTable.loot()) {
                     if (object instanceof Spawnable) {
                         ((Spawnable) object).spawn(event.getEntity().getLocation());
