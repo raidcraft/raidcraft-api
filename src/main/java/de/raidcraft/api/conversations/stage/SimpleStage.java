@@ -262,10 +262,10 @@ public class SimpleStage implements Stage {
                     .map(action -> ((ActionConfigWrapper<?>) action).getDelay())
                     .orElse(0L);
             if (delay > 0) {
-                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> getConversation().end(ConversationEndReason.SILENT), delay);
+                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> getConversation().end(ConversationEndReason.ENDED), delay);
             } else {
                 // automatically end the conversation silently if one one stage is defined and auto-end == true
-                getConversation().end(ConversationEndReason.SILENT);
+                getConversation().end(ConversationEndReason.ENDED);
             }
 
         }

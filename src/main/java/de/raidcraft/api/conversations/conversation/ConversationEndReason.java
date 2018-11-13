@@ -13,7 +13,7 @@ public enum ConversationEndReason {
     OUT_OF_RANGE("Ausser Reichweite!", false),
     DEATH("Du bist gestorben.", false),
     START_NEW_CONVERSATION("Es wurde eine neue Unterhaltung begonnen.", true),
-    ENDED("Unterhaltung beendet.", true),
+    ENDED("Unterhaltung beendet.", false),
     CUSTOM("Custom Conversation End Reason not defined!", false),
     PLAYER_ABORT("Die Unterhaltung wurde abgerochen.", false),
     PLAYER_QUIT("Die Unterhaltung wurde abgebrochen da Du das Spiel verlassen hast.", false),

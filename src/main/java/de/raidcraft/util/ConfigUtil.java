@@ -84,6 +84,7 @@ public class ConfigUtil {
     public static String replacePathReference(String value, String basePath) {
 
         value = value.replaceAll("(?<!\\.\\.)/", ".");
+        basePath = basePath.replaceAll("/", ".");
         if (value.startsWith("this.")) {
             value = value.replaceFirst("this", basePath).replaceFirst("^\\.", "");
         } else if (value.startsWith("../")) {
@@ -91,7 +92,7 @@ public class ConfigUtil {
             basePath = "";
             for (int i = sections.length - 1; i >= 0; --i) {
                 if (value.startsWith("../")) {
-                    value = value.replaceFirst("\\.\\./", "");
+                    value = value.replaceFirst("^\\.\\./", "");
                 } else {
                     basePath = sections[i] + "." + basePath.replaceFirst("^\\.", "");
                 }
@@ -262,14 +263,14 @@ public class ConfigUtil {
             if (file.isDirectory()) {
                 loadConfigs(file, path + "." + fileName.toLowerCase(), loaders);
             } else {
-                if (path.startsWith(".")) {
+                while (path.startsWith(".")) {
                     path = path.replaceFirst("\\.", "");
                 }
                 for (ConfigLoader loader : loaders) {
                     if (!loader.matches(file)) continue;
                     loader.setPath(path);
                     String id = (path + "." + file.getName().toLowerCase()).replace(loader.getSuffix(), "");
-                    if (id.startsWith(".")) id = id.replaceFirst("\\.", "");
+                    while (id.startsWith(".")) id = id.replaceFirst("\\.", "");
                     SimpleConfiguration configFile = loader.getPlugin().configure(new SimpleConfiguration<>(loader.getPlugin(), file));
                     if (loader.isGenerateId() && !configFile.isSet("id")) {
                         configFile.set("id", UUID.randomUUID().toString());

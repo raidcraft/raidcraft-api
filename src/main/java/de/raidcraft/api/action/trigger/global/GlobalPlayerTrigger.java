@@ -275,7 +275,6 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
                 event.setCancelled(true);
                 switch (hand) {
                     case OFF_HAND:
-
                         event.getPlayer().getInventory().setItemInOffHand(returnItem.get());
                         break;
                     default:

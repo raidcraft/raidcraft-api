@@ -176,11 +176,11 @@ public abstract class AbstractConversation extends DataMap implements Conversati
                     .map(action -> ((ActionConfigWrapper<?>) action).getDelay())
                     .orElse(0L);
             if (delay > 0) {
-                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> end(ConversationEndReason.SILENT), delay);
+                Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RaidCraftPlugin.class), () -> end(ConversationEndReason.ENDED), delay);
             } else {
                 // auto end the conversation if no other stages are present
                 // and after the player had a chance to answer
-                end(ConversationEndReason.SILENT);
+                end(ConversationEndReason.ENDED);
             }
 
         }

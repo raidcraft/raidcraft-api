@@ -28,7 +28,7 @@ public class EndConversationAction implements Action<Player> {
             String reason = config.getString("reason");
             ConversationEndReason endReason;
             if (reason == null) {
-                endReason = ConversationEndReason.SILENT;
+                endReason = ConversationEndReason.ENDED;
             } else {
                 endReason = ConversationEndReason.fromString(reason);
                 if (endReason == null) {

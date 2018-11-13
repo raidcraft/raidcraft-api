@@ -102,18 +102,13 @@ public abstract class AbstractConversationTemplate implements ConversationTempla
 
         Optional<Conversation> activeConversation = Conversations.removeActiveConversation(player);
         if (activeConversation.isPresent()) {
-            if (activeConversation.get().getTemplate().isBlockingConversationStart()) {
-                return activeConversation.get();
-            }
-            if (activeConversation.get().getHost().equals(host)) {
-                return activeConversation.get();
-            }
-            if (!activeConversation.get().getTemplate().equals(this)) {
-                activeConversation.get().abort(ConversationEndReason.START_NEW_CONVERSATION);
-            } else {
+            if (activeConversation.get().getTemplate().isBlockingConversationStart()
+                    || activeConversation.get().getHost().equals(host)
+                    || activeConversation.get().getTemplate().equals(this)) {
                 Conversations.setActiveConversation(activeConversation.get());
                 return activeConversation.get();
             }
+            activeConversation.get().abort(ConversationEndReason.START_NEW_CONVERSATION);
         }
 
         // lets execute all actions of this conversation
