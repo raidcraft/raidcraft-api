@@ -84,7 +84,9 @@ public class RDSRandom {
 
     public static int getIntNegativePositiveValue(int min, int max) {
 
-        return -min + (int) (Math.random() * ((max - (-min)) + 1));
+        int diff = max - min;
+
+        return getIntValue(diff) + min;
     }
 
     /**
