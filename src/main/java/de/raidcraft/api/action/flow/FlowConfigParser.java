@@ -268,8 +268,6 @@ public class FlowConfigParser {
                         delay = 0;
                         break;
                     case ACTION:
-                        if (clearRequirements) applicableRequirements.clear();
-
                         if (activeTrigger != null) {
                             String actionId = getBaseId() + "." + "actions.flow-" + i++;
                             configuration.set("delay", delay);
@@ -409,8 +407,6 @@ public class FlowConfigParser {
                     FlowConfiguration configuration = expression.getConfiguration();
                     switch (expression.getFlowType()) {
                         case ACTION:
-                            if (clearRequirements) requirements.clear();
-
                             if (activeAnswer == null)
                                 continue;
                             configuration.set("delay", delay);
