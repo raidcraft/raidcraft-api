@@ -30,6 +30,10 @@ public interface Requirement<T> extends RequirementConfigGenerator {
         throw new UnsupportedOperationException();
     }
 
+    default void addFailureAction(Action<?> action) {
+        throw new UnsupportedOperationException();
+    }
+
     default Optional<String> getDescription(T entity) {
 
         return getDescription(entity, new MemoryConfiguration());

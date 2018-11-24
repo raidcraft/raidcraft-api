@@ -42,7 +42,6 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     private final Requirement<T> requirement;
     private final Reasonable<T> reasonable;
     private final boolean persistant;
-    private final boolean negate;
     private final int order;
     private final int requiredCount;
     private final String countText;
@@ -53,6 +52,7 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
     private final List<Action<T>> failureActions;
     private final List<Requirement<?>> requirements;
     private final Map<UUID, Map<String, String>> mappings = new HashMap<>();
+    private final boolean negate;
 
     @SuppressWarnings("unchecked")
     protected RequirementConfigWrapper(String id, Requirement<T> requirement, ConfigurationSection config,
@@ -111,6 +111,13 @@ public class RequirementConfigWrapper<T> implements ReasonableRequirement<T>, Co
 
         if (ActionAPI.matchesType(action, getType())) {
             successActions.add((Action<T>) action);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addFailureAction(Action<?> action) {
+        if (ActionAPI.matchesType(action, getType())) {
+            failureActions.add((Action<T>) action);
         }
     }
 

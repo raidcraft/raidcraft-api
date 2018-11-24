@@ -549,6 +549,23 @@ actions:
         - '!held_tot'
 ```
 
+## Requirement Checks
+
+Seit der Version `RaidCraft-API 1.13.2` gibt es die Möglichkeit [Actions](#actions), [Answers](#answers) und [Trigger](#trigger) basierend auf dem Ausgang eines Requirements auszuführen. Dafür wurde eine Shortcut Syntax eingeführt.
+
+> Bei den Requirement Checks darf immer nur ein Requirement oberhalb der Checks stehen. Um mehrere zu nutzen gibt es die [Alias Groups](#alias-groups).
+
+```yaml
+actions:
+  flow:
+    # Hier darf nur ein Requirement stehen
+    - '?tag foobar'
+    # Diese Action wird nur ausgeführt wenn das Requirement positiv ist
+    - '+!foobar'
+    # Diese Action wird nur ausgeführt wenn das Requirement negativ ist
+    - '-!barfoo
+``` 
+
 ## Flow Syntax
 
 Die Flow Syntax ist eine spezielle Art und Weise ART Konfigurationen zu schreiben und ermöglicht einen übersichtlichen Ablauf. Jedes Modul hat in der Flow Syntax ein eigenes Präfix Symbol und die Möglichkeit durch Klammern nach dem Name globale Parameter entgegen zu nehmen.

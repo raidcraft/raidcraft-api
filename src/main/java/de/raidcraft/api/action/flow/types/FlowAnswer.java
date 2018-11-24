@@ -16,12 +16,14 @@ import java.util.Optional;
 public class FlowAnswer implements FlowExpression {
 
     private final String text;
-    private final Optional<String> inputVariable;
+    private final String inputVariable;
+    private boolean checkingRequirement = false;
+    private boolean negate = false;
 
     public FlowAnswer(String text, String inputVar) {
 
         this.text = text;
-        this.inputVariable = Optional.ofNullable(inputVar);
+        this.inputVariable = inputVar;
     }
 
     public FlowAnswer(String text) {
@@ -29,14 +31,18 @@ public class FlowAnswer implements FlowExpression {
         this(text, null);
     }
 
+    public Optional<String> getInputVariable() {
+        return Optional.ofNullable(this.inputVariable);
+    }
+
     public Optional<Answer> create(StageTemplate template) {
 
         MemoryConfiguration config = new MemoryConfiguration();
         config.set("text", getText());
-        if (getInputVariable().isPresent()) {
-            config.set("var", getInputVariable().get());
+        getInputVariable().ifPresent(var -> {
+            config.set("var", var);
             config.set("type", Answer.DEFAULT_INPUT_TYPE);
-        }
+        });
         return Conversations.getAnswer(template, config);
     }
 }
