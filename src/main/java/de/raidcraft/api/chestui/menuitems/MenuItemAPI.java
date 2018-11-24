@@ -106,7 +106,7 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemOk(String name) {
 
-        return ItemUtils.clearLore(ItemUtils.createItem(Material.GREEN_RECORD, name));
+        return ItemUtils.clearLore(ItemUtils.createItem(Material.MUSIC_DISC_MELLOHI, name));
     }
 
     public static ItemStack getItemCancel() {
@@ -116,7 +116,7 @@ public abstract class MenuItemAPI {
 
     public static ItemStack getItemCancel(String name) {
 
-        return ItemUtils.clearLore(ItemUtils.createItem(Material.RECORD_4, name));
+        return ItemUtils.clearLore(ItemUtils.createItem(Material.MUSIC_DISC_STRAD, name));
     }
 
     public boolean checkPlacing(ItemStack itemstack) {

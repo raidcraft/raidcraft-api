@@ -54,7 +54,7 @@ public class FallbackHeadCreator implements IHeadCreator {
 
     @Override
     public ItemStack createItemStack(String url) {
-        return new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        return new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
     }
 
     @Override

@@ -455,7 +455,7 @@ public class RaidCraft implements Listener {
                 Material item = ItemUtils.getItem(id);
                 String[] data = id.split(":");
                 if (item == null) return Optional.empty();
-                if ((item == Material.SKULL_ITEM || item == Material.SKULL) && data.length > 1) {
+                if ((item == Material.PLAYER_HEAD) && data.length > 1) {
                     itemStack = Skull.getSkull(data[1]);
                 } else {
                     if (data.length > 1) {
@@ -534,7 +534,7 @@ public class RaidCraft implements Listener {
                 && ((itemStack.hasItemMeta() && (itemStack.getItemMeta().hasDisplayName() || itemStack.getItemMeta().hasLore()))
                 || itemStack.getType() == Material.WRITTEN_BOOK
                 || itemStack.getType() == Material.ENCHANTED_BOOK
-                || itemStack.getType() == Material.BOOK_AND_QUILL
+                || itemStack.getType() == Material.WRITTEN_BOOK
                 || !itemStack.getEnchantments().isEmpty())) {
             // lets check this param after the custom item, but before mc
             sb.append(STORED_OBJECT_IDENTIFIER).append(new ItemStorage("API").storeObject(itemStack));

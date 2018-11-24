@@ -339,5 +339,10 @@ public class NPC_Manager {
         public void storeAll(NPCRegistry npcs) {
             // nothing
         }
+
+        @Override
+        public void reloadFromSource() {
+            // nothing
+        }
     }
 }

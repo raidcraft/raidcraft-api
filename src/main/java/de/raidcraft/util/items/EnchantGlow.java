@@ -11,9 +11,9 @@ public class EnchantGlow extends EnchantmentWrapper {
 
     private static Enchantment glow;
 
-    public EnchantGlow(int id) {
+    public EnchantGlow(String name) {
 
-        super(id);
+        super(name);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class EnchantGlow extends EnchantmentWrapper {
             e.printStackTrace();
         }
 
-        glow = new EnchantGlow(255);
+        glow = new EnchantGlow(Enchantment.SILK_TOUCH.getKey().getKey());
         Enchantment.registerEnchantment(glow);
         return glow;
     }

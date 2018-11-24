@@ -108,7 +108,7 @@ public class Skull {
             throw new IllegalStateException("Profile doesn't contain a property map");
         }
         propertyMap.put("textures", new Property("textures", base64Url));
-        ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
         ItemMeta headMeta = head.getItemMeta();
         Class<?> headMetaClass = headMeta.getClass();
         ReflectionUtil.getField(headMetaClass, "profile", GameProfile.class).set(headMeta, profile);
@@ -148,7 +148,7 @@ public class Skull {
 
     public static ItemStack getSkull(String skullOwner, String displayName, int quantity) {
 
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, quantity, (short) SkullType.PLAYER.ordinal());
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, quantity, (short) SkullType.PLAYER.ordinal());
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(skullOwner);
         if (displayName != null) {
@@ -175,7 +175,7 @@ public class Skull {
 
     public static ItemStack getSkull(SkullType type, int quantity) {
 
-        return new ItemStack(Material.SKULL_ITEM, quantity, (short) type.ordinal());
+        return new ItemStack(Material.PLAYER_HEAD, quantity, (short) type.ordinal());
     }
 
     public static String format(String text, String... replacement) {
@@ -278,12 +278,12 @@ public class Skull {
         }
         Object gameProfileHolder = null;
         if (object instanceof ItemStack) {
-            if (((ItemStack) object).getType() != Material.SKULL_ITEM) Optional.empty();
+            if (((ItemStack) object).getType() != Material.PLAYER_HEAD) Optional.empty();
             SkullMeta skullMeta = (SkullMeta) ((ItemStack) object).getItemMeta();
             gameProfileHolder = CRAFT_META_SKULL_CLASS.cast(skullMeta);
         } else if (object instanceof Block) {
             try {
-                if (((Block) object).getType() != Material.SKULL) Optional.empty();
+                if (((Block) object).getType() != Material.PLAYER_HEAD) Optional.empty();
                 Object handle = CRAFT_WORLD_GET_HANDLE.invoke(((Block) object).getWorld());
                 Object blockPosition = BLOCK_POSITION_CONSTRUCTOR.newInstance(((Block) object).getX(), ((Block) object).getY(), ((Block) object).getZ());
                 Object tileEntity = WORLD_SERVER_GET_TILE_ENTITY.invoke(handle, blockPosition);

@@ -40,25 +40,25 @@ public final class CustomItemUtil {
             case DIAMOND_HELMET:
             case IRON_HELMET:
             case LEATHER_HELMET:
-            case GOLD_HELMET:
+            case GOLDEN_HELMET:
                 return 0;
             case CHAINMAIL_CHESTPLATE:
             case DIAMOND_CHESTPLATE:
             case IRON_CHESTPLATE:
             case LEATHER_CHESTPLATE:
-            case GOLD_CHESTPLATE:
+            case GOLDEN_CHESTPLATE:
                 return 1;
             case CHAINMAIL_LEGGINGS:
             case DIAMOND_LEGGINGS:
             case IRON_LEGGINGS:
             case LEATHER_LEGGINGS:
-            case GOLD_LEGGINGS:
+            case GOLDEN_LEGGINGS:
                 return 2;
             case CHAINMAIL_BOOTS:
             case DIAMOND_BOOTS:
             case IRON_BOOTS:
             case LEATHER_BOOTS:
-            case GOLD_BOOTS:
+            case GOLDEN_BOOTS:
                 return 3;
             default:
                 return -1;
@@ -240,7 +240,7 @@ public final class CustomItemUtil {
 
     public static boolean isEquipment(ItemStack itemStack) {
 
-        if (itemStack == null || itemStack.getTypeId() == 0) {
+        if (itemStack == null || itemStack.getType() == Material.AIR) {
             return false;
         }
         CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
@@ -249,7 +249,7 @@ public final class CustomItemUtil {
 
     public static boolean isWeapon(ItemStack itemStack) {
 
-        if (itemStack == null || itemStack.getTypeId() == 0) {
+        if (itemStack == null || itemStack.getType() == Material.AIR) {
             return false;
         }
         CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
@@ -281,7 +281,7 @@ public final class CustomItemUtil {
 
     public static boolean isShield(ItemStack itemStack) {
 
-        if (itemStack == null || itemStack.getTypeId() == 0) {
+        if (itemStack == null || itemStack.getType() == Material.AIR) {
             return false;
         }
         CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);
@@ -292,7 +292,7 @@ public final class CustomItemUtil {
 
     public static boolean isArmor(ItemStack itemStack) {
 
-        if (itemStack == null || itemStack.getTypeId() == 0) {
+        if (itemStack == null || itemStack.getType() == Material.AIR) {
             return false;
         }
         CustomItemStack customItem = RaidCraft.getComponent(CustomItemManager.class).getCustomItem(itemStack);

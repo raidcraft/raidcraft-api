@@ -13,7 +13,7 @@ public class MenuItem implements MenuItemAPI {
 
     public MenuItem() {
 
-        item = new ItemStack(Material.STAINED_GLASS);
+        item = new ItemStack(Material.WHITE_STAINED_GLASS);
         item.setAmount(99);
     }
 

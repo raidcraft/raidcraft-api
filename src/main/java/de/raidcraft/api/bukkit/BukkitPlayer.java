@@ -1,7 +1,5 @@
 package de.raidcraft.api.bukkit;
 
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.WorldVector;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.InvalidTargetException;
 import de.raidcraft.api.player.AbstractPlayer;
@@ -10,12 +8,10 @@ import de.raidcraft.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -93,21 +89,6 @@ public class BukkitPlayer extends AbstractPlayer {
     }
 
     @Override
-    public WorldVector getLocation() {
-
-        if (isOnline()) {
-            return BukkitUtil.toWorldVector(player.getLocation());
-        }
-        return null;
-    }
-
-    @Override
-    public void teleport(WorldVector vector) {
-
-        player.teleport(BukkitUtil.getLocation(vector), PlayerTeleportEvent.TeleportCause.PLUGIN);
-    }
-
-    @Override
     public RCPlayer getTargetPlayer() throws InvalidTargetException {
 
         Player target = BukkitUtil.getTarget(player, player.getWorld().getPlayers());
@@ -115,12 +96,6 @@ public class BukkitPlayer extends AbstractPlayer {
             throw new InvalidTargetException("Du hast kein Ziel im Sichtfeld!");
         }
         return RaidCraft.getPlayer(target);
-    }
-
-    @Override
-    public BlockWorldVector getTargetBlock() {
-
-        return BukkitUtil.toBlockWorldVector(player.getTargetBlock(new HashSet<Material>(), 100));
     }
 
     @Override
@@ -140,9 +115,8 @@ public class BukkitPlayer extends AbstractPlayer {
     }
 
     @Override
-    public int getItemInHand() {
-
-        return player.getItemInHand().getTypeId();
+    public ItemStack getItemInHand() {
+        return getBukkitPlayer().getInventory().getItemInMainHand();
     }
 
     @Override

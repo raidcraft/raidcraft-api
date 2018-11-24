@@ -195,7 +195,7 @@ public class SerializationUtil {
 
     public static ConfigurationSerializable fromByteStream(String hex, Material type) {
 
-        if (type == Material.FIREWORK) {
+        if (type == Material.FIREWORK_ROCKET) {
             return StaticFireworkEffectSerialization.deserialize(hex);
         }
 
