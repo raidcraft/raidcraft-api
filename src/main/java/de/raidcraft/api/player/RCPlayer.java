@@ -1,11 +1,11 @@
 package de.raidcraft.api.player;
 
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.WorldVector;
 import de.raidcraft.api.InvalidTargetException;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -34,21 +34,13 @@ public interface RCPlayer {
 
     boolean isOnline();
 
-    @Deprecated
-    WorldVector getLocation();
-
-    @Deprecated
-    void teleport(WorldVector vector);
-
     RCPlayer getTargetPlayer() throws InvalidTargetException;
 
     LivingEntity getTarget() throws InvalidTargetException;
 
     List<LivingEntity> getNearbyEntities(int radius);
 
-    BlockWorldVector getTargetBlock();
-
-    int getItemInHand();
+    ItemStack getItemInHand();
 
     boolean hasMoved(Location location);
 

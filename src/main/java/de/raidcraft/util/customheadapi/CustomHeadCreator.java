@@ -122,7 +122,7 @@ public class CustomHeadCreator implements IHeadCreator {
             return null;                    
         }
         
-        ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD, 1, (short) 3);
         ItemMeta headMeta = head.getItemMeta();
         Class<?> headMetaClass = headMeta.getClass();
         if (!ReflectionUtil.set(headMetaClass, headMeta, "profile", profile)) {

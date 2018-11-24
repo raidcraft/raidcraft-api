@@ -1,9 +1,12 @@
 package de.raidcraft.api.action.requirement.global;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.util.LocationUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -22,9 +25,9 @@ public class RegionRequirement implements Requirement<Player> {
 
         if (RaidCraft.getWorldGuard() == null) return true;
 
-        RegionManager regionManager = RaidCraft.getWorldGuard().getRegionManager(player.getWorld());
-        return regionManager.getApplicableRegions(player.getLocation()).getRegions().stream()
-                .map(ProtectedRegion::getId)
-                .anyMatch(id -> id.equalsIgnoreCase(config.getString("region")));
+        return LocationUtil.getWorldGuardRegions(player.getLocation())
+                .map(protectedRegions -> protectedRegions.getRegions().stream())
+                .map(protectedRegions -> protectedRegions.anyMatch(protectedRegion -> protectedRegion.getId().equalsIgnoreCase(config.getString("region"))))
+                .orElse(false);
     }
 }

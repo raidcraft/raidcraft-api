@@ -31,6 +31,13 @@ public interface Aircraft<T> {
     T getEntity();
 
     /**
+     * Loads the aircraft with the given config.
+     *
+     * @param config to load {@link Aircraft} with.
+     */
+    default void load(AircraftConfig config) {}
+
+    /**
      * Checks if the aircraft reached the given waypoint.
      *
      * @param waypoint to reach

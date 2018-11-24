@@ -47,7 +47,7 @@ public class StaticFireworkEffectSerialization {
     public static FireworkMeta deserialize(String serializedData) {
 
         try {
-            FireworkMeta fireworkMeta = (FireworkMeta) (new ItemStack(Material.FIREWORK)).getItemMeta();
+            FireworkMeta fireworkMeta = (FireworkMeta) (new ItemStack(Material.FIREWORK_ROCKET)).getItemMeta();
             String[] powerPair = serializedData.split("=");
 
             fireworkMeta.setPower(Integer.valueOf(powerPair[0]));

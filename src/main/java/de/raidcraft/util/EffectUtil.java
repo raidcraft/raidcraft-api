@@ -43,12 +43,12 @@ public class EffectUtil {
 
     public static void fakeExplosion(Location location) {
 
-        ParticleEffect.sendToLocation(EnumWrappers.Particle.EXPLOSION_HUGE, location, 0.0F, 0.0F, 0.0F, 1);
+        ParticleEffect.sendToLocation(Particle.EXPLOSION_HUGE, location, 0.0F, 0.0F, 0.0F, 1);
     }
 
     public static void fakeWolfHearts(Location location) {
 
-        ParticleEffect.sendToLocation(EnumWrappers.Particle.HEART, location.add(0, 1, 0), 0.5F, 0F, 0.5F, 3);
+        ParticleEffect.sendToLocation(Particle.HEART, location.add(0, 1, 0), 0.5F, 0F, 0.5F, 3);
     }
 
     public static void playFirework(World world, Location location, FireworkEffect effect) {
@@ -93,7 +93,7 @@ public class EffectUtil {
             location.getWorld().strikeLightningEffect(location);
         }
         Bukkit.getOnlinePlayers().stream().filter(player -> LocationUtil.isWithinRadius(player.getLocation(), location, radius)).forEach(player -> {
-            player.playSound(location, Sound.ENTITY_LIGHTNING_THUNDER, 10, 1);
+            player.playSound(location, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 10, 1);
         });
     }
 

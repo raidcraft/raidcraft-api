@@ -1,9 +1,8 @@
 package de.raidcraft.api.items;
 
-import com.sk89q.worldedit.blocks.BlockID;
-import com.sk89q.worldedit.blocks.ItemID;
 import de.raidcraft.util.EnumUtils;
 import io.ebean.annotation.EnumValue;
+import org.bukkit.Material;
 
 /**
  * @author Silthus
@@ -57,39 +56,44 @@ public enum EquipmentSlot {
         return armorSlotModifier;
     }
 
-    public static EquipmentSlot fromItemId(int id) {
+    public static EquipmentSlot fromMaterial(Material material) {
 
-        switch (id) {
+        switch (material) {
 
-            case ItemID.CHAINMAIL_BOOTS:
-            case ItemID.DIAMOND_BOOTS:
-            case ItemID.IRON_BOOTS:
-            case ItemID.GOLD_BOOTS:
-            case ItemID.LEATHER_BOOTS:
+            case CHAINMAIL_BOOTS:
+            case DIAMOND_BOOTS:
+            case IRON_BOOTS:
+            case GOLDEN_BOOTS:
+            case LEATHER_BOOTS:
                 return FEET;
-            case ItemID.HEAD:
-            case ItemID.CHAINMAIL_HELMET:
-            case ItemID.DIAMOND_HELMET:
-            case ItemID.GOLD_HELMET:
-            case ItemID.IRON_HELMET:
-            case ItemID.LEATHER_HELMET:
+            case PLAYER_HEAD:
+            case CHAINMAIL_HELMET:
+            case DIAMOND_HELMET:
+            case GOLDEN_HELMET:
+            case IRON_HELMET:
+            case LEATHER_HELMET:
                 return HEAD;
-            case ItemID.CHAINMAIL_CHEST:
-            case ItemID.DIAMOND_CHEST:
-            case ItemID.GOLD_CHEST:
-            case ItemID.IRON_CHEST:
-            case ItemID.LEATHER_CHEST:
+            case CHAINMAIL_CHESTPLATE:
+            case DIAMOND_CHESTPLATE:
+            case GOLDEN_CHESTPLATE:
+            case IRON_CHESTPLATE:
+            case LEATHER_CHESTPLATE:
                 return CHEST;
-            case ItemID.CHAINMAIL_PANTS:
-            case ItemID.DIAMOND_PANTS:
-            case ItemID.GOLD_PANTS:
-            case ItemID.IRON_PANTS:
-            case ItemID.LEATHER_PANTS:
+            case CHAINMAIL_LEGGINGS:
+            case DIAMOND_LEGGINGS:
+            case GOLDEN_LEGGINGS:
+            case IRON_LEGGINGS:
+            case LEATHER_LEGGINGS:
                 return LEGS;
-            case BlockID.PISTON_BASE:
-            case BlockID.PISTON_STICKY_BASE:
-            case ItemID.IRON_DOOR_ITEM:
-            case ItemID.WOODEN_DOOR_ITEM:
+            case PISTON_HEAD:
+            case STICKY_PISTON:
+            case IRON_DOOR:
+            case DARK_OAK_DOOR:
+            case ACACIA_DOOR:
+            case BIRCH_DOOR:
+            case JUNGLE_DOOR:
+            case OAK_DOOR:
+            case SPRUCE_DOOR:
                 return SHIELD_HAND;
             default:
                 return null;

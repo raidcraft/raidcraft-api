@@ -2,22 +2,24 @@ package de.raidcraft.api.ambient;
 
 import com.comphenix.packetwrapper.WrapperPlayServerWorldParticles;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.WrappedParticle;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
 public class ParticleEffect {
 
 
-    public static void sendToPlayer(EnumWrappers.Particle effect, Player player, Location location, float offsetX, float offsetY, float offsetZ, int count) {
+    public static void sendToPlayer(Particle particle, Player player, Location location, float offsetX, float offsetY, float offsetZ, int count) {
 
-        WrapperPlayServerWorldParticles packet = createPacket(effect, location, offsetX, offsetY, offsetZ, count);
+        WrapperPlayServerWorldParticles packet = createPacket(WrappedParticle.create(particle, particle), location, offsetX, offsetY, offsetZ, count);
         packet.sendPacket(player);
     }
 
-    public static void sendToLocation(EnumWrappers.Particle effect, Location location, float offsetX, float offsetY, float offsetZ, int count) {
+    public static void sendToLocation(Particle particle, Location location, float offsetX, float offsetY, float offsetZ, int count) {
 
-        WrapperPlayServerWorldParticles packet = createPacket(effect, location, offsetX, offsetY, offsetZ, count);
+        WrapperPlayServerWorldParticles packet = createPacket(WrappedParticle.create(particle, particle), location, offsetX, offsetY, offsetZ, count);
         Bukkit.getOnlinePlayers().forEach(packet::sendPacket);
     }
 
@@ -33,7 +35,7 @@ public class ParticleEffect {
         Bukkit.getOnlinePlayers().forEach(packet::sendPacket);
     }
 
-    public static WrapperPlayServerWorldParticles createPacket(EnumWrappers.Particle effect, Location location, float offsetX, float offsetY, float offsetZ, int count) {
+    public static WrapperPlayServerWorldParticles createPacket(WrappedParticle effect, Location location, float offsetX, float offsetY, float offsetZ, int count) {
 
         if (count <= 0) {
             count = 1;
@@ -52,12 +54,13 @@ public class ParticleEffect {
 
     public static WrapperPlayServerWorldParticles createCrackPacket(boolean icon, int id, float data, Location location, float offsetX, float offsetY, float offsetZ, int count) {
 
+
+
         if (count <= 0) {
             count = 1;
         }
-        WrapperPlayServerWorldParticles wrapper = createPacket(icon ? EnumWrappers.Particle.ITEM_CRACK : EnumWrappers.Particle.BLOCK_CRACK, location, offsetX, offsetY, offsetZ, count);
-        int[] ids = {id};
-        wrapper.setData(ids);
+        WrappedParticle<Float> particle = WrappedParticle.create(icon ? Particle.ITEM_CRACK : Particle.BLOCK_CRACK, data);
+        WrapperPlayServerWorldParticles wrapper = createPacket(particle, location, offsetX, offsetY, offsetZ, count);
         wrapper.setParticleData(data);
         return wrapper;
     }

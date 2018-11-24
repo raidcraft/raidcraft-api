@@ -9,6 +9,7 @@ import de.raidcraft.util.MathUtil;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -51,33 +52,33 @@ public class MoneySelector {
         // GGG SS KK
         final MenuItemInteractive g100 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.GOLD_INGOT, ""),
-                ItemUtils.getGlassPane(DyeColor.YELLOW),
+                new ItemStack(Material.YELLOW_STAINED_GLASS_PANE),
                 1, 9);
         final MenuItemInteractive g10 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.GOLD_INGOT, ""),
-                ItemUtils.getGlassPane(DyeColor.YELLOW),
+                new ItemStack(Material.YELLOW_STAINED_GLASS_PANE),
                 1, 9);
         final MenuItemInteractive g1 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.GOLD_INGOT, ""),
-                ItemUtils.getGlassPane(DyeColor.YELLOW),
+                new ItemStack(Material.YELLOW_STAINED_GLASS_PANE),
                 1, 9);
 
         final MenuItemInteractive s10 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.IRON_INGOT, ""),
-                ItemUtils.getGlassPane(DyeColor.WHITE),
+                new ItemStack(Material.WHITE_STAINED_GLASS_PANE),
                 1, 9);
         final MenuItemInteractive s1 = new MenuItemInteractive(ItemUtils.createItem(
                 Material.IRON_INGOT, ""),
-                ItemUtils.getGlassPane(DyeColor.WHITE),
+                new ItemStack(Material.WHITE_STAINED_GLASS_PANE),
                 1, 9);
 
         final MenuItemInteractive k10 = new MenuItemInteractive(ItemUtils.createItem(
-                Material.NETHER_BRICK_ITEM, ""),
-                ItemUtils.getGlassPane(DyeColor.BROWN),
+                Material.NETHER_BRICK, ""),
+                new ItemStack(Material.BROWN_STAINED_GLASS_PANE),
                 1, 9);
         final MenuItemInteractive k1 = new MenuItemInteractive(ItemUtils.createItem(
-                Material.NETHER_BRICK_ITEM, ""),
-                ItemUtils.getGlassPane(DyeColor.BROWN),
+                Material.NETHER_BRICK, ""),
+                new ItemStack(Material.BROWN_STAINED_GLASS_PANE),
                 1, 9);
 
         final MenuItemInteractive[] item_values = new MenuItemInteractive[]{k1, k10, s1, s10, g1, g10, g100};

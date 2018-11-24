@@ -7,6 +7,7 @@ import de.raidcraft.util.InventoryUtils;
 import de.raidcraft.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -16,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -46,7 +48,7 @@ public class ItemSelector {
             if (i == InventoryUtils.COLUMN_COUNT + 4) {
                 continue;
             }
-            inventory.setItem(i, ItemUtils.getGlassPane(DyeColor.RED));
+            inventory.setItem(i, new ItemStack(Material.RED_STAINED_GLASS_PANE));
             inventory.setItem(inventory.getSize() - 1, MenuItemAPI.getItemOk());
             inventory.setItem(inventory.getSize() - InventoryUtils.COLUMN_COUNT, MenuItemAPI.getItemCancel());
         }

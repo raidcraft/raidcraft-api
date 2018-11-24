@@ -9,6 +9,7 @@ import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.RequirementConfigWrapper;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.util.LocationUtil;
 import de.raidcraft.util.TimeUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -134,10 +135,8 @@ public class TriggerListenerConfigWrapper<T> {
             }
         }
         if (!regions.isEmpty() && triggeringEntity instanceof Player && RaidCraft.getWorldGuard() != null) {
-            ApplicableRegionSet applicableRegions = RaidCraft.getWorldGuard()
-                    .getRegionManager(((Player) triggeringEntity).getWorld())
-                    .getApplicableRegions(((Player) triggeringEntity).getLocation());
-            if (applicableRegions.getRegions().stream().map(ProtectedRegion::getId).noneMatch(regions::contains)) {
+            Optional<ApplicableRegionSet> applicableRegions = LocationUtil.getWorldGuardRegions(((Player) triggeringEntity).getLocation());
+            if (applicableRegions.isPresent() && applicableRegions.get().getRegions().stream().map(ProtectedRegion::getId).noneMatch(regions::contains)) {
                 return false;
             }
         }

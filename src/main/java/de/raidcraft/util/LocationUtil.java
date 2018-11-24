@@ -1,11 +1,13 @@
 package de.raidcraft.util;
 
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
-import de.raidcraft.RaidCraft;
-import de.raidcraft.RaidCraftPlugin;
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -322,22 +324,22 @@ public final class LocationUtil {
 
     public static boolean isMobDamageAllowed(Player player, Location location) {
 
-        Optional<WorldGuardPlugin> worldGuard = RaidCraft.getComponent(RaidCraftPlugin.class).getWorldGuard();
-        if (worldGuard.isPresent()) {
-            ApplicableRegionSet regions = worldGuard.get().getRegionManager(location.getWorld()).getApplicableRegions(location);
-            return regions.queryState(worldGuard.get().wrapPlayer(player), DefaultFlag.MOB_DAMAGE) == StateFlag.State.ALLOW;
-        }
-        return true;
+        return getWorldGuardRegions(location)
+                .map(protectedRegions -> protectedRegions.queryState(WorldGuardPlugin.inst().wrapPlayer(player), Flags.MOB_DAMAGE) == StateFlag.State.ALLOW)
+                .orElse(true);
     }
 
     public static boolean isPvPAllowed(Player player, Location location) {
 
-        Optional<WorldGuardPlugin> worldGuard = RaidCraft.getComponent(RaidCraftPlugin.class).getWorldGuard();
-        if (worldGuard.isPresent()) {
-            ApplicableRegionSet regions = worldGuard.get().getRegionManager(location.getWorld()).getApplicableRegions(location);
-            return regions.queryState(worldGuard.get().wrapPlayer(player), DefaultFlag.PVP) == StateFlag.State.ALLOW;
-        }
-        return true;
+        return getWorldGuardRegions(location)
+                .map(protectedRegions -> protectedRegions.queryState(WorldGuardPlugin.inst().wrapPlayer(player), Flags.PVP) == StateFlag.State.ALLOW)
+                .orElse(true);
+    }
+
+    public static Optional<ApplicableRegionSet> getWorldGuardRegions(Location location) {
+        RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(new BukkitWorld(location.getWorld()));
+        if (regionManager == null) return Optional.empty();
+        return Optional.of(regionManager.getApplicableRegions(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ())));
     }
 
     public static Vector getRevertedViewDirection(Location location) {

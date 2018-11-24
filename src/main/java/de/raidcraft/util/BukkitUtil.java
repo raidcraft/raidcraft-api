@@ -1,11 +1,6 @@
 package de.raidcraft.util;
 
-import com.sk89q.worldedit.BlockWorldVector;
-import com.sk89q.worldedit.WorldVector;
-import com.sk89q.worldedit.bukkit.BukkitWorld;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -24,35 +19,6 @@ public final class BukkitUtil {
 
     private BukkitUtil() {
 
-    }
-
-    /**
-     * Gets the WorldEdit {@link com.sk89q.worldedit.WorldVector} from the Bukkit {@link org.bukkit.Location}
-     *
-     * @param location of the vector
-     *
-     * @return {@link com.sk89q.worldedit.WorldVector}
-     */
-    public static WorldVector toWorldVector(Location location) {
-
-        return new WorldVector(new BukkitWorld(location.getWorld()), location.getX(), location.getY(), location.getZ());
-    }
-
-    public static WorldVector getWorldVector(String world, int x, int y, int z) {
-
-        return new WorldVector(new BukkitWorld(Bukkit.getWorld(world)), x, y, z);
-    }
-
-    /**
-     * Gets the bukkit {@link org.bukkit.Location} from the WorldEdit {@link com.sk89q.worldedit.WorldVector}.
-     *
-     * @param vector location
-     *
-     * @return {@link org.bukkit.Location}
-     */
-    public static Location getLocation(WorldVector vector) {
-
-        return new Location(Bukkit.getWorld(vector.getWorld().getName()), vector.getX(), vector.getY(), vector.getZ());
     }
 
     public static void callEvent(Event event) {
@@ -102,11 +68,6 @@ public final class BukkitUtil {
                 .filter(entity -> entity instanceof LivingEntity)
                 .map(entity -> (LivingEntity) entity)
                 .collect(Collectors.toList());
-    }
-
-    public static BlockWorldVector toBlockWorldVector(Block block) {
-
-        return new BlockWorldVector(new BukkitWorld(block.getWorld()), toWorldVector(block.getLocation()));
     }
 
     public static List<LivingEntity> getLivingEntitiesInCone(LivingEntity source, float radius) {

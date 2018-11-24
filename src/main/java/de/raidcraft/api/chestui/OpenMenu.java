@@ -19,7 +19,7 @@ public class OpenMenu implements MenuItemAPI {
     @Override
     public ItemStack getItem() {
 
-        return new ItemStack(Material.FENCE_GATE);
+        return new ItemStack(Material.ACACIA_FENCE_GATE);
     }
 
     @Override

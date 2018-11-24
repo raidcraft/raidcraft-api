@@ -33,7 +33,7 @@ public final class CustomItemManager implements Component {
 
     public CustomItemStack getCustomItem(ItemStack itemStack) {
 
-        if (itemStack == null || itemStack.getTypeId() == 0) {
+        if (itemStack == null || itemStack.getType() == Material.AIR) {
             return null;
         }
         if (itemStack.hasItemMeta()) {
@@ -56,8 +56,8 @@ public final class CustomItemManager implements Component {
             } catch (CustomItemException ignored) {
             }
         }
-        if (mappedMinecraftItems.containsKey(itemStack.getTypeId())) {
-            for (CustomItem customItem : mappedMinecraftItems.get(itemStack.getTypeId())) {
+        if (mappedMinecraftItems.containsKey(itemStack.getType())) {
+            for (CustomItem customItem : mappedMinecraftItems.get(itemStack.getType())) {
                 if (customItem.matches(itemStack)) {
                     return new CustomItemStack(customItem, itemStack);
                 }

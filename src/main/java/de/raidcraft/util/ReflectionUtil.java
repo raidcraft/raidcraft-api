@@ -4,10 +4,7 @@ import org.apache.commons.lang.ClassUtils;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -569,6 +566,21 @@ public class ReflectionUtil {
     public static Class<?> getNmsClass(String basePackage, String clazzName) {
 
         return getNmsClass(basePackage, "", clazzName);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getNmsClass(String basePackage, String clazzName, Class<T> type) {
+        return (Class<T>) getNmsClass(basePackage, clazzName);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Optional<T> getNmsClassInstance(String basePackage, String clazzName) {
+        try {
+            return Optional.ofNullable((T) getNmsClass(basePackage, clazzName).newInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
     public static Class<?> getNmsClass(String basePackage, String detailPackage, String clazzName) {

@@ -1,6 +1,7 @@
 package de.raidcraft.util;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.util.items.serialazition.BookSerialization;
 import de.raidcraft.util.items.serialazition.EnchantmentSerialization;
@@ -14,6 +15,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.Dye;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -85,41 +88,41 @@ public final class ItemUtils {
 
     public static boolean isStackValid(ItemStack item) {
 
-        return item != null && item.getAmount() > 0 && item.getTypeId() > 0;
+        return item != null && item.getAmount() > 0;
     }
 
     public enum Item {
 
         // tools
-        WOODEN_SHOVEL(Material.WOOD_SPADE, ItemType.TOOL, "Holzschaufel"),
-        STONE_SHOVEL(Material.STONE_SPADE, ItemType.TOOL, "Steinschaufel"),
-        IRON_SHOVEL(Material.IRON_SPADE, ItemType.TOOL, "Eisenschaufel"),
-        GOLD_SHOVEL(Material.GOLD_SPADE, ItemType.TOOL, "Goldschaufel"),
-        DIAMOND_SHOVEL(Material.DIAMOND_SPADE, ItemType.TOOL, "Diamantschaufel"),
+        WOODEN_SHOVEL(Material.WOODEN_SHOVEL, ItemType.TOOL, "Holzschaufel"),
+        STONE_SHOVEL(Material.STONE_SHOVEL, ItemType.TOOL, "Steinschaufel"),
+        IRON_SHOVEL(Material.IRON_SHOVEL, ItemType.TOOL, "Eisenschaufel"),
+        GOLD_SHOVEL(Material.GOLDEN_SHOVEL, ItemType.TOOL, "Goldschaufel"),
+        DIAMOND_SHOVEL(Material.DIAMOND_SHOVEL, ItemType.TOOL, "Diamantschaufel"),
 
-        WOODEN_PICKAXE(Material.WOOD_PICKAXE, ItemType.TOOL, "Holzspitzhacke"),
+        WOODEN_PICKAXE(Material.WOODEN_PICKAXE, ItemType.TOOL, "Holzspitzhacke"),
         STONE_PICKAXE(Material.STONE_PICKAXE, ItemType.TOOL, "Steinspitzhacke"),
         IRON_PICKAXE(Material.IRON_PICKAXE, ItemType.TOOL, "Eisenspitzhacke"),
-        GOLD_PICKAXE(Material.GOLD_PICKAXE, ItemType.TOOL, "Goldspitzhacke"),
+        GOLD_PICKAXE(Material.GOLDEN_PICKAXE, ItemType.TOOL, "Goldspitzhacke"),
         DIAMOND_PICKAXE(Material.DIAMOND_PICKAXE, ItemType.TOOL, "Diamantspitzhacke"),
 
-        WOODEN_HOE(Material.WOOD_HOE, ItemType.TOOL, "Holzhacke"),
+        WOODEN_HOE(Material.WOODEN_HOE, ItemType.TOOL, "Holzhacke"),
         STONE_HOE(Material.STONE_HOE, ItemType.TOOL, "Steinhacke"),
         IRON_HOE(Material.IRON_HOE, ItemType.TOOL, "Eisenhacke"),
-        GOLD_HOE(Material.GOLD_HOE, ItemType.TOOL, "Goldhacke"),
+        GOLD_HOE(Material.GOLDEN_HOE, ItemType.TOOL, "Goldhacke"),
         DIAMOND_HOE(Material.DIAMOND_HOE, ItemType.TOOL, "Diamanthacke"),
 
         // blocks
-        LOG(Material.LOG, ItemType.BLOCK, "Holz"),
+        LOG(Material.ACACIA_LOG, ItemType.BLOCK, "Holz"),
         STONE(Material.STONE, ItemType.BLOCK, "Stein"),
         DIRT(Material.DIRT, ItemType.BLOCK, "Erde"),
         GRAVEL(Material.GRAVEL, ItemType.BLOCK, "Kies"),
         GRASS(Material.GRASS, ItemType.BLOCK, "Gras"),
         SAND(Material.SAND, ItemType.BLOCK, "Sand"),
         CLAY(Material.CLAY, ItemType.BLOCK, "Lehm"),
-        SMOOTH_BRICK(Material.SMOOTH_BRICK, ItemType.BLOCK, "Steinziegel"),
+        SMOOTH_BRICK(Material.SMOOTH_STONE, ItemType.BLOCK, "Steinziegel"),
         COBBLESTONE(Material.COBBLESTONE, ItemType.BLOCK, "Pflasterstein"),
-        LEAVES(Material.LEAVES, ItemType.BLOCK, "Blätter");
+        LEAVES(Material.ACACIA_LEAVES, ItemType.BLOCK, "Blätter");
 
         private Material material;
         private ItemType type;
@@ -192,9 +195,9 @@ public final class ItemUtils {
 
             this.item = item;
 
-            if (item.getType() == Material.FIREWORK) {
+            if (item.getType() == Material.FIREWORK_ROCKET) {
                 serializable = new FireworkEffectSerialization(item);
-            } else if (item.getType() == Material.BOOK_AND_QUILL) {
+            } else if (item.getType() == Material.WRITTEN_BOOK) {
                 serializable = new BookSerialization(item);
             } else {
                 serializable = new EnchantmentSerialization(item);
@@ -227,22 +230,6 @@ public final class ItemUtils {
         return dye.toItemStack(1);
     }
 
-    // TODO: use STAINED_GLASS_PANE
-    public static ItemStack getGlassPane(DyeColor color, int amount) {
-
-        return new ItemStack(160, amount, color.getWoolData());
-    }
-
-    public static ItemStack getGlassPane(DyeColor color, String name) {
-
-        return setDisplayName(getGlassPane(color, 1), name);
-    }
-
-    public static ItemStack getGlassPane(DyeColor color) {
-
-        return getGlassPane(color, 1);
-    }
-
     public static ItemStack createItem(Material mat, String name) {
 
         return setDisplayName(new ItemStack(mat), name);
@@ -259,5 +246,74 @@ public final class ItemUtils {
     public static ItemStack clearLore(ItemStack item) {
         //TODO: use nms to remove build in lore (e.g. weapon value)
         return item;
+    }
+
+    public static final Set<Material> LOGS = Sets.newHashSet(
+            Material.ACACIA_LOG,
+            Material.OAK_LOG,
+            Material.BIRCH_LOG,
+            Material.DARK_OAK_LOG,
+            Material.JUNGLE_LOG,
+            Material.SPRUCE_LOG,
+            Material.STRIPPED_ACACIA_LOG,
+            Material.STRIPPED_BIRCH_LOG,
+            Material.STRIPPED_DARK_OAK_LOG,
+            Material.STRIPPED_JUNGLE_LOG,
+            Material.STRIPPED_OAK_LOG,
+            Material.STRIPPED_SPRUCE_LOG
+    );
+
+    public static boolean isLog(Material material) {
+        return LOGS.contains(material);
+    }
+
+    public static final Set<Material> LEAVES = Sets.newHashSet(
+            Material.ACACIA_LEAVES,
+            Material.BIRCH_LEAVES,
+            Material.DARK_OAK_LEAVES,
+            Material.JUNGLE_LEAVES,
+            Material.OAK_LEAVES,
+            Material.SPRUCE_LEAVES
+    );
+
+    public static boolean isLeaves(Material material) {
+        return LEAVES.contains(material);
+    }
+
+    public static final Set<Material> DOORS = Sets.newHashSet(
+            Material.DARK_OAK_DOOR,
+            Material.ACACIA_DOOR,
+            Material.BIRCH_DOOR,
+            Material.IRON_DOOR,
+            Material.JUNGLE_DOOR,
+            Material.OAK_DOOR,
+            Material.SPRUCE_DOOR
+    );
+
+    public static boolean isDoor(Material material) {
+        return DOORS.contains(material);
+    }
+
+    public static Set<Material> WOOLS = Sets.newHashSet(
+            Material.WHITE_WOOL,
+            Material.BLACK_WOOL,
+            Material.BLUE_WOOL,
+            Material.BROWN_WOOL,
+            Material.CYAN_WOOL,
+            Material.GRAY_WOOL,
+            Material.GREEN_WOOL,
+            Material.LIGHT_BLUE_WOOL,
+            Material.LIGHT_GRAY_WOOL,
+            Material.LIME_WOOL,
+            Material.MAGENTA_WOOL,
+            Material.ORANGE_WOOL,
+            Material.PINK_WOOL,
+            Material.PURPLE_WOOL,
+            Material.RED_WOOL,
+            Material.YELLOW_WOOL
+    );
+
+    public static boolean isWool(Material material) {
+        return WOOLS.contains(material);
     }
 }

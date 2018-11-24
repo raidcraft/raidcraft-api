@@ -2,6 +2,7 @@ package de.raidcraft.api.items;
 
 import de.raidcraft.util.EnumUtils;
 import io.ebean.annotation.EnumValue;
+import org.bukkit.Material;
 
 /**
  * @author Silthus
@@ -112,9 +113,9 @@ public enum ArmorType {
 
     public abstract double getArmorModifier(ItemQuality quality, int itemLevel);
 
-    public EquipmentSlot getEquipmentSlot(int itemId) {
+    public EquipmentSlot getEquipmentSlot(Material material) {
 
-        return EquipmentSlot.fromItemId(itemId);
+        return EquipmentSlot.fromMaterial(material);
     }
 
     public static ArmorType fromGermanName(String name) {
