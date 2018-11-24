@@ -1,6 +1,6 @@
 package de.raidcraft.api.action.flow.parsers;
 
-import de.raidcraft.RaidCraft;
+import com.google.common.base.Strings;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.flow.*;
 import de.raidcraft.api.action.flow.types.ActionAPIType;
@@ -19,11 +19,12 @@ public class ActionApiFlowParser extends FlowParser {
 
     public ActionApiFlowParser() {
 
-        super(Pattern.compile("^([!@\\?~])([a-zA-Z\\-\\._\\d]+)([( ]?.*)$"));
+        super(Pattern.compile("^(?<requirement>[+\\-]?)(?<type>[!@\\?~])(?<name>[a-zA-Z\\-\\._\\d]+)(?<config>[( ]?.*)$"));
         // #0 	@trigger(blubb: aaaa) world,1,2,3
-        // #1	@
-        // #2	trigger
-        // #3	(blubb: aaaa) world,1,2,3
+        // #type	@
+        // #name	trigger
+        // #config	(blubb: aaaa) world,1,2,3
+        // #requirement +/-
     }
 
     public ActionApiFlowParser(FlowConfigParser configParser) {
@@ -39,13 +40,16 @@ public class ActionApiFlowParser extends FlowParser {
     public ActionAPIType parse() throws FlowException {
 
         // first we need to find out the flow type from group 1
-        String typeSymbol = getMatcher().group(1);
+        String typeSymbol = getMatcher().group("type");
         Optional<FlowType> optionalFlowType = FlowType.fromString(typeSymbol);
         if (!optionalFlowType.isPresent()) {
             throw new FlowException("No flow type for the symbol " + typeSymbol + " found!");
         }
         FlowConfiguration configuration = new FlowConfiguration();
-        String type = getMatcher().group(2);
+        String type = getMatcher().group("name");
+        String requirementGroup = getMatcher().group("requirement");
+        boolean checkingRequirement = !Strings.isNullOrEmpty(requirementGroup);
+        boolean requirementFailure = checkingRequirement && requirementGroup.equalsIgnoreCase("-");
         FlowType flowType = optionalFlowType.get();
         Optional<ConfigGenerator.Information> information = Optional.empty();
         switch (flowType) {
@@ -81,12 +85,15 @@ public class ActionApiFlowParser extends FlowParser {
             configParser = information.map(ConfigParser::new).orElseGet(ConfigParser::new);
         }
 
-        if (configParser.accept(getMatcher().group(3))) {
+        if (configParser.accept(getMatcher().group("config"))) {
             // if the parser does not match the config is empty
             configuration = configParser.parse();
         }
 
         configuration.set("type", type);
-        return new ActionAPIType(flowType, configuration, type);
+        ActionAPIType actionAPIType = new ActionAPIType(flowType, configuration, type);
+        actionAPIType.setCheckingRequirement(checkingRequirement);
+        actionAPIType.setNegate(requirementFailure);
+        return actionAPIType;
     }
 }

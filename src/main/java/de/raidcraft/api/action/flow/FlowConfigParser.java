@@ -20,14 +20,11 @@ import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.stage.StageTemplate;
 import de.raidcraft.util.ConfigUtil;
-import de.raidcraft.util.Tuple;
-import io.ebeaninternal.server.expression.Op;
 import lombok.Data;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Parses a given config section for all flow statements and returns a list of actions, requirements or triggers.
@@ -138,7 +135,7 @@ public class FlowConfigParser {
         long delay = 0;
         // we are gonna add all requirements to this list until an action is added
         boolean resetRequirements = false;
-        List<Requirement<?>> applicableRequirements = new ArrayList<>();
+        List<ActionAPIType> applicableRequirements = new ArrayList<>();
 
         for (FlowExpression flowExpression : expressions) {
             if (flowExpression instanceof FlowDelay) {
@@ -155,7 +152,17 @@ public class FlowConfigParser {
                         createAction(expression)
                                 .map(action -> {
                                     if (!applicableRequirements.isEmpty()) {
-                                        applicableRequirements.forEach(action::addRequirement);
+                                        String id = getBaseId() + "." + key + "." + expression.getTypeId();
+                                        if (expression.isCheckingRequirement() && expression.isNegate()) {
+                                            applicableRequirements.stream()
+                                                    .peek(requirement -> requirement.getConfiguration().set("negate", true))
+                                                    .map(type -> createRequirement(id, type))
+                                                    .forEach(requirement -> requirement.ifPresent(action::addRequirement));
+                                        } else {
+                                            applicableRequirements.stream()
+                                                    .map(type -> createRequirement(id, type))
+                                                    .forEach(requirement -> requirement.ifPresent(action::addRequirement));
+                                        }
                                     }
                                     return action;
                                 })
@@ -172,10 +179,7 @@ public class FlowConfigParser {
                             resetRequirements = false;
                         }
 
-                        String id = getBaseId() + "." + key + "." + expression.getTypeId();
-
-                        createRequirement(id, expression)
-                                .ifPresent(applicableRequirements::add);
+                        applicableRequirements.add(expression);
                         break;
                 }
             }
@@ -229,6 +233,7 @@ public class FlowConfigParser {
         TriggerFactory activeTrigger = null;
 
         int i = 0;
+        boolean clearRequirements = false;
         for (FlowExpression flowExpression : flowExpressions) {
             if (flowExpression instanceof FlowDelay) {
                 delay += ((FlowDelay) flowExpression).getDelay();
@@ -245,8 +250,17 @@ public class FlowConfigParser {
                         TriggerFactory trigger = ActionAPI.createTrigger(((ActionAPIType) flowExpression).getTypeId(), configuration);
                         String triggerId = getBaseId() + "." + "trigger.flow-" + i++;
 
-                        trigger.getRequirements().addAll(parseRequirements(triggerId, new ArrayList<>(applicableRequirements)));
-                        applicableRequirements.clear();
+                        if (expression.isCheckingRequirement()) {
+                            applicableRequirements.stream()
+                                    .peek(type -> type.getConfiguration().set("negate", expression.isNegate()))
+                                    .map(type -> createRequirement(triggerId, type))
+                                    .forEach(requirement -> requirement.ifPresent(wrapper -> trigger.getRequirements().add(wrapper)));
+                            // do not clear the requirements now, delay until actions or requirements are loaded
+                            clearRequirements = true;
+                        } else {
+                            trigger.getRequirements().addAll(parseRequirements(triggerId, new ArrayList<>(applicableRequirements)));
+                            applicableRequirements.clear();
+                        }
 
                         activeTrigger = trigger;
                         factories.add(trigger);
@@ -254,20 +268,36 @@ public class FlowConfigParser {
                         delay = 0;
                         break;
                     case ACTION:
+                        if (clearRequirements) applicableRequirements.clear();
+
                         if (activeTrigger != null) {
                             String actionId = getBaseId() + "." + "actions.flow-" + i++;
                             configuration.set("delay", delay);
-                            ArrayList<FlowExpression> expressions = new ArrayList<>();
-                            expressions.add(expression);
-                            List<Action<?>> actions = parseActions(actionId, expressions);
-                            for (Requirement<?> requirement : parseRequirements(actionId, new ArrayList<>(applicableRequirements))) {
-                                actions.forEach(action -> action.addRequirement(requirement));
+                            Optional<ActionConfigWrapper<?>> action = createAction(expression);
+
+                            if (action.isPresent()) {
+                                if (expression.isCheckingRequirement()) {
+                                    applicableRequirements.stream()
+                                            .peek(type -> type.getConfiguration().set("negate", expression.isNegate()))
+                                            .map(type -> createRequirement(actionId, type))
+                                            .forEach(requirement -> requirement.ifPresent(wrapper -> action.get().getRequirements().add(wrapper)));
+                                    // do not clear the requirements now, delay until actions or requirements are loaded
+                                    clearRequirements = true;
+                                } else {
+                                    for (Requirement<?> requirement : parseRequirements(actionId, new ArrayList<>(applicableRequirements))) {
+                                        action.get().addRequirement(requirement);
+                                    }
+                                    applicableRequirements.clear();
+                                }
+                                activeTrigger.getActions().add(action.get());
                             }
-                            applicableRequirements.clear();
-                            activeTrigger.getActions().addAll(actions);
                         }
                         break;
                     case REQUIREMENT:
+                        if (clearRequirements) {
+                            applicableRequirements.clear();
+                            clearRequirements = false;
+                        }
                         applicableRequirements.add(expression);
                         break;
                 }
@@ -299,9 +329,13 @@ public class FlowConfigParser {
                         if (requirements.isEmpty())
                             continue;
                         configuration.set("delay", delay);
-
-                        createAction(expression)
-                                .ifPresent(action -> requirements.get(requirements.size() - 1).addAction(action));
+                        createAction(expression).ifPresent(action -> {
+                            if (expression.isCheckingRequirement() && expression.isNegate()) {
+                                requirements.get(requirements.size() - 1).addFailureAction(action);
+                            } else {
+                                requirements.get(requirements.size() - 1).addAction(action);
+                            }
+                        });
                         break;
                     case REQUIREMENT:
                         createRequirement(id, expression)
@@ -334,10 +368,12 @@ public class FlowConfigParser {
         try {
             long delay = 0;
             List<FlowExpression> flowExpressions = parse(flowStatements);
-            List<Requirement<?>> requirements = new ArrayList<>();
+            List<ActionAPIType> requirements = new ArrayList<>();
             Answer activeAnswer = null;
 
+            boolean clearRequirements = false;
             for (FlowExpression flowExpression : flowExpressions) {
+                String id = getBaseId() + ".requirement." + key;
                 if (flowExpression instanceof FlowDelay) {
                     delay += ((FlowDelay) flowExpression).getDelay();
                 } else if (flowExpression instanceof FlowAnswer) {
@@ -348,7 +384,18 @@ public class FlowConfigParser {
                     answers.add(answer.get());
                     activeAnswer = answer.get();
 
-                    for (Requirement<?> requirement : requirements) {
+                    final List<Requirement<?>> createdRequirements = new ArrayList<>();
+                    if (((FlowAnswer) flowExpression).isCheckingRequirement()) {
+                        requirements.stream()
+                                .peek(type -> type.getConfiguration().set("negate", ((FlowAnswer) flowExpression).isNegate()))
+                                .map(type -> createRequirement(id, type))
+                                .forEach(wrapper -> wrapper.ifPresent(createdRequirements::add));
+                        clearRequirements = true;
+                    } else {
+                        createdRequirements.addAll(parseRequirements(id, new ArrayList<>(requirements)));
+                        requirements.clear();
+                    }
+                    for (Requirement<?> requirement : createdRequirements) {
                         if (ActionAPI.matchesType(requirement, Player.class)) {
                             activeAnswer.addPlayerRequirement((Requirement<Player>) requirement);
                         } else if (ActionAPI.matchesType(requirement, Conversation.class)) {
@@ -357,12 +404,13 @@ public class FlowConfigParser {
                             activeAnswer.addRequirement(requirement);
                         }
                     }
-                    requirements.clear();
                 } else if (flowExpression instanceof ActionAPIType) {
                     ActionAPIType expression = (ActionAPIType) flowExpression;
                     FlowConfiguration configuration = expression.getConfiguration();
                     switch (expression.getFlowType()) {
                         case ACTION:
+                            if (clearRequirements) requirements.clear();
+
                             if (activeAnswer == null)
                                 continue;
                             configuration.set("delay", delay);
@@ -376,12 +424,23 @@ public class FlowConfigParser {
                             } else {
                                 activeAnswer.addActions(action);
                             }
-                            requirements.forEach(action::addRequirement);
-                            requirements.clear();
+                            if (expression.isCheckingRequirement()) {
+                                requirements.stream()
+                                        .peek(type -> type.getConfiguration().set("negate", ((FlowAnswer) flowExpression).isNegate()))
+                                        .map(type -> createRequirement(id, type))
+                                        .forEach(wrapper -> wrapper.ifPresent(action::addRequirement));
+                                clearRequirements = true;
+                            } else {
+                                parseRequirements(id, new ArrayList<>(requirements)).forEach(action::addRequirement);
+                                requirements.clear();
+                            }
                             break;
                         case REQUIREMENT:
-                            requirements.add(createRequirement(getBaseId() + ".requirement." + key, expression)
-                                    .orElseThrow(() -> new FlowException("Could not find valid requirement type for " + expression.getTypeId())));
+                            if (clearRequirements) {
+                                requirements.clear();
+                                clearRequirements = false;
+                            }
+                            requirements.add(expression);
                             break;
                     }
                 }
