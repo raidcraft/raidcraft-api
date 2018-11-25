@@ -6,7 +6,7 @@
     <name>RaidCraft-API</name>
 
     <properties>
-        <version>1.13.2</version>
+        <version>1.13.3</version>
     </properties>
 
     <parent>
@@ -140,11 +140,4 @@
             </resource>
         </resources>
     </build>
-    
-    <distributionManagement>
-        <repository>
-            <id>faldoria-deps</id>
-            <url>http://repo.faldoria.de/artifactory/Faldoria/</url>
-        </repository>
-    </distributionManagement>
 </project>
