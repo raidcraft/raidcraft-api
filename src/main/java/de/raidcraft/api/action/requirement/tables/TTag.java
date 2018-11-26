@@ -26,7 +26,7 @@ public class TTag {
     public static TTag findOrCreateTag(String tagName, @Nullable String description) {
         return findTag(tagName).orElseGet(() -> {
             TTag newTag = new TTag();
-            newTag.setId(tagName);
+            newTag.setId(tagName.toLowerCase());
             newTag.setDescription(description);
             RaidCraft.getDatabase(RaidCraftPlugin.class).save(newTag);
             return newTag;
