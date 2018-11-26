@@ -7,15 +7,20 @@ import de.raidcraft.api.ebean.BaseModel;
 import io.ebean.EbeanServer;
 import io.ebean.annotation.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.bukkit.entity.Player;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
 @Entity
-@Data
+@Data()
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "rc_player_tags")
 public class TPlayerTag extends BaseModel {
 
@@ -24,15 +29,31 @@ public class TPlayerTag extends BaseModel {
 
         return RaidCraft.getDatabase(RaidCraftPlugin.class).find(TPlayerTag.class)
                 .where().eq("player_id", playerId)
-                .and().eq("tag", tag)
+                .and().eq("tag_id", tag)
                 .findOneOrEmpty();
+    }
+
+    public static TPlayerTag createTag(Player player, String tagName, String duration) {
+
+        TPlayerTag tag = TPlayerTag.findTag(player.getUniqueId(), tagName)
+                .orElse(new TPlayerTag());
+
+        tag.setPlayerId(player.getUniqueId());
+        tag.setPlayer(player.getName());
+        tag.setTag(TTag.findOrCreateTag(tagName));
+        tag.setDuration(duration);
+
+        tag.save();
+
+        return tag;
     }
 
     @NotNull
     private UUID playerId;
     private String player;
-    @NotNull
-    private String tag;
+    @ManyToOne
+    @Column(name = "tag_id")
+    private TTag tag;
     private String duration = null;
 
     @Override
