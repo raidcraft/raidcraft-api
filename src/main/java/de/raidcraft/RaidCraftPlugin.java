@@ -16,6 +16,7 @@ import de.raidcraft.api.action.requirement.global.IfElseRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirement;
 import de.raidcraft.api.action.requirement.tables.TPersistantRequirementMapping;
 import de.raidcraft.api.action.requirement.tables.TPlayerTag;
+import de.raidcraft.api.action.requirement.tables.TTag;
 import de.raidcraft.api.action.trigger.TriggerGroup;
 import de.raidcraft.api.action.trigger.global.GlobalPlayerTrigger;
 import de.raidcraft.api.action.trigger.global.TimerTrigger;
@@ -215,6 +216,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TPlayerLog.class);
         classes.add(TPlayerLogStatistic.class);
         classes.add(TPlayerTag.class);
+        classes.add(TTag.class);
         classes.add(Disguise.class);
         return classes;
     }

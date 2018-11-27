@@ -26,14 +26,6 @@ public class PlayerTagAction implements Action<Player> {
             return;
         }
 
-        TPlayerTag tag = TPlayerTag.findTag(player.getUniqueId(), config.getString("tag"))
-                .orElse(new TPlayerTag());
-
-        tag.setPlayerId(player.getUniqueId());
-        tag.setPlayer(player.getName());
-        tag.setTag(config.getString("tag"));
-        tag.setDuration(config.getString("duration"));
-
-        tag.save();
+        TPlayerTag.createTag(player, config.getString("tag"), config.getString("duration"));
     }
 }

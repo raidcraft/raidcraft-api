@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addColumn tableName="rc_player_tags">
+            <column name="tag_id" type="varchar" references="rc_tags.id" foreignKeyName="fk_rc_player_tags_tag_id" foreignKeyIndex="ix_rc_player_tags_tag_id"/>
+        </addColumn>
+        <createTable name="rc_tags" identityType="external" pkName="pk_rc_tags">
+            <column name="id" type="varchar" primaryKey="true"/>
+            <column name="description" type="varchar"/>
+        </createTable>
+    </changeSet>
+    <changeSet type="pendingDrops">
+        <dropColumn columnName="tag" tableName="rc_player_tags"/>
+    </changeSet>
+</migration>
