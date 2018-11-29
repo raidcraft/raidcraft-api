@@ -86,7 +86,7 @@ public class RaidCraftDatabase {
     public void initializeDatabase(DatabaseConfig config) {
         //Logging needs to be set back to the original level, no matter what happens
         boolean logging = config.getBoolean("logging", true);
-        
+
         String url = "jdbc:mysql://";
         url += config.getString("host", "localhost") + ":";
         url += config.getInt("port", 3306) + "/";
