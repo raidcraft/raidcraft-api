@@ -85,26 +85,16 @@ public class RaidCraftDatabase {
      */
     public void initializeDatabase(DatabaseConfig config) {
         //Logging needs to be set back to the original level, no matter what happens
-        boolean logging = config.getBoolean("logging", false);
+        boolean logging = config.getBoolean("logging", true);
+        
+        String url = "jdbc:mysql://";
+        url += config.getString("host", "localhost") + ":";
+        url += config.getInt("port", 3306) + "/";
+        url += config.getString("database", "minecraft");
+
         try {
             //Disable all logging
             disableDatabaseLogging(logging);
-
-            String url = "";
-            Driver driver = Driver.fromString(config.getString("driver", "MYSQL"));
-            switch (driver) {
-
-                case SQLITE:
-                    url += "jdbc:sqlite:";
-                    url += config.getString("file", "database.db");
-                    break;
-                case MYSQL:
-                    url += "jdbc:mysql://";
-                    url += config.getString("host", "localhost") + ":";
-                    url += config.getInt("port", 3306) + "/";
-                    url += config.getString("database", "minecraft");
-                    break;
-            }
 
             plugin.getLogger().info("Connecting to dabase: " + url);
             String server = config.getString("host", "localhost") + ":" + config.getInt("port", 3306);
@@ -122,7 +112,7 @@ public class RaidCraftDatabase {
             //Load the database
             loadDatabase();
         } catch (Exception ex) {
-            throw new RuntimeException("An exception has occured while initializing the database", ex);
+            throw new RuntimeException("An exception has occured while initializing the database: " + url , ex);
         } finally {
             //Enable all logging
             enableDatabaseLogging(logging);
