@@ -106,12 +106,14 @@ public class RaidCraftDatabase {
                     break;
             }
 
+            plugin.getLogger().info("Connecting to dabase: " + url);
+
             //Prepare the database
             prepareDatabase(
                     config.getString("database", "minecraft"),
                     config.getString("username", "minecraft"),
                     config.getString("password", "password"),
-                    config.getString("server", "localhost:3306"),
+                    config.getString("host", "localhost") + ":" + config.getInt("port", 3306),
                     config.getBoolean("rebuild", false));
 
             config.save();
