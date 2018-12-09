@@ -86,17 +86,12 @@ public class Disguise extends BaseModel {
     }
 
     public TargetedDisguise applyToPlayer(Player player) {
-        TargetedDisguise disguise = getDisguise(player);
-        disguise.setEntity(player);
-        disguise.startDisguise();
-        DisguiseAPI.disguiseToAll(player, disguise);
-        return disguise;
+        return applyToEntity(player);
     }
 
     public TargetedDisguise applyToEntity(org.bukkit.entity.Entity entity) {
         TargetedDisguise disguise = getDisguise(entity);
         disguise.setEntity(entity);
-        disguise.startDisguise();
         DisguiseAPI.disguiseToAll(entity, disguise);
         return disguise;
     }

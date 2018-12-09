@@ -10,4 +10,5 @@ public class RC_Traits {
     public static String STATION = "station";
     public static String TALK_CLOSE = "talkclose";
     public static String GRAVEYARDS = "rcgraveyards";
+    public static String DISGUISE = "disguise";
 }
