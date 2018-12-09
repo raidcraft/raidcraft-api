@@ -1,17 +1,27 @@
 package de.raidcraft.api.items;
 
+import com.comphenix.protocol.wrappers.WrappedGameProfile;
+import com.comphenix.protocol.wrappers.WrappedSignedProperty;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.common.base.Strings;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import de.raidcraft.api.disguise.Disguise;
+import de.raidcraft.api.disguise.DisguiseManager;
 import de.raidcraft.util.ReflectionUtil;
+import io.ebeaninternal.server.expression.Op;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_13_R1.CraftOfflinePlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,10 +34,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Base64;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -36,6 +43,7 @@ import java.util.regex.Pattern;
 public class Skull {
 
     private static final Pattern Base64Matcher = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
+    private static final String DIVIDER = "###";
 
     public static boolean isBase64(String base64String) {
         if (Strings.isNullOrEmpty(base64String)) return false;
@@ -114,6 +122,51 @@ public class Skull {
         ReflectionUtil.getField(headMetaClass, "profile", GameProfile.class).set(headMeta, profile);
         head.setItemMeta(headMeta);
         return head;
+    }
+
+    public static Optional<String> serializeSkull(Block block) {
+        if (block == null || !(block.getState() instanceof org.bukkit.block.Skull)) {
+            return Optional.empty();
+        }
+
+        org.bukkit.block.Skull skull = (org.bukkit.block.Skull) block.getState();
+
+        if (skull.getPlayerProfile() == null || !skull.getPlayerProfile().hasTextures()) {
+            return Optional.empty();
+        }
+
+        return skull.getPlayerProfile().getProperties().stream().findFirst().map(profileProperty ->
+                skull.getOwningPlayer().getUniqueId().toString() +
+                DIVIDER +
+                profileProperty.getName() +
+                DIVIDER +
+                profileProperty.getValue() +
+                DIVIDER +
+                profileProperty.getSignature());
+    }
+
+    public static void applySerializedSkull(Block block, String serializedSkull) {
+
+        if (Strings.isNullOrEmpty(serializedSkull) || block == null) return;
+        if (!(block.getState() instanceof org.bukkit.block.Skull)) return;
+
+        String[] split = serializedSkull.split(DIVIDER);
+        if (split.length < 4) return;
+        UUID uuid = UUID.fromString(split[0]);
+        String name = split[1];
+        String value = split[2];
+        String signature = split[3];
+
+        org.bukkit.block.Skull skull = (org.bukkit.block.Skull) block.getState();
+        if (!skull.hasOwner() || skull.getPlayerProfile() == null) {
+            skull.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
+        }
+
+        PlayerProfile playerProfile = skull.getPlayerProfile();
+        playerProfile.setProperty(new ProfileProperty(name, value, signature));
+        skull.setPlayerProfile(playerProfile);
+
+        skull.update(true);
     }
 
     public static ItemStack getSkull(String skullOwner, int quantity) {
@@ -258,7 +311,10 @@ public class Skull {
 
         try {
             GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
-            gameProfile.getProperties().put("textures", new Property("textures", Base64Coder.encodeString("{textures:{SKIN:{url:\"" + url + "\"}}}")));
+            if (!isBase64(url)) {
+                url = Base64Coder.encodeString("{textures:{SKIN:{url:\"" + url + "\"}}}");
+            }
+            gameProfile.getProperties().put("textures", new Property("textures", url));
             gameProfileField.get().set(gameProfileHolder.get(), gameProfile);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -283,7 +339,7 @@ public class Skull {
             gameProfileHolder = CRAFT_META_SKULL_CLASS.cast(skullMeta);
         } else if (object instanceof Block) {
             try {
-                if (((Block) object).getType() != Material.PLAYER_HEAD) Optional.empty();
+                if (((Block) object).getType() != Material.PLAYER_HEAD || ((Block) object).getType() != Material.PLAYER_WALL_HEAD) Optional.empty();
                 Object handle = CRAFT_WORLD_GET_HANDLE.invoke(((Block) object).getWorld());
                 Object blockPosition = BLOCK_POSITION_CONSTRUCTOR.newInstance(((Block) object).getX(), ((Block) object).getY(), ((Block) object).getZ());
                 Object tileEntity = WORLD_SERVER_GET_TILE_ENTITY.invoke(handle, blockPosition);
