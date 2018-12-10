@@ -286,7 +286,29 @@ public enum GlobalAction {
 
             Locations.fromConfig(config, player).ifPresent(location -> player.teleport(location.getLocation()));
         }
-    }), START_TIMER("timer.start", new Action<Player>() {
+    }),
+    BLIND("blind", new Action<Player>() {
+        @Override
+        @Information(
+                value = "blind",
+                desc = "Makes the player blind.",
+                conf = {
+                        "duration: <5s>"
+                }
+        )
+        public void accept(Player player, ConfigurationSection config) {
+
+            player.addPotionEffect(new PotionEffect(
+                    PotionEffectType.BLINDNESS,
+                    (int) TimeUtil.parseTimeAsTicks(config.getString("duration", "5s")),
+                    Integer.MAX_VALUE,
+                    true,
+                    true,
+                    true)
+            );
+        }
+    }),
+    START_TIMER("timer.start", new Action<Player>() {
         @Override
         @Information(value = "timer.start", desc = "Starts a timer for the player, executing the given actions at cancel or end.", conf = {
                 "id: unique id for the timer", "duration: 10s2 -> 10secs 2 ticks",
