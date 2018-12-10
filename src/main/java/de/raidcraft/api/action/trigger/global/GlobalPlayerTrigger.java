@@ -1,5 +1,6 @@
 package de.raidcraft.api.action.trigger.global;
 
+import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.trigger.Trigger;
 import de.raidcraft.api.items.CustomItemException;
@@ -375,6 +376,26 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
             RaidCraft.getItem(config.getString("item")).ifPresent(item::setItemStack);
 
             return true;
+        });
+    }
+
+    @Information(
+            value = "world.enter",
+            desc = "Triggers when the player changes the world.",
+            conf = {
+                    "world: name of the new world",
+                    "old_world: optional old world of the player"
+            }
+    )
+    @EventHandler(ignoreCancelled = true)
+    public void onWorldJoin(PlayerChangedWorldEvent event) {
+
+        informListeners("world.enter", event.getPlayer(), config -> {
+            if (config.isSet("old_world") && !event.getFrom().getName().equalsIgnoreCase(config.getString("old_world"))) {
+                return false;
+            }
+            return Strings.isNullOrEmpty(config.getString("world"))
+                    || event.getPlayer().getWorld().getName().equalsIgnoreCase(config.getString("world"));
         });
     }
 
