@@ -38,7 +38,7 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
 
     public GlobalPlayerTrigger() {
 
-        super("player", "interact", "block.break", "block.place", "move", "craft", "death", "join", "shear", "milk", "fish");
+        super("player", "interact", "block.break", "block.place", "move", "craft", "death", "join", "shear", "milk", "fish", "world.enter");
     }
 
     @Information(
