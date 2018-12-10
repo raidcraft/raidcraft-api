@@ -293,13 +293,42 @@ public enum GlobalAction {
                 value = "blind",
                 desc = "Makes the player blind.",
                 conf = {
-                        "duration: <5s>"
+                        "duration: [5s]"
                 }
         )
         public void accept(Player player, ConfigurationSection config) {
 
+            int duration = (int) TimeUtil.parseTimeAsTicks(config.getString("duration", "5s"));
             player.addPotionEffect(new PotionEffect(
                     PotionEffectType.BLINDNESS,
+                    duration,
+                    Integer.MAX_VALUE,
+                    true,
+                    true,
+                    true)
+            );
+            player.addPotionEffect(new PotionEffect(
+                    PotionEffectType.NIGHT_VISION,
+                    duration,
+                    Integer.MAX_VALUE,
+                    false,
+                    false,
+                    false
+            ));
+        }
+    }),
+    DRUNK("drunk", new Action<Player>() {
+        @Override
+        @Information(
+                value = "drunk",
+                desc = "Makes the player drunk, warping his vision.",
+                conf = {
+                        "duration: [5s]"
+                }
+        )
+        public void accept(Player player, ConfigurationSection config) {
+            player.addPotionEffect(new PotionEffect(
+                    PotionEffectType.CONFUSION,
                     (int) TimeUtil.parseTimeAsTicks(config.getString("duration", "5s")),
                     Integer.MAX_VALUE,
                     true,
