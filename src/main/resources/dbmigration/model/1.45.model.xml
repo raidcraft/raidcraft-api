@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addColumn tableName="rc_minecraft_items">
+            <column name="deprecated_since" type="varchar"/>
+        </addColumn>
+        <addColumn tableName="rc_tags">
+            <column name="auto_generated" type="boolean" defaultValue="false" notnull="true"/>
+        </addColumn>
+    </changeSet>
+    <changeSet type="pendingDrops">
+        <dropColumn columnName="depcrecated_since" tableName="rc_minecraft_items"/>
+    </changeSet>
+</migration>
