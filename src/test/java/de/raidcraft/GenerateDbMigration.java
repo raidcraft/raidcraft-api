@@ -18,8 +18,8 @@ public class GenerateDbMigration {
     public static void main(String[] args) throws IOException {
 
         DbMigration dbMigration = new DefaultDbMigration();
-        dbMigration.setVersion("1.40");
-        dbMigration.setGeneratePendingDrop("1.39");
+        dbMigration.setVersion("1.44");
+        dbMigration.setGeneratePendingDrop("1.35");
         dbMigration.setPlatform(Platform.MYSQL);
         // generate the migration ddl and xml
         // ... with EbeanServer in "offline" mode

@@ -57,6 +57,7 @@ import io.ebean.EbeanServer;
 import io.ebean.SqlUpdate;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
@@ -175,6 +176,8 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
 
         // sync all ActionAPI stuff into Database
         Bukkit.getScheduler().runTaskLater(this, this::trackActionApi, TimeUtil.secondsToTicks(getConfig().actoionapiSyncDelay));
+
+        Bukkit.getScheduler().runTaskLater(this, this::registerItems, 1L);
     }
 
     private void registerActionAPI() {
@@ -218,7 +221,18 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         classes.add(TPlayerTag.class);
         classes.add(TTag.class);
         classes.add(Disguise.class);
+        classes.add(TMinecraftItem.class);
         return classes;
+    }
+
+    private void registerItems() {
+        getLogger().info("Synchronizing Minecraft items into database...");
+        int i = 0;
+        for (Material material : Material.values()) {
+            if (material.isLegacy()) continue;
+            if (TMinecraftItem.createOrUpdate(material)) i++;
+        }
+        getLogger().info("... created or updated " + i + " Minecraft items.");
     }
 
     private void setupDatabase() {
