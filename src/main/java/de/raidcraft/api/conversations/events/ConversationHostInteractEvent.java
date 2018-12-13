@@ -15,7 +15,7 @@ public class ConversationHostInteractEvent extends Event implements Cancellable 
     @Getter
     private final String hostIdentifier;
     @Getter
-    private final ConversationHost<?> questHost;
+    private final ConversationHost<?> host;
     @Getter
     private final Player player;
     @Getter
