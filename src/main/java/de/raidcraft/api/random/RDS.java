@@ -18,6 +18,7 @@ public class RDS {
 
     private static final Map<String, RDSObjectFactory> registeredFactories = new CaseInsensitiveMap<>();
     private static final Map<String, Map<String, RDSTable>> registeredTables = new CaseInsensitiveMap<>();
+    private static final Map<String, LootTableMeta> lootTableMeta = new CaseInsensitiveMap<>();
 
     public static void registerObject(RDSObjectFactory creator) {
 
@@ -93,6 +94,10 @@ public class RDS {
         table.setCount(config.getInt("count", 1));
         registeredTables.get(plugin.getName()).put(name, table);
         plugin.getLogger().info("Registered loot table (" + table.getClass().getSimpleName() + "): " + name);
+
+        if (config.isConfigurationSection("meta")) {
+            lootTableMeta.put(name, new LootTableMeta(config.getConfigurationSection("meta")));
+        }
     }
 
     public static void unregisterTable(BasePlugin plugin, String name) {
@@ -124,5 +129,9 @@ public class RDS {
             }
         }
         return tables;
+    }
+
+    public static Optional<LootTableMeta> getLootTableMeta(String id) {
+        return Optional.ofNullable(lootTableMeta.get(id));
     }
 }
