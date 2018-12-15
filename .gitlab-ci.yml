@@ -51,7 +51,7 @@ release:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - git checkout -B "$CI_BUILD_REF_NAME"
-    - mvn $MAVEN_CLI_OPTS -DscmCommentPrefix="[ci skip]" release:prepare release:perform
+    - mvn $MAVEN_CLI_OPTS -DscmCommentPrefix="[ci skip]" -Dproject.scm.developerConnection="scm:git:git@faldoria.de/$CI_PROJECT_PATH.git" release:prepare release:perform
   only:
     - master
   artifacts:
