@@ -46,6 +46,12 @@
             <groupId>de.slikey</groupId>
             <artifactId>EffectLib</artifactId>
             <version>6.2-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>fr.zcraft</groupId>
@@ -123,6 +129,7 @@
                                     <include>io.ebean:*</include>
                                     <include>org.avaje:*</include>
                                     <include>org.slf4j:*</include>
+                                    <include>de.silkey:EffectLib</include>
                                     <include>org.apache.logging.log4j:*</include>
                                     <include>log4j:*</include>
                                     <include>com.fasterxml.jackson.core:*</include>
