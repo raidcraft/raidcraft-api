@@ -31,7 +31,7 @@ deploy:
     - target/*.jar
 
 release:
-  stage: release
+  stage: deploy
   when: manual
   script:
     - mvn $MAVEN_CLI_OPTS -DreleaseVersion=$VERSION -DdevelopmentVersion=$NEXT_VERSION -DskipITs -DscmCommentPrefix="[ci skip]" release:prepare release:perform
