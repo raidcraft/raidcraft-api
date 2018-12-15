@@ -14,21 +14,13 @@ build:
   script:
     - mvn $MAVEN_CLI_OPTS compile
 
-test:
-  stage: test
-  script:
-    - mvn $MAVEN_CLI_OPTS test
-
 deploy:
   stage: deploy
   script:
     - mvn $MAVEN_CLI_OPTS deploy
   only:
     - master
-  artifacts:
-    name: Plugin
-    paths:
-    - target/*.jar
+    - tags
 
 release:
   stage: deploy
@@ -44,6 +36,9 @@ release:
     # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
 
+    - git config --global user.email "$GITLAB_USER_EMAIL"
+    - git config --global user.name "$GITLAB_USER_NAME"
+
     # For Docker builds disable host key checking. Be aware that by adding that
     # you are susceptible to man-in-the-middle attacks.
     # WARNING: Use this only with the Docker executor, if you use it with shell
@@ -51,10 +46,6 @@ release:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - git checkout -B "$CI_BUILD_REF_NAME"
-    - mvn $MAVEN_CLI_OPTS -DscmCommentPrefix="[ci skip]" release:prepare release:perform
+    - mvn $MAVEN_CLI_OPTS release:prepare release:perform
   only:
     - master
-  artifacts:
-    name: Plugin
-    paths:
-    - target/*.jar
