@@ -23,6 +23,10 @@
         </repository>
     </repositories>
 
+    <scm>
+        <developerConnection>scm:git:ssh://git@git.faldoria.de:${CI_PROJECT_PATH}.git</developerConnection>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
