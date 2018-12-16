@@ -9,7 +9,7 @@
     <parent>
         <groupId>de.faldoria</groupId>
         <artifactId>FaldoriaMasterPom</artifactId>
-        <version>1.13.5</version>
+        <version>1.13.6</version>
     </parent>
 
     <repositories>
@@ -28,12 +28,6 @@
             <groupId>de.faldoria</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.13.2-R0.1-beta.01</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>bukkit</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>

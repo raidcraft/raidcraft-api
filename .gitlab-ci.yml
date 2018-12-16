@@ -26,6 +26,10 @@ deploy:
   only:
     - master
     - tags
+  artifacts:
+    name: Plugin
+    paths:
+    - target/*.jar
 
 release:
   stage: deploy
