@@ -29,7 +29,7 @@ public class TMinecraftItem extends BaseModel {
      */
     public static boolean createOrUpdate(Material material) {
         TMinecraftItem item = RaidCraft.getDatabase(RaidCraftPlugin.class).find(TMinecraftItem.class).where()
-                .eq("key", material.getKey().toString())
+                .eq("namespaced_key", material.getKey().toString())
                 .findOne();
 
         if (item == null) {
