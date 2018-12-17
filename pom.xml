@@ -4,7 +4,7 @@
     <artifactId>raidcraft-api</artifactId>
     <packaging>jar</packaging>
     <name>RaidCraft-API</name>
-    <version>1.13.4-SNAPSHOT</version>
+    <version>1.13.5-SNAPSHOT</version>
 
     <parent>
         <groupId>de.faldoria</groupId>
