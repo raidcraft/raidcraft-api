@@ -27,6 +27,7 @@ deploy:
     - master
   artifacts:
     name: Plugin
+    expire_in: 90 days
     paths:
     - target/*.jar
 
@@ -38,6 +39,7 @@ deploy-release:
     - tags
   artifacts:
     name: Plugin
+    expire_in: 10 years
     paths:
     - target/*.jar
 
