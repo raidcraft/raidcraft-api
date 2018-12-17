@@ -114,7 +114,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>fr.zcraft:zlib</include>
+                                    <include>de.faldoria:zlib</include>
                                     <include>io.ebean:*</include>
                                     <include>org.avaje:*</include>
                                     <include>org.slf4j:*</include>
