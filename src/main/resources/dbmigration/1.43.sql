@@ -9,7 +9,7 @@ create table rc_minecraft_items (
   version                       bigint not null,
   when_created                  datetime(6) not null,
   when_modified                 datetime(6) not null,
-  constraint uq_rc_minecraft_items_key unique (key),
+  constraint uq_rc_minecraft_items_key unique (namespaced_key),
   constraint pk_rc_minecraft_items primary key (id)
 );
 
