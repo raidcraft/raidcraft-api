@@ -45,7 +45,7 @@ public class TMinecraftItem extends BaseModel {
     }
 
     @Index(unique = true)
-    private String key;
+    private String namespacedKey;
 
     private String name;
 

@@ -3,7 +3,7 @@
     <changeSet type="apply">
         <createTable name="rc_minecraft_items" pkName="pk_rc_minecraft_items">
             <column name="id" type="bigint" primaryKey="true"/>
-            <column name="key" type="varchar"/>
+            <column name="namespaced_key" type="varchar"/>
             <column name="name" type="varchar"/>
             <column name="block_data" type="varchar(1024)"/>
             <column name="since" type="varchar"/>

@@ -1,7 +1,7 @@
 -- apply changes
 create table rc_minecraft_items (
   id                            bigint auto_increment not null,
-  key                           varchar(255),
+  namespaced_key                           varchar(255),
   name                          varchar(255),
   block_data                    varchar(1024),
   since                         varchar(255),
