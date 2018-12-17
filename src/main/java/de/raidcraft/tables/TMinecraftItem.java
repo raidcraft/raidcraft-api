@@ -32,13 +32,19 @@ public class TMinecraftItem extends BaseModel {
                 .eq("namespaced_key", material.getKey().toString())
                 .findOne();
 
-        if (item == null) {
-            item = new TMinecraftItem();
-            item.since = Bukkit.getVersion();
-            item.name = new ItemStack(material).getI18NDisplayName();
-            item.blockData = material.createBlockData().getAsString();
-            item.save();
-            return true;
+        try {
+            if (item == null) {
+                item = new TMinecraftItem();
+                item.since = Bukkit.getVersion();
+                item.name = new ItemStack(material).getI18NDisplayName();
+                if (material.isBlock()) {
+                    item.blockData = material.createBlockData().getAsString();
+                }
+                item.save();
+                return true;
+            }
+        } catch (Exception e) {
+            RaidCraft.LOGGER.warning(e.getMessage());
         }
 
         return false;
