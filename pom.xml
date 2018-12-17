@@ -4,7 +4,7 @@
     <artifactId>raidcraft-api</artifactId>
     <packaging>jar</packaging>
     <name>RaidCraft-API</name>
-    <version>1.13.3-SNAPSHOT</version>
+    <version>1.13.4-SNAPSHOT</version>
 
     <parent>
         <groupId>de.faldoria</groupId>
@@ -26,7 +26,8 @@
     
     <scm>
         <developerConnection>scm:git:ssh://git@git.faldoria.de:/${CI_PROJECT_PATH}.git</developerConnection>
-    </scm>
+      <tag>HEAD</tag>
+  </scm>
 
     <dependencies>
         <dependency>
