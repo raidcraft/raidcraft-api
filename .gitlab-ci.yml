@@ -25,6 +25,16 @@ deploy:
     - mvn $MAVEN_CLI_OPTS deploy
   only:
     - master
+  artifacts:
+    name: Plugin
+    paths:
+    - target/*.jar
+
+deploy-release:
+  stage: deploy
+  script:
+    - mvn $MAVEN_CLI_OPTS compile
+  only:
     - tags
   artifacts:
     name: Plugin
