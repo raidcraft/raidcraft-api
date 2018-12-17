@@ -9,7 +9,7 @@ import de.raidcraft.api.config.builder.ConfigBuilder;
 import de.raidcraft.api.config.builder.ConfigGenerator;
 import lombok.Getter;
 import lombok.NonNull;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Player;
@@ -419,7 +419,7 @@ public final class ActionAPI {
             return this;
         }
         String identifier = information.get().value();
-        aliases = ArrayUtils.addAll(aliases, information.get().aliases());
+        aliases = (String[]) ArrayUtils.addAll(aliases, information.get().aliases());
         return action(identifier, action, type, aliases);
     }
 
@@ -436,7 +436,7 @@ public final class ActionAPI {
             return this;
         }
         String identifier = information.get().value();
-        aliases = ArrayUtils.addAll(aliases, information.get().aliases());
+        aliases = (String[]) ArrayUtils.addAll(aliases, information.get().aliases());
         return requirement(identifier, requirement, type, aliases);
     }
 
