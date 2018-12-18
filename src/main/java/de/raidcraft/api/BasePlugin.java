@@ -1,11 +1,17 @@
 package de.raidcraft.api;
 
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.commands.QueuedCommand;
+import de.raidcraft.api.components.*;
+import de.raidcraft.api.components.loader.ClassLoaderComponentLoader;
+import de.raidcraft.api.components.loader.ConfigListedComponentLoader;
+import de.raidcraft.api.components.loader.JarFilesComponentLoader;
 import de.raidcraft.api.config.Config;
+import de.raidcraft.api.config.SimpleConfiguration;
 import de.raidcraft.api.ebean.DatabaseConfig;
 import de.raidcraft.api.ebean.RaidCraftDatabase;
 import de.raidcraft.api.language.ConfigTranslationProvider;
@@ -18,9 +24,11 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.command.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -29,6 +37,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import javax.persistence.OneToMany;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +48,7 @@ import java.util.logging.Level;
 /**
  * @author Silthus
  */
+@Getter
 public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Component {
 
     // vault variables
@@ -53,6 +63,7 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
     private CommandsManager<CommandSender> commands;
     private CommandsManagerRegistration commandRegistration;
     private RaidCraftDatabase database;
+    private ComponentManager<BukkitComponent> componentManager;
 
     public final void onEnable() {
 
@@ -115,6 +126,8 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
         super.onDisable();
 
         this.commandRegistration.unregisterCommands();
+        this.getServer().getScheduler().cancelTasks(this);
+        componentManager.unloadComponents();
         // call the sub plugin to disable
         disable();
         PluginDescriptionFile description = getDescription();
@@ -174,6 +187,10 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
         return config;
     }
 
+    public final SimpleConfiguration<BasePlugin> configure(String configName) {
+        return configure(new SimpleConfiguration<>(this, configName));
+    }
+
     public final void queueCommand(final QueuedCommand command) {
 
         queuedCommands.put(command.getSender().getName(), command);
@@ -215,6 +232,76 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
             sender.sendMessage(ChatColor.RED + e.getMessage());
         }
         return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setupComponentManager() {
+        componentManager = new ComponentManager<BukkitComponent>(getLogger(), BukkitComponent.class) {
+            @Override
+            protected void setUpComponent(BukkitComponent component) {
+                // Create a CommandsManager instance
+                CommandsManager<CommandSender> commands = new CommandsManager<CommandSender>() {
+                    @Override
+                    public boolean hasPermission(CommandSender sender, String permission) {
+                        return BasePlugin.this.hasPermission(sender, permission);
+                    }
+                };
+                commands.setInjector(new SimpleInjector(component));
+                component.setUp(BasePlugin.this, commands);
+            }
+        };
+
+        registerComponentLoaders();
+
+        try {
+            componentManager.loadComponents(this);
+        } catch (InvalidComponentException e) {
+            getLogger().severe(e.getMessage());
+        }
+
+        componentManager.enableComponents();
+    }
+
+    public void registerComponentLoaders() {
+        // -- Component loaders
+        final File configDir = new File(getDataFolder(), "config/");
+
+        FileConfiguration globalConfig = getConfig();
+        SimpleConfiguration<BasePlugin> config = configure(new SimpleConfiguration<BasePlugin>(this, "components.yml"));
+
+        componentManager.addComponentLoader(new ConfigListedComponentLoader(getLogger(),
+                globalConfig,
+                config,
+                configDir));
+
+        for (String dir : config.getStringList("component-class-dirs")) {
+            final File classesDir = new File(getDataFolder(), dir);
+            if (!classesDir.exists() || !classesDir.isDirectory()) {
+                classesDir.mkdirs();
+            }
+            componentManager.addComponentLoader(new ClassLoaderComponentLoader(getLogger(), classesDir, configDir) {
+                @Override
+                public YamlConfiguration createConfigurationNode(File file) {
+                    return BasePlugin.this.configure(new SimpleConfiguration<>(BasePlugin.this, file));
+                }
+            });
+        }
+
+        for (String dir : config.getStringList("component-jar-dirs")) {
+            final File classesDir = new File(getDataFolder(), dir);
+            if (!classesDir.exists() || !classesDir.isDirectory()) {
+                classesDir.mkdirs();
+            }
+            componentManager.addComponentLoader(new JarFilesComponentLoader(getLogger(), classesDir, configDir) {
+                @Override
+                public YamlConfiguration createConfigurationNode(File file) {
+                    return BasePlugin.this.configure(new SimpleConfiguration<>(BasePlugin.this, file));
+                }
+            });
+        }
+
+        // -- Annotation handlers
+        componentManager.registerAnnotationHandler(InjectComponent.class, new InjectComponentAnnotationHandler(componentManager));
     }
 
     protected boolean setupPermissions() {
@@ -274,6 +361,59 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
     public TranslationProvider getTranslationProvider() {
 
         return translationProvider;
+    }
+
+    /**
+     * Checks permissions.
+     *
+     * @param sender The sender to check
+     * @param perm The permission to check
+     * @return Whether the sender has the permission
+     */
+    public boolean hasPermission(CommandSender sender, String perm) {
+        if (!(sender instanceof Player)) {
+            return (sender.isOp() || sender instanceof ConsoleCommandSender
+                    || sender instanceof BlockCommandSender
+                    || getPermission().has(sender, perm));
+        }
+        return hasPermission(sender, ((Player) sender).getWorld(), perm);
+    }
+
+    public boolean hasPermission(CommandSender sender, World world, String perm) {
+        if (sender.isOp() || sender instanceof ConsoleCommandSender
+                || sender instanceof BlockCommandSender) {
+            return true;
+        }
+
+        // Invoke the permissions resolver
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            return getPermission().has(player, perm);
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks permissions and throws an exception if permission is not met.
+     *
+     * @param sender The sender to check
+     * @param perm the permission to check
+     * @throws com.sk89q.minecraft.util.commands.CommandPermissionsException if the sender
+     * doesn't have the required permission
+     */
+    public void checkPermission(CommandSender sender, String perm)
+            throws CommandPermissionsException {
+        if (!hasPermission(sender, perm)) {
+            throw new CommandPermissionsException();
+        }
+    }
+
+    public void checkPermission(CommandSender sender, World world, String perm)
+            throws CommandPermissionsException {
+        if (!hasPermission(sender, world, perm)) {
+            throw new CommandPermissionsException();
+        }
     }
 
     // Rc log methods for informations
