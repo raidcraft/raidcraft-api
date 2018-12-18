@@ -8,6 +8,7 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.commands.QueuedCommand;
 import de.raidcraft.api.components.*;
 import de.raidcraft.api.components.loader.ClassLoaderComponentLoader;
+import de.raidcraft.api.components.loader.ClassPathComponentLoader;
 import de.raidcraft.api.components.loader.ConfigListedComponentLoader;
 import de.raidcraft.api.components.loader.JarFilesComponentLoader;
 import de.raidcraft.api.config.Config;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 
 /**
@@ -117,6 +119,8 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
         }
         // call the sub plugins to enable
         enable();
+
+        setupComponentManager(getJarFile());
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, this::loadDependencyConfigs, 5 * 20L);
     }
@@ -235,7 +239,7 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
     }
 
     @SuppressWarnings("unchecked")
-    private void setupComponentManager() {
+    protected void setupComponentManager(JarFile jarFile) {
         componentManager = new ComponentManager<BukkitComponent>(getLogger(), BukkitComponent.class) {
             @Override
             protected void setUpComponent(BukkitComponent component) {
@@ -251,7 +255,7 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
             }
         };
 
-        registerComponentLoaders();
+        registerComponentLoaders(jarFile);
 
         try {
             componentManager.loadComponents(this);
@@ -262,7 +266,7 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
         componentManager.enableComponents();
     }
 
-    public void registerComponentLoaders() {
+    private void registerComponentLoaders(JarFile jarFile) {
         // -- Component loaders
         final File configDir = new File(getDataFolder(), "config/");
 
@@ -273,6 +277,13 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
                 globalConfig,
                 config,
                 configDir));
+
+        componentManager.addComponentLoader(new ClassPathComponentLoader(getLogger(), configDir, jarFile) {
+            @Override
+            public FileConfiguration createConfigurationNode(File configFile) {
+                return BasePlugin.this.configure(new SimpleConfiguration<>(BasePlugin.this, configFile));
+            }
+        });
 
         for (String dir : config.getStringList("component-class-dirs")) {
             final File classesDir = new File(getDataFolder(), dir);

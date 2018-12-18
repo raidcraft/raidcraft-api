@@ -101,6 +101,11 @@
             <version>3.2.0</version>
             <type>maven-plugin</type>
         </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -121,6 +126,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>de.faldoria:zlib</include>
+                                    <include>org.reflections:reflections</include>
                                     <include>io.ebean:*</include>
                                     <include>org.avaje:*</include>
                                     <include>org.slf4j:*</include>

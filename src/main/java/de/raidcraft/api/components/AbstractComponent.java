@@ -13,7 +13,7 @@ import java.util.Map;
  * @author zml2008
  */
 @Getter
-public abstract class AbstractComponent<TPlugin extends BasePlugin> {
+public abstract class AbstractComponent {
 
     /**
      * The raw configuration for this component. This is usually accessed through
@@ -21,7 +21,7 @@ public abstract class AbstractComponent<TPlugin extends BasePlugin> {
      */
     private ConfigurationSection rawConfiguration;
 
-    private TPlugin plugin;
+    private BasePlugin plugin;
 
     private ComponentLoader loader;
 
@@ -29,7 +29,7 @@ public abstract class AbstractComponent<TPlugin extends BasePlugin> {
 
     private boolean enabled;
 
-    protected void setUp(TPlugin plugin, ComponentLoader loader, ComponentInformation info) {
+    protected void setUp(BasePlugin plugin, ComponentLoader loader, ComponentInformation info) {
         this.plugin = plugin;
         this.loader = loader;
         this.info = info;
@@ -49,7 +49,7 @@ public abstract class AbstractComponent<TPlugin extends BasePlugin> {
         }
     }
 
-    protected <T extends de.raidcraft.api.config.ConfigurationBase<TPlugin>> T configure(T config) {
+    protected <T extends de.raidcraft.api.config.ConfigurationBase> T configure(T config) {
         return getPlugin().configure(config);
     }
 

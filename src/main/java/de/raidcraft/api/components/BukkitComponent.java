@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * A component written for a Bukkit server
  */
-public abstract class BukkitComponent<TPlugin extends BasePlugin> extends AbstractComponent<TPlugin> implements CommandExecutor {
+public abstract class BukkitComponent extends AbstractComponent implements CommandExecutor {
 
     /**
      * The {@link CommandsManagerRegistration} used to handle dynamic
@@ -46,11 +46,10 @@ public abstract class BukkitComponent<TPlugin extends BasePlugin> extends Abstra
     /**
      * The BasePlugin is a base for all plugins that use this component system.
      */
-    private TPlugin plugin;
+    private BasePlugin plugin;
 
-    public void setUp(TPlugin plugin, CommandsManager<CommandSender> commands) {
+    public void setUp(BasePlugin plugin, CommandsManager<CommandSender> commands) {
         this.commands = commands;
-        this.plugin = plugin;
         commandRegistration = new CommandsManagerRegistration(plugin, this, commands);
     }
 
