@@ -7,6 +7,7 @@ import io.ebean.EbeanServer;
 import io.ebean.EbeanServerFactory;
 import io.ebean.config.ClassLoadConfig;
 import io.ebean.config.ServerConfig;
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.sql.DataSource;
@@ -53,7 +54,9 @@ public class RaidCraftDatabase {
     private ClassLoader classLoader;
     private Level loggerLevel;
     private boolean usingSQLite;
+    @Getter
     private ServerConfig serverConfig;
+    @Getter
     private EbeanServer ebeanServer;
 
     /**
@@ -143,16 +146,16 @@ public class RaidCraftDatabase {
 //        sc.setName(ds.getUrl().replaceAll("[^a-zA-Z0-9]", ""));
 
         //Get all persistent classes
-        List<Class<?>> classes = getDatabaseClasses();
-
-        //Do a sanity check first
-        if (classes.size() == 0) {
-            //Exception: There is no use in continuing to load this database
-            throw new RuntimeException("Database has been enabled, but no classes are registered to it");
-        }
+//        List<Class<?>> classes = getDatabaseClasses();
+//
+//        //Do a sanity check first
+//        if (classes.size() == 0) {
+//            //Exception: There is no use in continuing to load this database
+//            throw new RuntimeException("Database has been enabled, but no classes are registered to it");
+//        }
 
         //Register them with the EbeanServer
-        sc.setClasses(classes);
+//        sc.setClasses(classes);
 
         prepareDatabaseAdditionalConfig(ds, sc);
 

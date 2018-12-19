@@ -247,7 +247,7 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
                 CommandsManager<CommandSender> commands = new CommandsManager<CommandSender>() {
                     @Override
                     public boolean hasPermission(CommandSender sender, String permission) {
-                        return BasePlugin.this.hasPermission(sender, permission);
+                        return sender.isOp() || sender.hasPermission(permission);
                     }
                 };
                 commands.setInjector(new SimpleInjector(component));
