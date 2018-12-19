@@ -1,5 +1,6 @@
 package de.raidcraft.api.components;
 
+import com.google.inject.AbstractModule;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.components.loader.ComponentLoader;
 import de.raidcraft.api.config.ConfigurationBase;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @author zml2008
  */
 @Getter
-public abstract class AbstractComponent {
+public abstract class AbstractComponent extends AbstractModule {
 
     /**
      * The raw configuration for this component. This is usually accessed through
