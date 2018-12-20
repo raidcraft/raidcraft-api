@@ -1,12 +1,10 @@
 package de.raidcraft.api.components;
 
-import com.google.inject.AbstractModule;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.components.loader.ComponentLoader;
 import de.raidcraft.api.config.ConfigurationBase;
 import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Map;
 
@@ -14,7 +12,7 @@ import java.util.Map;
  * @author zml2008
  */
 @Getter
-public abstract class AbstractComponent extends AbstractModule {
+public abstract class AbstractComponent {
 
     /**
      * The raw configuration for this component. This is usually accessed through
@@ -43,9 +41,6 @@ public abstract class AbstractComponent extends AbstractModule {
     public abstract void enable();
 
     public void disable() {}
-
-    @Override
-    protected void configure() {}
 
     public void reload() {
         if (getConfiguration() != null && getConfiguration() instanceof ConfigurationBase) {
