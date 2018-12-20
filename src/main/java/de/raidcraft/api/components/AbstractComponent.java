@@ -44,6 +44,9 @@ public abstract class AbstractComponent extends AbstractModule {
 
     public void disable() {}
 
+    @Override
+    protected void configure() {}
+
     public void reload() {
         if (getConfiguration() != null && getConfiguration() instanceof ConfigurationBase) {
             ((ConfigurationBase) getConfiguration()).reload();
