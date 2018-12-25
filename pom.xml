@@ -53,17 +53,6 @@
             <version>6.1</version>
         </dependency>
         <dependency>
-            <groupId>de.faldoria</groupId>
-            <artifactId>zlib</artifactId>
-            <version>0.99-beta.01</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>bukkit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>xyz.upperlevel.spigot.book</groupId>
             <artifactId>spigot-book-api</artifactId>
             <version>1.2</version>
@@ -125,7 +114,6 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>de.faldoria:zlib</include>
                                     <include>org.reflections:reflections</include>
                                     <include>io.ebean:*</include>
                                     <include>org.avaje:*</include>

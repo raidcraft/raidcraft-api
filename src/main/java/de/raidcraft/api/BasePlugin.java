@@ -259,7 +259,8 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
 
         try {
             componentManager.loadComponents(this);
-        } catch (InvalidComponentException e) {
+        } catch (Throwable e) {
+            getLogger().severe("Unable to load components of: " + getName());
             getLogger().severe(e.getMessage());
         }
 
