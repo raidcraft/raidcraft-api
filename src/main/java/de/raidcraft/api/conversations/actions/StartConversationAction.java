@@ -21,6 +21,7 @@ public class StartConversationAction implements Action<Player> {
     @Override
     @Information(
             value = "conversation.start",
+            aliases = {"conv.start"},
             desc = "Starts the given conversation with the given host.",
             conf = {
                     "conv: <conv id>",

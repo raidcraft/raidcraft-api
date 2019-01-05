@@ -17,7 +17,7 @@ public class EndConversationAction implements Action<Player> {
     @Override
     @Information(
             value = "end",
-            aliases = {"conversation.end"},
+            aliases = {"conversation.end", "conv.end"},
             desc = "Ends the current conversation with the given or custom reason.",
             conf = "reason: ConversationEndReason or Custom Message"
     )

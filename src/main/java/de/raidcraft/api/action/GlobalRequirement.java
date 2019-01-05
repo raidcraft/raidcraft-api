@@ -32,21 +32,21 @@ public enum GlobalRequirement {
 
     IS_SPRINTING("player.sprinting", new Requirement<Player>() {
         @Override
-        @Information(value = "player.sprinting", desc = "Checks if the player is currently sprinting.")
+        @Information(value = "player.sprinting", aliases = {"sprinting"}, desc = "Checks if the player is currently sprinting.")
         public boolean test(Player player, ConfigurationSection config) {
 
             return player.isSprinting();
         }
     }), IS_SNEAKING("player.sneaking", new Requirement<Player>() {
         @Override
-        @Information(value = "player.sneaking", desc = "Checks if the player is currently sneaking.")
+        @Information(value = "player.sneaking", aliases = {"sneaking"}, desc = "Checks if the player is currently sneaking.")
         public boolean test(Player type, ConfigurationSection config) {
 
             return type.isSneaking();
         }
     }), IS_ALIVE("player.alive", new Requirement<Player>() {
         @Override
-        @Information(value = "player.alive", desc = "Checks if the player is currently alive.")
+        @Information(value = "player.alive", aliases = {"alive"}, desc = "Checks if the player is currently alive.")
         public boolean test(Player type, ConfigurationSection config) {
 
             return !type.isDead();
@@ -86,7 +86,7 @@ public enum GlobalRequirement {
         }
     }), PLAYER_LOCATION("player.location", new Requirement<Player>() {
         @Override
-        @Information(value = "player.location", desc = "Checks if the player is at or in a radius of the given location.", conf = {
+        @Information(value = "player.location", aliases = {"loc", "location"}, desc = "Checks if the player is at or in a radius of the given location.", conf = {
                 "x", "y", "z", "world: [current]", "radius: [0]" })
         public boolean test(Player player, ConfigurationSection config) {
 
@@ -94,7 +94,7 @@ public enum GlobalRequirement {
         }
     }), HAS_ITEM("player.has-item", new Requirement<Player>() {
         @Override
-        @Information(value = "player.has-item", desc = "Checks if the player has the given item in his (quest) inventory.", conf = {
+        @Information(value = "player.has-item", aliases = {"item"}, desc = "Checks if the player has the given item in his (quest) inventory.", conf = {
                 "item: <rc1337/so43034/world.quest.named-item/WOOD:5>", "amount: [1]" })
         public boolean test(Player player, ConfigurationSection config) {
 
