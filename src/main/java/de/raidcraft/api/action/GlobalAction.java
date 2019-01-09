@@ -35,7 +35,11 @@ public enum GlobalAction {
 
     PLAYER_FREEZE("player.freeze", new Action<Player>() {
         @Override
-        @Information(value = "player.freeze", desc = "Freezes the given player in place making him unable to move. Needs to be disabled with player.unfreeze")
+        @Information(
+                value = "player.freeze",
+                desc = "Freezes the given player in place making him unable to move. Needs to be disabled with player.unfreeze",
+                aliases = {"freeze"}
+        )
         public void accept(Player player, ConfigurationSection config) {
 
             player.setWalkSpeed(0F);
@@ -44,7 +48,11 @@ public enum GlobalAction {
         }
     }), PLAYER_UNFREEZE("player.unfreeze", new Action<Player>() {
         @Override
-        @Information(value = "player.unfreeze", desc = "Unfreezes the player resetting his walk and fly speed to the default values")
+        @Information(
+                value = "player.unfreeze",
+                desc = "Unfreezes the player resetting his walk and fly speed to the default values",
+                aliases = {"unfreeze"}
+        )
         public void accept(Player player, ConfigurationSection config) {
 
             player.setWalkSpeed(DEFAULT_WALK_SPEED);
@@ -53,9 +61,20 @@ public enum GlobalAction {
         }
     }), GIVE_ITEM("player.give.item", new Action<Player>() {
         @Override
-        @Information(value = "player.give.item", desc = "Gives the player the item or drops it if inventory is full.", conf = {
-                "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
-                "amount: [1]"}, aliases = {"player.item.give", "item.give"})
+        @Information(
+                value = "player.give.item",
+                desc = "Gives the player the item or drops it if inventory is full.",
+                aliases = {
+                        "item.add",
+                        "item.give",
+                        "player.item.give",
+                        "player.item.add"
+                },
+                conf = {
+                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
+                        "amount: [1]"
+                }
+        )
         public void accept(Player player, ConfigurationSection config) {
 
             try {
@@ -68,9 +87,17 @@ public enum GlobalAction {
         }
     }), REMOVE_ITEM("player.remove.item", new Action<Player>() {
         @Override
-        @Information(value = "player.remove.item", desc = "Removes the item from the player, will also search in the quest inventory if it is a quest item.", conf = {
-                "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
-                "amount: [1]"}, aliases = {"player.item.remove", "item.remove"})
+        @Information(
+                value = "player.remove.item",
+                desc = "Removes the item from the player, will also search in the quest inventory if it is a quest item.",
+                aliases = {
+                        "player.item.remove",
+                        "item.remove"
+                },
+                conf = {
+                        "item: <rc1337/so43034/world.quest.named-item/WOOD:5>",
+                        "amount: [1]"}
+        )
         public void accept(Player player, ConfigurationSection config) {
 
             try {
@@ -101,8 +128,17 @@ public enum GlobalAction {
         }
     }), GIVE_MONEY("player.give.money", new Action<Player>() {
         @Override
-        @Information(value = "player.give.money", desc = "Gives the player the given amount of money.", conf = {
-                "amount: <1g5s3k/1g/5g3k>|<50.0>"}, aliases = {"money.give", "money.add"})
+        @Information(
+                value = "player.give.money",
+                desc = "Gives the player the given amount of money.",
+                aliases = {
+                        "money.give",
+                        "money.add"
+                },
+                conf = {
+                        "amount: <1g5s3k/1g/5g3k>|<50.0>"
+                }
+        )
         public void accept(Player player, ConfigurationSection config) {
 
             if (!config.isSet("amount"))
@@ -134,7 +170,7 @@ public enum GlobalAction {
         }
     }), KILL_PLAYER("player.kill", new Action<Player>() {
         @Override
-        @Information(value = "player.kill", desc = "Kills the player by damaging him 10x the max health.")
+        @Information(value = "player.kill", desc = "Kills the player by damaging him 10x the max health.", aliases = {"kill"})
         public void accept(Player player, ConfigurationSection config) {
 
             player.damage(player.getMaxHealth() * 10);
@@ -200,7 +236,7 @@ public enum GlobalAction {
     }), TEXT_INFO("text.info", new Action<Player>() {
         @Override
         @Information(value = "text.info", desc = "Sends the given text to the player formatted in DARK AQUA.", conf = {
-                "text: <First line.|Second line.>"})
+                "text: <First line.|Second line.>"}, aliases = {"text.quest"})
         public void accept(Player player, ConfigurationSection config) {
 
             String[] text = config.getString("text").split("\\|");

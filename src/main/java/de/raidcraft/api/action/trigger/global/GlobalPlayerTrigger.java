@@ -209,6 +209,10 @@ public class GlobalPlayerTrigger extends Trigger implements Listener {
     @Information(
             value = "player.move",
             desc = "Triggers if the player is at or in a radius of the given location.",
+            aliases = {
+                    "loc",
+                    "location"
+            },
             conf = {
                     "x",
                     "y",
