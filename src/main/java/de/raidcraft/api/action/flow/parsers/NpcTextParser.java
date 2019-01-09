@@ -10,7 +10,7 @@ public class NpcTextParser extends FlowParser {
     private static final String TEXT_ACTION = "text";
 
     public NpcTextParser() {
-        super(Pattern.compile("^(?<text>[a-zA-Z]+.*)$"));
+        super(Pattern.compile("^(?<text>[a-zA-Z\"]+.*)$"));
     }
 
     @Override
