@@ -18,7 +18,7 @@ public class GenerateDbMigration {
     public static void main(String[] args) throws IOException {
 
         DbMigration dbMigration = new DefaultDbMigration();
-        dbMigration.setVersion("1.45");
+        dbMigration.setVersion("1.46");
 //        dbMigration.setGeneratePendingDrop("1.35");
         dbMigration.setPlatform(Platform.MYSQL);
         // generate the migration ddl and xml
