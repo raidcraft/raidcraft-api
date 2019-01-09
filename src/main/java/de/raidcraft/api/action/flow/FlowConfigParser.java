@@ -10,6 +10,7 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.GroupAction;
 import de.raidcraft.api.action.flow.parsers.ActionApiFlowParser;
 import de.raidcraft.api.action.flow.parsers.AnswerParser;
+import de.raidcraft.api.action.flow.parsers.NpcTextParser;
 import de.raidcraft.api.action.flow.types.ActionAPIType;
 import de.raidcraft.api.action.flow.types.FlowAlias;
 import de.raidcraft.api.action.flow.types.FlowAnswer;
@@ -36,7 +37,7 @@ public class FlowConfigParser {
     private static final String VARIABLE_GROUPS_SECTION = "groups";
     private static final String FLOW_SECTION = "flow";
 
-    private final FlowParser[] parsers = {new ActionApiFlowParser(this), new AnswerParser()};
+    private final FlowParser[] parsers = {new ActionApiFlowParser(this), new AnswerParser(), new NpcTextParser()};
 
     private final ConfigurationSection config;
     private final String baseId;

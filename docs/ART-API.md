@@ -5,23 +5,25 @@ Jedes Plugin hat die Möglichkeit eigene [Actions](#actions), [Requirements](#re
 
 > Eine Liste mit allen `ART` Configs lässt sich im Spiel über `/actionapi` generieren.
 
-- [Actions](#actions)
-    - [Entwicklung von Actions](#entwicklung-von-actions)
-    - [Verwendung von Actions](#verwendung-von-actions)
-        - [Action Parameter](#action-parameter)
-- [Requirements](#requirements)
-    - [Entwicklung von Requirements](#entwicklung-von-requirements)
-    - [Verwendung von Requirements](#verwendung-von-requirements)
-        - [Requirement Parameter](#requirement-parameter)
-- [Trigger](#trigger)
-    - [Entwicklung von Triggern](#entwicklung-von-triggern)
-    - [Verwendung von Triggern](#verwendung-von-triggern)
-        - [Trigger Parameter](#trigger-parameter)
-- [Trigger Gruppen](#trigger-gruppen)
-- [Answers](#answers)
-- [Alias Groups](#alias-groups)
-- [Flow Syntax](#flow-syntax)
-- [Referenzen](#referenzen)
+* [Actions](#actions)
+  * [Entwicklung von Actions](#entwicklung-von-actions)
+  * [Verwendung von Actions](#verwendung-von-actions)
+    * [Action Parameter](#action-parameter)
+* [Requirements](#requirements)
+  * [Entwicklung von Requirements](#entwicklung-von-requirements)
+  * [Verwendung von Requirements](#verwendung-von-requirements)
+    * [Requirement Parameter](#requirement-parameter)
+* [Trigger](#trigger)
+  * [Entwicklung von Triggern](#entwicklung-von-triggern)
+  * [Verwendung von Triggern](#verwendung-von-triggern)
+    * [Trigger Parameter](#trigger-parameter)
+* [Trigger Gruppen](#trigger-gruppen)
+* [Answers](#answers)
+* [NPC Text](#npc-text)
+* [Alias Groups](#alias-groups)
+* [Requirement Checks](#requirement-checks)
+* [Flow Syntax](#flow-syntax)
+* [Referenzen](#referenzen)
 
 ## Actions
 
@@ -514,6 +516,23 @@ stages:
 ```
 
 > Antworten besitzen keine globalen Parameter.
+
+## NPC Text
+
+Für die `!text` Action gibt es eine kurz Form, welche es ermöglicht schneller NPC Texte in Dialogen zu schreiben. Dafür wird einfach die Action weggelassen und nur der Text geschrieben.
+
+> **Wichtig:** Der Satz muss mit einem Buchstaben beginnen. Tut er das nicht muss die normale `!text` Action verwendet werden.
+
+```yml
+actions:
+  flow:
+    # Dieser Block wird automatisch als '!text "Hallo du da, wie geht es dir?"' interpretiert.
+    - 'Hallo du da, wie geht es dir?'
+    # Durch den Text Shortcut sind auch Anführungsstriche in Texten möglich:
+    - 'Er hat mich einfach einen "verdammten Lügner" genannt'
+    # Da YAML alles als Text interpretiert kann man auch einfach die Hochkommas weglassen
+    - Was für ein schöner Tag, nicht?
+```
 
 ## Alias Groups
 
