@@ -60,6 +60,7 @@ public class FlowConfigParser {
         this.aliasMap.put(FlowType.ANSWER, new HashMap<>());
         this.aliasMap.put(FlowType.TRIGGER, new HashMap<>());
         this.aliasMap.put(FlowType.EXPRESSION, new HashMap<>());
+        this.aliasMap.put(FlowType.DYNAMIC_ACTION, new HashMap<>());
         getVariableGroupSection().ifPresent(this::loadVariableGroups);
         if (config.isConfigurationSection("options")) {
             this.globalParameters = new GlobalFlowParameters(getConfig().getConfigurationSection("options"));
@@ -546,7 +547,7 @@ public class FlowConfigParser {
     }
 
     public boolean hasAlias(FlowType type, String alias) {
-        return aliasMap.get(type).containsKey(alias);
+        return aliasMap.containsKey(type) && aliasMap.get(type).containsKey(alias);
     }
 
     public FlowAlias getAlias(FlowType type, String alias) {
