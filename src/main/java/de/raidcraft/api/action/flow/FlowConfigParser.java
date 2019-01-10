@@ -8,8 +8,10 @@ import de.raidcraft.api.action.RequirementConfigWrapper;
 import de.raidcraft.api.action.TriggerFactory;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.GroupAction;
+import de.raidcraft.api.action.action.global.DynamicPlayerTextAction;
 import de.raidcraft.api.action.flow.parsers.ActionApiFlowParser;
 import de.raidcraft.api.action.flow.parsers.AnswerParser;
+import de.raidcraft.api.action.flow.parsers.DynamicPlayerTextParser;
 import de.raidcraft.api.action.flow.parsers.NpcTextParser;
 import de.raidcraft.api.action.flow.types.ActionAPIType;
 import de.raidcraft.api.action.flow.types.FlowAlias;
@@ -37,7 +39,7 @@ public class FlowConfigParser {
     private static final String VARIABLE_GROUPS_SECTION = "groups";
     private static final String FLOW_SECTION = "flow";
 
-    private final FlowParser[] parsers = {new ActionApiFlowParser(this), new AnswerParser(), new NpcTextParser()};
+    private final FlowParser[] parsers = {new ActionApiFlowParser(this), new AnswerParser(), new NpcTextParser(), new DynamicPlayerTextParser()};
 
     private final ConfigurationSection config;
     private final String baseId;
@@ -137,6 +139,7 @@ public class FlowConfigParser {
         // we are gonna add all requirements to this list until an action is added
         boolean resetRequirements = false;
         List<ActionAPIType> applicableRequirements = new ArrayList<>();
+        ActionConfigWrapper<?> dynamicAction = null;
 
         for (FlowExpression flowExpression : expressions) {
             if (flowExpression instanceof FlowDelay) {
@@ -146,11 +149,23 @@ public class FlowConfigParser {
             if (flowExpression instanceof ActionAPIType) {
                 ActionAPIType expression = (ActionAPIType) flowExpression;
                 switch (expression.getFlowType()) {
+                    case DYNAMIC_ACTION:
+                        ActionConfigWrapper<?> dynamicTextAction = createDynamicTextAction(expression);
+                        if (dynamicAction != null) {
+                            dynamicAction.getActions().add(dynamicTextAction);
+                        } else {
+                            actions.add(dynamicTextAction);
+                        }
+                        dynamicAction = dynamicTextAction;
+                        // we need to reset the delay because dynamic text actions are triggered by users on click
+                        delay = 0;
+                        // no requirement support for dynamic actions at the moment
+                        applicableRequirements.clear();
                     case ACTION:
                         FlowConfiguration configuration = expression.getConfiguration();
                         configuration.set("delay", delay);
 
-                        createAction(expression)
+                        ActionConfigWrapper<?> actionConfigWrapper = createAction(expression)
                                 .map(action -> {
                                     if (!applicableRequirements.isEmpty()) {
                                         String id = getBaseId() + "." + key + "." + expression.getTypeId();
@@ -166,8 +181,15 @@ public class FlowConfigParser {
                                         }
                                     }
                                     return action;
-                                })
-                                .ifPresent(actions::add);
+                                }).orElse(null);
+
+                        if (actionConfigWrapper != null) {
+                            if (dynamicAction == null) {
+                                actions.add(actionConfigWrapper);
+                            }  else {
+                                dynamicAction.getActions().add(actionConfigWrapper);
+                            }
+                        }
 
                         if (!applicableRequirements.isEmpty()) {
                             resetRequirements = true;
@@ -206,6 +228,10 @@ public class FlowConfigParser {
         return Optional.of(configWrapper);
     }
 
+    private ActionConfigWrapper<?> createDynamicTextAction(ActionAPIType expressions) {
+        return ActionAPI.createAction(DynamicPlayerTextAction.class, expressions.getConfiguration());
+    }
+
     @SuppressWarnings("unchecked")
     private Optional<RequirementConfigWrapper<?>> createGroupRequirement(String id, ActionAPIType expression) {
 
@@ -232,6 +258,7 @@ public class FlowConfigParser {
         // we are gonna add all requirements to this list until an action is added
         List<ActionAPIType> applicableRequirements = new ArrayList<>();
         TriggerFactory activeTrigger = null;
+        ActionConfigWrapper<?> dynamicAction = null;
 
         int i = 0;
         boolean clearRequirements = false;
@@ -267,27 +294,48 @@ public class FlowConfigParser {
                         factories.add(trigger);
                         // reset the delay when a new trigger starts
                         delay = 0;
+                        // reset the dynamic action to be added to the new trigger
+                        dynamicAction = null;
+                        break;
+                    case DYNAMIC_ACTION:
+                        if (activeTrigger == null) break;
+
+                        ActionConfigWrapper<?> dynamicTextAction = createDynamicTextAction(expression);
+                        if (dynamicAction != null) {
+                            dynamicAction.getActions().add(dynamicTextAction);
+                        } else {
+                            activeTrigger.getActions().add(dynamicTextAction);
+                        }
+                        dynamicAction = dynamicTextAction;
+                        // we need to reset the delay because dynamic text actions are triggered by users on click
+                        delay = 0;
+                        // no requirement support for dynamic actions at the moment
+                        applicableRequirements.clear();
                         break;
                     case ACTION:
-                        if (activeTrigger != null) {
-                            String actionId = getBaseId() + "." + "actions.flow-" + i++;
-                            configuration.set("delay", delay);
-                            Optional<ActionConfigWrapper<?>> action = createAction(expression);
+                        if (activeTrigger == null) break;
 
-                            if (action.isPresent()) {
-                                if (expression.isCheckingRequirement()) {
-                                    applicableRequirements.stream()
-                                            .peek(type -> type.getConfiguration().set("negate", expression.isNegate()))
-                                            .map(type -> createRequirement(actionId, type))
-                                            .forEach(requirement -> requirement.ifPresent(wrapper -> action.get().getRequirements().add(wrapper)));
-                                    // do not clear the requirements now, delay until actions or requirements are loaded
-                                    clearRequirements = true;
-                                } else {
-                                    for (Requirement<?> requirement : parseRequirements(actionId, new ArrayList<>(applicableRequirements))) {
-                                        action.get().addRequirement(requirement);
-                                    }
-                                    applicableRequirements.clear();
+                        String actionId = getBaseId() + "." + "actions.flow-" + i++;
+                        configuration.set("delay", delay);
+                        Optional<ActionConfigWrapper<?>> action = createAction(expression);
+
+                        if (action.isPresent()) {
+                            if (expression.isCheckingRequirement()) {
+                                applicableRequirements.stream()
+                                        .peek(type -> type.getConfiguration().set("negate", expression.isNegate()))
+                                        .map(type -> createRequirement(actionId, type))
+                                        .forEach(requirement -> requirement.ifPresent(wrapper -> action.get().getRequirements().add(wrapper)));
+                                // do not clear the requirements now, delay until actions or requirements are loaded
+                                clearRequirements = true;
+                            } else {
+                                for (Requirement<?> requirement : parseRequirements(actionId, new ArrayList<>(applicableRequirements))) {
+                                    action.get().addRequirement(requirement);
                                 }
+                                applicableRequirements.clear();
+                            }
+                            if (dynamicAction != null) {
+                                dynamicAction.getActions().add(action.get());
+                            } else {
                                 activeTrigger.getActions().add(action.get());
                             }
                         }
@@ -369,6 +417,7 @@ public class FlowConfigParser {
             List<FlowExpression> flowExpressions = parse(flowStatements);
             List<ActionAPIType> requirements = new ArrayList<>();
             Answer activeAnswer = null;
+            ActionConfigWrapper<?> dynamicAction = null;
 
             boolean clearRequirements = false;
             for (FlowExpression flowExpression : flowExpressions) {
@@ -382,6 +431,8 @@ public class FlowConfigParser {
                     }
                     answers.add(answer.get());
                     activeAnswer = answer.get();
+                    // reset the dynamic action to be added to the next answer
+                    dynamicAction = null;
 
                     final List<Requirement<?>> createdRequirements = new ArrayList<>();
                     if (((FlowAnswer) flowExpression).isCheckingRequirement()) {
@@ -407,20 +458,38 @@ public class FlowConfigParser {
                     ActionAPIType expression = (ActionAPIType) flowExpression;
                     FlowConfiguration configuration = expression.getConfiguration();
                     switch (expression.getFlowType()) {
+                        case DYNAMIC_ACTION:
+                            if (activeAnswer == null) break;
+
+                            ActionConfigWrapper<?> dynamicTextAction = createDynamicTextAction(expression);
+                            if (dynamicAction != null) {
+                                dynamicAction.getActions().add(dynamicTextAction);
+                            } else {
+                                activeAnswer.addActions(dynamicTextAction);
+                            }
+                            dynamicAction = dynamicTextAction;
+                            // we need to reset the delay because dynamic text actions are triggered by users on click
+                            delay = 0;
+                            // no requirement support for dynamic actions at the moment
+                            requirements.clear();
+                            break;
                         case ACTION:
-                            if (activeAnswer == null)
-                                continue;
+                            if (activeAnswer == null) break;
+
                             configuration.set("delay", delay);
                             Action<?> action = createAction(expression)
                                     .orElseThrow(() -> new FlowException("Could not find valid action type for " + expression.getTypeId()));
 
-                            if (ActionAPI.matchesType(action, Player.class)) {
+                            if (dynamicAction != null) {
+                                dynamicAction.getActions().add(action);
+                            } else if (ActionAPI.matchesType(action, Player.class)) {
                                 activeAnswer.addPlayerAction((Action<Player>) action);
                             } else if (ActionAPI.matchesType(action, Conversation.class)) {
                                 activeAnswer.addConversationAction((Action<Conversation>) action);
                             } else {
                                 activeAnswer.addActions(action);
                             }
+
                             if (expression.isCheckingRequirement()) {
                                 requirements.stream()
                                         .peek(type -> type.getConfiguration().set("negate", ((FlowAnswer) flowExpression).isNegate()))
