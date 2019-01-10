@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Silthus
@@ -166,6 +167,21 @@ public final class CustomItemManager implements Component {
             throw new DuplicateCustomItemException("The custom item with the displayName" + name + " is already registered.");
         }
         namedCustomItems.put(name, item);
+    }
+
+    public void unregisterNamedCustomItem(String name) {
+        unregisterNamedCustomItem(name, false);
+    }
+
+    public void unregisterNamedCustomItem(String name, boolean deep) {
+        if (deep) {
+            namedCustomItems.keySet().stream()
+                    .filter(key -> key.startsWith(name))
+                    .collect(Collectors.toList())
+                    .forEach(namedCustomItems::remove);
+        } else {
+            namedCustomItems.remove(name);
+        }
     }
 
     public void registerCustomItemAlias(int id, String alias) throws DuplicateCustomItemException {
