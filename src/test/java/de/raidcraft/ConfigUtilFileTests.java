@@ -1,13 +1,10 @@
 package de.raidcraft;
 
-import de.raidcraft.api.config.SimpleConfiguration;
 import de.raidcraft.util.ConfigUtil;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
-import sun.misc.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
