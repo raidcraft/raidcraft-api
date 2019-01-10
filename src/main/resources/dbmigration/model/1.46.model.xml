@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <addUniqueConstraint constraintName="uq_rc_minecraft_items_key" tableName="rc_minecraft_items" columnNames="DROP CONSTRAINT" nullableColumns="namespaced_key"/>
+        <addUniqueConstraint constraintName="uq_rc_minecraft_items_namespaced_key" tableName="rc_minecraft_items" columnNames="namespaced_key" oneToOne="false" nullableColumns="namespaced_key"/>
+        <addColumn tableName="rc_player_tags">
+            <column name="count" type="integer" defaultValue="0" notnull="true"/>
+        </addColumn>
+    </changeSet>
+</migration>

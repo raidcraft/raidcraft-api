@@ -16,6 +16,7 @@ build:
 
 test:
   stage: test
+  allow_failure: true
   script:
     - mvn $MAVEN_CLI_OPTS test
 

@@ -8,6 +8,7 @@ import de.raidcraft.api.config.SimpleConfiguration;
 import de.raidcraft.api.config.typeconversions.*;
 import de.raidcraft.api.quests.Quests;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -271,8 +272,11 @@ public class ConfigUtil {
                 for (ConfigLoader loader : loaders) {
                     if (!loader.matches(file)) continue;
                     loader.setPath(path);
-                    String id = (path + "." + file.getName().toLowerCase()).replace(loader.getSuffix(), "");
-                    while (id.startsWith(".")) id = id.replaceFirst("\\.", "");
+                    String id = StringUtils.strip(
+                            path + "." + file.getName().toLowerCase()
+                                .replace(loader.getSuffix(), ""),
+                            ".");
+
                     SimpleConfiguration configFile = loader.getPlugin().configure(new SimpleConfiguration<>(loader.getPlugin(), file));
                     if (loader.isGenerateId() && !configFile.isSet("id")) {
                         configFile.set("id", UUID.randomUUID().toString());

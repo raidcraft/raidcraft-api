@@ -23,6 +23,7 @@ import de.raidcraft.api.BasePlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,6 +67,14 @@ public abstract class BukkitComponent extends AbstractComponent implements Comma
 
     public void unregisterCommands() {
         commandRegistration.unregisterCommands();
+    }
+
+    protected final void registerEvents(Listener listener) {
+        getPlugin().registerEvents(listener);
+    }
+
+    protected final void unregisterEvents(Listener listener) {
+        getPlugin().unregisterEvents(listener);
     }
 
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {

@@ -5,6 +5,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.ebean.BaseModel;
 import io.ebean.EbeanServer;
+import io.ebean.annotation.DbDefault;
 import io.ebean.annotation.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -42,6 +43,7 @@ public class TPlayerTag extends BaseModel {
         tag.setPlayer(player.getName());
         tag.setTag(TTag.findOrCreateTag(tagName));
         tag.setDuration(duration);
+        tag.increaseCount();
 
         tag.save();
 
@@ -55,6 +57,16 @@ public class TPlayerTag extends BaseModel {
     @Column(name = "tag_id")
     private TTag tag;
     private String duration = null;
+    @DbDefault("0")
+    private int count = 0;
+
+    public void increaseCount() {
+        this.count++;
+    }
+
+    public void decreaseCount() {
+        this.count--;
+    }
 
     @Override
     protected EbeanServer database() {

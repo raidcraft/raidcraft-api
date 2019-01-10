@@ -17,3 +17,22 @@ requirements:
     # Prüft ob der Spieler den Tag foo hat, egal ob er bereits abgelaufen ist.
     - '?player.tag tag:foo ignore-duration:true'
 ```
+
+Neu seit Version **2.0.0** ist, dass alle Tags automatisch gecounted werden. Den Count eines Tags kann man mit dem `count` Parameter abfragen.
+
+Folgende Operatoren sind zum Vergleich eines Tags verfügbar:
+
+- `>` größer als
+- `>=` größer oder gleich als
+- `<` kleiner als
+- `<=` kleiner oder gleich als
+- `=` gleich als
+
+``````yml
+requirements:
+  flow:
+    # Prüft ob der Spieler einen aktiven Tag foobar hat und ob der Tag mindestens 6 mal geschrieben wurde.
+    - '?player.tag foobar >5'
+    # Prüft ob der Spieler den Tag foo hat der weniger als oder gleich 5 mal getaggt wurde.
+    - '?player.tag tag:foo count:<=5'
+```
