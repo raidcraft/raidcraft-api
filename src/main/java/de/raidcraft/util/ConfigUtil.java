@@ -222,6 +222,8 @@ public class ConfigUtil {
 
     public static Location getLocationFromConfig(ConfigurationSection config, Player player) {
 
+        if (config == null) return null;
+
         World world = Bukkit.getWorld(config.getString("world"));
         if (world == null) {
             if (player != null) {
