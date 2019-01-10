@@ -3,6 +3,7 @@ package de.raidcraft.api.action;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.action.ContextualAction;
 import de.raidcraft.api.action.action.RevertableAction;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.util.TimeUtil;
@@ -35,6 +36,7 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
     private final long delay;
     private final long cooldown;
     private final boolean executeOnce;
+    private boolean executeChildActions;
     private Player player;
     private List<Action<?>> actions = new ArrayList<>();
     private List<Requirement<?>> requirements = new ArrayList<>();
@@ -47,6 +49,7 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
         this.delay = TimeUtil.parseTimeAsTicks(config.getString("delay"));
         this.cooldown = TimeUtil.parseTimeAsTicks(config.getString("cooldown"));
         this.executeOnce = config.getBoolean("execute-once", false);
+        this.executeChildActions = config.getBoolean("execute-child-actions", true);
         this.actions = ActionAPI.createActions(config.getConfigurationSection("actions"));
         this.requirements = ActionAPI.createRequirements(getIdentifier(),
                 config.getConfigurationSection("requirements"));
@@ -136,15 +139,14 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
                 if (!allMatch)
                     return;
             }
-            action.accept(type, config);
-            for (Action<?> action : actions) {
-                if (ActionAPI.matchesType(action, Player.class)) {
-                    Player player = getPlayer().orElse((Player) type);
-                    ((Action<Player>) action).accept(player);
-                } else if (ActionAPI.matchesType(action, getType())) {
-                    ((Action<T>) action).accept(type);
-                }
+
+            if (action instanceof ContextualAction) {
+                ((ContextualAction<T>) action).accept(type, this, config);
+            } else {
+                action.accept(type, config);
             }
+            if(isExecuteChildActions()) executeChildActions(type);
+
             if (plugin.getConfig().debugActions) {
                 plugin.getLogger().info("ACTION EXECUTED: " + ActionAPI.getIdentifier(getAction()));
             }
@@ -161,6 +163,17 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
             Bukkit.getScheduler().runTaskLater(plugin, runnable, delay);
         } else {
             runnable.run();
+        }
+    }
+
+    public void executeChildActions(T type) {
+        for (Action<?> action : actions) {
+            if (ActionAPI.matchesType(action, Player.class)) {
+                Player player = getPlayer().orElse((Player) type);
+                ((Action<Player>) action).accept(player);
+            } else if (ActionAPI.matchesType(action, getType())) {
+                ((Action<T>) action).accept(type);
+            }
         }
     }
 

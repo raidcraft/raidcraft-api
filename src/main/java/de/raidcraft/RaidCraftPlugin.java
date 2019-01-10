@@ -10,6 +10,8 @@ import de.raidcraft.api.action.ActionCommand;
 import de.raidcraft.api.action.GlobalAction;
 import de.raidcraft.api.action.GlobalRequirement;
 import de.raidcraft.api.action.action.GroupAction;
+import de.raidcraft.api.action.action.global.DynamicPlayerTextAction;
+import de.raidcraft.api.action.action.global.DynamicPlayerTextManager;
 import de.raidcraft.api.action.flow.FlowType;
 import de.raidcraft.api.action.requirement.GroupRequirement;
 import de.raidcraft.api.action.requirement.global.IfElseRequirement;
@@ -107,9 +109,11 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerCommands(ConfirmCommand.class, getName());
         registerCommands(ActionCommand.class, getName());
         registerCommands(DisguiseCommand.class);
+        registerCommands(DynamicPlayerTextManager.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
+        RaidCraft.registerComponent(DynamicPlayerTextManager.class, new DynamicPlayerTextManager(this));
 
         if(getConfig().enablePlayerInventorySave) {
             registerEvents(new InventorySync(this));
@@ -197,6 +201,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }
         actionAPI.requirement(new IfElseRequirement<>(), Object.class);
         actionAPI.action(new GroupAction<>(), Player.class);
+        actionAPI.action(new DynamicPlayerTextAction());
         actionAPI.requirement(new GroupRequirement<>(), Object.class);
     }
 
@@ -292,6 +297,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
             super(plugin, "config.yml");
         }
 
+
         @Setting("server-start-delay")
         public double startDelay = 10.0;
         @Setting("pre-login-kicker")
@@ -328,6 +334,9 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         @Comment("Save and Load Player Inventories in Database, allow sharing with other servers")
         @Setting("enable-player-inventory-share")
         private boolean enablePlayerInventorySave = false;
+        @Comment("The average words per minute a player can read.")
+        @Setting("average-words-per-minute")
+        public int averageWordsPerMinute = 150;
 
         @Setting("check-player-block-placement")
         public boolean checkPlayerBlockPlacement = false;

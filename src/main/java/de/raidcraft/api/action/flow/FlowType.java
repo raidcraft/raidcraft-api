@@ -12,7 +12,8 @@ public enum FlowType {
     TRIGGER('@'),
     DELAY('~'),
     ANSWER(':'),
-    EXPRESSION('%');
+    EXPRESSION('%'),
+    DYNAMIC_ACTION('>');
 
     private final char triggerChar;
 
