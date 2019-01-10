@@ -233,6 +233,19 @@ public enum GlobalAction {
                         + "]" + ChatColor.GOLD + ": " + ChatColor.AQUA + line);
             }
         }
+    }), PLAYER_EMOTE("emote", new Action<Player>() {
+        @Override
+        @Information(value = "emote", desc = "Sends the given text to the player prepended by the player displayName.", conf = {
+                "text: <First line.|Second line.>"})
+        public void accept(Player player, ConfigurationSection config) {
+
+            String[] text = config.getString("text").split("\\|");
+            for (String line : text) {
+                line = RaidCraft.replaceVariables(player, line);
+                player.sendMessage(ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + player.getName() + ChatColor.DARK_GRAY
+                        + "]" + ChatColor.GOLD + ": " + ChatColor.GRAY + line);
+            }
+        }
     }), TEXT_INFO("text.info", new Action<Player>() {
         @Override
         @Information(value = "text.info", desc = "Sends the given text to the player formatted in DARK AQUA.", conf = {
