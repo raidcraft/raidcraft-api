@@ -258,16 +258,13 @@ public class ConfigUtil {
             if (file.isDirectory()) {
                 loadConfigs(file, path + "." + fileName.toLowerCase(), loaders);
             } else {
-                while (path.startsWith(".")) {
-                    path = path.replaceFirst("\\.", "");
-                }
+                path = StringUtils.strip(path, ".");
                 for (ConfigLoader loader : loaders) {
                     if (!loader.matches(file)) continue;
                     loader.setPath(path);
-                    String id = StringUtils.strip(
-                            path + "." + file.getName().toLowerCase()
-                                .replace(loader.getSuffix(), ""),
-                            ".");
+                    String id = path + "." + file.getName().toLowerCase()
+                            .replace(loader.getSuffix(), "");
+                    id = StringUtils.strip(id,".");
 
                     SimpleConfiguration configFile = loader.getPlugin().configure(new SimpleConfiguration<>(loader.getPlugin(), file));
                     if (loader.isGenerateId() && !configFile.isSet("id")) {
