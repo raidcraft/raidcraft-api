@@ -8,10 +8,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -384,5 +381,16 @@ public final class LocationUtil {
             }
         }
         return blocks;
+    }
+
+    /**
+     * Checks if any world matches the case insensitive name or id of the param name.
+     * @param name name or id to check for
+     * @return world or null if no world was found
+     */
+    public static World getCaseInsensitiveWorld(String name) {
+        return Bukkit.getWorlds().stream()
+                .filter(world -> world.getName().equalsIgnoreCase(name) || world.getUID().toString().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
     }
 }

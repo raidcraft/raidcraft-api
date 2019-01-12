@@ -224,7 +224,7 @@ public class ConfigUtil {
     public static Location getLocationFromConfig(ConfigurationSection config, Player player) {
 
         if (config == null) return null;
-        World world = Bukkit.getWorld(config.getString("world"));
+        World world = LocationUtil.getCaseInsensitiveWorld(config.getString("world"));
         if (world == null) return null;
 
         return new Location(world,

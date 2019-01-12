@@ -1,6 +1,7 @@
 package de.raidcraft.api.locations;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.util.LocationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -36,13 +37,8 @@ public final class Locations {
         if (config.isString("location") || config.isString("x")) return fromString(config.getString("location", config.getString("x")));
         if (config.isConfigurationSection("location")) return fromConfig(config.getConfigurationSection("location"));
         if (config.isSet("x") && config.isSet("y") && config.isSet("z")) {
-            World world = Bukkit.getWorld(config.getString("world", "world"));
-            if (world == null) {
-                Optional<World> any = Bukkit.getWorlds().stream().findAny();
-                if (!any.isPresent()) return Optional.empty();
-                config.set("world", any.get().getName());
-            }
-
+            World world = LocationUtil.getCaseInsensitiveWorld(config.getString("world"));
+            if (world == null) return Optional.empty();
             return Optional.of(new ConfiguredLocation(config));
         }
         return Optional.empty();
