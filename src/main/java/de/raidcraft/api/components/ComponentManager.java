@@ -1,5 +1,6 @@
 package de.raidcraft.api.components;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.components.loader.ComponentLoader;
 import org.bukkit.configuration.ConfigurationSection;
@@ -42,6 +43,7 @@ public abstract class ComponentManager<T extends AbstractComponent> {
                 T component = componentClass.cast(baseComponent);
                 ComponentInformation info = component.getClass().getAnnotation(ComponentInformation.class);
                 component.setUp(plugin, loader, info);
+                RaidCraft.registerComponent(component.getClass(), component);
                 setUpComponent(component);
                 registeredComponents.put(info.friendlyName().replaceAll(" ", "-").toLowerCase(), component);
             }

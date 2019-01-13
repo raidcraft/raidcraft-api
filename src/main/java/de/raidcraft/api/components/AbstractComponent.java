@@ -1,6 +1,7 @@
 package de.raidcraft.api.components;
 
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.Component;
 import de.raidcraft.api.components.loader.ComponentLoader;
 import de.raidcraft.api.config.ConfigurationBase;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author zml2008
  */
 @Getter
-public abstract class AbstractComponent {
+public abstract class AbstractComponent implements Component {
 
     /**
      * The raw configuration for this component. This is usually accessed through
