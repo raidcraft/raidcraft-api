@@ -240,7 +240,11 @@ public abstract class BasePlugin extends ZPlugin implements CommandExecutor, Com
 
     @SuppressWarnings("unchecked")
     protected void setupComponentManager(JarFile jarFile) {
-        componentManager = new ComponentManager<BukkitComponent>(getLogger(), BukkitComponent.class) {
+        componentManager = new ComponentManager<BukkitComponent>(
+                getLogger(),
+                BukkitComponent.class,
+                configure(new SimpleConfiguration<BasePlugin>(this, "components.yml"))
+        ) {
             @Override
             protected void setUpComponent(BukkitComponent component) {
                 // Create a CommandsManager instance

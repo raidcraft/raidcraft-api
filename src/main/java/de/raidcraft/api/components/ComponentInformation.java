@@ -11,11 +11,20 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ComponentInformation {
+
+    /**
+     * The unique name of the component.
+     * This name can be used in the components.yml config to disable the component.
+     *
+     * @return name of the component.
+     */
+    public String value();
+
     /**
      * A name for this component that users see.
      * @return This component's friendly name.
      */
-    public String friendlyName();
+    public String friendlyName() default "";
 
     /**
      * An array of authors involved in the creation of this component.

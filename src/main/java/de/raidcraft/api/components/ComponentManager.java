@@ -2,6 +2,7 @@ package de.raidcraft.api.components;
 
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.api.components.loader.ComponentLoader;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -19,10 +20,12 @@ public abstract class ComponentManager<T extends AbstractComponent> {
     protected final List<ComponentLoader> loaders = new ArrayList<ComponentLoader>();
     protected final Map<String, T> registeredComponents = new LinkedHashMap<String, T>();
     protected final Map<Class<? extends Annotation>, AnnotationHandler<?>> annotationHandlers = new LinkedHashMap<Class<? extends Annotation>, AnnotationHandler<?>>();
+    protected final ConfigurationSection config;
 
-    public ComponentManager(Logger logger, Class<T> componentCass) {
+    public ComponentManager(Logger logger, Class<T> componentCass, ConfigurationSection config) {
         this.logger = logger;
         this.componentClass = componentCass;
+        this.config = config;
     }
 
     public synchronized boolean addComponentLoader(ComponentLoader loader) {
@@ -64,11 +67,14 @@ public abstract class ComponentManager<T extends AbstractComponent> {
                     }
                 }
             }
+            if (!config.getBoolean(component.getInfo().value() + ".enabled", true)) {
+                logger.info("Component " + component.getInformation().friendlyName() + " (" + component.getInfo().value() + ") is disabled!");
+                continue;
+            }
             component.enable();
             component.setEnabled(true);
             component.saveConfig();
-            logger.log(Level.FINEST, "Component " +
-                    component.getInformation().friendlyName() + " successfully enabled!");
+            logger.info("Component " + component.getInformation().friendlyName() + " (" + component.getInfo().value() + ") successfully enabled!");
         }
 
     }
