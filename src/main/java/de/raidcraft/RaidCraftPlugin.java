@@ -201,7 +201,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         }
         actionAPI.requirement(new IfElseRequirement<>(), Object.class);
         actionAPI.action(new GroupAction<>(), Player.class);
-        actionAPI.action(new DynamicPlayerTextAction());
+        actionAPI.action(new DynamicPlayerTextAction(), Player.class);
         actionAPI.requirement(new GroupRequirement<>(), Object.class);
     }
 
@@ -335,8 +335,11 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         @Setting("enable-player-inventory-share")
         private boolean enablePlayerInventorySave = false;
         @Comment("The average words per minute a player can read.")
-        @Setting("average-words-per-minute")
+        @Setting("dynamic-actions.average-words-per-minute")
         public int averageWordsPerMinute = 150;
+        @Comment("The minimum delay gets added to the average word delay.")
+        @Setting("dynamic-actions.min-delay")
+        public String minDynamicTextActionDelay = "2s";
 
         @Setting("check-player-block-placement")
         public boolean checkPlayerBlockPlacement = false;

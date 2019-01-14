@@ -108,7 +108,7 @@ public class RaidCraftDatabase {
                     config.getString("username", "minecraft"),
                     config.getString("password", "password"),
                     server,
-                    config.getBoolean("rebuild", false));
+                    config.getBoolean("ssl", false));
 
             config.save();
 
@@ -122,7 +122,7 @@ public class RaidCraftDatabase {
         }
     }
 
-    private void prepareDatabase(String database, String username, String password, String server, boolean rebuild) {
+    private void prepareDatabase(String database, String username, String password, String server, boolean ssl) {
 
         MysqlDataSource ds = new MysqlDataSource();
         ds.setDatabaseName(database);
@@ -135,6 +135,7 @@ public class RaidCraftDatabase {
             ds.setPort(3306);
         }
         ds.setServerName(split[0]);
+        ds.setUseSSL(ssl);
 
         //Setup the server configuration
         ServerConfig sc = new ServerConfig();

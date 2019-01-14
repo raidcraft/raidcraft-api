@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionConfigWrapper;
 import de.raidcraft.api.action.action.ActionHolder;
+import de.raidcraft.api.action.action.global.DynamicPlayerTextAction;
 import de.raidcraft.api.config.DataMap;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.answer.Answer;
@@ -167,8 +168,11 @@ public abstract class AbstractConversation extends DataMap implements Conversati
 
         boolean changedStage = getCurrentStage().map(nextStage -> !nextStage.equals(stage.get())).orElse(false);
         boolean hasAnswers = changedStage && getCurrentStage().map(nextStage -> !nextStage.getAnswers().isEmpty()).orElse(false);
+        boolean hasDynamicActions = getCurrentStage()
+                .map(nextStage -> nextStage.getActions().stream().anyMatch(action -> action.getIdentifier().equals(DynamicPlayerTextAction.ACTION_NAME)))
+                .orElse(false);
 
-        if (getTemplate().isAutoEnding() && answer.isPresent() && !hasAnswers && !changedStage) {
+        if (getTemplate().isAutoEnding() && answer.isPresent() && !hasAnswers && !changedStage && !hasDynamicActions) {
             long delay = answer.map(ActionHolder::getActions)
                     .map(actions -> actions.stream()
                             .filter(action -> action instanceof ActionConfigWrapper)

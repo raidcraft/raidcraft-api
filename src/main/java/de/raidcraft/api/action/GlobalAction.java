@@ -2,10 +2,7 @@ package de.raidcraft.api.action;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.action.action.global.DoorAction;
-import de.raidcraft.api.action.action.global.PlayerTagAction;
-import de.raidcraft.api.action.action.global.RemovePlayerTag;
-import de.raidcraft.api.action.action.global.SetBlockAction;
+import de.raidcraft.api.action.action.global.*;
 import de.raidcraft.api.conversations.Conversations;
 import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.api.conversations.host.ConversationHost;

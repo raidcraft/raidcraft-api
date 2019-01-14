@@ -40,12 +40,14 @@ public class DynamicPlayerTextManager implements Component {
         text = RaidCraft.replaceVariables(player, text);
         String uuid = UUID.randomUUID().toString();
 
-        BukkitTask task = new DynamicTextTask(uuid, player, action).runTaskLater(getPlugin(), TimeUtil.secondsToTicks(StringUtils.calculateAverageReadingTime(text)));
+        BukkitTask task = new DynamicTextTask(uuid, player, action).runTaskLater(getPlugin(),
+                TimeUtil.parseTimeAsTicks(plugin.getConfig().minDynamicTextActionDelay)
+                        + TimeUtil.secondsToTicks(StringUtils.calculateAverageReadingTime(text)));
         actionTasks.put(uuid, task);
 
         player.sendMessage(BookUtil.TextBuilder.of("[").color(ChatColor.DARK_GRAY).text("Antworte").color(ChatColor.GRAY).text("]: ").color(ChatColor.DARK_GRAY)
                 .text(text).color(ChatColor.GOLD)
-                .onClick(BookUtil.ClickAction.runCommand("rcdynamictextaction " + uuid))
+                .onClick(BookUtil.ClickAction.runCommand("/rcdynamictextaction " + uuid))
                 .build());
     }
 

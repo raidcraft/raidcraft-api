@@ -9,8 +9,10 @@ import org.bukkit.event.Listener;
 
 public class DynamicPlayerTextAction implements ContextualAction<Player>, Listener {
 
+    public static final String ACTION_NAME = "text.dynamic";
+
     @Information(
-            value = "text.dynamic",
+            value = ACTION_NAME,
             desc = "Displays the player a clickable text that will execute all actions after clicked.",
             conf = {
                     "text: the clickable text that is displayed to the player"

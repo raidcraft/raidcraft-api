@@ -162,6 +162,7 @@ public class FlowConfigParser {
                         delay = 0;
                         // no requirement support for dynamic actions at the moment
                         applicableRequirements.clear();
+                        break;
                     case ACTION:
                         FlowConfiguration configuration = expression.getConfiguration();
                         configuration.set("delay", delay);

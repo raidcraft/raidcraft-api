@@ -5,6 +5,7 @@ import de.raidcraft.RaidCraftPlugin;
 import de.raidcraft.api.action.ActionAPI;
 import de.raidcraft.api.action.ActionConfigWrapper;
 import de.raidcraft.api.action.action.Action;
+import de.raidcraft.api.action.action.global.DynamicPlayerTextAction;
 import de.raidcraft.api.action.requirement.Requirement;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.conversation.Conversation;
@@ -255,7 +256,8 @@ public class SimpleStage implements Stage {
 
         if (getConversation().getTemplate().isAutoEnding()
                 && getConversation().getStages().size() < 2
-                && getAnswers().size() < 1) {
+                && getAnswers().size() < 1
+                && getActions().stream().noneMatch(action -> action.getIdentifier().equals(DynamicPlayerTextAction.ACTION_NAME))) {
             long delay = getActions().stream()
                     .filter(action -> action instanceof ActionConfigWrapper)
                     .reduce((first, second) -> second)
