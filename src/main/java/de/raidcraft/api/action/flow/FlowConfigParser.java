@@ -434,6 +434,7 @@ public class FlowConfigParser {
                     activeAnswer = answer.get();
                     // reset the dynamic action to be added to the next answer
                     dynamicAction = null;
+                    delay = 0;
 
                     final List<Requirement<?>> createdRequirements = new ArrayList<>();
                     if (((FlowAnswer) flowExpression).isCheckingRequirement()) {
