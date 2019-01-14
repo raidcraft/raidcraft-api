@@ -166,8 +166,9 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         }
 
         boolean changedStage = getCurrentStage().map(nextStage -> !nextStage.equals(stage.get())).orElse(false);
+        boolean hasAnswers = changedStage && getCurrentStage().map(nextStage -> !nextStage.getAnswers().isEmpty()).orElse(false);
 
-        if (getTemplate().isAutoEnding() && answer.isPresent() && !changedStage) {
+        if (getTemplate().isAutoEnding() && answer.isPresent() && !hasAnswers && !changedStage) {
             long delay = answer.map(ActionHolder::getActions)
                     .map(actions -> actions.stream()
                             .filter(action -> action instanceof ActionConfigWrapper)
