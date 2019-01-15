@@ -48,6 +48,7 @@ import de.raidcraft.api.random.objects.MoneyLootObject;
 import de.raidcraft.api.random.objects.RandomMoneyLootObject;
 import de.raidcraft.api.random.tables.ConfiguredRDSTable;
 import de.raidcraft.api.storage.TObjectStorage;
+import de.raidcraft.api.tags.TagCommands;
 import de.raidcraft.tables.*;
 import de.raidcraft.tracking.BlockTracking;
 import de.raidcraft.util.BlockTracker;
@@ -110,6 +111,7 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         registerCommands(ActionCommand.class, getName());
         registerCommands(DisguiseCommand.class);
         registerCommands(DynamicPlayerTextManager.class);
+        registerCommands(TagCommands.class);
         RaidCraft.registerComponent(CustomItemManager.class, new CustomItemManager());
         RaidCraft.registerComponent(ItemAttachmentManager.class, new ItemAttachmentManager());
         RaidCraft.registerComponent(InventoryManager.class, new InventoryManager(this));
