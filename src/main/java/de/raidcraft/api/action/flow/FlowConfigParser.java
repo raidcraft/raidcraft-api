@@ -151,6 +151,7 @@ public class FlowConfigParser {
                 ActionAPIType expression = (ActionAPIType) flowExpression;
                 switch (expression.getFlowType()) {
                     case DYNAMIC_ACTION:
+                        expression.getConfiguration().set("delay", delay);
                         ActionConfigWrapper<?> dynamicTextAction = createDynamicTextAction(expression);
                         if (dynamicAction != null) {
                             dynamicAction.getActions().add(dynamicTextAction);
