@@ -7,6 +7,7 @@ import de.raidcraft.api.action.action.ActionHolder;
 import de.raidcraft.api.action.action.global.DynamicPlayerTextAction;
 import de.raidcraft.api.config.DataMap;
 import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.actions.ChangeStageAction;
 import de.raidcraft.api.conversations.answer.Answer;
 import de.raidcraft.api.conversations.events.RCConversationAbortedEvent;
 import de.raidcraft.api.conversations.events.RCConversationChangedStageEvent;
@@ -167,12 +168,8 @@ public abstract class AbstractConversation extends DataMap implements Conversati
         }
 
         boolean changedStage = getCurrentStage().map(nextStage -> !nextStage.equals(stage.get())).orElse(false);
-        boolean hasAnswers = changedStage && getCurrentStage().map(nextStage -> !nextStage.getAnswers().isEmpty()).orElse(false);
-        boolean hasDynamicActions = getCurrentStage()
-                .map(nextStage -> nextStage.getActions().stream().anyMatch(action -> action.getIdentifier().equals(DynamicPlayerTextAction.ACTION_NAME)))
-                .orElse(false);
 
-        if (getTemplate().isAutoEnding() && answer.isPresent() && !hasAnswers && !changedStage && !hasDynamicActions) {
+        if (answer.isPresent() && !changedStage && getCurrentStage().map(this::isAutoEnding).orElse(false)) {
             long delay = answer.map(ActionHolder::getActions)
                     .map(actions -> actions.stream()
                             .filter(action -> action instanceof ActionConfigWrapper)
@@ -190,6 +187,22 @@ public abstract class AbstractConversation extends DataMap implements Conversati
 
         }
         return answer;
+    }
+
+    @Override
+    public boolean isAutoEnding(Stage stage) {
+
+        boolean hasAnswers = !stage.getAnswers().isEmpty();
+        boolean hasDynamicActions = stage.getActions().stream()
+                .filter(action -> action instanceof ActionConfigWrapper)
+                .map(action -> (ActionConfigWrapper) action)
+                .anyMatch(wrapper -> wrapper.getAction() instanceof DynamicPlayerTextAction);
+        boolean hasChangeStageActions = stage.getActions().stream()
+                .filter(action -> action instanceof ActionConfigWrapper)
+                .map(action -> (ActionConfigWrapper) action)
+                .anyMatch(wrapper -> wrapper.getAction() instanceof ChangeStageAction);
+
+        return getTemplate().isAutoEnding() && !hasAnswers && !hasDynamicActions && !hasChangeStageActions;
     }
 
     @Override
