@@ -197,6 +197,8 @@ public interface Conversation extends ConfigurationSection {
      */
     void setLastInput(String input);
 
+    boolean isAutoEnding(Stage stage);
+
     /**
      * @see Stage#changePage(int)
      */
