@@ -1,4 +1,4 @@
-package de.raidcraft.api.action.requirement.tables;
+package de.raidcraft.api.tags;
 
 import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
@@ -15,7 +15,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
