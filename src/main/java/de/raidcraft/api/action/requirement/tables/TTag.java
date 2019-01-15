@@ -5,6 +5,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.RaidCraftPlugin;
 import io.ebean.annotation.DbDefault;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Entity
 @Data
 @Table(name = "rc_tags")
+@EqualsAndHashCode(of = "id")
 public class TTag {
 
     public static Optional<TTag> findTag(String tag) {
