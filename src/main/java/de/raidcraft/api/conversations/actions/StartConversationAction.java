@@ -3,6 +3,7 @@ package de.raidcraft.api.conversations.actions;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.conversation.ConversationEndReason;
 import de.raidcraft.api.conversations.conversation.ConversationTemplate;
 import de.raidcraft.api.conversations.host.ConversationHost;
 import de.raidcraft.api.conversations.host.PlayerHost;
@@ -49,6 +50,7 @@ public class StartConversationAction implements Action<Player> {
         } else {
             host = new PlayerHost(player);
         }
+        Conversations.endActiveConversation(player, ConversationEndReason.SILENT);
         if (config.isSet("stage")) {
             Optional<StageTemplate> stage = template.get().getStage(config.getString("stage"));
             if (!stage.isPresent()) {
