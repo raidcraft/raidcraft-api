@@ -16,12 +16,12 @@ brackets1: '[this.foobar]'
 brackets2: '[../foobar]'
 brackets3: '[../bar/foobar]'
 brackets4: '[bar/foobar]'
-brackets4: '[bar.foobar]'
 brackets5: '"Text bla blabla [this.item] dsdsaodaso [../item] adsad"'
 list:
   - 'this.foobar'
   - '../foobar/barfoo'
   - 'foobar/barfoo'
+  - '@host.interact ../../npcs/vinnan this.foobar'
   - 'this.foo ../foobar foo'
   - '"Text bla blabla [this.item] dsdsaodaso [../item] adsad"'
 depply:
