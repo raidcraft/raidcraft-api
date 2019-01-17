@@ -12,7 +12,7 @@ import java.io.File;
  * The loader will be called for each file depending on the suffix match.
  */
 @Getter
-public abstract class ConfigLoader implements Comparable<ConfigLoader> {
+public abstract class ConfigLoader<TPlugin extends BasePlugin> implements Comparable<ConfigLoader> {
 
     private final BasePlugin plugin;
     private final String suffix;
@@ -27,12 +27,12 @@ public abstract class ConfigLoader implements Comparable<ConfigLoader> {
         this.suffix = ".yml";
     }
 
-    public ConfigLoader(BasePlugin plugin, String suffix) {
+    public ConfigLoader(TPlugin plugin, String suffix) {
         this.plugin = plugin;
         this.suffix = ("." + suffix + ".yml").toLowerCase();
     }
 
-    public ConfigLoader(BasePlugin plugin, String suffix, int priority) {
+    public ConfigLoader(TPlugin plugin, String suffix, int priority) {
         this(plugin, suffix);
         this.priority = priority;
     }
@@ -46,7 +46,7 @@ public abstract class ConfigLoader implements Comparable<ConfigLoader> {
      *               subfolder1.subfolder2.my-config
      * @param config loaded config file not null
      */
-    public abstract void loadConfig(String id, ConfigurationSection config);
+    public abstract void loadConfig(String id, ConfigurationBase<TPlugin> config);
 
     /**
      * Override this method and unload the loaded config.
@@ -65,7 +65,7 @@ public abstract class ConfigLoader implements Comparable<ConfigLoader> {
      * Tests if the loader suffix matches the suffix of the given file.
      *
      * @param file to match against
-     * @return true if the loader matches and {@link #loadConfig(String, ConfigurationSection)} should be called.
+     * @return true if the loader matches and {@link #loadConfig(String, ConfigurationBase)} should be called.
      */
     public boolean matches(File file) {
         return file.getName().toLowerCase().endsWith(getSuffix());

@@ -132,17 +132,17 @@ public class RaidCraftPlugin extends BasePlugin implements Component, Listener {
         RDS.registerObject(new GenericRDSTable.GenericTableFactory());
         RDS.registerObject(new ConfiguredRDSTable.TableFactory());
 
-        Quests.registerQuestLoader(new ConfigLoader(this, "trigger", -5) {
+        Quests.registerQuestLoader(new ConfigLoader<RaidCraftPlugin>(this, "trigger", -5) {
             @Override
-            public void loadConfig(String id, ConfigurationSection config) {
+            public void loadConfig(String id, ConfigurationBase<RaidCraftPlugin> config) {
                 ActionAPI.register(RaidCraftPlugin.this).global()
                         .trigger(new TriggerGroup(id, config));
             }
         });
 
-        Bukkit.getScheduler().runTaskLater(this, () -> ConfigUtil.loadRecursiveConfigs(this, "trigger", new ConfigLoader(this) {
+        Bukkit.getScheduler().runTaskLater(this, () -> ConfigUtil.loadRecursiveConfigs(this, "trigger", new ConfigLoader<RaidCraftPlugin>(this) {
             @Override
-            public void loadConfig(String id, ConfigurationSection config) {
+            public void loadConfig(String id, ConfigurationBase<RaidCraftPlugin> config) {
                 ActionAPI.register(RaidCraftPlugin.this).global()
                         .trigger(new TriggerGroup(id, config));
             }

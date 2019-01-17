@@ -50,7 +50,7 @@ public class ConfigUtil {
         return value;
     }
 
-    public static ConfigurationSection replacePathReferences(ConfigurationSection section, String basePath) {
+    public static <T extends ConfigurationSection> T replacePathReferences(T section, String basePath) {
 
         if (basePath.startsWith(".")) {
             basePath = basePath.replaceFirst("\\.", "");
