@@ -32,7 +32,7 @@ public class TagCommands {
 
     }
 
-    public class NestedTagCommands {
+    public static class NestedTagCommands {
 
         public NestedTagCommands(RaidCraftPlugin plugin) {
 
