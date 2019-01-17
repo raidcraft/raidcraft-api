@@ -34,6 +34,10 @@ public class TagCommands {
 
     public class NestedTagCommands {
 
+        public NestedTagCommands(RaidCraftPlugin plugin) {
+
+        }
+
         @Command(
                 aliases = {"list"},
                 desc = "Zeit alle Tags des Spielers an.",
