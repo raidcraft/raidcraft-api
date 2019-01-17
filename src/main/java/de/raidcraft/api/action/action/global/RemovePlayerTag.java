@@ -1,7 +1,7 @@
 package de.raidcraft.api.action.action.global;
 
 import de.raidcraft.api.action.action.Action;
-import de.raidcraft.api.action.requirement.tables.TPlayerTag;
+import de.raidcraft.api.tags.TPlayerTag;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 

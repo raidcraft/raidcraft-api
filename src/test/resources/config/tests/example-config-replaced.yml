@@ -16,12 +16,12 @@ brackets1: '[config.tests.foobar]'
 brackets2: '[config.foobar]'
 brackets3: '[config.bar.foobar]'
 brackets4: '[bar.foobar]'
-brackets4: '[bar.foobar]'
 brackets5: '"Text bla blabla [config.tests.item] dsdsaodaso [config.item] adsad"'
 list:
   - 'config.tests.foobar'
   - 'config.foobar.barfoo'
   - 'foobar.barfoo'
+  - '@host.interact npcs.vinnan config.tests.foobar'
   - 'config.tests.foo config.foobar foo'
   - '"Text bla blabla [config.tests.item] dsdsaodaso [config.item] adsad"'
 depply:

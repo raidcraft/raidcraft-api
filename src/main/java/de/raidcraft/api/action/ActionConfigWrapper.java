@@ -6,6 +6,8 @@ import de.raidcraft.api.action.action.Action;
 import de.raidcraft.api.action.action.ContextualAction;
 import de.raidcraft.api.action.action.RevertableAction;
 import de.raidcraft.api.action.requirement.Requirement;
+import de.raidcraft.api.conversations.Conversations;
+import de.raidcraft.api.conversations.conversation.Conversation;
 import de.raidcraft.util.TimeUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -166,11 +168,16 @@ public class ActionConfigWrapper<T> implements RevertableAction<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void executeChildActions(T type) {
         for (Action<?> action : actions) {
             if (ActionAPI.matchesType(action, Player.class)) {
                 Player player = getPlayer().orElse((Player) type);
                 ((Action<Player>) action).accept(player);
+            } else if (ActionAPI.matchesType(action, Conversation.class)) {
+                Player player = getPlayer().orElse((Player) type);
+                Conversations.getActiveConversation(player)
+                        .ifPresent(((Action<Conversation>) action)::accept);
             } else if (ActionAPI.matchesType(action, getType())) {
                 ((Action<T>) action).accept(type);
             }

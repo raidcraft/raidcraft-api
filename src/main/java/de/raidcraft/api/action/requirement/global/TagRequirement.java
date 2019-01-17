@@ -2,7 +2,7 @@ package de.raidcraft.api.action.requirement.global;
 
 import com.google.common.base.Strings;
 import de.raidcraft.api.action.requirement.Requirement;
-import de.raidcraft.api.action.requirement.tables.TPlayerTag;
+import de.raidcraft.api.tags.TPlayerTag;
 import de.raidcraft.util.TimeUtil;
 import lombok.Data;
 import org.bukkit.configuration.ConfigurationSection;

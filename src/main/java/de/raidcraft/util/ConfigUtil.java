@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 public class ConfigUtil {
 
     private final static Pattern VARIABLE_PATTERN = Pattern.compile(".*#([\\w\\d\\s]+):([\\w\\d\\s]+)#.*");
-    private final static Pattern THIS_PATH_PATTERN = Pattern.compile("^(.*)((this\\.)|(\\.\\./)[\\w\\-_.\\n/]+)( ?.*)$");
+    private final static Pattern THIS_PATH_PATTERN = Pattern.compile("^(?<prefix>[\\w@!\\-+?:_\\d\\.\\s\"\\[\\]]* ?)(?<path>((this\\.)|(\\.\\.\\/)+)[\\w\\d\\-_\\.\\/]+)(?<suffix> ?.*)$");
     private static final List<TypeConversion> typeConversions = new ArrayList<>(
             Arrays.asList(new SameTypeConversion(),
                     new StringTypeConversion(),
@@ -62,7 +62,7 @@ public class ConfigUtil {
             input = input.replaceAll("(?<!\\.\\.)/", ".");
             Matcher thisMatcher;
             while ((thisMatcher = THIS_PATH_PATTERN.matcher(input)).matches()) {
-                input = thisMatcher.group(1) + thisMatcher.replaceFirst(replacePathReference(thisMatcher.group(2), path)) + thisMatcher.group(5);
+                input = thisMatcher.group("prefix") + thisMatcher.replaceFirst(replacePathReference(thisMatcher.group("path"), path)) + thisMatcher.group("suffix");
             }
             return replaceVariableRefrences(path, input);
         };

@@ -1,4 +1,4 @@
-package de.raidcraft.api.action.requirement.tables;
+package de.raidcraft.api.tags;
 
 import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
@@ -9,13 +9,14 @@ import io.ebean.annotation.DbDefault;
 import io.ebean.annotation.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,6 +35,13 @@ public class TPlayerTag extends BaseModel {
                 .findOneOrEmpty();
     }
 
+    public static List<TPlayerTag> findTags(UUID playerId) {
+
+        return RaidCraft.getDatabase(RaidCraftPlugin.class).find(TPlayerTag.class)
+                .where().eq("player_id", playerId)
+                .findList();
+    }
+
     public static TPlayerTag createTag(Player player, String tagName, String duration) {
 
         TPlayerTag tag = TPlayerTag.findTag(player.getUniqueId(), tagName)
@@ -44,6 +52,22 @@ public class TPlayerTag extends BaseModel {
         tag.setTag(TTag.findOrCreateTag(tagName));
         tag.setDuration(duration);
         tag.increaseCount();
+
+        tag.save();
+
+        return tag;
+    }
+
+    public static TPlayerTag createTag(OfflinePlayer player, String tagName, int count) {
+
+        TPlayerTag tag = TPlayerTag.findTag(player.getUniqueId(), tagName)
+                .orElse(new TPlayerTag());
+
+        tag.setPlayerId(player.getUniqueId());
+        tag.setPlayer(player.getName());
+        tag.setTag(TTag.findOrCreateTag(tagName));
+        tag.setDuration(null);
+        tag.setCount(count);
 
         tag.save();
 
