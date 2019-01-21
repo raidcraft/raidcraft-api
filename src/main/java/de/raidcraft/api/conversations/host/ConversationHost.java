@@ -51,45 +51,6 @@ ConversationHost<T> {
     void addDefaultConversation(ConversationTemplate conversationTemplate);
 
     /**
-     * Adds the given citizens {@link Trait} to the host.
-     * Will silently fail and return false if the trait cannot be added.
-     * This can be the case if the host is not a NPC host.
-     *
-     * @param traitClass trait to add
-     * @return false if trait could not be added
-     */
-    boolean addTrait(Class<? extends Trait> traitClass);
-
-    /**
-     * Adds the given citizens {@link Trait} to the host.
-     * Will silently fail and return false if the trait cannot be added.
-     * This can be the case if the host is not a NPC host.
-     *
-     * @param trait to add
-     * @return false if trait could not be added
-     */
-    boolean addTrait(Trait trait);
-
-    /**
-     * Gets the given trait from the host.
-     * Returns empty optional if the host is not a NPC
-     * or the trait does not exist.
-     *
-     * @param traitClass class of the trait
-     * @param <TTrait> type of the trait
-     * @return trait or empty optional
-     */
-    <TTrait extends Trait> Optional<TTrait> getTrait(Class<TTrait> traitClass);
-
-    /**
-     * Checks if the given {@link ConversationHost} has the given trait.
-     *
-     * @param traitClass to check for
-     * @return true if host has trait
-     */
-    boolean hasTrait(Class<? extends Trait> traitClass);
-
-    /**
      * Gets the default conversation of this conversation host. If no default
      * conversation exists an empty {@link Optional} will be returned.
      * A host can have multiple default conversations and picks the one that will meet all
