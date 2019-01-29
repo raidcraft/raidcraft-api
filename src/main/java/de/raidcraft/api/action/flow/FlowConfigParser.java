@@ -496,7 +496,7 @@ public class FlowConfigParser {
 
                             if (expression.isCheckingRequirement()) {
                                 requirements.stream()
-                                        .peek(type -> type.getConfiguration().set("negate", ((FlowAnswer) flowExpression).isNegate()))
+                                        .peek(type -> type.getConfiguration().set("negate", ((ActionAPIType) flowExpression).isNegate()))
                                         .map(type -> createRequirement(id, type))
                                         .forEach(wrapper -> wrapper.ifPresent(action::addRequirement));
                                 clearRequirements = true;
